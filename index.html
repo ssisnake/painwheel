@@ -173,6 +173,10 @@
             </label>
         </div>
     </header>
+    <div id="moveBanner" style="background: linear-gradient(90deg,#065f46,#059669,#065f46)" class="hidden w-full text-white text-xs sm:text-sm font-bold px-4 py-2 flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center">
+        <span>🚚 The Pain Wheel has moved! The new link has the guild leaderboard and Discord stats.</span>
+        <button id="moveBannerBtn" style="color:#065f46" class="bg-white font-black px-3 py-1 rounded cursor-pointer hover:bg-emerald-50">Move me + my stats →</button>
+    </div>
 
     <!-- Evelyn Lullaby Dimming Overlay -->
     <div id="evelynDimOverlay" class="fixed inset-0 z-40 bg-indigo-950/90 pointer-events-none opacity-0 flex flex-col items-center justify-center">
@@ -260,9 +264,28 @@
                 </div>
                 <div class="overflow-x-auto"><table id="guildTable" class="w-full text-sm" style="font-variant-numeric: tabular-nums"></table></div>
             </div>
+            <div id="moveSection" class="mt-5 pt-4 border-t border-slate-800 text-sm"></div>
             <p id="statsNote" class="text-[11px] text-slate-500 mt-4">Stats are saved in this browser only.</p>
         </div>
     </div>
+
+    <!-- Move to the new wheel -->
+    <div id="moveModal" style="z-index: 74" class="fixed inset-0 hidden items-center justify-center bg-slate-950/85 backdrop-blur-sm p-4">
+        <div class="w-full max-w-lg bg-slate-900 border-2 border-emerald-500 rounded-2xl p-5 shadow-2xl">
+            <div class="flex items-center justify-between mb-2">
+                <div class="text-lg font-black uppercase tracking-tight text-emerald-300">🚚 Move to the new wheel</div>
+                <button id="moveClose" class="text-slate-400 hover:text-white text-sm font-bold cursor-pointer">✕</button>
+            </div>
+            <p class="text-sm text-slate-300 leading-snug">Your name, stats, achievements and Ret buffs come with you, and your spins get added to the guild leaderboard. Do this once on each computer or phone you spin on.</p>
+            <a id="moveLink" target="_blank" rel="noopener" class="block mt-4 text-center bg-emerald-500 hover:bg-emerald-400 text-emerald-950 font-black text-lg py-3 rounded-lg">Open the new wheel with my stats →</a>
+            <p class="text-[11px] text-slate-400 mt-4 leading-snug">If that button doesn't open it: copy this code, go to <b id="moveUrlText" class="text-slate-200"></b>, open <b>📊 My Stats</b> and paste it under "Moving from the old wheel?"</p>
+            <div class="flex gap-2 mt-2">
+                <textarea id="moveCode" readonly rows="2" class="flex-1 min-w-0 mono text-[10px] bg-slate-950 border border-slate-700 rounded p-2 text-slate-300 resize-none"></textarea>
+                <button id="moveCopy" class="shrink-0 px-3 rounded bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold cursor-pointer">Copy code</button>
+            </div>
+        </div>
+    </div>
+    <div id="moveToast" class="fixed left-1/2 -translate-x-1/2 top-4 hidden px-4 py-3 rounded-xl border-2 border-emerald-400 bg-emerald-950 text-emerald-100 text-sm font-bold shadow-2xl text-center" style="z-index: 75; max-width: calc(100vw - 32px);"></div>
 
     <!-- Achievement toast -->
     <div id="achToast" class="fixed z-[73] right-4 bottom-4 hidden items-center gap-3 px-4 py-3 rounded-xl border-2 border-amber-400 shadow-2xl" style="background: linear-gradient(135deg,#1c1917,#422006); max-width: calc(100vw - 32px);">
@@ -330,6 +353,22 @@
                 <div id="historyList" class="flex-1 overflow-y-auto space-y-1.5 text-xs mono pr-1">
                     <div class="text-slate-600 italic py-10 text-center">No spins recorded yet. Pull the trigger!</div>
                 </div>
+            </div>
+
+            <!-- $KNOB stock ticker -->
+            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl">
+                <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+                    <span>🥃 $KNOB · Knob Creek Holdings</span>
+                    <span class="flex items-center gap-1.5 text-[10px] text-red-400"><span class="w-1.5 h-1.5 rounded-full bg-red-500 ad-blink"></span>LIVE</span>
+                </div>
+                <div class="flex items-center justify-between gap-3">
+                    <div class="shrink-0">
+                        <div id="knobPrice" class="text-2xl font-black mono text-slate-100" style="font-variant-numeric: tabular-nums">$420.69</div>
+                        <div id="knobChange" class="text-xs font-bold mono text-emerald-400">▲ +0.00% today</div>
+                    </div>
+                    <canvas id="knobChart" class="flex-1 min-w-0" style="max-width: 240px; height: 56px"></canvas>
+                </div>
+                <div id="knobNews" class="mt-2 text-[11px] text-slate-400 mono truncate">Market open. Reb is awake.</div>
             </div>
         </div>
 
@@ -453,6 +492,62 @@
 
     <script src="config.js"></script>
     <script>
+    /* ===================== MOVING TO THE NEW WHEEL (stats transfer) =====================
+       Each browser keeps its stats per site, so the old link and the GitHub link don't share
+       them. The old page builds a link (or a code) holding this browser's painWheel* data;
+       opening it on the new page merges it in here, before anything else reads storage. */
+    const NEW_WHEEL_URL = 'https://ssisnake.github.io/painwheel/';
+    const MOVE_OPEN = false;   // flip to true when the new link + leaderboard are ready: shows the "we moved" banner on the old link
+    const MOVE_KEYS = ['painWheelPlayer', 'painWheelStats', 'painWheelAchievements', 'painWheelRetBuffs', 'painWheelAllTimeSpins',
+        'painWheelVolume', 'painWheelTheme', 'painWheelCalloutIdx', 'painWheelSkippedName'];
+    function makeMoveCode() {
+        const o = { v: 1 };
+        MOVE_KEYS.forEach(k => { try { const v = localStorage.getItem(k); if (v !== null) o[k] = v; } catch (e) {} });
+        return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    }
+    // Merges a move code into this browser. Returns a message for the toast.
+    function importMoveCode(code) {
+        let o;
+        try { o = JSON.parse(decodeURIComponent(escape(atob(code.trim().replace(/-/g, '+').replace(/_/g, '/'))))); } catch (e) { return { ok: false, msg: "That code didn't work. Copy the whole thing and try again." }; }
+        if (!o || o.v !== 1) return { ok: false, msg: "That code didn't work. Copy the whole thing and try again." };
+        const get = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+        const put = (k, v) => { try { localStorage.setItem(k, typeof v === 'string' ? v : JSON.stringify(v)); } catch (e) {} };
+        const J = (t, d) => { try { return JSON.parse(t) ?? d; } catch (e) { return d; } };
+        if (get('painWheelImported') === code.slice(0, 64)) return { ok: false, msg: 'Those stats were already moved here.' };
+        // stats: add counts together, keep the best streak
+        const a = J(get('painWheelStats'), null), b = J(o.painWheelStats, null);
+        if (b) {
+            if (!a) put('painWheelStats', b);
+            else {
+                a.spins = (a.spins || 0) + (b.spins || 0);
+                a.byType = a.byType || {}; Object.entries(b.byType || {}).forEach(([t, n]) => a.byType[t] = (a.byType[t] || 0) + n);
+                a.bestKevinStreak = Math.max(a.bestKevinStreak || 0, b.bestKevinStreak || 0);
+                if (b.firstSpin && (!a.firstSpin || b.firstSpin < a.firstSpin)) a.firstSpin = b.firstSpin;
+                a.kromSeen = Array.from(new Set([...(a.kromSeen || []), ...(b.kromSeen || [])]));
+                put('painWheelStats', a);
+            }
+        }
+        const ach = Object.assign({}, J(o.painWheelAchievements, {}), J(get('painWheelAchievements'), {}));
+        put('painWheelAchievements', ach);
+        const rb = J(get('painWheelRetBuffs'), { v: 2, hits: {} }), rbo = J(o.painWheelRetBuffs, null);
+        if (rbo && rbo.v === 2) { rb.v = 2; rb.hits = rb.hits || {}; Object.entries(rbo.hits || {}).forEach(([i, n]) => rb.hits[i] = Math.max(rb.hits[i] || 0, n)); put('painWheelRetBuffs', rb); }
+        put('painWheelAllTimeSpins', String((parseInt(get('painWheelAllTimeSpins'), 10) || 0) + (parseInt(o.painWheelAllTimeSpins, 10) || 0)));
+        ['painWheelPlayer', 'painWheelVolume', 'painWheelTheme', 'painWheelCalloutIdx', 'painWheelSkippedName'].forEach(k => {
+            if (o[k] !== undefined && (get(k) === null || get(k) === '""' || get(k) === '')) put(k, o[k]);
+        });
+        // what the guild leaderboard should add for this person (sent once, when a name and the Sheet are ready)
+        const spins = Math.max(b ? b.spins || 0 : 0, parseInt(o.painWheelAllTimeSpins, 10) || 0), bt = (b && b.byType) || {};
+        put('painWheelSheetImport', { spins, kevins: bt.KEVIN || 0, bestStreak: (b && b.bestKevinStreak) || 0, ret: bt.RET_PALADIN || 0,
+            noone: bt.NO_ONE || 0, penis: bt.PENIS || 0, achievements: Object.keys(ach).length });
+        put('painWheelImported', code.slice(0, 64));
+        return { ok: true, msg: `Welcome to the new wheel! Moved ${spins.toLocaleString()} spins and ${Object.keys(J(o.painWheelAchievements, {})).length} achievements.` };
+    }
+    let moveResult = null;
+    try {
+        const m = location.hash.match(/import=([A-Za-z0-9_-]+)/);
+        if (m) { moveResult = importMoveCode(m[1]); history.replaceState(null, '', location.pathname + location.search); }
+    } catch (e) {}
+
     /* =====================================================================
        SLICE TABLE — the single source of truth.
        Change a count here and the wheel layout, odds pills, and % text
@@ -495,6 +590,7 @@
     const VIDEO_BUZZ = null;
     const AUDIO_CLUSSY = "media/audio_clussy.mp3";  // Clussy soundboard clip
     const AUDIO_CHIRP = "media/audio_chirp.mp3";
+    const AUDIO_ISRAEL_SONG = "media/audio_israel_song.mp3";
     const AUDIO_EXXON = "media/audio_exxon.mp3";  // Exxon slice soundboard clip
 
     /* Croissant videos (made by Axazon & Platemage). Slice 1 plays the first, slice 2 the sequel. */
@@ -667,11 +763,11 @@
         { id: "ENRON", n: 1, label: "📕 Enron Ethics Handbook 📕", pill: "ENRON ETHICS", bg: "#1e293b", text: "#94a3b8", border: "#475569", color: "text-slate-400", glow: "bg-slate-700", key: "E", rig: "ENR",
           win: { blank: true, blankGif: GIF_LOST } },
         { id: "TRILLION", n: 1, label: "💵 1 Trillion to Israel 💵", pill: "1 TRILLION", bg: "#1d4ed8", text: "#ffffff", border: "#ffffff", color: "text-blue-300", glow: "bg-blue-600", key: "%", rig: "TRL",
-          win: { title: "💵 $1,000,000,000,000 TO ISRAEL 💵", size: SIZE.small, sub: () => "Our greatest ally needs us." } },
+          win: { title: "💵 $1,000,000,000,000 TO ISRAEL 💵", size: SIZE.small, sound: "israelsong", sub: () => "Our greatest ally needs us." } },
         { id: "ROE_RUST", n: 1, label: "🩺 Roe v. Wade on Rust 🩺", pill: "ROE V. WADE ON RUST", bg: "#7c2d12", text: "#fed7aa", border: "#fb923c", color: "text-orange-300", glow: "bg-orange-800", key: "W", rig: "ROE",
           win: { title: "🩺 ROE V. WADE ON RUST 🩺", size: SIZE.small, sub: () => "No stethoscopes only." } },
         { id: "IDF_RECRUITER", n: 1, label: "🪖 IDF Recruiter 🪖", pill: "IDF RECRUITER", bg: "#1e40af", text: "#ffffff", border: "#bfdbfe", color: "text-blue-300", glow: "bg-blue-700", key: "Y", rig: "IDF",
-          win: { title: "🪖 IDF RECRUITER 🪖", size: SIZE.mid, my: "my-3",
+          win: { title: "🪖 IDF RECRUITER 🪖", size: SIZE.mid, sound: "israelsong", my: "my-3",
                  media: { src: PHOTO_IDF, fallback: null, caption: "📋 NOW HIRING — ASK ABOUT OUR SIGN-ON BONUS" },
                  sub: () => "Your application has been pre-approved." } },
         { id: "MOONRUNES", n: 1, label: "🈵 Moonrunes R Us 🈵", pill: "MOONRUNES R US", bg: "#be123c", text: "#fff1f2", border: "#fda4af", color: "text-rose-400", glow: "bg-rose-600", key: "U", rig: "MRN",
@@ -1916,6 +2012,7 @@
         train:   { play: () => playTrainHorn(),         cooldownMin: 0 },  // Nick
         womp:    { play: () => playSadTromboneSound(),  cooldownMin: 0 },  // Shitty Vault
         asmon:   { play: () => {},                      cooldownMin: 2 },  // Asmongold video audio; muted on cooldown
+        israelsong: { play: () => playClip('israelsong', AUDIO_ISRAEL_SONG, playWinSound), cooldownMin: 0 },  // IDF Recruiter + 1 Trillion to Israel
         exxon:   { play: () => playClip('exxon', AUDIO_EXXON, playWinSound), cooldownMin: 0 },  // Exxon soundboard clip  // croissant videos carry their own audio
         kfc:     { play: () => {},                      cooldownMin: 2 },  // the KFC clip's own audio; muted while on cooldown
         sinking: { play: () => playSinkingShipSound(), cooldownMin: 2 }  // Taps (Krom)
@@ -2637,10 +2734,7 @@
         nextCallout();
         sponsorBanner.classList.remove('opacity-0', 'scale-95');
         sponsorBanner.classList.add('opacity-100', 'scale-100');
-        if (spinBannerInterval) clearInterval(spinBannerInterval);
-        spinBannerInterval = setInterval(() => {
-            nextCallout();
-        }, 1900);
+        if (spinBannerInterval) clearTimeout(spinBannerInterval);
         // 2 turns on a tap, up to 12 on a full charge, plus a little wobble
         const turns = 2 + power * 10 + (Math.random() - 0.5) * 0.6;
         let distance = (Math.floor(turns) + Math.random()) * Math.PI * 2;  // strength sets how long it spins; the stop spot is fully random
@@ -2655,6 +2749,7 @@
 
         const startRot = currentRotation, finalRot = startRot + distance;
         const duration = 3500 + power * 5000 + Math.random() * 600, t0 = performance.now();
+        spinBannerInterval = setTimeout(nextCallout, duration * 0.5);   // 2 callouts per spin: one at the start, one halfway
         const ease = (t) => 1 - Math.pow(1 - t, 5);
 
         function frame(now) {
@@ -2665,7 +2760,7 @@
             if (p < 1) return requestAnimationFrame(frame);
             currentRotation = finalRot; renderAll();
             isSpinning = false; chirpSpin = false;
-            clearInterval(spinBannerInterval); spinBannerInterval = null;
+            clearTimeout(spinBannerInterval); spinBannerInterval = null;
             // the last callout stays up until the next spin starts
             cheetoCrumbSpin = false;
             spinBtn.disabled = false; spinBtn.classList.remove('opacity-60');
@@ -2839,7 +2934,7 @@
     (function setupPlayer() {
         const input = $('playerName'), welcome = $('welcome');
         input.value = playerName;
-        const save = (v) => { playerName = (v || '').trim().slice(0, 20); store.set('painWheelPlayer', playerName); input.value = playerName; };
+        const save = (v) => { playerName = (v || '').trim().slice(0, 20); store.set('painWheelPlayer', playerName); input.value = playerName; flushSheetImport(); };
         input.addEventListener('change', () => save(input.value));
         input.addEventListener('keydown', (e) => { e.stopPropagation(); if (e.key === 'Enter') input.blur(); });
         if (!playerName && !store.get('painWheelSkippedName', false)) {
@@ -2891,6 +2986,61 @@
             });
         }).catch(() => { status.textContent = "Couldn't reach the leaderboard."; });
     }
+
+    /* ===================== MOVING TO THE NEW WHEEL: buttons, banner, leaderboard import ===================== */
+    const ON_NEW_WHEEL = !!window.PAIN_WHEEL_CONFIG || location.href.startsWith(NEW_WHEEL_URL);
+    function flushSheetImport() {
+        if (!LEADERBOARD_URL || !playerName) return;
+        const pending = store.get('painWheelSheetImport', null);
+        if (!pending) return;
+        try {
+            fetch(LEADERBOARD_URL, { method: 'POST', mode: 'no-cors', keepalive: true, body: JSON.stringify({ name: playerName, import: pending }) })
+                .then(() => { try { localStorage.removeItem('painWheelSheetImport'); } catch (e) {} }).catch(() => {});
+        } catch (e) {}
+    }
+    function moveToast(msg) {
+        const t = $('moveToast'); t.textContent = msg; t.classList.remove('hidden');
+        setTimeout(() => t.classList.add('hidden'), 6000);
+    }
+    (function setupMove() {
+        const modal = $('moveModal'), section = $('moveSection');
+        const openModal = () => {
+            const code = makeMoveCode();
+            $('moveLink').href = NEW_WHEEL_URL + '#import=' + code;
+            $('moveCode').value = code; $('moveUrlText').textContent = NEW_WHEEL_URL;
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+        };
+        $('moveClose').addEventListener('click', () => { modal.classList.add('hidden'); modal.classList.remove('flex'); });
+        $('moveCopy').addEventListener('click', () => {
+            const ta = $('moveCode'); ta.select();
+            const done = () => { $('moveCopy').textContent = 'Copied!'; setTimeout(() => $('moveCopy').textContent = 'Copy code', 1500); };
+            (navigator.clipboard ? navigator.clipboard.writeText(ta.value).then(done) : Promise.reject()).catch(() => { try { document.execCommand('copy'); done(); } catch (e) {} });
+        });
+        if (!ON_NEW_WHEEL && MOVE_OPEN) {
+            const banner = $('moveBanner'); banner.classList.remove('hidden'); banner.classList.add('flex');
+            $('moveBannerBtn').addEventListener('click', openModal);
+            const b = document.createElement('button');
+            b.className = 'w-full py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-black cursor-pointer';
+            b.textContent = '🚚 Move my stats to the new wheel'; b.addEventListener('click', openModal);
+            section.appendChild(b);
+        } else if (ON_NEW_WHEEL) {
+            section.innerHTML = `<div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Moving from the old wheel?</div>
+                <div class="flex gap-2"><input id="moveImportCode" placeholder="Paste your code here" class="flex-1 min-w-0 bg-slate-950 border border-slate-700 rounded px-2 py-1.5 text-xs mono text-slate-200">
+                <button id="moveImportBtn" class="shrink-0 px-3 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold cursor-pointer">Import</button></div>
+                <div id="moveImportMsg" class="text-xs mt-1.5 text-slate-400"></div>`;
+            $('moveImportCode').addEventListener('keydown', e => e.stopPropagation());
+            $('moveImportBtn').addEventListener('click', () => {
+                const r = importMoveCode($('moveImportCode').value);
+                $('moveImportMsg').textContent = r.msg;
+                if (r.ok) { try { sessionStorage.setItem('painWheelMoveMsg', r.msg); } catch (e) {} setTimeout(() => location.reload(), 900); }
+            });
+        }
+        if (!section.children.length) section.classList.add('hidden');
+        let msg = moveResult && moveResult.msg;
+        try { msg = msg || sessionStorage.getItem('painWheelMoveMsg'); sessionStorage.removeItem('painWheelMoveMsg'); } catch (e) {}
+        if (msg) setTimeout(() => moveToast(msg), 600);
+        flushSheetImport();
+    })();
 
     /* ===================== ULTRA-RARE: ASHBRINGER (1 in 500) ===================== */
     const ASHBRINGER_CHANCE = 1 / 500;
@@ -3366,6 +3516,11 @@
             playAshbringer(null, true);
             return;
         }
+        if (typedBuffer.endsWith("knob")) {         // force the Knob Creek ad (to test the $KNOB crash)
+            typedBuffer = ""; setRigMode("FAIR");
+            if (window.showAdById) window.showAdById('knobcreek');
+            return;
+        }
         if (typedBuffer.endsWith("kana")) {
             typedBuffer = "";
             setRigMode("FAIR"); // typing k-a-n-a pressed rig hotkeys along the way; undo that
@@ -3724,7 +3879,7 @@
                     <div class="font-black text-xl md:text-2xl leading-tight uppercase mt-1">🥃 Knob Creek Stock Is Soaring 🥃</div>
                     <svg viewBox="0 0 300 90" class="w-full h-24 mt-2"><rect width="300" height="90" fill="#0f172a"/><path d="M0 80 L30 76 L60 78 L90 66 L120 70 L150 52 L180 56 L210 34 L240 30 L270 14 L300 4" stroke="#22c55e" stroke-width="3" fill="none"/><path d="M0 80 L30 76 L60 78 L90 66 L120 70 L150 52 L180 56 L210 34 L240 30 L270 14 L300 4 L300 90 L0 90 Z" fill="#22c55e" opacity="0.15"/><text x="8" y="16" font-family="monospace" font-size="10" fill="#94a3b8">REB DRINKING HOURS →</text></svg>
                     <div class="text-sm md:text-base mt-1 leading-snug">Analysts credit record demand from a single customer: <b>Reb</b>. Every empty bottle sends shares higher. Get in now before he finishes another one!</div>
-                    ${adButtons('bg-amber-500 text-black font-black text-lg md:text-xl px-4 py-2 rounded', '', '📈 BUY $KNOB', 'Order filled at the top. Reb finished another bottle. Shares up 12%. Your liver down 12%.', 'Sell everything, I\'m sober now')}
+                    ${adButtons('bg-amber-500 text-black font-black text-lg md:text-xl px-4 py-2 rounded', '', '📈 BUY $KNOB', 'Order filled at the very top. Please check the $KNOB ticker. 👀', 'Sell everything, I\'m sober now')}
                     <div class="text-[10px] text-slate-400 mt-3 leading-snug">Past performance is not indicative of future hangovers. Not financial advice. Barely bourbon advice. Exxon-Hawkeyes Capital is not responsible for liver-related losses.</div>
                 </div>
             </div>` }
@@ -3777,16 +3932,18 @@
             waiting = true;
             (function attempt() {
                 if (!due() || !ad.classList.contains('hidden')) { waiting = false; return; }
-                const overlayOpen = ['welcome', 'statsPanel', 'cheatSheet', 'ashbringer'].some(id => !$(id).classList.contains('hidden'));
+                const overlayOpen = ['welcome', 'statsPanel', 'cheatSheet', 'ashbringer', 'moveModal'].some(id => !$(id).classList.contains('hidden'));
                 if (isSpinning || !winnerModal.classList.contains('hidden') || overlayOpen) return setTimeout(attempt, 1500);
                 waiting = false;
                 show();
             })();
         }
-        function show() {
+        let currentAdId = null;
+        function show(forceId) {
             let lastId = null; try { lastId = localStorage.getItem('painWheelAdLastId'); } catch (e) {}
             const pool = POPUP_ADS.filter(a => a.id !== lastId);
-            const pickAd = pool[Math.floor(Math.random() * pool.length)];
+            const pickAd = POPUP_ADS.find(a => a.id === forceId) || pool[Math.floor(Math.random() * pool.length)];
+            currentAdId = pickAd.id;
             slot.innerHTML = pickAd.html;
             lastShown = memLast = Date.now();
             set('painWheelAdLastShown', lastShown); set('painWheelAdLastId', pickAd.id);
@@ -3812,12 +3969,111 @@
             const replyEl = slot.querySelector('[data-adreply]');
             if (!act && !cl) return;
             if (!closable) { if (replyEl) replyEl.textContent = 'Please wait for the countdown. Your patience is valued. 🙂'; return; }
-            if (act) { unlock('adclick'); if (replyEl) replyEl.textContent = act.dataset.adaction; setTimeout(closeAd, 1800); }
+            if (act) {
+                unlock('adclick'); if (replyEl) replyEl.textContent = act.dataset.adaction; setTimeout(closeAd, 1800);
+                if (currentAdId === 'knobcreek' && window.knobCrash) setTimeout(window.knobCrash, 1900);   // you bought the top
+            }
             else closeAd();
         });
+        window.showAdById = (id) => { if (ad.classList.contains('hidden') && !isSpinning) show(id); };
         setTimeout(tryShow, 10000);
         setInterval(tryShow, 15000);   // check often while the page stays open
     })();
+    /* ===================== $KNOB STOCK TICKER =====================
+       A fake Knob Creek stock that drifts up and down every few seconds, with the
+       occasional Reb-related headline. Redraws one tiny chart per tick and pauses
+       while the tab is hidden, so it costs next to nothing. */
+    (function setupKnobStock() {
+        const priceEl = $('knobPrice'), chgEl = $('knobChange'), newsEl = $('knobNews'), cv = $('knobChart');
+        if (!cv) return;
+        const UP = ['Reb opened a new bottle', 'Reb said "just one more"', 'Raid wiped on trash. Reb pours a double',
+            'Kevin pulled the boss early. Sales spike', 'Analysts upgrade $KNOB to "Neat"', 'Reb found the Costco handle',
+            'Prog night announced. Futures soar', 'Reb is "just tasting" it', 'Wipe #47 on the same boss. Buy buy buy'];
+        const DOWN = ['Reb drank a glass of water by mistake', 'Reb fell asleep at the keyboard', 'Reb says he\'s "taking a break" (lol)',
+            'Liquor store closed early. Panic selling', 'Reb tried Fireball. Investors horrified', 'Reb\'s liver files for bankruptcy',
+            'Raid cancelled. Reb goes to bed on time', 'SEC investigating Reb\'s "breakfast"'];
+        let price = 420.69, open = price, crashedUntil = 0;
+        const hist = Array.from({ length: 48 }, (_, i) => price * (0.97 + 0.03 * i / 47 + (Math.random() - 0.5) * 0.02));
+        hist[hist.length - 1] = price;
+        function draw() {
+            const dpr = Math.min(2, window.devicePixelRatio || 1), w = cv.clientWidth || 200, h = cv.clientHeight || 56;
+            if (cv.width !== Math.round(w * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+            const c = cv.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, w, h);
+            const lo = Math.min(...hist), hi = Math.max(...hist), pad = 4;
+            const X = i => i / (hist.length - 1) * w, Y = v => h - pad - (v - lo) / Math.max(0.01, hi - lo) * (h - pad * 2);
+            const up = price >= open, col = up ? '#34d399' : '#f87171';
+            const yo = Y(Math.min(hi, Math.max(lo, open)));
+            c.strokeStyle = 'rgba(148,163,184,0.35)'; c.setLineDash([3, 3]); c.beginPath(); c.moveTo(0, yo); c.lineTo(w, yo); c.stroke(); c.setLineDash([]);
+            c.beginPath(); hist.forEach((v, i) => i ? c.lineTo(X(i), Y(v)) : c.moveTo(X(i), Y(v)));
+            c.strokeStyle = col; c.lineWidth = 2; c.lineJoin = 'round'; c.stroke();
+            c.lineTo(w, h); c.lineTo(0, h); c.closePath();
+            const g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, up ? 'rgba(52,211,153,0.25)' : 'rgba(248,113,113,0.25)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+            c.fillStyle = g; c.fill();
+            c.fillStyle = col; c.beginPath(); c.arc(X(hist.length - 1), Y(price), 2.5, 0, Math.PI * 2); c.fill();
+        }
+        function show() {
+            const pct = (price - open) / open * 100, up = pct >= 0;
+            priceEl.textContent = '$' + price.toFixed(2);
+            chgEl.textContent = `${up ? '▲' : '▼'} ${up ? '+' : ''}${pct.toFixed(2)}% today`;
+            chgEl.className = 'text-xs font-bold mono ' + (up ? 'text-emerald-400' : 'text-red-400');
+            draw();
+        }
+        function tick() {
+            if (document.hidden) return;
+            let move;
+            const crashed = Date.now() < crashedUntil;
+            if (crashedUntil && !crashed) {          // the bailout
+                crashedUntil = 0; move = open * (0.55 + Math.random() * 0.2) / price - 1;
+                newsEl.textContent = '📈 Reb bought the dip with the guild bank. Trading resumes.';
+            } else if (crashed) move = (Math.random() - 0.5) * 0.3;
+            else if (Math.random() < 0.22) {
+                const good = Math.random() < 0.62;
+                move = good ? 0.03 + Math.random() * 0.09 : -(0.02 + Math.random() * 0.07);
+                newsEl.textContent = (good ? '📈 ' : '📉 ') + pick(good ? UP : DOWN) + ` (${move > 0 ? '+' : ''}${(move * 100).toFixed(1)}%)`;
+            } else move = 0.002 + (Math.random() - 0.5) * 0.024;
+            price = Math.max(0.01, price * (1 + move));
+            hist.push(price); if (hist.length > 48) hist.shift();
+            show();
+        }
+        // Someone clicked BUY on the Knob Creek ad: the stock instantly goes to cents, with an explosion
+        window.knobCrash = () => {
+            const card = cv.closest('.rounded-2xl');
+            const r = card.getBoundingClientRect();
+            if (r.top < 0 || r.bottom > innerHeight) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            crashedUntil = Date.now() + 45000;
+            newsEl.textContent = '💥 SOMEONE BOUGHT $KNOB. IT IMMEDIATELY COLLAPSED.';
+            const start = price, target = 0.02 + Math.random() * 0.07;
+            let k = 0;
+            const fall = setInterval(() => {
+                k++; price = start * Math.pow(target / start, k / 12);
+                hist.push(price); if (hist.length > 48) hist.shift(); show();
+                if (k >= 12) { clearInterval(fall); boom(card); }
+            }, 70);
+            if (soundOn()) { try { playFartSound(); } catch (e) {} }
+        };
+        function boom(card) {
+            card.style.position = 'relative'; card.style.overflow = 'visible';
+            card.animate([{ transform: 'translate(0,0)' }, { transform: 'translate(-6px,3px)' }, { transform: 'translate(5px,-4px)' }, { transform: 'translate(-3px,2px)' }, { transform: 'translate(0,0)' }], { duration: 420, iterations: 2 });
+            const cr = card.getBoundingClientRect(), cvr = cv.getBoundingClientRect();
+            const ox = cvr.right - cr.left - 6, oy = cvr.top - cr.top + cvr.height * 0.85;
+            const big = document.createElement('div');
+            big.textContent = '💥'; big.style.cssText = `position:absolute;left:${ox}px;top:${oy}px;font-size:64px;pointer-events:none;z-index:5;transform:translate(-50%,-50%) scale(0.2)`;
+            card.appendChild(big);
+            big.animate([{ transform: 'translate(-50%,-50%) scale(0.2)', opacity: 1 }, { transform: 'translate(-50%,-50%) scale(1.6)', opacity: 1, offset: 0.35 }, { transform: 'translate(-50%,-50%) scale(2.2)', opacity: 0 }], { duration: 1100, easing: 'ease-out' }).onfinish = () => big.remove();
+            ['💸', '🔥', '🥃', '💸', '📉', '🔥', '💸', '🥃', '💥', '💸'].forEach((e, i) => {
+                const d = document.createElement('div'); d.textContent = e;
+                d.style.cssText = `position:absolute;left:${ox}px;top:${oy}px;font-size:22px;pointer-events:none;z-index:5`;
+                card.appendChild(d);
+                const a = (i / 10) * Math.PI * 2 + Math.random() * 0.4, dist = 70 + Math.random() * 60;
+                d.animate([{ transform: 'translate(-50%,-50%)', opacity: 1 }, { transform: `translate(calc(-50% + ${Math.cos(a) * dist}px), calc(-50% + ${Math.sin(a) * dist + 30}px)) rotate(${(Math.random() - 0.5) * 540}deg)`, opacity: 0 }],
+                    { duration: 900 + Math.random() * 400, easing: 'cubic-bezier(.2,.7,.4,1)' }).onfinish = () => d.remove();
+            });
+        }
+        show();
+        setInterval(tick, 3500);
+        window.addEventListener('resize', draw);
+    })();
+
     updateSpinBadge();
     startTickers();
     applyTheme();
