@@ -513,7 +513,15 @@
         const get = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
         const put = (k, v) => { try { localStorage.setItem(k, typeof v === 'string' ? v : JSON.stringify(v)); } catch (e) {} };
         const J = (t, d) => { try { return JSON.parse(t) ?? d; } catch (e) { return d; } };
-        if (get('painWheelImported') === code.slice(0, 64)) return { ok: false, msg: 'Those stats were already moved here.' };
+        const bo = J(o.painWheelStats, null), bto = (bo && bo.byType) || {};
+        const sheetImport = { spins: Math.max(bo ? bo.spins || 0 : 0, parseInt(o.painWheelAllTimeSpins, 10) || 0), kevins: bto.KEVIN || 0,
+            bestStreak: (bo && bo.bestKevinStreak) || 0, ret: bto.RET_PALADIN || 0, noone: bto.NO_ONE || 0, penis: bto.PENIS || 0,
+            achievements: Object.keys(J(o.painWheelAchievements, {})).length };
+        if (get('painWheelImported') === code.slice(0, 64)) {
+            // already merged here; just make sure the guild leaderboard gets them (the Sheet ignores repeats)
+            if (get('painWheelSheetImportDone') !== '1') put('painWheelSheetImport', sheetImport);
+            return { ok: false, msg: 'Those stats were already moved here. Re-sending them to the guild leaderboard.' };
+        }
         // stats: add counts together, keep the best streak
         const a = J(get('painWheelStats'), null), b = J(o.painWheelStats, null);
         if (b) {
@@ -536,9 +544,8 @@
             if (o[k] !== undefined && (get(k) === null || get(k) === '""' || get(k) === '')) put(k, o[k]);
         });
         // what the guild leaderboard should add for this person (sent once, when a name and the Sheet are ready)
-        const spins = Math.max(b ? b.spins || 0 : 0, parseInt(o.painWheelAllTimeSpins, 10) || 0), bt = (b && b.byType) || {};
-        put('painWheelSheetImport', { spins, kevins: bt.KEVIN || 0, bestStreak: (b && b.bestKevinStreak) || 0, ret: bt.RET_PALADIN || 0,
-            noone: bt.NO_ONE || 0, penis: bt.PENIS || 0, achievements: Object.keys(ach).length });
+        const spins = sheetImport.spins;
+        put('painWheelSheetImport', sheetImport);
         put('painWheelImported', code.slice(0, 64));
         return { ok: true, msg: `Welcome to the new wheel! Moved ${spins.toLocaleString()} spins and ${Object.keys(J(o.painWheelAchievements, {})).length} achievements.` };
     }
@@ -2993,9 +3000,14 @@
         if (!LEADERBOARD_URL || !playerName) return;
         const pending = store.get('painWheelSheetImport', null);
         if (!pending) return;
+        // Send it, then check the board: only stop re-sending once the Sheet actually shows it (it ignores repeats).
+        const check = () => fetch(LEADERBOARD_URL + '?action=board').then(r => r.json()).then(d => {
+            const me = (d.players || []).find(p => p.name.toLowerCase() === playerName.toLowerCase());
+            if (me && me.spins >= pending.spins) { try { localStorage.removeItem('painWheelSheetImport'); localStorage.setItem('painWheelSheetImportDone', '1'); } catch (e) {} }
+        }).catch(() => {});
         try {
             fetch(LEADERBOARD_URL, { method: 'POST', mode: 'no-cors', keepalive: true, body: JSON.stringify({ name: playerName, import: pending }) })
-                .then(() => { try { localStorage.removeItem('painWheelSheetImport'); } catch (e) {} }).catch(() => {});
+                .then(() => setTimeout(check, 2500)).catch(() => {});
         } catch (e) {}
     }
     function moveToast(msg) {
