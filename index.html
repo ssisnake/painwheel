@@ -497,7 +497,7 @@
        them. The old page builds a link (or a code) holding this browser's painWheel* data;
        opening it on the new page merges it in here, before anything else reads storage. */
     const NEW_WHEEL_URL = 'https://ssisnake.github.io/painwheel/';
-    const MOVE_OPEN = false;   // flip to true when the new link + leaderboard are ready: shows the "we moved" banner on the old link
+    const MOVE_OPEN = true;    // flip to true when the new link + leaderboard are ready: shows the "we moved" banner on the old link
     const MOVE_KEYS = ['painWheelPlayer', 'painWheelStats', 'painWheelAchievements', 'painWheelRetBuffs', 'painWheelAllTimeSpins',
         'painWheelVolume', 'painWheelTheme', 'painWheelCalloutIdx', 'painWheelSkippedName'];
     function makeMoveCode() {
