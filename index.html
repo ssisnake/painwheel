@@ -219,6 +219,7 @@
             </label>
             <button id="statsBtn" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold cursor-pointer">📊 My Stats</button>
             <button id="bagBtn" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold cursor-pointer">🎒 Bag</button>
+            <button id="homeBtn" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold cursor-pointer">🏠 Home</button>
             <label class="flex items-center gap-1.5 text-slate-400">
                 <span>Theme</span>
                 <select id="themePicker" class="bg-slate-900 border border-slate-700 rounded-md px-2 py-1 text-slate-200 cursor-pointer"></select>
@@ -353,10 +354,46 @@
         </div>
     </div>
     <div id="lootToast" style="z-index: 74; left: 16px; bottom: 96px;" class="fixed hidden px-4 py-2.5 rounded-lg border bg-slate-950/95 shadow-2xl text-sm font-bold max-w-[calc(100vw-32px)]"></div>
-    <div id="timeshareHouse" style="z-index: 60" class="fixed bottom-2 left-1/2 -translate-x-1/2 hidden flex-col items-center cursor-pointer select-none" title="Your Undermine timeshare">
+    <div id="timeshareHouse" style="z-index: 60" class="fixed bottom-2 left-1/2 -translate-x-1/2 hidden flex-col items-center cursor-pointer select-none" title="Click to manage your goblin property">
         <div id="timeshareBubble" class="hidden mb-1 px-2 py-1 rounded bg-emerald-950 border border-emerald-500 text-emerald-100 text-[11px] font-bold whitespace-nowrap"></div>
-        <div class="text-5xl leading-none">🏚️</div>
-        <div style="font-size:9px;font-weight:900;letter-spacing:.06em;color:#fde047;background:rgba(0,0,0,.7);padding:0 6px;border-radius:4px;text-transform:uppercase">Your Timeshare (1/52nd)</div>
+        <div id="houseEmoji" class="text-5xl leading-none">🏚️</div>
+        <div id="houseLabel" style="font-size:9px;font-weight:900;letter-spacing:.06em;color:#fde047;background:rgba(0,0,0,.7);padding:0 6px;border-radius:4px;text-transform:uppercase">Your Timeshare (1/52nd)</div>
+    </div>
+    <div id="housePanel" style="z-index: 72" class="fixed inset-0 hidden items-center justify-center bg-slate-950/85 backdrop-blur-sm p-4">
+        <div class="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl p-5 shadow-2xl border-2 border-emerald-600" style="background: linear-gradient(170deg,#052e16,#0f172a 45%,#1c1402);">
+            <div class="flex items-center justify-between mb-2">
+                <div class="text-lg font-black uppercase tracking-tight text-emerald-300">🏚️ Goblin Property Management</div>
+                <button id="houseClose" class="text-slate-400 hover:text-white text-sm font-bold cursor-pointer">✕</button>
+            </div>
+            <div class="text-center">
+                <div id="hpEmoji" style="font-size:72px;line-height:1.1">🏚️</div>
+                <div id="hpName" class="font-black text-xl text-yellow-300"></div>
+                <div id="hpDesc" class="text-sm text-emerald-100/80 italic"></div>
+                <div id="hpIncome" class="text-xs text-slate-300 mt-1 mono"></div>
+            </div>
+            <div class="mt-3 flex flex-col items-center gap-1">
+                <button id="hpUpgrade" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-black cursor-pointer"></button>
+                <div id="hpMsg" class="text-xs text-amber-300 font-bold min-h-[1rem] text-center"></div>
+            </div>
+            <div class="mt-3 pt-3 border-t border-emerald-900">
+                <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">💸 Goblin debt</div>
+                <div class="flex items-center gap-2 flex-wrap text-sm">
+                    <span id="hpDebt" class="mono text-red-300 font-bold"></span>
+                    <button id="hpPay100" class="px-2 py-1 rounded bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold cursor-pointer">Pay 100g</button>
+                    <button id="hpPayAll" class="px-2 py-1 rounded bg-red-800 hover:bg-red-700 text-white text-xs font-bold cursor-pointer">Pay it all off</button>
+                </div>
+                <div class="text-[11px] text-slate-500 mt-1">Debt grows 1% every 10 minutes. 400% APR, as promised.</div>
+            </div>
+            <div class="mt-3 pt-3 border-t border-emerald-900">
+                <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">🎟️ Goblin Scratch-Off (50g)</div>
+                <div class="flex items-center gap-2">
+                    <div id="scratchCells" class="flex gap-1.5"></div>
+                    <button id="scratchBuy" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">Buy ticket</button>
+                </div>
+                <div id="scratchMsg" class="text-xs text-slate-300 mt-1 min-h-[1rem]"></div>
+                <div class="text-[11px] text-slate-500">Match 3: 💰 100g · 🍺 250g · 🔨 1,000g · 👑 5,000g. Scratch all three cells.</div>
+            </div>
+        </div>
     </div>
     <div id="eventBanner" style="z-index: 77; top: 84px;" class="fixed left-1/2 -translate-x-1/2 hidden px-5 py-2.5 rounded-xl border-2 border-red-500 bg-red-950/95 text-red-100 font-black text-base md:text-lg shadow-2xl text-center"></div>
     <div id="disconnectScreen" style="z-index: 90" class="fixed inset-0 hidden items-center justify-center bg-black/90">
@@ -3004,7 +3041,7 @@
         isSpinning = true;
         spinBtn.disabled = true; spinBtn.classList.add('opacity-60');
         closeModal();
-        cheetoCrumbSpin = Math.random() < 1 / 100;
+        cheetoCrumbSpin = Math.random() < 1 / 25;
         stopChuckClip(); stopAllClips(); cutAllSounds();
 
         // 1-in-40: the wheel goes silent except for a single smoke-detector chirp
@@ -3145,6 +3182,10 @@
         { id: 'orangetext', name: 'Orange Text',              desc: 'Loot a legendary item.' },
         { id: 'collector1', name: 'Starting a Collection',    desc: 'Complete a loot set.' },
         { id: 'collectorall', name: 'Museum Curator',         desc: 'Complete all 7 loot sets.' },
+        { id: 'debtfree',   name: 'Debt Free',                desc: 'Pay off your goblin bailout debt.' },
+        { id: 'castle',     name: 'Goblin Baron',             desc: 'Upgrade your timeshare to an Undermine Castle.' },
+        { id: 'yacht',      name: 'Gallywix Who?',            desc: "Upgrade all the way to Gallywix's Yacht." },
+        { id: 'jackpot',    name: 'Scratch That',             desc: 'Win 1,000g or more on a goblin scratch-off.' },
         { id: 'konami',     name: '+30 Lives',                desc: 'Enter the Konami code.' },
         { id: 'adclick',    name: 'Shut Up and Take My Gold', desc: "Click a popup ad's big button." },
         { id: 'ashbringer', name: 'Server First!',            desc: 'Obtain [Ashbringer] (1-in-500 spin).' }
@@ -3426,6 +3467,46 @@
         });
         modalCard.style.visibility = 'hidden';
     }
+    // Mephisto: the scream cracks the popup, then it shatters into falling shards
+    function crackCard(step) {
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('viewBox', '0 0 100 100'); svg.setAttribute('preserveAspectRatio', 'none');
+        svg.setAttribute('class', 'chopper-part');
+        svg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:40';
+        const paths = step === 1
+            ? ['M52 0 L47 18 L55 31 L44 47 L51 62', 'M47 18 L30 24 L18 21', 'M55 31 L72 36 L86 30']
+            : ['M51 62 L43 78 L50 100', 'M44 47 L24 55 L8 70 L0 74', 'M51 62 L68 70 L84 66 L100 74', 'M30 24 L22 40 L6 44', 'M72 36 L80 52 L96 55'];
+        paths.forEach(d => {
+            const pth = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            pth.setAttribute('d', d); pth.setAttribute('fill', 'none'); pth.setAttribute('stroke', '#fff'); pth.setAttribute('stroke-width', '0.7');
+            pth.setAttribute('vector-effect', 'non-scaling-stroke'); pth.style.filter = 'drop-shadow(0 0 2px #000) drop-shadow(0 0 4px #ef4444)';
+            pth.style.strokeWidth = '2.5px';
+            svg.appendChild(pth);
+        });
+        modalCard.appendChild(svg);
+    }
+    function shatterCard() {
+        const r = modalCard.getBoundingClientRect();
+        const shards = ['polygon(0 0, 52% 0, 47% 18%, 30% 24%, 0 21%)', 'polygon(52% 0, 100% 0, 100% 30%, 72% 36%, 55% 31%, 47% 18%)',
+            'polygon(0 21%, 30% 24%, 44% 47%, 24% 55%, 0 74%)', 'polygon(30% 24%, 47% 18%, 55% 31%, 72% 36%, 68% 70%, 51% 62%, 44% 47%)',
+            'polygon(72% 36%, 100% 30%, 100% 74%, 68% 70%)', 'polygon(0 74%, 24% 55%, 44% 47%, 51% 62%, 43% 78%, 50% 100%, 0 100%)',
+            'polygon(51% 62%, 68% 70%, 100% 74%, 100% 100%, 50% 100%, 43% 78%)'];
+        shards.forEach((clip, i) => {
+            const c = modalCard.cloneNode(true);
+            c.querySelectorAll('.hidden, svg.chopper-part').forEach(e => e.remove());
+            c.removeAttribute('id'); c.querySelectorAll('[id]').forEach(e => e.removeAttribute('id'));
+            c.classList.add('card-piece'); c.classList.remove('clussy-shake', 'winner-animate', 'ear-blast');
+            Object.assign(c.style, { left: r.left + 'px', top: r.top + 'px', width: r.width + 'px', height: r.height + 'px', margin: '0', clipPath: clip,
+                transition: `transform ${0.9 + Math.random() * 0.5}s cubic-bezier(.5,0,.9,.6), opacity 1.2s ease-in ${0.3 + Math.random() * 0.3}s` });
+            document.body.appendChild(c);
+            const dx = (i % 3 - 1) * (40 + Math.random() * 80), rot = (Math.random() - 0.5) * 90;
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                c.style.transform = `translate(${dx}px, ${420 + Math.random() * 260}px) rotate(${rot}deg)`;
+                c.style.opacity = '0';
+            }));
+        });
+        modalCard.style.visibility = 'hidden';
+    }
     function clearCardEffects() {
         document.querySelectorAll('.card-piece, #burnFlames').forEach(e => e.remove());
         modalCard.querySelectorAll('.glaive-fly, .slash-mark, .cast-bar, .chopper-part, .peaking').forEach(e => e.remove());
@@ -3554,7 +3635,10 @@
             const b = document.createElement('div'); b.className = 'peaking'; b.textContent = '🔊 AUDIO PEAKING 🔊';
             modalCard.appendChild(b);
             later(() => { modalCard.classList.remove('ear-blast'); void modalCard.offsetWidth; modalCard.classList.add('ear-blast'); }, 150);
-            later(() => { modalCard.classList.remove('ear-blast'); void modalCard.offsetWidth; modalCard.classList.add('ear-blast'); }, 2200);
+            later(() => crackCard(1), 950);                       // right after MEPHISTOOO
+            later(() => crackCard(2), 1450);
+            later(() => { if (soundOn()) { try { playSlashSound(); } catch (e) {} } shatterCard(); }, 2300);
+            later(() => closeModal(), 3800);
         }
         if (w.door) {
             later(() => { modalCard.classList.add('leave-room'); }, 1700);
@@ -4333,7 +4417,7 @@
             waiting = true;
             (function attempt() {
                 if (!due() || !ad.classList.contains('hidden')) { waiting = false; return; }
-                const overlayOpen = ['welcome', 'statsPanel', 'cheatSheet', 'ashbringer', 'moveModal'].some(id => !$(id).classList.contains('hidden'));
+                const overlayOpen = ['welcome', 'statsPanel', 'cheatSheet', 'ashbringer', 'moveModal', 'bagPanel', 'housePanel'].some(id => !$(id).classList.contains('hidden'));
                 if (isSpinning || !winnerModal.classList.contains('hidden') || overlayOpen) return setTimeout(attempt, 1500);
                 waiting = false;
                 show();
@@ -4534,7 +4618,7 @@
     }
     function idleScreen() {
         return !isSpinning && winnerModal.classList.contains('hidden') && $('lawAd').classList.contains('hidden')
-            && ['welcome', 'statsPanel', 'cheatSheet', 'ashbringer', 'moveModal', 'bagPanel'].every(id => !$(id) || $(id).classList.contains('hidden'));
+            && ['welcome', 'statsPanel', 'cheatSheet', 'ashbringer', 'moveModal', 'bagPanel', 'housePanel'].every(id => !$(id) || $(id).classList.contains('hidden'));
     }
     // Server Shutdown: a fake countdown and a fake disconnect, roughly every 20 minutes of sitting on the page
     setInterval(() => {
@@ -4872,7 +4956,106 @@
     // ---------- timeshare house (from the Undermine timeshare ad) ----------
     const HOUSE_LINES = ['Payment due: 9,999g', 'Ocean view* (*a puddle of oil)', 'Mini-fridge is a bomb. Do not open.', '1/52nd of a sewer, all yours',
         'HOA meeting tonight. Attendance mandatory.', 'Goblin Glider still not refunded', 'Your week: Feb 30th'];
-    function showHouse() { const h = $('timeshareHouse'); h.classList.remove('hidden'); h.classList.add('flex'); }
+    // ---------- goblin property: upgrade the timeshare with gold; higher levels pay rent instead of HOA fees ----------
+    const HOUSE_LEVELS = [
+        { e: '🏚️', name: 'Timeshare (1/52nd)', desc: 'A sewer with a door. You own one week a year.', rent: -25, cost: 0 },
+        { e: '🛖', name: 'Goblin Hut', desc: 'You own the whole week now. The door even locks.', rent: 20, cost: 500 },
+        { e: '🏠', name: 'Undermine Cottage', desc: 'Running water! (It is oil.)', rent: 60, cost: 2000 },
+        { e: '🏡', name: 'House with a Garden', desc: 'The garden is mostly explosives. Neighbors are nervous.', rent: 150, cost: 6000 },
+        { e: '🏘️', name: 'Goblin Estate', desc: 'You are now a landlord. Your tenants are all Kevin.', rent: 400, cost: 15000 },
+        { e: '🏰', name: 'Undermine Castle', desc: 'Gallywix has started returning your calls.', rent: 1000, cost: 40000 },
+        { e: '🛥️', name: "Gallywix's Yacht", desc: 'You won capitalism. Reb is drinking on the deck.', rent: 2500, cost: 100000 }
+    ];
+    let houseLevel = store.get('painWheelHouseLevel', 0);
+    function houseInfo() { return HOUSE_LEVELS[houseLevel]; }
+    function renderHouseIcon() {
+        const h = houseInfo(); $('houseEmoji').textContent = h.e;
+        $('houseLabel').textContent = houseLevel ? `Your ${h.name}` : 'Your Timeshare (1/52nd)';
+    }
+    function renderHousePanel() {
+        const h = houseInfo(), next = HOUSE_LEVELS[houseLevel + 1];
+        $('hpEmoji').textContent = h.e; $('hpName').textContent = h.name; $('hpDesc').textContent = h.desc;
+        $('hpIncome').textContent = h.rent < 0 ? (hasPerk('goblin') ? 'HOA fee: waived (Goblin Portfolio)' : `HOA fee: ${h.rent}g every 10 minutes`) : `Rent income: +${h.rent.toLocaleString()}g every 10 minutes`;
+        const up = $('hpUpgrade');
+        if (!store.get('painWheelTimeshare', false)) { up.textContent = 'Buy the timeshare (100g)'; up.disabled = false; }
+        else if (next) { up.textContent = `Upgrade to ${next.e} ${next.name}: ${next.cost.toLocaleString()}g`; up.disabled = false; }
+        else { up.textContent = 'Fully upgraded. You are the goblin now.'; up.disabled = true; }
+        $('hpDebt').textContent = goblinDebt ? `You owe ${goblinDebt.toLocaleString()}g` : 'Debt free! 🎉';
+        $('hpPay100').style.display = $('hpPayAll').style.display = goblinDebt ? '' : 'none';
+        renderScratch();
+    }
+    $('hpUpgrade').addEventListener('click', () => {
+        const msg = $('hpMsg');
+        if (!store.get('painWheelTimeshare', false)) {
+            if (gold < 100) { msg.textContent = 'You need 100g. Try a goblin bailout (lol).'; return; }
+            setGold(gold - 100); buyTimeshare(); renderHousePanel(); msg.textContent = 'Welcome, homeowner.'; return;
+        }
+        const next = HOUSE_LEVELS[houseLevel + 1]; if (!next) return;
+        if (gold < next.cost) { msg.textContent = `You need ${(next.cost - gold).toLocaleString()}g more.`; return; }
+        setGold(gold - next.cost); houseLevel++; store.set('painWheelHouseLevel', houseLevel);
+        renderHouseIcon(); renderHousePanel();
+        msg.textContent = `Upgraded to ${next.name}!`;
+        houseSay(`Welcome to your ${next.name}!`);
+        chatBurst(['HOUSE UPGRADE POG', 'real estate mogul', 'goblin W', 'landlord arc', 'rent is due KEKW'], 3);
+        launchConfetti(['💰', '🏠', '✨'], ['#4ade80', '#facc15', '#ffffff'], 0.5, 0.5);
+        if (houseLevel >= 5) unlock('castle');
+        if (houseLevel >= 6) unlock('yacht');
+    });
+    function payDebt(amt) {
+        amt = Math.min(amt, goblinDebt, gold);
+        if (amt <= 0) { $('hpMsg').textContent = gold <= 0 ? 'You are broke. The goblins laugh.' : ''; return; }
+        setGold(gold - amt); goblinDebt -= amt; store.set('painWheelDebt', goblinDebt);
+        if (!goblinDebt) { unlock('debtfree'); $('hpMsg').textContent = 'DEBT FREE! The goblins are furious.'; chatBurst(['DEBT FREE POG', 'financially literate W', 'goblins seething'], 3); }
+        renderGold(); renderHousePanel();
+    }
+    $('hpPay100').addEventListener('click', () => payDebt(100));
+    $('hpPayAll').addEventListener('click', () => payDebt(goblinDebt));
+    setInterval(() => { if (goblinDebt && !document.hidden) { goblinDebt = Math.ceil(goblinDebt * 1.01); store.set('painWheelDebt', goblinDebt); renderGold(); } }, 10 * 60 * 1000);
+    // scratch-off: 3 cells, match all three to win
+    const SCRATCH = [['💀', 50], ['💰', 25], ['🍺', 12], ['🔨', 4], ['👑', 1]];
+    const SCRATCH_PAY = { '💰': 100, '🍺': 250, '🔨': 1000, '👑': 5000 };
+    let ticket = null;
+    function scratchSym() { let r = Math.random() * 92; for (const [e, w] of SCRATCH) { r -= w; if (r <= 0) return e; } return '💀'; }
+    function renderScratch() {
+        const c = $('scratchCells'); c.innerHTML = '';
+        for (let i = 0; i < 3; i++) {
+            const b = document.createElement('button');
+            const shown = ticket && ticket.open[i];
+            b.className = 'w-11 h-11 rounded-md border-2 text-2xl font-black cursor-pointer ' + (shown ? 'bg-slate-900 border-amber-500' : 'border-amber-700');
+            b.style.background = shown ? '' : 'repeating-linear-gradient(45deg,#a16207 0 6px,#ca8a04 6px 12px)';
+            b.textContent = shown ? ticket.sym[i] : (ticket ? '?' : '');
+            b.disabled = !ticket || shown;
+            b.addEventListener('click', () => { ticket.open[i] = true; renderScratch(); if (ticket.open.every(Boolean)) settleTicket(); });
+            c.appendChild(b);
+        }
+        $('scratchBuy').disabled = !!ticket;
+    }
+    function settleTicket() {
+        const t = ticket; ticket = null;
+        const win = t.sym[0] === t.sym[1] && t.sym[1] === t.sym[2] ? SCRATCH_PAY[t.sym[0]] || 0 : 0;
+        if (win) { setGold(gold + win); $('scratchMsg').textContent = `WINNER! +${win.toLocaleString()}g`; chatBurst(['SCRATCH WIN POG', 'gamba W', 'lucky goblin'], 2); if (win >= 1000) unlock('jackpot'); }
+        else if (t.sym[0] === '💀' && t.sym[1] === '💀' && t.sym[2] === '💀') $('scratchMsg').textContent = 'Three skulls. The goblins point and laugh.';
+        else $('scratchMsg').textContent = pick(['No match. The goblins thank you.', 'So close. (Not really.)', 'Try again! Gambling is a solid retirement plan.']);
+        setTimeout(() => { $('scratchBuy').disabled = false; }, 300);
+        renderScratchAfter(t);
+    }
+    function renderScratchAfter(t) {   // keep the finished ticket visible until the next one
+        const c = $('scratchCells'); c.innerHTML = '';
+        t.sym.forEach(e => { const d = document.createElement('div'); d.className = 'w-11 h-11 rounded-md border-2 border-slate-600 bg-slate-900 text-2xl flex items-center justify-center'; d.textContent = e; c.appendChild(d); });
+    }
+    $('scratchBuy').addEventListener('click', () => {
+        if (ticket) return;
+        if (gold < 50) { $('scratchMsg').textContent = 'Tickets are 50g. You are broke.'; return; }
+        setGold(gold - 50);
+        // 8% of tickets are rigged to match (the goblins want you hooked)
+        const sym = [scratchSym(), scratchSym(), scratchSym()];
+        if (Math.random() < 0.08) sym[1] = sym[2] = sym[0];
+        ticket = { sym, open: [false, false, false] };
+        $('scratchMsg').textContent = 'Scratch all three!'; renderScratch();
+    });
+    function openHousePanel() { renderHousePanel(); $('hpMsg').textContent = ''; const p = $('housePanel'); p.classList.remove('hidden'); p.classList.add('flex'); }
+    $('houseClose').addEventListener('click', () => { const p = $('housePanel'); p.classList.add('hidden'); p.classList.remove('flex'); });
+    function showHouse() { const h = $('timeshareHouse'); h.classList.remove('hidden'); h.classList.add('flex'); renderHouseIcon(); }
     function houseSay(t) { const b = $('timeshareBubble'); b.textContent = t; b.classList.remove('hidden'); clearTimeout(houseSay.t); houseSay.t = setTimeout(() => b.classList.add('hidden'), 3500); }
     function buyTimeshare() {
         const first = !store.get('painWheelTimeshare', false);
@@ -4880,10 +5063,13 @@
         houseSay(first ? 'Congratulations, homeowner!' : 'You bought ANOTHER week. Bold.');
         chatBurst(['he bought the timeshare KEKW', 'scammed', 'goblin W', 'enjoy the sewer'], 3);
     }
-    $('timeshareHouse').addEventListener('click', () => houseSay(pick(HOUSE_LINES)));
+    $('timeshareHouse').addEventListener('click', () => { if (!houseLevel) houseSay(pick(HOUSE_LINES)); openHousePanel(); });
     if (store.get('painWheelTimeshare', false)) showHouse();
-    setInterval(() => {   // the HOA fee never stops
+    $('homeBtn').addEventListener('click', () => { openHousePanel(); $('homeBtn').blur(); });
+    setInterval(() => {   // every 10 minutes: HOA fee on the timeshare, rent once you've upgraded
         if (!store.get('painWheelTimeshare', false) || document.hidden) return;
+        const h = houseInfo();
+        if (h.rent > 0) { setGold(gold + h.rent); houseSay(`Rent collected: +${h.rent.toLocaleString()}g`); return; }
         if (hasPerk('goblin')) { houseSay('HOA fee waived (Goblin Portfolio)'); return; }
         setGold(gold - 25); houseSay('HOA fee: -25g');
     }, 10 * 60 * 1000);
