@@ -322,6 +322,9 @@
             <div id="statsTop" class="space-y-1 mb-4 text-sm"></div>
             <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Achievements <span id="achCount" class="text-amber-300"></span></div>
             <div id="achList" class="grid grid-cols-1 sm:grid-cols-2 gap-1.5"></div>
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mt-4 mb-1">Slices you haven't landed on yet <span id="unseenCount" class="text-amber-300"></span></div>
+            <div class="text-[11px] text-slate-500 mb-2">Land on 40 different kinds for <b>Seen It All</b>. Numbers are slice numbers on the wheel (they show in the zoom cam).</div>
+            <div id="unseenList" class="flex flex-wrap gap-1 text-[11px]"></div>
             <div id="guildSection" class="hidden mt-5">
                 <div class="flex items-center justify-between mb-2">
                     <div class="text-xs font-bold uppercase tracking-wider text-slate-400">🏰 Guild leaderboard</div>
@@ -505,6 +508,7 @@
                 <div id="knobNews" class="mt-2 text-[11px] text-slate-400 mono truncate">Market open. Reb is awake.</div>
                 <div class="mt-2 flex items-center gap-2 text-[11px]">
                     <button id="knobBuy" class="px-2 py-1 rounded bg-emerald-700 hover:bg-emerald-600 text-white font-bold cursor-pointer">Buy 1 share</button>
+                    <button id="knobSell1" class="px-2 py-1 rounded bg-slate-700 hover:bg-slate-600 text-white font-bold cursor-pointer">Sell 1</button>
                     <button id="knobSell" class="px-2 py-1 rounded bg-slate-700 hover:bg-slate-600 text-white font-bold cursor-pointer">Sell all</button>
                     <span id="knobHold" class="text-slate-400 mono truncate">You own 0 shares</span>
                 </div>
@@ -3260,6 +3264,15 @@
             const b = document.createElement('div'); b.className = 'text-xl font-black text-slate-100'; b.style.fontVariantNumeric = 'tabular-nums'; b.textContent = v;
             d.append(a, b); grid.appendChild(d);
         });
+        const seen = Object.keys(stats.byType).length, un = $('unseenList'); un.innerHTML = '';
+        $('unseenCount').textContent = `(${seen} / 40 kinds landed${(stats.byType.KEVIN || 0) < 50 ? ` · Kevins ${stats.byType.KEVIN || 0} / 50` : ''})`;
+        TYPES.filter(t => !stats.byType[t.id]).forEach(t => {
+            const chip = document.createElement('span');
+            chip.className = 'px-1.5 py-0.5 rounded border border-slate-700 bg-slate-950/70 text-slate-300';
+            chip.textContent = `${t.pill} #${(indicesOf[t.id] || []).map(i => i + 1).join(', #')}`;
+            un.appendChild(chip);
+        });
+        if (!un.children.length) un.innerHTML = '<span class="text-emerald-300 font-bold">You have landed on every slice. Seek help.</span>';
         const top = $('statsTop'); top.innerHTML = '';
         const rows = Object.entries(stats.byType).sort((a, b) => b[1] - a[1]).slice(0, 6);
         if (!rows.length) top.innerHTML = '<div class="text-slate-500 text-sm">No spins yet. Go spin!</div>';
@@ -4709,6 +4722,11 @@
         if (gold < cost) { $('knobNews').textContent = `📉 You need ${cost}g for one share. You have ${gold}g.`; return; }
         knobShares++; store.set('painWheelKnobShares', knobShares); setGold(gold - cost);
         chat(pick(['buying the top KEKW', 'diamond hands', 'Reb thanks you', '$KNOB to the moon']));
+    });
+    $('knobSell1').addEventListener('click', () => {
+        if (!knobShares) return;
+        const got = Math.round(knobNow); knobShares--; store.set('painWheelKnobShares', knobShares); setGold(gold + got);
+        $('knobNews').textContent = `💸 Sold 1 share for ${got.toLocaleString()}g.`;
     });
     $('knobSell').addEventListener('click', () => {
         if (!knobShares) return;
