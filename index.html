@@ -207,6 +207,13 @@
         @keyframes beamC { to { transform: translate(30vw, -40vh); } }
         @keyframes hueSpin { to { filter: blur(60px) hue-rotate(360deg); } }
         @keyframes ballSpin { from { transform: translateX(-50%) rotate(0); } to { transform: translateX(-50%) rotate(360deg); } }
+        /* CLUCK! quest */
+        #wildChicken { position: fixed; z-index: 59; bottom: 64px; left: -80px; font-size: 46px; line-height: 1; cursor: pointer; user-select: none; transition: left linear; }
+        #wildChicken .em { display: inline-block; animation: chickenWalk .35s ease-in-out infinite alternate; }
+        #wildChicken.flip .em { transform: scaleX(-1); }
+        @keyframes chickenWalk { from { translate: 0 0; } to { translate: 0 -4px; } }
+        #wildChicken .bub { position: absolute; bottom: 52px; left: 50%; transform: translateX(-50%); white-space: nowrap; background: #fffbe6; color: #111; font-size: 12px; font-weight: 800; padding: 3px 8px; border-radius: 8px; border: 1.5px solid #111; }
+        .quest-box { background: linear-gradient(180deg,#f5e6c4,#e6cf9c); color: #3b2512; border: 3px solid #7c5a2a; box-shadow: 0 10px 40px rgba(0,0,0,.7); font-family: Georgia, serif; }
         @media (prefers-reduced-motion: reduce) { #partyLights .beam, #partyLights .ball { animation: none; } }
     </style>
 </head>
@@ -433,6 +440,21 @@
         <div class="text-lg leading-none">📢</div>
         <div><div class="text-[10px] font-black uppercase tracking-widest text-sky-300">Guild announcement</div><div id="announceText" class="text-sm font-bold whitespace-pre-line"></div></div>
         <button id="announceClose" class="text-sky-300 hover:text-white text-sm font-bold cursor-pointer">✕</button>
+    </div>
+    <div id="questTracker" style="z-index: 57; right: 16px; top: 180px; width: 230px;" class="fixed hidden flex-col text-right select-none">
+        <div style="color:#ffd100;font-weight:900;font-size:14px;text-shadow:0 1px 2px #000">CLUCK!</div>
+        <div id="questObj" style="color:#fff;font-size:12px;text-shadow:0 1px 2px #000;line-height:1.4"></div>
+    </div>
+    <div id="questDialog" style="z-index: 80" class="fixed inset-0 hidden items-center justify-center bg-black/60 p-4">
+        <div class="quest-box w-full rounded-lg p-5" style="max-width:420px">
+            <div id="questTitle" class="text-2xl font-black text-center" style="color:#5b3a12">CLUCK!</div>
+            <div id="questText" class="mt-3 text-sm leading-relaxed"></div>
+            <div id="questObjText" class="mt-3 text-sm"></div>
+            <div class="mt-4 flex justify-end gap-2" style="font-family:system-ui,sans-serif">
+                <button id="questNo" class="px-4 py-1.5 rounded border-2 font-bold text-sm cursor-pointer" style="background:#7f1d1d;border-color:#fca5a5;color:#fff">Decline</button>
+                <button id="questYes" class="px-4 py-1.5 rounded border-2 font-bold text-sm cursor-pointer" style="background:#166534;border-color:#86efac;color:#fff">Accept</button>
+            </div>
+        </div>
     </div>
     <div id="shopPanel" style="z-index: 72" class="fixed inset-0 hidden items-center justify-center bg-slate-950/85 backdrop-blur-sm p-4">
         <div class="w-full max-w-2xl flex flex-col rounded-2xl p-5 shadow-2xl border-2 border-amber-500" style="max-height:90vh;max-width:42rem;background: linear-gradient(170deg,#1c1402,#0f172a 45%,#052e16);">
@@ -3364,13 +3386,14 @@
         { id: 'aipac3',     name: 'Bought a Committee Seat',  desc: 'Reach the Silver lobbying tier (1,000g).' },
         { id: 'aipac4',     name: 'Bought a Senator',         desc: 'Reach the Gold lobbying tier (1,000,000g).' },
         { id: 'aipac5',     name: 'Bought Congress',          desc: 'Reach the Platinum lobbying tier (1,000,000,000g).' },
-        { id: 'rocket',     name: 'Billionaire Space Race',   desc: 'Buy the 100,000,000g rocket.' },
+        { id: 'rocket',     name: 'Billionaire Space Race',   desc: 'Buy the 10,000,000,000g rocket.' },
         { id: 'weewoo',     name: 'Wee-Woo',                  desc: "Buy Nick's ambulance." },
         { id: 'golddonut',  name: 'To Protect and Serve',     desc: "Find Justin's Golden Chocolate Donut." },
         { id: 'rugpull',    name: 'Rug Pulled',               desc: 'Ape into $KEVCOIN.' },
         { id: 'taxman',     name: 'Death and Taxes',          desc: 'Pay the Tuesday reset income tax.' },
         { id: 'drip',       name: 'Drip',                     desc: 'Buy something cosmetic from the shop.' },
         { id: 'boughtaotc', name: 'Pulled a Krom',            desc: "Buy Krom's AOTC carry. Shameful." },
+        { id: 'cluck',      name: 'CLUCK!',                   desc: 'Complete the Westfall chicken\'s quest.' },
         { id: 'clippy',     name: "It Looks Like You're Adopting a Paperclip", desc: 'Find and adopt the secret pet.', secret: true, secretName: true }
     ];
     let achQueue = [], achShowing = false;
@@ -4162,6 +4185,11 @@
             if (window.showAdById) window.showAdById('knobcreek');
             return;
         }
+        if (typedBuffer.endsWith("chicken") || typedBuffer.endsWith("cluck")) {   // /chicken at a wandering chicken
+            typedBuffer = ""; setRigMode("FAIR");
+            chickenEmote();
+            return;
+        }
         if (typedBuffer.endsWith("kana")) {
             typedBuffer = "";
             setRigMode("FAIR"); // typing k-a-n-a pressed rig hotkeys along the way; undo that
@@ -4655,7 +4683,7 @@
     GEMINI_ADS.push(
         { id: 'rugpull', theme: 'spam', effect: 'rugpull', header: '🚀 $KEVCOIN PRESALE: 10,000× GUARANTEED 🚀', body: "Kevin is launching a coin. The dev is doxxed (it's Kevin). Liquidity is locked (the lock is also Kevin). Put in ALL your gold before it moons!", primary: '💎 APE IN (ALL MY GOLD)', reply: 'Transaction confirmed... wait, where did the website go?', close: "I've met Kevin" },
         { id: 'aotc-carry', theme: 'gold', effect: 'aotccarry', header: "🏆 KROM'S AOTC CARRY SERVICE 🏆", body: "Why earn it like a guild when you can BUY it like a GM? Krom did it, and he only lost every single raider. Now you can too. Everyone will know. Everyone.", primary: '💳 DO A KROM (UNLOCK IN SHOP)', reply: "Krom's AOTC Carry is now in the Shop (Consumables → Black market). Discord will be told when you buy it. :)", close: 'I have dignity (unlike Krom)' },
-        { id: 'kanarenew', theme: 'vip', header: '📺 YOUR KANA+ PREMIUM HAS EXPIRED', body: 'We noticed you have been enjoying ad-free spinning. That was a mistake on our part. Renew now and the brooding demon hunters return, ad-free!', primary: 'RENEW (10,000g IN THE SHOP)', reply: 'Renewal is in the Shop → Consumables. We will be waiting. Right here. In this ad.', close: 'I like ads now' }
+        { id: 'kanarenew', theme: 'vip', header: '📺 YOUR KANA+ PREMIUM HAS EXPIRED', body: 'We noticed you have been enjoying ad-free spinning. That was a mistake on our part. Renew now and the brooding demon hunters return, ad-free!', primary: 'RENEW (1,000,000g IN THE SHOP)', reply: 'Renewal is in the Shop → Consumables. We will be waiting. Right here. In this ad.', close: 'I like ads now' }
     );
     GEMINI_ADS.forEach(a => {
         const st = AD_STYLES[a.theme];
@@ -5687,9 +5715,9 @@
         body.innerHTML = '';
         const add = (el) => body.appendChild(el);
         if (shopTab === 'themes') {
-            add(shopHead('Joke themes · 25,000g'));
+            add(shopHead('Joke themes · 2,500,000g'));
             THEMES.filter(t => t.group === 'joke').forEach(t => add(themeRow(t)));
-            add(shopHead('Class themes · 10,000g'));
+            add(shopHead('Class themes · 1,000,000g'));
             THEMES.filter(t => t.group === 'class').forEach(t => add(themeRow(t)));
             const n = document.createElement('div'); n.className = 'text-[11px] text-slate-500'; n.textContent = 'Owned themes show up in the theme menu in the header. Holiday themes still come for free.'; add(n);
         } else if (shopTab === 'cosmetics') {
@@ -5707,33 +5735,37 @@
                 () => { if (!spend(c, t)) return; ownedTitles[t] = true; store.set('painWheelTitles', ownedTitles); unlock('drip'); equipTitle(t); },
                 () => equipTitle(t))));
         } else if (shopTab === 'consumables') {
-            add(shopRow('🧪', 'Flask of Loot', `Your next 10 spins all drop loot. (${flaskLoot} charges left)`, 'Buy: 2,500g', () => { if (!spend(2500, 'a Flask of Loot')) return; flaskLoot += 10; store.set('painWheelFlask', flaskLoot); shopMsg('Glug glug. Next 10 spins drop loot.'); renderShop(); }));
-            add(shopRow('📜', 'Mulligan Scroll', `If your next bet loses, you get it all back. (${mulligan} held)`, 'Buy: 1,500g', () => { if (!spend(1500, 'a Mulligan Scroll')) return; mulligan++; store.set('painWheelMulligan', mulligan); shopMsg('Scroll ready. Go lose a bet.'); renderShop(); }));
-            add(shopRow('🥃', 'Bottle for Reb', "Fully restores Reb's liver. Somehow.", 'Buy: 500g', () => {
+            add(shopRow('🧪', 'Flask of Loot', `Your next 10 spins all drop loot. (${flaskLoot} charges left)`, 'Buy: 250,000g', () => { if (!spend(250000, 'a Flask of Loot')) return; flaskLoot += 10; store.set('painWheelFlask', flaskLoot); shopMsg('Glug glug. Next 10 spins drop loot.'); renderShop(); }));
+            add(shopRow('📜', 'Mulligan Scroll', `If your next bet loses, you get it all back. (${mulligan} held)`, 'Buy: 150,000g', () => { if (!spend(150000, 'a Mulligan Scroll')) return; mulligan++; store.set('painWheelMulligan', mulligan); shopMsg('Scroll ready. Go lose a bet.'); renderShop(); }));
+            add(shopRow('🥃', 'Bottle for Reb', "Fully restores Reb's liver. Somehow.", 'Buy: 50,000g', () => {
                 if (liverDown) { shopMsg("Reb is in the hospital. They won't let you bring that in."); return; }
-                if (!spend(500, 'a bottle for Reb')) return; liver = 100; store.set('painWheelLiver', liver); renderLiver(); shopMsg('Reb thanks you. His liver does not.'); chatBurst(['REB IS BACK', 'liver restored KEKW', 'enabler'], 2); }));
+                if (!spend(50000, 'a bottle for Reb')) return; liver = 100; store.set('painWheelLiver', liver); renderLiver(); shopMsg('Reb thanks you. His liver does not.'); chatBurst(['REB IS BACK', 'liver restored KEKW', 'enabler'], 2); }));
             const kanaLeft = Math.max(0, Math.ceil((kanaUntil - Date.now()) / 60000));
-            add(shopRow('📺', 'Kana+ Premium (30 min)', kanaLeft ? `Ad-free for ${kanaLeft} more minutes.` : 'No popup ads for 30 minutes. Then Kana+ will ask you to renew.', 'Buy: 10,000g', () => {
-                if (!spend(10000, 'Kana+ Premium')) return; kanaUntil = Math.max(Date.now(), kanaUntil) + 30 * 60000; store.set('painWheelKanaUntil', kanaUntil); shopMsg('Welcome to Kana+ Premium. Enjoy the brooding demon hunters, ad-free.'); renderShop(); }));
+            add(shopRow('📺', 'Kana+ Premium (30 min)', kanaLeft ? `Ad-free for ${kanaLeft} more minutes.` : 'No popup ads for 30 minutes. Then Kana+ will ask you to renew.', 'Buy: 1,000,000g', () => {
+                if (!spend(1000000, 'Kana+ Premium')) return; kanaUntil = Math.max(Date.now(), kanaUntil) + 30 * 60000; store.set('painWheelKanaUntil', kanaUntil); shopMsg('Welcome to Kana+ Premium. Enjoy the brooding demon hunters, ad-free.'); renderShop(); }));
             add(shopHead("🛡️ Kevin Repel (Kevin's lawyers are billionaires; priced accordingly)"));
             REPELS.forEach(([n, c, name]) => add(shopRow('🛡️', name, `The next ${n} spin${n > 1 ? 's' : ''} can't land on Kevin. Still counts as a fair spin. (Active: ${kevinShield})`, 'Buy: ' + fmt(c),
                 () => { if (!spend(c, name)) return; kevinShield += n; updateShieldBadge(); shopMsg(`Repel applied. ${kevinShield} Kevin-free spin${kevinShield > 1 ? 's' : ''} queued.`); renderShop(); })));
             add(shopHead('📣 Buy a Shoutout (posts in Discord)'));
             const w = document.createElement('div'); w.className = 'flex gap-2';
-            w.innerHTML = '<input id="shoutText" maxlength="140" placeholder="Say something to the guild..." class="flex-1 min-w-0 bg-slate-950 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-200"><button id="shoutBtn" class="shrink-0 px-3 rounded bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold cursor-pointer">Post: 10,000g</button>';
+            w.innerHTML = '<input id="shoutText" maxlength="140" placeholder="Say something to the guild..." class="flex-1 min-w-0 bg-slate-950 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-200"><button id="shoutBtn" class="shrink-0 px-3 rounded bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold cursor-pointer">Post: 1,000,000g</button>';
             add(w);
             w.querySelector('input').addEventListener('keydown', e => e.stopPropagation());
             w.querySelector('button').addEventListener('click', () => {
                 const txt = $('shoutText').value.trim();
                 if (!txt) { shopMsg('Type something first.'); return; }
                 if (!LEADERBOARD_URL || !playerName) { shopMsg('Shoutouts need the guild wheel and a player name.'); return; }
-                if (!spend(10000, 'a shoutout')) return;
-                sendEvent({ k: 'shout', text: txt.slice(0, 140) }); $('shoutText').value = ''; shopMsg('Shoutout sent to Discord. No refunds.');
+                if (!spend(1000000, 'a shoutout')) return;
+                sendEvent({ k: 'shout', text: txt.slice(0, 140) }); $('shoutText').value = ''; shopMsg('Shoutout sent to Discord. One million gold well spent. No refunds.');
             });
+            if (cluckStage === 1) add(shopRow('🌾', 'Special Chicken Feed (quest item)', 'For the CLUCK! quest. A Westfall chicken will come looking for it.', 'Buy: 5,000g', () => {
+                if (!spend(5000, 'Special Chicken Feed')) return; setCluck(2); shopMsg('You got the feed. Keep an eye out for a chicken...'); renderShop();
+                setTimeout(() => spawnChicken(true), 8000);
+            }));
             if (aotcCarryUnlocked) {
                 add(shopHead('🏆 Black market'));
-                add(shopRow('🏆', "Krom's AOTC Carry", 'Pull a Krom: your next spin lands on AOTC. It is rigged, everyone will see it is rigged, and Discord will be told.', 'Buy: 250,000g', () => {
-                    if (!spend(250000, 'an AOTC carry')) return;
+                add(shopRow('🏆', "Krom's AOTC Carry", 'Pull a Krom: your next spin lands on AOTC. It is rigged, everyone will see it is rigged, and Discord will be told.', 'Buy: 25,000,000g', () => {
+                    if (!spend(25000000, 'an AOTC carry')) return;
                     setRigMode('AOTC'); unlock('boughtaotc'); sendEvent({ k: 'boughtaotc' });
                     shopMsg('Carry purchased. Spin to collect your "achievement". Shame has been sent to Discord.'); closeShop();
                     funEvent('💳 YOU PULLED A KROM. SPIN TO COLLECT YOUR SHAME.', 4000);
@@ -5743,6 +5775,7 @@
         } else if (shopTab === 'pets') {
             Object.entries(PETS).forEach(([k, p]) => {
                 if (p.secret && !clippyUnlocked && !pets[k]) return;
+                if (k === 'chicken' && !pets[k]) { add(shopRow(p.e, p.name, 'Can\'t be bought. Find a Westfall chicken wandering around and type /chicken at it...', cluckStage ? 'Quest: CLUCK!' : 'Quest only', null, 'owned')); return; }
                 add(shopRow(p.e, p.name, p.desc, pets[k] ? 'Owned ✓' : 'Adopt: ' + fmt(p.cost), () => {
                     if (!spend(p.cost, p.name)) return; pets[k] = true; store.set('painWheelPets', pets); renderPets();
                     if (k === 'clippy') unlock('clippy');
@@ -5752,11 +5785,11 @@
             });
             if (!clippyUnlocked) { const n = document.createElement('div'); n.className = 'text-[11px] text-slate-500'; n.textContent = '??? — one pet is hiding somewhere. It looks like it\'s waiting for you to click something.'; add(n); }
         } else if (shopTab === 'garage') {
-            add(shopRow('🚑', "Nick's Ambulance", 'Parks in the corner. Click it for lights and siren. Thank you to our first responders (except Nick).', garage.ambulance ? 'Owned ✓' : 'Buy: 25,000g', () => {
-                if (!spend(25000, 'the ambulance')) return; garage.ambulance = true; store.set('painWheelGarage', garage); renderGarage(); unlock('weewoo'); driveAmbulance(); renderShop();
+            add(shopRow('🚑', "Nick's Ambulance", 'Parks in the corner. Click it for lights and siren. Thank you to our first responders (except Nick).', garage.ambulance ? 'Owned ✓' : 'Buy: 2,500,000g', () => {
+                if (!spend(2500000, 'the ambulance')) return; garage.ambulance = true; store.set('painWheelGarage', garage); renderGarage(); unlock('weewoo'); driveAmbulance(); renderShop();
             }, garage.ambulance ? 'owned' : 'buy'));
-            add(shopRow('🚀', 'Gallywix Rocket', 'For when you\'ve made it. Launches on purchase and every time you click it.', garage.rocket ? 'Owned ✓' : 'Buy: 100,000,000g', () => {
-                if (!spend(100000000, 'the rocket')) return; garage.rocket = true; store.set('painWheelGarage', garage); renderGarage(); unlock('rocket'); closeShop(); launchRocket(); sendEvent({ k: 'rocket' }); renderShop();
+            add(shopRow('🚀', 'Gallywix Rocket', 'For when you\'ve made it (10 billion gold). Launches on purchase and every time you click it.', garage.rocket ? 'Owned ✓' : 'Buy: 10,000,000,000g', () => {
+                if (!spend(10000000000, 'the rocket')) return; garage.rocket = true; store.set('painWheelGarage', garage); renderGarage(); unlock('rocket'); closeShop(); launchRocket(); sendEvent({ k: 'rocket' }); renderShop();
             }, garage.rocket ? 'owned' : 'buy'));
         } else if (shopTab === 'scratch') {
             add(shopHead('Click a ticket to buy it, then Scratch All'));
@@ -5955,7 +5988,99 @@
         else if (type === 'FLASHBANG') flashbang();
     }
 
+    // ---------- CLUCK! (the Westfall chicken quest, like in the real game) ----------
+    // A chicken wanders by now and then. Type /chicken at it enough times and it offers the quest.
+    // Buy Special Chicken Feed in the shop, feed the next chicken, it lays an egg, the egg hatches into your pet.
+    let cluckStage = store.get('painWheelCluck', 0);   // 0 none · 1 need feed · 2 have feed · 3 done
+    let wildChicken = null;
+    function setCluck(n) { cluckStage = n; store.set('painWheelCluck', n); renderQuestTracker(); }
+    function renderQuestTracker() {
+        const t = $('questTracker'), on = cluckStage === 1 || cluckStage === 2;
+        t.classList.toggle('hidden', !on); t.classList.toggle('flex', on);
+        $('questObj').innerHTML = '';
+        [[`- Special Chicken Feed: ${cluckStage >= 2 ? 1 : 0}/1`, cluckStage >= 2], ['- Feed a Westfall Chicken: 0/1', false]].forEach(([txt, done]) => {
+            const d = document.createElement('div'); d.textContent = txt; if (done) d.style.color = '#9ca3af'; $('questObj').appendChild(d);
+        });
+    }
+    function chickenSay(t) {
+        if (!wildChicken) return;
+        const b = wildChicken.querySelector('.bub'); b.textContent = t; b.classList.remove('hidden');
+        clearTimeout(chickenSay.t); chickenSay.t = setTimeout(() => b.classList.add('hidden'), 2500);
+    }
+    function spawnChicken(force) {
+        if (wildChicken || pets.chicken || cluckStage === 3) return;
+        if (!force && !idleScreen()) return;
+        const c = document.createElement('div'); c.id = 'wildChicken'; c.title = 'Westfall Chicken';
+        c.innerHTML = '<div class="bub hidden"></div><span class="em">🐔</span>';
+        c.dataset.need = String(3 + Math.floor(Math.random() * 4)); c.dataset.got = '0';
+        const ltr = Math.random() < 0.5, secs = 28;
+        if (ltr) c.classList.add('flip');   // the emoji faces left, so flip it when walking right
+        c.style.left = ltr ? '-80px' : 'calc(100vw + 20px)';
+        document.body.appendChild(c); wildChicken = c;
+        c.addEventListener('click', () => {
+            if (cluckStage === 2) return feedChicken();
+            chickenSay(pick(['Bawk?', '*stares at you*', '*pecks the ground*', 'bok bok', '(maybe try /chicken)']));
+        });
+        requestAnimationFrame(() => requestAnimationFrame(() => { c.style.transitionDuration = secs + 's'; c.style.left = ltr ? 'calc(100vw + 20px)' : '-80px'; }));
+        setTimeout(() => { if (wildChicken === c) { c.remove(); wildChicken = null; } }, secs * 1000 + 200);
+        if (cluckStage === 2) setTimeout(() => chickenSay('*looks hungry*'), 1500);
+        chat(pick(['is that a chicken', 'CHICKEN', 'bawk', 'why is there a chicken on the wheel', 'someone /chicken it']));
+    }
+    function chickenEmote() {
+        if (!wildChicken) { moveToast('🐔 You cluck at nothing. Everyone in /say is concerned.'); return; }
+        if (cluckStage === 2) return feedChicken();
+        if (cluckStage === 1) { chickenSay('BAWK! (where is my feed?)'); return; }
+        const got = +wildChicken.dataset.got + 1; wildChicken.dataset.got = String(got);
+        chat(`${playerName || 'You'} clucks at the chicken.`, 'goblin_banker');
+        if (got < +wildChicken.dataset.need) { chickenSay(pick(['Bawk?', 'BAWK.', 'bok bok bok', '*tilts head*', '*clucks back*'])); return; }
+        chickenSay('BAWK BAWK BAWK!!');
+        setTimeout(() => showQuest('offer'), 700);
+    }
+    function showQuest(kind) {
+        const d = $('questDialog'), yes = $('questYes'), no = $('questNo');
+        if (kind === 'offer') {
+            $('questTitle').textContent = 'CLUCK!';
+            $('questText').textContent = 'Bawk bawk bawk! The chicken looks up at you and clucks frantically. It seems to want something... it keeps pecking at your pockets. Maybe it is hungry? Some Special Chicken Feed would probably calm it down.';
+            $('questObjText').innerHTML = '<b>Objectives</b><br>Buy Special Chicken Feed (Shop → Consumables), then feed a Westfall Chicken.';
+            yes.textContent = 'Accept'; no.classList.remove('hidden');
+            yes.onclick = () => { hide(); setCluck(1); chatBurst(['CLUCK!', 'he got the chicken quest', 'bawk bawk', 'the classic'], 3); moveToast('📜 Quest accepted: CLUCK!'); };
+            no.onclick = hide;
+        } else {
+            $('questTitle').textContent = 'CLUCK! (Complete)';
+            $('questText').textContent = 'The chicken gobbles up the feed, does a happy little dance... and lays an egg! You carefully pick it up. It\'s warm. It wobbles. Out pops a tiny chicken, who follows you home and never leaves.';
+            $('questObjText').innerHTML = '<b>You receive:</b> 🐔 Westfall Chicken (pet)';
+            yes.textContent = 'Complete Quest'; no.classList.add('hidden');
+            yes.onclick = hide;
+        }
+        d.classList.remove('hidden'); d.classList.add('flex');
+        function hide() { d.classList.add('hidden'); d.classList.remove('flex'); }
+    }
+    function feedChicken() {
+        if (!wildChicken) return;
+        chickenSay('*nom nom nom* 🥚');
+        const c = wildChicken; c.style.transitionDuration = '0s'; c.style.left = c.getBoundingClientRect().left + 'px';
+        setTimeout(() => {
+            c.remove(); wildChicken = null;
+            pets.chicken = true; store.set('painWheelPets', pets); renderPets(); setCluck(3); unlock('cluck');
+            launchConfetti(['🐔', '🥚', '🌾'], ['#fde68a', '#ffffff', '#facc15'], 0.6, 0.6);
+            chatBurst(['CLUCK COMPLETE', 'CHICKEN POG', 'best quest in the game', 'bawk bawk', 'he did the chicken quest'], 4);
+            showQuest('done');
+            setTimeout(() => petSay('chicken', 'BAWK! (thanks for the feed)'), 1200);
+        }, 1400);
+    }
+    setInterval(() => {   // a chicken wanders by every few minutes (much more often once you have the feed)
+        if (document.hidden || pets.chicken || cluckStage === 3) return;
+        if (Math.random() < (cluckStage === 2 ? 0.5 : 1 / 12)) spawnChicken();
+    }, 20000);
+    renderQuestTracker();
+
     // ---------- start-up ----------
+    // "add two zeros to everything in the shop so they actually have to work for it"
+    const PX = 100;
+    THEMES.filter(t => t.shop).forEach(t => t.cost *= PX);
+    Object.values(NEEDLES).forEach(n => n.cost *= PX); Object.values(TICK_PACKS).forEach(n => n.cost *= PX);
+    TITLES.forEach(t => t[1] *= PX); REPELS.forEach(r => r[1] *= PX); SCRATCHERS.forEach(t => t.cost *= PX);
+    Object.values(PETS).forEach(pt => pt.cost *= PX);
     renderTitle(); applyNeedle(); renderGarage(); renderAipacBadge(); renderClippyPet();
     kevinShield = store.get('painWheelRepel', 0); updateShieldBadge();
     setInterval(() => {   // Kana+ ran out: Kana+ would like you to renew
