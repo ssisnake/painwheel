@@ -118,7 +118,7 @@
         .chopper-away { animation: chopperAway 2.4s cubic-bezier(.5,0,.75,.3) forwards; }
         .chopper-bob { animation: chopperBob 0.5s ease-in-out infinite alternate; }
         @keyframes chopperBob { from { transform: translateY(0); } to { transform: translateY(-5px); } }
-        /* Mephist: everything vibrates from the volume */
+        /* Mephisto: everything vibrates from the volume */
         @keyframes earBlast { 0%,100% { transform: translate(0,0); } 20% { transform: translate(-7px,3px); } 40% { transform: translate(6px,-4px); } 60% { transform: translate(-5px,-3px); } 80% { transform: translate(5px,4px); } }
         .ear-blast { animation: earBlast 0.09s linear 18; }
         .peaking { display: inline-block; margin-top: 8px; padding: 2px 10px; border-radius: 4px; background: #dc2626; color: #fff; font-weight: 900; letter-spacing: .15em; font-size: 12px; animation: adBlink 0.25s steps(2) infinite; }
@@ -623,7 +623,7 @@
     const AUDIO_CHIRP = "media/audio_chirp.mp3";
     const AUDIO_ISRAEL_SONG = "media/audio_israel_song.mp3";
     const AUDIO_MASH = "media/audio_mash.mp3";   // M*A*S*H theme clip from Axa (chopper sound if it can't load)
-    const AUDIO_MEPHIST = null;   // Mephist clip from ChAoTiC goes here (falls back to mic feedback)
+    const AUDIO_MEPHIST = null;   // Mephisto clip from ChAoTiC goes here (falls back to mic feedback)
     const AUDIO_EXXON = "media/audio_exxon.mp3";  // Exxon slice soundboard clip
 
     /* Croissant videos (made by Axazon & Platemage). Slice 1 plays the first, slice 2 the sequel. */
@@ -844,10 +844,10 @@
                  sub: () => pick(["Incoming wounded! (It's Kevin. It's always Kevin.)", "The 4077th has seen worse. They have not.",
                      "Choppers inbound with three DPS who stood in the fire.", "Triage says: wipe, run back, try again.",
                      "Stretcher for the tank, body bag for the Ret Paladin."]) } },
-        { id: "MEPHIST", n: 1, label: "📢🔊 Mephist 🔊📢", pill: "MEPHIST", bg: "#7f1d1d", text: "#fee2e2", border: "#f97316", fill: "fire", whiteText: true, color: "text-red-400", glow: "bg-red-700", key: "*", rig: "MPH",
-          win: { title: "📢🔊 MEPHIST 🔊📢", size: SIZE.mid, sound: "mephist", earBlast: true,
+        { id: "MEPHIST", n: 1, label: "📢🔊 Mephisto 🔊📢", pill: "MEPHISTO", bg: "#7f1d1d", text: "#fee2e2", border: "#f97316", fill: "fire", whiteText: true, color: "text-red-400", glow: "bg-red-700", key: "*", rig: "MPH",
+          win: { title: "📢🔊 MEPHISTO 🔊📢", size: SIZE.mid, sound: "mephist", earBlast: true,
                  sub: () => pick(["ChAoTiC unmuted. Everyone's eardrums have left the raid.", "Discord volume: 1000%. Noise suppression has given up.",
-                     "ChAoTiC is screaming into a mic taped to a jet engine.", "Hearing aids now drop from Mephist (100% drop rate).",
+                     "ChAoTiC is screaming into a mic taped to a jet engine.", "Hearing aids now drop from Mephisto (100% drop rate).",
                      "Push-to-talk? ChAoTiC has never heard of it. Now neither can you."]) } }
     ];
     const TYPE = Object.fromEntries(TYPES.map(t => [t.id, t]));
@@ -2063,7 +2063,7 @@
         israelsong: { play: () => playClip('israelsong', AUDIO_ISRAEL_SONG, playWinSound), cooldownMin: 0 },  // IDF Recruiter + 1 Trillion to Israel
         hearth:  { play: () => playHearthSound(),      cooldownMin: 0 },  // Murder Row port
         mash:    { play: () => AUDIO_MASH ? playClip('mash', AUDIO_MASH, playChopperSound) : playChopperSound(), cooldownMin: 0 },  // M*A*S*H (clip slot)
-        mephist: { play: () => AUDIO_MEPHIST ? playClip('mephist', AUDIO_MEPHIST, playMicBlast) : playMicBlast(), cooldownMin: 0 },  // Mephist (clip slot)
+        mephist: { play: () => AUDIO_MEPHIST ? playClip('mephist', AUDIO_MEPHIST, playMicBlast) : playMicBlast(), cooldownMin: 0 },  // Mephisto (clip slot)
         exxon:   { play: () => playClip('exxon', AUDIO_EXXON, playWinSound), cooldownMin: 0 },  // Exxon soundboard clip  // croissant videos carry their own audio
         kfc:     { play: () => {},                      cooldownMin: 2 },  // the KFC clip's own audio; muted while on cooldown
         sinking: { play: () => playSinkingShipSound(), cooldownMin: 2 }  // Taps (Krom)
@@ -2411,7 +2411,7 @@
             o.connect(lp); lp.connect(og); og.connect(masterGain); o.start(t); o.stop(t + dur + 0.1);
         } catch (e) {}
     }
-    // Mephist: mic feedback squeal + a blown-out burst (kept at a sane volume; the shaking sells it)
+    // Mephisto: mic feedback squeal + a blown-out burst (kept at a sane volume; the shaking sells it)
     function playMicBlast() {
         if (!soundOn()) return;
         try {
@@ -2957,7 +2957,7 @@
         { id: 'kevin10',    name: 'Kevin Incarnate',          desc: 'Land on Kevin 10 times in a row.' },
         { id: 'murderrow',  name: "I'm Not a Rat",            desc: 'Take the Murder Row port.' },
         { id: 'mash',       name: 'Incoming Wounded',         desc: 'Land on M*A*S*H.' },
-        { id: 'mephist',    name: 'Tinnitus',                 desc: 'Get your eardrums blown out by Mephist.' },
+        { id: 'mephist',    name: 'Tinnitus',                 desc: 'Get your eardrums blown out by Mephisto.' },
         { id: 'boughttop',  name: 'Bought the Top',           desc: 'Buy $KNOB right before it crashes.' },
         { id: 'rigger',     name: 'Cheater Cheater',          desc: 'Rig 25 spins.' },
         { id: 'konami',     name: '+30 Lives',                desc: 'Enter the Konami code.' },
