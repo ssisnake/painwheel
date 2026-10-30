@@ -181,6 +181,8 @@
         ::-webkit-scrollbar-track { background: #0f172a; border-radius: 8px; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 8px; }
         ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        .ex-scroll { scrollbar-width: thin; scrollbar-color: #475569 transparent; }
+        .ex-scroll::-webkit-scrollbar { width: 6px; } .ex-scroll::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
         /* shop */
         .shop-tab { background: #1e293b; color: #cbd5e1; border: 1px solid #334155; }
         .shop-tab-on { background: #f59e0b; color: #111; border-color: #fbbf24; }
@@ -564,7 +566,7 @@
             <!-- $KNOB stock ticker -->
             <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl">
                 <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                    <span>🥃 $KNOB · Knob Creek Holdings</span>
+                    <span>📈 Guild Stocks · 🥃 $KNOB Knob Creek Holdings</span>
                     <span class="flex items-center gap-1.5 text-[10px] text-red-400"><span class="w-1.5 h-1.5 rounded-full bg-red-500 ad-blink"></span>LIVE</span>
                 </div>
                 <div class="flex items-center justify-between gap-3">
@@ -588,17 +590,13 @@
                     <button id="knobSell" class="px-2 py-1 rounded bg-slate-700 hover:bg-slate-600 text-white font-bold cursor-pointer">Sell all</button>
                     <span id="knobHold" class="text-slate-400 mono truncate">You own 0 shares</span>
                 </div>
+                <div class="mt-3 pt-3 border-t border-slate-800">
+                    <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">🏦 Degenerate Exchange · scroll for more</div>
+                    <div id="exRows" class="ex-scroll" style="display:flex;flex-direction:column;gap:10px;max-height:236px;overflow-y:auto;padding-right:6px"></div>
+                    <div id="exNews" class="mt-2 text-[11px] text-slate-400 mono truncate">Markets open. Nobody here should be trading.</div>
+                </div>
             </div>
 
-            <!-- More guild stocks -->
-            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl">
-                <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                    <span>🏦 Degenerate Exchange</span>
-                    <span class="flex items-center gap-1.5 text-[10px] text-red-400"><span class="w-1.5 h-1.5 rounded-full bg-red-500 ad-blink"></span>LIVE</span>
-                </div>
-                <div id="exRows" style="display:flex;flex-direction:column;gap:10px"></div>
-                <div id="exNews" class="mt-2 text-[11px] text-slate-400 mono truncate">Markets open. Nobody here should be trading.</div>
-            </div>
 
             <!-- Guild feed (what everyone else just spun) -->
             <div id="feedCard" class="hidden bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl">
@@ -699,6 +697,26 @@
                     "Tôi đang theo dõi bạn đấy, G.I."
                     <div class="text-[11px] text-slate-400 font-normal mt-0.5">(I am watching you, G.I.)</div>
                 </div>
+            </div>
+
+            <div id="tsussieScene" class="hidden flex-col items-center justify-center my-2">
+                <svg viewBox="0 0 220 210" style="width:min(260px,70vw);height:auto" aria-label="A guy in full makeup with a sword and shield">
+                    <path d="M150 18 L160 120" stroke="#cbd5e1" stroke-width="9" stroke-linecap="round"/><path d="M150 18 L160 120" stroke="#f8fafc" stroke-width="3"/>
+                    <rect x="146" y="118" width="26" height="8" rx="3" fill="#a16207" transform="rotate(-5 159 122)"/><rect x="155" y="124" width="8" height="22" rx="3" fill="#78350f"/>
+                    <path d="M58 104 C 92 98, 128 98, 162 104 L 168 200 L 52 200 Z" fill="#9ca3af" stroke="#334155" stroke-width="3"/>
+                    <path d="M88 104 L110 140 L132 104" fill="none" stroke="#475569" stroke-width="3"/>
+                    <circle cx="110" cy="66" r="40" fill="#e8b48a" stroke="#7c4a2a" stroke-width="2.5"/>
+                    <path d="M72 58 C 75 26, 145 22, 148 58 C 140 40, 82 40, 72 58 Z" fill="#3f2a1d"/>
+                    <path d="M78 80 C 84 104, 136 104, 142 80 C 136 96, 84 96, 78 80 Z" fill="#5b3a26" opacity=".85"/>
+                    <ellipse cx="95" cy="62" rx="11" ry="7" fill="#c084fc"/><ellipse cx="125" cy="62" rx="11" ry="7" fill="#c084fc"/>
+                    <circle cx="95" cy="64" r="4" fill="#1e293b"/><circle cx="125" cy="64" r="4" fill="#1e293b"/>
+                    <path d="M85 57 l-4 -5 M90 55 l-2 -6 M95 54 l0 -6 M115 54 l0 -6 M120 55 l2 -6 M125 57 l4 -5" stroke="#111" stroke-width="2" stroke-linecap="round"/>
+                    <ellipse cx="86" cy="78" rx="8" ry="5" fill="#f472b6" opacity=".6"/><ellipse cx="134" cy="78" rx="8" ry="5" fill="#f472b6" opacity=".6"/>
+                    <path d="M98 86 C 104 81, 116 81, 122 86 C 116 94, 104 94, 98 86 Z" fill="#dc2626"/><path d="M98 86 L122 86" stroke="#7f1d1d" stroke-width="1.5"/>
+                    <path d="M28 104 C 28 92, 92 92, 92 104 L 92 140 C 92 170, 60 186, 60 186 C 60 186, 28 170, 28 140 Z" fill="#1d4ed8" stroke="#fde047" stroke-width="4"/>
+                    <path d="M60 106 L60 172 M38 128 L82 128" stroke="#fde047" stroke-width="6"/>
+                    <text x="190" y="40" font-size="22">💅</text><text x="14" y="40" font-size="20">✨</text><text x="186" y="196" font-size="18">💄</text>
+                </svg>
             </div>
 
             <div id="smokesScene" class="hidden flex-col items-center justify-center my-3">
@@ -875,7 +893,7 @@
     const PHOTO_CEILINGCAT = "media/photo_ceilingcat.jpg?v=f9ecbd81";  // Carl slice
     const PHOTO_FBI_CARL = "media/photo_fbi_carl.png?v=a2fabb26";     // Carl, slides in from the left
 
-    const TOTAL_SLICES = 150; // change this to grow/shrink the wheel; KEVIN fills whatever is left
+    const TOTAL_SLICES = 175; // change this to grow/shrink the wheel; KEVIN fills whatever is left
     const SLICE_ANGLE = (Math.PI * 2) / TOTAL_SLICES;
 
     const SIZE = {
@@ -1112,6 +1130,26 @@
                      "Nine bangs, zero survivors, one very happy Dylan.", "You can't see. You can't hear. You can still lose gold."]) } },
         { id: "THEY_THEM", n: 1, label: "🏳️‍🌈 They/Them 🏳️‍🌈", pill: "THEY/THEM", bg: "#7c3aed", text: "#ffffff", border: "#f0abfc", fill: "rainbow", color: "text-violet-300", glow: "bg-violet-500", key: "}", rig: "THM",
           win: { title: "THEY/THEM 🏳️‍🌈", size: SIZE.big, sub: () => "Pronouns noted. Spin again." } },
+        { id: "TSUSSIE", n: 2, label: "💄 Tsussie 🛡️", pill: "TSUSSIE", bg: "#be185d", text: "#fdf2f8", border: "#f9a8d4", color: "text-pink-300", glow: "bg-pink-500", key: "'", rig: "TSU",
+          win: { title: "💄 TSUSSIE 🛡️", size: SIZE.big,
+                 sub: () => pick(["Contour on point. Threat on point. Tsussie has entered the raid.", "Shield up, lashes on. The boss never stood a chance.",
+                     "Tsussie took 40 minutes to get ready. The pull timer waited.", "Tanking in full glam. Not one smudge after a wipe.",
+                     "Sword, shield, setting spray. Tsussie is fully geared.", "The T is silent. The taunt is not."]) } },
+        { id: "QUESTION_ALUMINUM", n: 1, label: "🥫 Question of Aluminum 🥫", pill: "QUESTION OF ALUMINUM", bg: "#94a3b8", text: "#0f172a", border: "#e2e8f0", color: "text-slate-300", glow: "bg-slate-400", key: ":", rig: "ALU",
+          win: { title: "🥫 QUESTION OF ALUMINUM 🥫", size: SIZE.smaller,
+                 sub: () => pick(["Not strong enough to be steel. At least it's recyclable.", "Folds under pressure. Just like their raid team.",
+                     "Wrapped their leftovers better than they ever wrapped a raid.", "Crushed easily. Just like their M+ keys.",
+                     "The question: how did they ever get a boss kill? The answer: they didn't."]) } },
+        { id: "CONUNDRUM_TIN", n: 1, label: "🥫 Conundrum of Tin 🥫", pill: "CONUNDRUM OF TIN", bg: "#64748b", text: "#f8fafc", border: "#cbd5e1", color: "text-slate-400", glow: "bg-slate-500", key: '"', rig: "TIN",
+          win: { title: "🥫 CONUNDRUM OF TIN 🥫", size: SIZE.smaller,
+                 sub: () => pick(["Even cheaper than aluminum. Tin foil hats sold separately.", "Soft, cheap and quick to rust. Like their roster.",
+                     "Their loot council was made of tin. It bent the first time someone whispered.", "The conundrum: why did anyone stay this long?",
+                     "Tin Man had no heart. This guild had no healers."]) } },
+        { id: "SEVEN_ELEVEN", n: 2, label: "🏪 7/11 🥤", pill: "7/11", bg: "#15803d", text: "#ffffff", border: "#f97316", color: "text-green-400", glow: "bg-orange-500", key: "{", rig: "711",
+          win: { title: "🏪 7/11 🥤", size: SIZE.big,
+                 sub: () => pick(["Thank you, come again! (You got a Slurpee.)", "Brain freeze in 3... 2... (You got a Slurpee.)",
+                     "Two hot dogs that have been rolling since 2019 and a Slurpee. Dinner is served.", "Reb bought the ice. You got a Slurpee.",
+                     "Open 24/7. Unlike Olive Garden. (You got a Slurpee.)"]) } },
         { id: "AOTC", n: 1, label: "🏆 AOTC 🏆", pill: "AOTC", bg: "#b45309", text: "#fffbeb", border: "#fde68a", fill: "gold", color: "text-yellow-300", glow: "bg-yellow-400", key: "!", rig: "AOTC", odds: "0.1%",
           win: { title: "🏆 AHEAD OF THE CURVE 🏆", size: SIZE.big, sound: "aotc", aotc: true, extra: "drop-shadow-[0_0_22px_rgba(250,204,21,0.95)]",
                  confetti: true, confettiEmoji: ['🏆', '✨', '⭐', '👑'], confettiColors: ['#ffd700', '#fde68a', '#facc15', '#fff7cc', '#ffffff'], confettiAmount: 1,
@@ -5080,7 +5118,7 @@
         poor: ["Reb's Empty Bottle", 'Half a Stale Cheeto', "Kevin's Participation Trophy", 'Broken Hearthstone', 'Soggy Croissant Crumb',
             'Torn Discord Log', 'Jar of Sewer Pickle Juice', 'Frayed Leap of Faith Rope', 'Expired Healthstone'],
         common: ['Linen Cloth (x3)', 'Conjured Mana Bun', 'Light Feather', "Kevin's Spare Keyboard", 'Six-Pack of Garage Beers', 'Glazed Donut'],
-        uncommon: ['Belt of Standing in Fire', 'Ret Paladin 6% Buff Coupon', 'Goblin Timeshare Brochure', "Platemage's Spare Plate",
+        uncommon: ['Slurpee (Blue Raspberry)', 'Slurpee (Cherry)', 'Slurpee (Coke)', 'Slurpee (Mystery Flavor)', 'Belt of Standing in Fire', 'Ret Paladin 6% Buff Coupon', 'Goblin Timeshare Brochure', "Platemage's Spare Plate",
             'Murder Row Teleport Scroll', 'Road Beer (Still Cold)'],
         rare: ["Biblehumping's Holy Lasso", "Axa's Defibrillator", 'Knob Creek Single Barrel', "ChAoTiC's Blown-Out Headset", 'M*A*S*H Medevac Voucher'],
         epic: ['Shield of Kevin Avoidance', "Gammon's Saving Grace", "Clussy's Clown Nose of Doom", 'The Undermine Deed', "Uwutek's Pocket Lint"],
@@ -5096,7 +5134,9 @@
         'Frayed Leap of Faith Rope': 'Used. Many times. On you.', 'Expired Healthstone': 'Best before Wrath of the Lich King.',
         'Linen Cloth (x3)': 'Vendor price: an insult.', 'Conjured Mana Bun': 'Tastes like a mage\'s disappointment.', 'Light Feather': 'For when you fall off Murder Row.',
         "Kevin's Spare Keyboard": 'Every key is bound to "stand in fire".', 'Six-Pack of Garage Beers': 'Best enjoyed at 10 AM.', 'Glazed Donut': 'Perfectly fine. Suspicious.',
-        'Belt of Standing in Fire': '+10 Fire Resistance. -100 Awareness.', 'Ret Paladin 6% Buff Coupon': 'Void where prohibited (everywhere).',
+        'Belt of Standing in Fire': '+10 Fire Resistance. -100 Awareness.', 'Slurpee (Blue Raspberry)': 'Turns your tongue blue for 3 raid nights.',
+        'Slurpee (Cherry)': 'Brain freeze on use. 30 second cooldown.', 'Slurpee (Coke)': 'The classic. Straight from the 7/11 by the guild hall.',
+        'Slurpee (Mystery Flavor)': 'Nobody knows. Not even 7/11.', 'Ret Paladin 6% Buff Coupon': 'Void where prohibited (everywhere).',
         'Goblin Timeshare Brochure': 'Page 2 is just a bomb emoji.', "Platemage's Spare Plate": 'Not plate. Not a mage. A plate.',
         'Murder Row Teleport Scroll': 'Not a rat. Strategically elsewhere.', 'Road Beer (Still Cold)': 'Do not drink and fly a gryphon.',
         "Biblehumping's Holy Lasso": 'Yanks allies into danger with love.', "Axa's Defibrillator": 'CLEAR! (Batteries not included.)',
@@ -5321,6 +5361,7 @@
     const HOUSE_LEVELS = [
         { e: '🏚️', name: 'Timeshare (1/52nd)', desc: 'A sewer with a door. You own one week a year.', rent: -25, cost: 0 },
         { e: '🛖', name: 'Goblin Hut', desc: 'You own the whole week now. The door even locks.', rent: 20, cost: 500 },
+        { e: '🪵', name: 'Swamp Shack', desc: 'Four walls, three of them load-bearing. Smells like Reb\'s garage.', rent: 40, cost: 1350 },
         { e: '🏠', name: 'Undermine Cottage', desc: 'Running water! (It is oil.)', rent: 60, cost: 2000 },
         { e: '🏡', name: 'House with a Garden', desc: 'The garden is mostly explosives. Neighbors are nervous.', rent: 150, cost: 6000 },
         { e: '🏘️', name: 'Goblin Estate', desc: 'You are now a landlord. Your tenants are all Kevin.', rent: 400, cost: 15000 },
@@ -5328,6 +5369,10 @@
         { e: '🛥️', name: "Gallywix's Yacht", desc: 'You won capitalism. Reb is drinking on the deck.', rent: 2500, cost: 100000 }
     ];
     let houseLevel = store.get('painWheelHouseLevel', 0);
+    if (!store.get('painWheelShackAdded', false)) {   // the Shack was slotted in at level 2: bump anyone already past the Hut
+        if (houseLevel >= 2) { houseLevel++; store.set('painWheelHouseLevel', houseLevel); }
+        store.set('painWheelShackAdded', true);
+    }
     function houseInfo() { return HOUSE_LEVELS[houseLevel]; }
     function renderHouseIcon() {
         const h = houseInfo(); $('houseEmoji').textContent = h.e;
@@ -5358,8 +5403,8 @@
         houseSay(`Welcome to your ${next.name}!`);
         chatBurst(['HOUSE UPGRADE POG', 'real estate mogul', 'goblin W', 'landlord arc', 'rent is due KEKW'], 3);
         launchConfetti(['💰', '🏠', '✨'], ['#4ade80', '#facc15', '#ffffff'], 0.5, 0.5);
-        if (houseLevel >= 5) unlock('castle');
-        if (houseLevel >= 6) unlock('yacht');
+        if (houseLevel >= 6) unlock('castle');
+        if (houseLevel >= 7) unlock('yacht');
     });
     function payDebt(amt) {
         amt = Math.min(amt, goblinDebt, gold);
@@ -6007,9 +6052,21 @@
         WINRAR: ['WINRAR', 'is winrar', 'u r winrar', 'buy a license KEKW', 'not loser!', 'W'],
         SMOKES: ["SMOKES LET'S GO", 'grab the smokes', 'trailer park vibes', 'liquor store run', 'decent'],
         FLASHBANG: ['MY EYES', 'eeeeeeeeeeeee', 'I CANT SEE', 'DYLAN WHY', 'turn your brightness down LUL', 'cant hear'],
-        THEY_THEM: ['noted', 'o7', 'gg', 'spin again']
+        THEY_THEM: ['noted', 'o7', 'gg', 'spin again'],
+        TSUSSIE: ['SLAY', 'the glam tank', 'contour on point', 'serving looks AND threat', 'TSUSSIE 💅', 'queen of the tank spot'],
+        QUESTION_ALUMINUM: ['LMAO the old guild', 'aluminum KEKW', 'recyclable', 'rip old guild', 'still not steel'],
+        CONUNDRUM_TIN: ['TIN KEKW', 'cheaper than aluminum', 'old guild flashbacks', 'tin foil hat time', 'F'],
+        SEVEN_ELEVEN: ['SLURPEE', 'brain freeze', 'thank you come again', 'get me a big gulp', '7/11 run']
     });
     function newSliceFx(type) {
+        const ts = $('tsussieScene');
+        if (ts) { ts.classList.toggle('hidden', type !== 'TSUSSIE'); ts.classList.toggle('flex', type === 'TSUSSIE'); }
+        if (type === 'SEVEN_ELEVEN') {
+            setTimeout(() => giveLoot('uncommon', '🥤 Thank you, come again', pick(['Slurpee (Blue Raspberry)', 'Slurpee (Cherry)', 'Slurpee (Coke)', 'Slurpee (Mystery Flavor)'])), 1200);
+            const f = document.createElement('div');   // brain freeze: a soft blue frost that fades
+            f.style.cssText = 'position:fixed;inset:0;z-index:58;pointer-events:none;background:radial-gradient(circle,transparent 40%,rgba(56,189,248,.45));opacity:1;transition:opacity 2.5s';
+            document.body.appendChild(f); setTimeout(() => f.style.opacity = '0', 900); setTimeout(() => f.remove(), 3600);
+        }
         const sc = $('smokesScene');
         if (sc) { sc.classList.toggle('hidden', type !== 'SMOKES'); sc.classList.toggle('flex', type === 'SMOKES'); }
         if (type === 'SMOKES' && SMOKES_IMG && !$('smokesImg').src) { $('smokesImg').src = SMOKES_IMG; $('smokesImg').classList.remove('hidden'); $('smokesEmoji').classList.add('hidden'); }
@@ -6106,20 +6163,29 @@
 
     // ---------- Degenerate Exchange: more guild stocks (they trend up over time like $KNOB, with their own disasters) ----------
     const STOCKS = [
-        { sym: 'KEVN', e: '🤡', name: 'Kevin Industries', start: 69, col: '#ef4444',
+        { sym: 'KEVN', e: '🤡', name: 'Kevin Industries', start: 69.69, col: '#ef4444',
           up: ['Kevin stood in fire. Demand for repair bills soars', 'Kevin pulled the boss early. Analysts call it "bold"', 'Kevin announces new strategy (it is the old strategy)', 'Kevin bought a new keyboard. Same results'],
           down: ['Kevin moved out of the fire. Investors confused', 'Kevin read the dungeon journal. Stock tanks', 'Kevin was benched. Shareholders panic'],
           land: { KEVIN: [0.06, 'Another Kevin landed. $KEVN rallies'] } },
-        { sym: 'RET', e: '🔨', name: 'Ret Paladin Futures', start: 6, col: '#facc15',
+        { sym: 'RET', e: '🔨', name: 'Ret Paladin Futures', start: 67.67, col: '#facc15',
           up: ['Blizzard "looking into" Ret. Futures soar', 'Axa hit a 60 parse. Market euphoric', 'Corrinne pressed Wake of Ashes on time', 'Datamined 6% buff. Speculators pile in'],
           down: ['Hotfix: Ret nerfed 6%. Again', 'Axa bubbled during the DPS check', 'Patch notes say "Paladin: bug fixes". Panic', 'Ret Paladin seen standing in fire. Wait, that was Kevin'],
           land: { RET_PALADIN: [0.25, 'The Light provides! $RET pops'] }, crash: [1 / 90, 0.45, '🔧 EMERGENCY HOTFIX: Ret nerfed. $RET collapses'] },
-        { sym: 'SUSN', e: '💸', name: 'Susan Express Gold Co.', start: 0.99, col: '#f472b6',
+        { sym: 'SUSN', e: '💸', name: 'Susan Express Gold Co.', start: 13.37, col: '#f472b6',
           up: ['WTS GOLD CHEAP. Revenue up', '4,000 new bots spawned in Stormwind', 'Fast delivery! (of the stock price, upward)', 'Susan opened a new bot farm. Very efficient'],
           down: ['Account suspended. Then 300 more', 'Players learned how to /ignore', 'Susan whispered a GM by accident'],
-          land: { SUSAN_EXPRESS: [0.15, 'Susan Express sighted on the wheel. $SUSN spikes'] }, crash: [1 / 60, 0.8, '🔨 BAN WAVE! Blizzard deletes 10,000 bots. $SUSN wiped out'], vol: 2 }
+          land: { SUSAN_EXPRESS: [0.15, 'Susan Express sighted on the wheel. $SUSN spikes'] }, crash: [1 / 60, 0.8, '🔨 BAN WAVE! Blizzard deletes 10,000 bots. $SUSN wiped out'], vol: 2 },
+        { sym: 'ALT', e: '🔄', name: 'Alt-oholics Inc. (Justin & ChAoTiC)', start: 80.08, likeKnob: true, col: '#38bdf8',
+          up: ['Justin rolled a new alt. Again', 'ChAoTiC leveled an alt overnight', 'The alt army passes 50 characters', 'Justin bought another character boost', 'ChAoTiC needs a new bank alt for his bank alts'],
+          down: ['Justin played his main for a whole week', 'ChAoTiC deleted an alt by accident', 'Character slots full. Liquidity crisis', 'Justin forgot which alt he was on'],
+          land: { JUSTIN_ALT: [0.2, 'Justin picked a new alt for the day. $ALT rallies'], MEPHIST: [0.1, 'ChAoTiC unmuted. Alt demand surges'] } },
+        { sym: 'DEDFRMR', e: '🪦', name: 'Ded Farmer Holdings (Nick & Biblehumping)', start: 911.00, likeKnob: true, col: '#a3e635',
+          up: ['Nick died farming in a level 10 zone. Repair revenue soars', 'Biblehumping yanked Nick into a farm pack', 'Spirit healer reports record traffic', 'Nick farmed for 2 hours, died, lost everything'],
+          down: ['Nick stayed alive for an entire farm session', 'Biblehumping healed instead of yanking', 'Herb prices crashed. Nobody died'],
+          land: { NICK_DPS: [0.15, "Nick DPS'd instead of healing. Somebody died. $DEDFRMR up"], YANKED: [0.15, 'Biblehumping yanked someone to their death. $DEDFRMR up'] },
+        }
     ];
-    let exHold = store.get('painWheelStocks', {}), exPrice = store.get('painWheelStockPrices', {});
+    let exHold = store.get('painWheelStocks', {}), exPrice = store.get('painWheelStockPrices2', {});
     const exHist = {};
     STOCKS.forEach(st => {
         if (!(exPrice[st.sym] > 0)) exPrice[st.sym] = st.start;
@@ -6180,14 +6246,14 @@
         STOCKS.forEach(st => {
             const v = st.vol || 1;
             if (st.crash && Math.random() < st.crash[0]) { exMove(st, -st.crash[1], null); $('exNews').textContent = st.crash[2]; chatBurst(['RIP my portfolio', 'CRASHED', 'down bad', 'F'], 2); }
-            else if (Math.random() < 0.12) { const good = Math.random() < 0.62; exMove(st, (good ? 0.03 + Math.random() * 0.08 : -(0.02 + Math.random() * 0.06)) * v, pick(good ? st.up : st.down)); }
+            else if (Math.random() < (st.likeKnob ? 0.22 : 0.12)) { const good = Math.random() < 0.62; exMove(st, (good ? 0.03 + Math.random() * (st.likeKnob ? 0.09 : 0.08) : -(0.02 + Math.random() * (st.likeKnob ? 0.07 : 0.06))) * v, pick(good ? st.up : st.down)); }
             else exMove(st, (0.002 + (Math.random() - 0.5) * 0.024) * v);
         });
-        store.set('painWheelStockPrices', exPrice); exRender();
+        store.set('painWheelStockPrices2', exPrice); exRender();
     }, 4000);
     function exOnLand(type) {
         STOCKS.forEach(st => { const l = st.land && st.land[type]; if (l) exMove(st, l[0], l[1]); });
-        if (type === 'RET_PALADIN' || type === 'KEVIN' || type === 'SUSAN_EXPRESS') { store.set('painWheelStockPrices', exPrice); exRender(); }
+        if (STOCKS.some(st => st.land && st.land[type])) { store.set('painWheelStockPrices2', exPrice); exRender(); }
     }
     exRender();
 
