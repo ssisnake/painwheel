@@ -362,6 +362,7 @@
         <div id="houseEmoji" class="text-5xl leading-none">🏚️</div>
         <div id="houseLabel" style="font-size:9px;font-weight:900;letter-spacing:.06em;color:#fde047;background:rgba(0,0,0,.7);padding:0 6px;border-radius:4px;text-transform:uppercase">Your Timeshare (1/52nd)</div>
     </div>
+    <div id="petDock" style="z-index: 61; left: calc(50% + 80px); bottom: 10px;" class="fixed flex items-end gap-3 pointer-events-none"></div>
     <div id="housePanel" style="z-index: 72" class="fixed inset-0 hidden items-center justify-center bg-slate-950/85 backdrop-blur-sm p-4">
         <div class="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl p-5 shadow-2xl border-2 border-emerald-600" style="background: linear-gradient(170deg,#052e16,#0f172a 45%,#1c1402);">
             <div class="flex items-center justify-between mb-2">
@@ -377,6 +378,10 @@
             <div class="mt-3 flex flex-col items-center gap-1">
                 <button id="hpUpgrade" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-black cursor-pointer"></button>
                 <div id="hpMsg" class="text-xs text-amber-300 font-bold min-h-[1rem] text-center"></div>
+            </div>
+            <div class="mt-3 pt-3 border-t border-emerald-900">
+                <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">🐾 Pet shop</div>
+                <div id="petShop" class="grid grid-cols-1 gap-1.5"></div>
             </div>
             <div class="mt-3 pt-3 border-t border-emerald-900">
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">💸 Goblin debt</div>
@@ -506,6 +511,11 @@
                     <canvas id="knobChart" class="flex-1 min-w-0" style="max-width: 240px; height: 56px"></canvas>
                 </div>
                 <div id="knobNews" class="mt-2 text-[11px] text-slate-400 mono truncate">Market open. Reb is awake.</div>
+                <div class="mt-2 flex items-center gap-2 text-[11px]">
+                    <span class="text-slate-400 font-bold shrink-0">🫀 Reb's liver</span>
+                    <div class="relative flex-1 h-3 rounded bg-black/60 border border-slate-700 overflow-hidden"><div id="liverFill" style="position:absolute;inset:0 auto 0 0;width:100%;background:#22c55e;transition:width .6s,background .6s"></div></div>
+                    <span id="liverText" class="mono text-slate-300 shrink-0 w-24 text-right">100%</span>
+                </div>
                 <div class="mt-2 flex items-center gap-2 text-[11px]">
                     <button id="knobBuy" class="px-2 py-1 rounded bg-emerald-700 hover:bg-emerald-600 text-white font-bold cursor-pointer">Buy 1 share</button>
                     <button id="knobSell1" class="px-2 py-1 rounded bg-slate-700 hover:bg-slate-600 text-white font-bold cursor-pointer">Sell 1</button>
@@ -1749,6 +1759,7 @@
     let spinCount = 0;
     let riggedMode = "FAIR";
     let chirpSpin = false;
+    let kevinTakeover = false;   // rare event: for one spin, every slice is Kevin
     let kevinShield = 0, pixelUntil = 0; // Konami code rewards
     let activeThemeId = null;            // holiday theme currently applied (null = normal)
     let cheetoCrumbSpin = false; // 1-in-100: the Cheeto slice sheds crumbs while spinning
@@ -2847,7 +2858,7 @@
 
         c.save();
         c.beginPath(); c.moveTo(cx, cy); c.arc(cx, cy, r, start, start + SLICE_ANGLE); c.closePath();
-        c.fillStyle = fillFor(c, t, s, cx, cy, innerR, r);
+        c.fillStyle = kevinTakeover ? (i % 2 ? '#991b1b' : '#b91c1c') : fillFor(c, t, s, cx, cy, innerR, r);
         c.fill();
         c.lineWidth = opts.active ? 2.5 : (opts.zoom ? 1 : (s.type === "KEVIN" ? 0.5 : rb ? 1.8 : 1.25));
         c.strokeStyle = opts.active ? "#fbbf24" : (rb ? rb.border : s.border);
@@ -2862,7 +2873,8 @@
         c.translate(cx, cy); c.rotate(mid);
         c.textAlign = "right"; c.textBaseline = "middle";
         c.fillStyle = rb ? rb.text : (t.whiteText ? "#ffffff" : s.text);
-        const long = s.label.length > 30;
+        const shownLabel = kevinTakeover ? 'Kevin' : s.label;
+        const long = shownLabel.length > 30;
         let px;
         if (opts.zoom) px = Math.max(10, opts.zw * (long ? 0.018 : s.type !== "KEVIN" ? 0.024 : 0.036));
         else px = Math.max(8, r * (s.type === "KEVIN" ? 0.027 : long ? 0.015 : 0.02));
@@ -2870,12 +2882,12 @@
         if ((t.fill && t.fill !== "rainbow") || s.type === "KEVIN") { c.shadowColor = "rgba(0,0,0,0.95)"; c.shadowBlur = opts.zoom ? 5 : 4; }
 
         const edge = opts.zoom ? r - 14 : r * 0.96;
-        if (t.portrait && momPhotoImg.complete) {
+        if (t.portrait && momPhotoImg.complete && !kevinTakeover) {
             const sz = opts.zoom ? Math.max(18, opts.zw * 0.06) : Math.max(14, r * 0.042);
             c.drawImage(momPhotoImg, edge + (opts.zoom ? 4 : 0) - sz, -sz / 2, sz, sz);
             c.fillText("NICK'S MOM", edge - sz - 4, 0);
         } else {
-            c.fillText(opts.zoom ? s.label.toUpperCase() : s.label, edge, 0);
+            c.fillText(opts.zoom ? shownLabel.toUpperCase() : shownLabel, edge, 0);
         }
         if (!opts.zoom) {
             c.shadowBlur = 0;
@@ -2939,7 +2951,9 @@
        fire...) and buffed Ret slices are redrawn live. Rebuilt on resize, theme change, or new buff. */
     const ANIMATED_FILLS = new Set(['rainbow', 'bike', 'fire', 'chuck', 'reparations', 'gold']);
     let wheelCacheKey = '', wheelCacheDirty = true;
+    function setKevinTakeover(on) { kevinTakeover = on; wheelCacheDirty = true; }
     function isLiveSlice(i) {
+        if (kevinTakeover) return false;
         return ANIMATED_FILLS.has(TYPE[slices[i].type].fill) || retGrowth(i) > 0 || (retGrowAnim && retGrowAnim.i === i);
     }
     function wheelGeom() {
@@ -3140,6 +3154,12 @@
             distance = Math.floor(turns) * Math.PI * 2 + delta;
         }
 
+        // random event: Kevin Takeover (1 in 75 spins) paints every slice Kevin for this spin
+        if (Math.random() < 1 / 75) {
+            setKevinTakeover(true);
+            funEvent('🤡 KEVIN HAS TAKEN OVER THE WHEEL 🤡', 3500);
+            chatBurst(['KEVIN TAKEOVER', 'ITS ALL KEVIN', 'KEVIN KEVIN KEVIN', 'monkaS', 'the wheel is compromised', 'kevinpocalypse'], 6, 3000);
+        }
         // random event: Wrong Spec (1 in 40 fair spins) sends the wheel backwards
         if (target === null && Math.random() < 1 / 40) { distance = -distance; funEvent('🔄 WRONG SPEC! The wheel is spinning backwards.'); }
         // a fair landing on AOTC only sticks 1 time in 10,000; otherwise it slides onto the next slice
@@ -3176,6 +3196,7 @@
     }
 
     function onSpinComplete() {
+        if (kevinTakeover) { setKevinTakeover(false); setTimeout(() => chatBurst(['oh it was not Kevin', 'phew', 'wait it lied', 'KEVIN WAS A LIE'], 2, 1500), 600); }
         const winner = slices[getActiveSliceIndex(currentRotation)];
         spinCount++;
         allTimeSpins++;
@@ -5195,13 +5216,93 @@
     }
     window.retAscension = retAscension;
 
+    // ---------- pets: bought with gold, they sit in the corner and react to your spins ----------
+    const PETS = {
+        murloc: { e: '🐸', name: 'Mrgl the Murloc', cost: 500, desc: 'Gurgles at everything. Especially Kevin.',
+            say: (t, ctx) => t === 'KEVIN' ? pick(['Mrglglgl!', 'MRGLGLGL (Kevin again)', 'mrgl... mrgl. (sad gurgle)', 'Aaaaaughibbrgubugbugrguburgle!'])
+                : t === 'RET_PALADIN' ? pick(['Mrrrgl? (Ret buff?)', 'MRGL! MRGL! (the Light!)']) : t === 'AOTC' ? 'MRGLGLGLGLGLGLGL!!!!!'
+                : ctx.lootQ ? 'Mrgl? (shiny!)' : pick(['Mrgl.', 'Mrglglgl?', 'Mrrrrgl', 'blub', 'Mrgl mrgl (nice)', 'Aaaaaughibbrgubugbugrguburgle!']) },
+        accountant: { e: '🧮', name: 'Gizzlenut, Goblin Accountant', cost: 1500, desc: 'Comments on your finances. Constantly.',
+            say: (t, ctx) => ctx.bet && ctx.bet < 0 ? pick([`That bet cost you ${-ctx.bet}g. I've made a note.`, `-${-ctx.bet}g. Fiscally irresponsible.`])
+                : ctx.bet > 0 ? pick([`+${ctx.bet}g. Don't let it go to your head.`, `A profit of ${ctx.bet}g. I'll allow it.`])
+                : goblinDebt ? pick([`Reminder: you owe ${goblinDebt.toLocaleString()}g.`, `Your debt is ${goblinDebt.toLocaleString()}g. I'm not mad. Just disappointed.`])
+                : pick([`Net worth: ${gold.toLocaleString()}g. Pathetic.`, `${gold.toLocaleString()}g. Have you considered a Goblin Estate?`, 'Time is money, friend.',
+                    knobShares ? `You own ${knobShares} $KNOB. Bold.` : 'Buy $KNOB. Trust me.', `That spin was worth exactly 0g.`]) }
+    };
+    let pets = store.get('painWheelPets', {});
+    function renderPets() {
+        const dock = $('petDock'); dock.innerHTML = '';
+        Object.keys(PETS).filter(k => pets[k]).forEach(k => {
+            const w = document.createElement('div'); w.className = 'flex flex-col items-center'; w.id = 'pet-' + k;
+            w.innerHTML = '<div class="pet-bubble hidden mb-1 px-2 py-1 rounded-lg bg-slate-900/95 border border-slate-600 text-slate-100 text-[11px] font-bold whitespace-nowrap shadow-lg"></div><div style="font-size:38px;line-height:1;animation:houseBob 1.1s ease-in-out infinite alternate">' + PETS[k].e + '</div>';
+            dock.appendChild(w);
+        });
+        const shop = $('petShop'); if (!shop) return; shop.innerHTML = '';
+        Object.entries(PETS).forEach(([k, pt]) => {
+            const row = document.createElement('div'); row.className = 'flex items-center justify-between gap-2 bg-slate-950/60 border border-slate-700 rounded-lg px-3 py-1.5 text-sm';
+            const left = document.createElement('div'); left.innerHTML = `<span style="font-size:22px">${pt.e}</span> <b></b><div class="text-[11px] text-slate-400"></div>`;
+            left.querySelector('b').textContent = pt.name; left.querySelector('div').textContent = pt.desc;
+            const b = document.createElement('button'); b.className = 'shrink-0 px-2.5 py-1 rounded text-xs font-bold cursor-pointer ' + (pets[k] ? 'bg-slate-700 text-slate-300' : 'bg-emerald-700 hover:bg-emerald-600 text-white');
+            b.textContent = pets[k] ? 'Owned ✓' : `Adopt: ${pt.cost.toLocaleString()}g`; b.disabled = !!pets[k];
+            b.addEventListener('click', () => {
+                if (gold < pt.cost) { $('hpMsg').textContent = `You need ${(pt.cost - gold).toLocaleString()}g more for ${pt.name}.`; return; }
+                setGold(gold - pt.cost); pets[k] = true; store.set('painWheelPets', pets); renderPets();
+                $('hpMsg').textContent = `${pt.name} has joined you!`; setTimeout(() => petSay(k, k === 'murloc' ? 'MRGLGLGL! (hello!)' : 'Pleasure. I bill hourly.'), 300);
+                chatBurst(['PET POG', 'cute', 'MRGL', 'new friend'], 2);
+            });
+            row.append(left, b); shop.appendChild(row);
+        });
+    }
+    function petSay(k, text) {
+        const w = $('pet-' + k); if (!w) return;
+        const b = w.querySelector('.pet-bubble'); b.textContent = text; b.classList.remove('hidden');
+        clearTimeout(w._t); w._t = setTimeout(() => b.classList.add('hidden'), 3800);
+    }
+    function petsReact(type, ctx) {
+        Object.keys(PETS).filter(k => pets[k]).forEach((k, i) => {
+            if (Math.random() < 0.6) setTimeout(() => petSay(k, PETS[k].say(type, ctx)), 900 + i * 1100);
+        });
+    }
+    renderPets();
+
+    // ---------- Reb's liver: beer and bourbon slices hurt it; it slowly heals ----------
+    let liver = store.get('painWheelLiver', 100), liverDown = false;
+    function renderLiver() {
+        const f = $('liverFill'), t = $('liverText'); if (!f) return;
+        f.style.width = Math.max(0, liver) + '%';
+        f.style.background = liver > 60 ? '#22c55e' : liver > 30 ? '#eab308' : '#dc2626';
+        t.textContent = liverDown ? '🚑 HOSPITALIZED' : `${Math.round(liver)}%`;
+    }
+    function hurtLiver(n, why) {
+        if (liverDown) return;
+        liver = Math.max(0, liver - n); store.set('painWheelLiver', liver); renderLiver();
+        $('knobNews').textContent = `🫀 ${why}: Reb's liver -${n}%`;
+        if (liver <= 0) {
+            liverDown = true; renderLiver();
+            funEvent('🚑 REB HAS BEEN HOSPITALIZED 🚑', 4500);
+            chatBurst(['F', 'REB NOOO', 'press F for Reb', 'his liver filed for divorce', '$KNOB CRASHING', 'call Lisa'], 6, 3000);
+            if (window.knobCrash) setTimeout(window.knobCrash, 1200);
+            setTimeout(() => {
+                liverDown = false; liver = 100; store.set('painWheelLiver', liver); renderLiver();
+                $('knobNews').textContent = '🏥 Reb discharged himself against medical advice. He went straight to the liquor store.';
+                chatBurst(['HE IS BACK', 'Reb is immortal', 'the liver regenerates'], 2);
+            }, 90000);
+        }
+    }
+    setInterval(() => { if (!document.hidden && !liverDown && liver < 100) { liver = Math.min(100, liver + 1); store.set('painWheelLiver', liver); renderLiver(); } }, 60000);
+    renderLiver();
+
     // ---------- spin hooks ----------
     function onSpinStartFun(rigged) {
         lockBet(rigged);
         chatBurst(CHAT_START, 2, 1200);
     }
     function afterSpinFun(s, fair, ash) {
+        const g0 = gold;
         resolveBet(s.type);
+        const betDelta = gold - g0;
+        if (s.type === 'KNOB_CREEK') hurtLiver(25, 'Another bottle');
+        else if (s.type === 'ROAD_BEERS' || s.type === 'GARAGE_BEERS') hurtLiver(15, 'Beers');
         const t = TYPE[s.type];
         chatBurst(CHAT_LAND[s.type] || [`${t.pill} LUL`, 'Pog', 'KEKW', 'ez', 'rigged', 'this wheel is scuffed', 'W', 'L', `${t.pill}?? ok`], 3, 2400);
         if (ash) chatBurst(['ASHBRINGER???', 'SERVER FIRST', 'HOLY', 'CLIP IT'], 4);
@@ -5215,6 +5316,7 @@
         if (hasPerk('ret') && s.type === 'RET_PALADIN') bonus += 50;
         if (bonus) { setGold(gold + bonus); const m = $('betMsg'); m.textContent = (m.textContent ? m.textContent + ' · ' : '') + `+${bonus}g set bonus`; }
         if (fair && LEADERBOARD_URL && playerName && bossState) bossHitFloat(bossDmgFor(s.type, ash));
+        petsReact(s.type, { bet: betDelta, lootQ: null });
     }
     setInterval(() => { if (!document.hidden && hasPerk('shame')) { setGold(gold + 50); moveToast('🏛️ Hall of Shame royalties: +50g'); } }, 10 * 60 * 1000);
     renderBetChips(); renderGold();
