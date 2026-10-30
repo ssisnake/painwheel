@@ -3390,7 +3390,7 @@
         { id: 'weewoo',     name: 'Wee-Woo',                  desc: "Buy Nick's ambulance." },
         { id: 'golddonut',  name: 'To Protect and Serve',     desc: "Find Justin's Golden Chocolate Donut." },
         { id: 'rugpull',    name: 'Rug Pulled',               desc: 'Ape into $KEVCOIN.' },
-        { id: 'taxman',     name: 'Death and Taxes',          desc: 'Pay the Tuesday reset income tax.' },
+        { id: 'taxman',     name: 'Death and Taxes',          desc: 'Pay the monthly Tuesday reset income tax.' },
         { id: 'drip',       name: 'Drip',                     desc: 'Buy something cosmetic from the shop.' },
         { id: 'boughtaotc', name: 'Pulled a Krom',            desc: "Buy Krom's AOTC carry. Shameful." },
         { id: 'cluck',      name: 'CLUCK!',                   desc: 'Complete the Westfall chicken\'s quest.' },
@@ -5912,12 +5912,12 @@
 
     // ---------- Tuesday reset: Goblin IRS income tax ----------
     function checkTax() {
-        const d = new Date(); if (d.getDay() !== 2) return;
-        const key = d.toDateString(); if (store.get('painWheelTaxDay', '') === key) return;
-        store.set('painWheelTaxDay', key);
+        const d = new Date(); if (d.getDay() !== 2) return;   // Tuesdays only (WoW reset day), once a month
+        const key = d.getFullYear() + '-' + (d.getMonth() + 1); if (store.get('painWheelTaxMonth', '') === key) return;
+        store.set('painWheelTaxMonth', key);
         if (gold < 100) { moveToast('🧾 Tuesday reset: the Goblin IRS checked your wallet and left disappointed.'); return; }
         const tax = Math.round(gold * 0.15); setGold(gold - tax); unlock('taxman');
-        funEvent(`🧾 TUESDAY RESET: Goblin IRS collected ${fmt(tax)} in income tax (15%)`, 5500);
+        funEvent(`🧾 MONTHLY TUESDAY RESET: Goblin IRS collected ${fmt(tax)} in income tax (15%)`, 5500);
         chatBurst(['TAXED KEKW', 'the goblin IRS got him', 'death and taxes', 'reset day tax LUL', 'should have bought $KNOB'], 3, 2500);
     }
     setTimeout(checkTax, 5000); setInterval(checkTax, 60000);
