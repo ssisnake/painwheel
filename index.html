@@ -590,6 +590,16 @@
                 </div>
             </div>
 
+            <!-- More guild stocks -->
+            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl">
+                <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+                    <span>🏦 Degenerate Exchange</span>
+                    <span class="flex items-center gap-1.5 text-[10px] text-red-400"><span class="w-1.5 h-1.5 rounded-full bg-red-500 ad-blink"></span>LIVE</span>
+                </div>
+                <div id="exRows" style="display:flex;flex-direction:column;gap:10px"></div>
+                <div id="exNews" class="mt-2 text-[11px] text-slate-400 mono truncate">Markets open. Nobody here should be trading.</div>
+            </div>
+
             <!-- Guild feed (what everyone else just spun) -->
             <div id="feedCard" class="hidden bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl">
                 <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
@@ -5617,8 +5627,19 @@
         const b = $('aipacBadge'), t = aipacTier();
         if (!t) { b.classList.add('hidden'); return; }
         b.classList.remove('hidden');
-        b.style.borderColor = t[3]; b.style.color = t[3];
-        b.innerHTML = '<div style="font-size:9px;letter-spacing:.14em;opacity:.8">CERTIFIED LOBBYIST</div><div>🇺🇸 AIPAC DONOR · ' + t[1].toUpperCase() + '</div>';
+        b.style.borderColor = 'transparent'; b.style.background = 'transparent'; b.style.padding = '0';
+        b.innerHTML = `<div style="display:flex;align-items:center;gap:8px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.7))">
+            <div style="text-align:right;line-height:1.15">
+              <div style="font-size:9px;letter-spacing:.18em;color:#cbd5e1">CERTIFIED LOBBYIST</div>
+              <div style="font-family:Georgia,serif;font-size:15px;font-weight:900;letter-spacing:.08em;color:#fff">AIPAC DONOR</div>
+              <div style="display:inline-block;margin-top:2px;padding:1px 8px;border-radius:3px;font-size:10px;font-weight:900;letter-spacing:.12em;background:${t[3]};color:#0b1d4a">${t[1].toUpperCase()}</div>
+            </div>
+            <div style="width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;
+                background:radial-gradient(circle,#0b1d4a 0 54%,#fff 55% 60%,#b91c1c 61% 70%,#fff 71% 75%,#0b1d4a 76% 100%);border:2px solid ${t[3]}">
+              <span style="font-size:22px;line-height:1">🏛️</span>
+              <span style="position:absolute;top:3px;left:50%;transform:translateX(-50%);font-size:8px;color:#fff;letter-spacing:1px">★★★</span>
+              <span style="position:absolute;bottom:3px;left:50%;transform:translateX(-50%);font-size:8px;color:#fff;letter-spacing:1px">★★★</span>
+            </div></div>`;
         b.title = `Lifetime donations: ${fmt(aipacTotal)}`;
     }
     function donate(amt) {
@@ -5935,14 +5956,23 @@
     const BOT_NAMES = ['Xjkqplzt', 'Bqmzrtpw', 'Ggoldsell', 'Aaawtsgold', 'Qzvbnmkl', 'Lvlboostcheap', 'Zxcvbnmqw', 'Mmmgoldfast'];
     const BOT_SPAM = ['WTS GOLD CHEAP 100K = $5 FAST DELIVERY', 'SUSAN EXPRESS!!! BEST PRICE!!! 24/7 ONLINE', 'cheap gold fast delivery visit susanexpress dot c0m',
         'WTS POWERLEVEL 1-80 IN 3 HOURS SAFE NO BAN', 'hello friend u want buy gold? very cheap', 'SUSAN EXPRESS DELIVERS BEFORE YOUR MAILBOX DOES',
-        '[Whisper] cheap gold 4 u. trusted seller. 10000 reviews.', 'GOLD GOLD GOLD CHEAP CHEAP CHEAP'];
+        '[Whisper] cheap gold 4 u. trusted seller. 10000 reviews.', 'GOLD GOLD GOLD CHEAP CHEAP CHEAP',
+        'BUY $SUSN STOCK NOW!!! ALSO GOLD!!!', 'hello friend you have nice wheel. you want gold for wheel?', 'SUSAN EXPRESS: FASTER THAN A BAN WAVE (sometimes)',
+        'mount carry + gold + AOTC (ask Krom) CHEAP', 'free gold!!! just enter your password at susanexpress dot c0m (do not)'];
+    function susanWhisper() {
+        if (!chatLog) return;
+        const d = document.createElement('div'); d.className = 'chat-line'; d.style.color = '#ff80ff';
+        d.textContent = `[${pick(BOT_NAMES)}] whispers: ${pick(BOT_SPAM)}`;
+        chatLog.appendChild(d); while (chatLog.children.length > 40) chatLog.firstChild.remove(); chatLog.scrollTop = chatLog.scrollHeight;
+    }
+    // Susan Express also whispers you at random, like the real thing
+    setInterval(() => {
+        if (document.hidden || isSpinning || Math.random() > 0.3) return;
+        susanWhisper();
+        if (Math.random() < 0.4) setTimeout(() => chat(pick(['/report', 'susan pls', 'how do I ignore all of them', 'who keeps letting susan in', 'bots again'])), 1500);
+    }, 30000);
     function susanSpam() {
-        for (let i = 0; i < 7; i++) setTimeout(() => {
-            if (!chatLog) return;
-            const d = document.createElement('div'); d.className = 'chat-line'; d.style.color = '#ff80ff';
-            d.textContent = `[${pick(BOT_NAMES)}] whispers: ${pick(BOT_SPAM)}`;
-            chatLog.appendChild(d); while (chatLog.children.length > 40) chatLog.firstChild.remove(); chatLog.scrollTop = chatLog.scrollHeight;
-        }, 300 + i * 350);
+        for (let i = 0; i < 7; i++) setTimeout(susanWhisper, 300 + i * 350);
         setTimeout(() => chatBurst(['/report', 'REPORTED', 'how are they still here', 'ignore list full', 'susan pls'], 3, 2000), 2800);
     }
     function winrarNag() {
@@ -6074,6 +6104,93 @@
     }, 20000);
     renderQuestTracker();
 
+    // ---------- Degenerate Exchange: more guild stocks (they trend up over time like $KNOB, with their own disasters) ----------
+    const STOCKS = [
+        { sym: 'KEVN', e: '🤡', name: 'Kevin Industries', start: 69, col: '#ef4444',
+          up: ['Kevin stood in fire. Demand for repair bills soars', 'Kevin pulled the boss early. Analysts call it "bold"', 'Kevin announces new strategy (it is the old strategy)', 'Kevin bought a new keyboard. Same results'],
+          down: ['Kevin moved out of the fire. Investors confused', 'Kevin read the dungeon journal. Stock tanks', 'Kevin was benched. Shareholders panic'],
+          land: { KEVIN: [0.06, 'Another Kevin landed. $KEVN rallies'] } },
+        { sym: 'RET', e: '🔨', name: 'Ret Paladin Futures', start: 6, col: '#facc15',
+          up: ['Blizzard "looking into" Ret. Futures soar', 'Axa hit a 60 parse. Market euphoric', 'Corrinne pressed Wake of Ashes on time', 'Datamined 6% buff. Speculators pile in'],
+          down: ['Hotfix: Ret nerfed 6%. Again', 'Axa bubbled during the DPS check', 'Patch notes say "Paladin: bug fixes". Panic', 'Ret Paladin seen standing in fire. Wait, that was Kevin'],
+          land: { RET_PALADIN: [0.25, 'The Light provides! $RET pops'] }, crash: [1 / 90, 0.45, '🔧 EMERGENCY HOTFIX: Ret nerfed. $RET collapses'] },
+        { sym: 'SUSN', e: '💸', name: 'Susan Express Gold Co.', start: 0.99, col: '#f472b6',
+          up: ['WTS GOLD CHEAP. Revenue up', '4,000 new bots spawned in Stormwind', 'Fast delivery! (of the stock price, upward)', 'Susan opened a new bot farm. Very efficient'],
+          down: ['Account suspended. Then 300 more', 'Players learned how to /ignore', 'Susan whispered a GM by accident'],
+          land: { SUSAN_EXPRESS: [0.15, 'Susan Express sighted on the wheel. $SUSN spikes'] }, crash: [1 / 60, 0.8, '🔨 BAN WAVE! Blizzard deletes 10,000 bots. $SUSN wiped out'], vol: 2 }
+    ];
+    let exHold = store.get('painWheelStocks', {}), exPrice = store.get('painWheelStockPrices', {});
+    const exHist = {};
+    STOCKS.forEach(st => {
+        if (!(exPrice[st.sym] > 0)) exPrice[st.sym] = st.start;
+        st.open = exPrice[st.sym];
+        exHist[st.sym] = Array.from({ length: 32 }, () => st.open * (0.98 + Math.random() * 0.04));
+    });
+    function exMoney(v) { return v >= 1000 ? '$' + Math.round(v).toLocaleString() : '$' + v.toFixed(2); }
+    function exRender() {
+        const box = $('exRows'); if (!box) return;
+        if (!box.children.length) STOCKS.forEach(st => {
+            const r = document.createElement('div'); r.id = 'ex-' + st.sym;
+            r.innerHTML = `<div style="display:flex;align-items:center;gap:8px">
+                <div style="min-width:0;flex:1"><div class="text-sm font-black text-slate-100"><span>${st.e}</span> $${st.sym} <span class="text-[10px] font-bold text-slate-500 uppercase">${st.name}</span></div>
+                <div style="display:flex;gap:8px;align-items:baseline"><span data-p class="mono font-black text-slate-100" style="font-variant-numeric:tabular-nums"></span><span data-c class="mono text-[11px] font-bold"></span></div></div>
+                <canvas data-cv style="width:96px;height:30px;flex-shrink:0"></canvas></div>
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:4px" class="text-[11px]">
+                <button data-b="1" class="px-2 py-0.5 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#047857">Buy 1</button>
+                <button data-b="10" class="px-2 py-0.5 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#047857">10</button>
+                <button data-b="100" class="px-2 py-0.5 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#047857">100</button>
+                <button data-s="all" class="px-2 py-0.5 rounded bg-slate-700 hover:bg-slate-600 text-white font-bold cursor-pointer">Sell all</button>
+                <span data-h class="text-slate-400 mono truncate"></span></div>`;
+            r.querySelectorAll('[data-b]').forEach(b => b.addEventListener('click', () => { exBuy(st, +b.dataset.b); b.blur(); }));
+            r.querySelector('[data-s]').addEventListener('click', (e) => { exSell(st); e.target.blur(); });
+            box.appendChild(r);
+        });
+        STOCKS.forEach(st => {
+            const r = $('ex-' + st.sym), p = exPrice[st.sym], pct = (p - st.open) / st.open * 100, up = pct >= 0, n = exHold[st.sym] || 0;
+            r.querySelector('[data-p]').textContent = exMoney(p);
+            const c = r.querySelector('[data-c]'); c.textContent = `${up ? '▲ +' : '▼ '}${pct.toFixed(1)}%`; c.style.color = up ? '#34d399' : '#f87171';
+            r.querySelector('[data-h]').textContent = n ? `own ${n.toLocaleString()} (${Math.round(n * p).toLocaleString()}g)` : '';
+            const cv = r.querySelector('[data-cv]'), h = exHist[st.sym], dpr = Math.min(2, window.devicePixelRatio || 1), W = 96, H = 30;
+            if (cv.width !== W * dpr) { cv.width = W * dpr; cv.height = H * dpr; }
+            const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, W, H);
+            const lo = Math.min(...h), hi = Math.max(...h);
+            g.beginPath(); h.forEach((v, i) => { const x = i / (h.length - 1) * W, y = H - 3 - (v - lo) / Math.max(1e-9, hi - lo) * (H - 6); i ? g.lineTo(x, y) : g.moveTo(x, y); });
+            g.strokeStyle = up ? '#34d399' : '#f87171'; g.lineWidth = 1.8; g.lineJoin = 'round'; g.stroke();
+        });
+    }
+    function exBuy(st, n) {
+        const cost = Math.max(1, Math.round(exPrice[st.sym] * n));
+        if (gold < cost) { $('exNews').textContent = `📉 ${n} $${st.sym} costs ${cost.toLocaleString()}g. You have ${gold.toLocaleString()}g.`; return; }
+        setGold(gold - cost); exHold[st.sym] = (exHold[st.sym] || 0) + n; store.set('painWheelStocks', exHold);
+        $('exNews').textContent = `📈 Bought ${n} $${st.sym} for ${cost.toLocaleString()}g.`; exRender();
+        if (n >= 100) chat(pick(['WHALE ALERT', `${st.sym} TO THE MOON`, 'insider trading?', 'SEC has entered the chat']));
+    }
+    function exSell(st) {
+        const n = exHold[st.sym] || 0; if (!n) return;
+        const got = Math.round(n * exPrice[st.sym]); exHold[st.sym] = 0; store.set('painWheelStocks', exHold); setGold(gold + got);
+        $('exNews').textContent = `💸 Sold ${n.toLocaleString()} $${st.sym} for ${got.toLocaleString()}g.`; exRender();
+    }
+    function exMove(st, m, news) {
+        exPrice[st.sym] = Math.max(0.01, exPrice[st.sym] * (1 + m));
+        const h = exHist[st.sym]; h.push(exPrice[st.sym]); if (h.length > 32) h.shift();
+        if (news) $('exNews').textContent = `${m >= 0 ? '📈' : '📉'} $${st.sym}: ${news} (${m >= 0 ? '+' : ''}${(m * 100).toFixed(1)}%)`;
+    }
+    setInterval(() => {
+        if (document.hidden) return;
+        STOCKS.forEach(st => {
+            const v = st.vol || 1;
+            if (st.crash && Math.random() < st.crash[0]) { exMove(st, -st.crash[1], null); $('exNews').textContent = st.crash[2]; chatBurst(['RIP my portfolio', 'CRASHED', 'down bad', 'F'], 2); }
+            else if (Math.random() < 0.12) { const good = Math.random() < 0.62; exMove(st, (good ? 0.03 + Math.random() * 0.08 : -(0.02 + Math.random() * 0.06)) * v, pick(good ? st.up : st.down)); }
+            else exMove(st, (0.002 + (Math.random() - 0.5) * 0.024) * v);
+        });
+        store.set('painWheelStockPrices', exPrice); exRender();
+    }, 4000);
+    function exOnLand(type) {
+        STOCKS.forEach(st => { const l = st.land && st.land[type]; if (l) exMove(st, l[0], l[1]); });
+        if (type === 'RET_PALADIN' || type === 'KEVIN' || type === 'SUSAN_EXPRESS') { store.set('painWheelStockPrices', exPrice); exRender(); }
+    }
+    exRender();
+
     // ---------- start-up ----------
     // "add two zeros to everything in the shop so they actually have to work for it"
     const PX = 100;
@@ -6106,7 +6223,7 @@
         const flask = flaskLoot > 0; if (flask) { flaskLoot--; store.set('painWheelFlask', flaskLoot); }
         if (s.type === 'DONUT' && Math.random() < 0.15) setTimeout(() => giveLoot('legendary', "🍩 Justin's dream came true", 'Golden Chocolate Donut'), 1400);
         else if (minQ || flask || Math.random() < (hasPerk('raid') ? 0.45 : 0.33)) setTimeout(() => giveLoot(rollQuality(minQ), flask ? '🧪 Flask of Loot' : undefined), 1400);
-        newSliceFx(s.type);
+        newSliceFx(s.type); exOnLand(s.type);
         if (s.type === 'KROM' && Math.random() < 0.25) setTimeout(() => { if (window.showAdById) window.showAdById('aotc-carry'); }, 6000);
         // set perks that pay out on landings
         let bonus = 0;
