@@ -2035,6 +2035,77 @@
             tim('C2', 1.28, 0.85); tim('G2', 1.98, 0.35); tim('C2', 2.12, 0.6);
         }, playWinSynth);
     }
+    // ---------- fanfare variety: regular popups rotate through these so it doesn't get old ----------
+    function bell(f, at, dur, gain, out) {
+        const t = audioCtx.currentTime + 0.03 + at;
+        [1, 2.76, 5.4].forEach((m, i) => {
+            const o = audioCtx.createOscillator(), g = audioCtx.createGain(); o.type = 'sine'; o.frequency.value = f * m;
+            const a = gain / (i * 2.5 + 1);
+            g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(a, t + 0.005); g.gain.exponentialRampToValueAtTime(0.0001, t + dur / (i + 1));
+            o.connect(g); g.connect(out || masterGain); o.start(t); o.stop(t + dur + 0.05);
+        });
+    }
+    function chip(f, at, dur, gain) {   // 8-bit square blip
+        const t = audioCtx.currentTime + 0.03 + at, o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        o.type = 'square'; o.frequency.value = f;
+        g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(gain, t + 0.005); g.gain.setValueAtTime(gain, t + dur * 0.7); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+        o.connect(g); g.connect(masterGain); o.start(t); o.stop(t + dur + 0.02);
+    }
+    const FANFARES = {
+        // ta... DA!
+        tada: { short: true, play: () => withSamples(() => {
+            const out = brassBus(0.8, 2.3), tp = (n, at, dur, g, c) => playSample('trumpet_' + n, { at, dur, gain: g, out, release: 0.3, cents: c || 0 });
+            tp('C5', 0, 0.12, 0.4); tp('G5', 0.17, 0.75, 0.42); tp('E5', 0.17, 0.75, 0.3); tp('C5', 0.17, 0.75, 0.28);
+            playSample('french_horn_C4', { at: 0.17, dur: 0.85, gain: 0.3, out, release: 0.5 }); playSample('timpani_C2', { at: 0.17, dur: 0.8, gain: 0.6, out, release: 0.5 });
+        }, playWinSynth) },
+        // a warm rising horn call
+        royal: { short: false, play: () => withSamples(() => {
+            const out = brassBus(1.1, 3.6), hn = (n, at, dur, g, c) => playSample('french_horn_' + n, { at, dur, gain: g, out, release: 0.6, cents: c || 0, vibrato: 6 });
+            hn('C4', 0, 0.3, 0.34); hn('E4', 0.28, 0.3, 0.34); hn('G4', 0.56, 0.3, 0.36); hn('C4', 0.84, 1.1, 0.4, 1200);
+            hn('G4', 0.84, 1.1, 0.26); hn('E4', 0.84, 1.1, 0.24); playSample('timpani_C2', { at: 0.84, dur: 1, gain: 0.55, out, release: 0.6 });
+        }, playWinSynth) },
+        // shave and a haircut... two bits
+        haircut: { short: false, play: () => withSamples(() => {
+            const out = brassBus(0.6, 3.6), tp = (n, at, dur, c, g) => playSample('trumpet_' + n, { at, dur, gain: g || 0.36, out, release: 0.12, cents: c || 0 });
+            tp('C5', 0, 0.16); tp('G4', 0.22, 0.1); tp('G4', 0.34, 0.1); tp('G4', 0.48, 0.18, 200); tp('G4', 0.72, 0.2);
+            tp('C5', 1.15, 0.16, -100, 0.4); tp('C5', 1.38, 0.5, 0, 0.44); playSample('timpani_C2', { at: 1.38, dur: 0.6, gain: 0.5, out, release: 0.4 });
+        }, playWinSynth) },
+        // sparkly bells
+        chime: { short: true, play: () => { if (!soundOn()) return; ensureAudio(); const out = brassBus(0.9, 1.5);
+            [1046.5, 1318.5, 1568, 2093].forEach((f, i) => bell(f, i * 0.09, 1.4, 0.07, out)); bell(2637, 0.42, 1.6, 0.05, out); } },
+        // retro level-up
+        levelup: { short: true, play: () => { if (!soundOn()) return; ensureAudio();
+            [523.25, 659.25, 783.99, 1046.5, 1318.5, 1568, 2093].forEach((f, i) => chip(f, i * 0.055, 0.08, 0.075)); chip(2093, 0.42, 0.3, 0.07); chip(1568, 0.42, 0.3, 0.05); } },
+        // orchestra hit
+        stab: { short: true, play: () => withSamples(() => {
+            const out = brassBus(1.2, 2.5);
+            ['trumpet_C5', 'trumpet_E5', 'trumpet_G5'].forEach(n => playSample(n, { at: 0, dur: 0.22, gain: 0.32, out, release: 0.5 }));
+            ['french_horn_C4', 'french_horn_G4'].forEach(n => playSample(n, { at: 0, dur: 0.3, gain: 0.3, out, release: 0.7 }));
+            playSample('trombone_Bb3', { at: 0, dur: 0.3, gain: 0.3, out, release: 0.6, cents: 200 }); playSample('timpani_C2', { at: 0, dur: 1, gain: 0.8, out, release: 0.8 });
+        }, playWinSynth) },
+        grand: { short: false, play: () => playWinSound() }
+    };
+    // Kevin is a third of the wheel, so Kevin gets short, unimpressed sounds
+    const KEVIN_SOUNDS = {
+        wah: () => withSamples(() => playSample('trombone_Bb3', { at: 0, dur: 0.55, gain: 0.3, slide: -250, release: 0.25, out: brassBus(0.5, 2) }), () => playNotes([{ f: 233, t: 0, d: 0.5 }], 'sawtooth', 0.08)),
+        ding: () => { if (!soundOn()) return; ensureAudio(); bell(392, 0, 1.0, 0.07); },
+        dud: () => { if (!soundOn()) return; ensureAudio(); [[392, 0], [311, 0.16]].forEach(([f, at]) => bell(f, at, 0.6, 0.06)); },
+        boop: () => { if (!soundOn()) return; ensureAudio(); chip(220, 0, 0.12, 0.05); chip(165, 0.13, 0.2, 0.05); }
+    };
+    const fanfareBag = {}; let lastFanfareAt = 0;
+    function pickFromBag(key, names) {   // shuffle-bag: every option plays once before any repeats, never twice in a row
+        let bag = fanfareBag[key];
+        if (!bag || !bag.length) { bag = names.slice().sort(() => Math.random() - 0.5); if (fanfareBag[key + 'Last'] === bag[0]) bag.push(bag.shift()); fanfareBag[key] = bag; }
+        const n = bag.shift(); fanfareBag[key + 'Last'] = n; return n;
+    }
+    function playRegularFanfare(type) {
+        if (!soundOn()) return;
+        const now = Date.now(), quick = now - lastFanfareAt < 10000;   // spinning fast: keep it short
+        lastFanfareAt = now;
+        if (type === 'KEVIN') return KEVIN_SOUNDS[pickFromBag('kevin', Object.keys(KEVIN_SOUNDS))]();
+        const names = Object.keys(FANFARES).filter(k => !quick || FANFARES[k].short);
+        FANFARES[pickFromBag(quick ? 'quick' : 'all', names)].play();
+    }
     function playWinSynth() {
         playNotes([
             { f: 523.25, t: 0.00, d: 0.11 }, { f: 659.25, t: 0.10, d: 0.11 }, { f: 783.99, t: 0.20, d: 0.11 },
@@ -2241,13 +2312,14 @@
         sinking: { play: () => playSinkingShipSound(), cooldownMin: 2 }  // Taps (Krom)
     };
     const soundLastPlayed = {};
+    let lastLandedType = null;
     let lastSpecialSoundAllowed = false;
     function playSliceSound(win) {
         lastSpecialSoundAllowed = false;
         const snd = win.sound && SLICE_SOUNDS[win.sound];
-        if (!snd) return playWinSound();
+        if (!snd) return playRegularFanfare(lastLandedType);
         const now = Date.now(), last = soundLastPlayed[win.sound] || 0;
-        if (snd.cooldownMin > 0 && now - last < snd.cooldownMin * 60000) return playWinSound();
+        if (snd.cooldownMin > 0 && now - last < snd.cooldownMin * 60000) return playRegularFanfare(lastLandedType);
         lastSpecialSoundAllowed = true;
         soundLastPlayed[win.sound] = now;
         snd.play();
@@ -3117,7 +3189,7 @@
 
         addHistoryEntry(spinCount, winner);
         const fair = riggedMode === "FAIR", ash = rollAshbringer();
-        const finish = () => { playSliceSound(TYPE[winner.type].win || {}); showWinnerModal(winner); recordSpin(winner, fair); afterSpinFun(winner, fair, ash); reportSpin(winner, fair, ash); };
+        const finish = () => { lastLandedType = winner.type; playSliceSound(TYPE[winner.type].win || {}); showWinnerModal(winner); recordSpin(winner, fair); afterSpinFun(winner, fair, ash); reportSpin(winner, fair, ash); };
         if (ash) playAshbringer(finish); else finish();
         if (riggedMode !== "FAIR") setRigMode("FAIR");
     }
