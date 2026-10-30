@@ -181,6 +181,33 @@
         ::-webkit-scrollbar-track { background: #0f172a; border-radius: 8px; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 8px; }
         ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        /* shop */
+        .shop-tab { background: #1e293b; color: #cbd5e1; border: 1px solid #334155; }
+        .shop-tab-on { background: #f59e0b; color: #111; border-color: #fbbf24; }
+        .scratch-cell { width: 48px; height: 48px; border-radius: 8px; border: 2px solid #b45309; display: flex; align-items: center; justify-content: center; font-size: 26px;
+            background: repeating-linear-gradient(45deg,#a16207 0 6px,#ca8a04 6px 12px); }
+        .scratch-cell.open { background: #0f172a; border-color: #f59e0b; animation: scratchPop .35s ease-out both; }
+        @keyframes scratchPop { from { transform: scale(.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        /* clippy pet */
+        .clippy-pet { position: fixed; z-index: 76; pointer-events: none; font-size: 38px; left: 0; top: 0; }
+        .clippy-pet .pet-bubble { position: absolute; left: 40px; top: -10px; width: 200px; background: #fffbe6; color: #111; font-size: 11px; font-weight: 700; line-height: 1.3; border: 1.5px solid #111; border-radius: 10px; padding: 6px 8px; box-shadow: 2px 2px 0 #111; }
+        /* ambulance light: slow pulse, no strobe */
+        .siren-glow { animation: sirenGlow 1s ease-in-out infinite alternate; }
+        @keyframes sirenGlow { from { filter: drop-shadow(0 0 2px #ef4444); } to { filter: drop-shadow(0 0 14px #3b82f6); } }
+        /* party mode: big soft lights that drift and change color slowly (no flashing) */
+        #partyLights { position: fixed; inset: 0; z-index: 58; pointer-events: none; display: none; overflow: hidden; mix-blend-mode: screen; }
+        body.party-on #partyLights { display: block; }
+        #partyLights .beam { position: absolute; width: 70vmax; height: 70vmax; border-radius: 50%; filter: blur(60px); opacity: .32; }
+        #partyLights .b1 { background: #ec4899; left: -20vmax; top: -20vmax; animation: beamA 9s ease-in-out infinite alternate, hueSpin 14s linear infinite; }
+        #partyLights .b2 { background: #22d3ee; right: -25vmax; top: 10vh; animation: beamB 11s ease-in-out infinite alternate, hueSpin 17s linear infinite; }
+        #partyLights .b3 { background: #a3e635; left: 20vw; bottom: -35vmax; animation: beamC 13s ease-in-out infinite alternate, hueSpin 20s linear infinite; }
+        #partyLights .ball { position: absolute; left: 50%; top: 4px; transform: translateX(-50%); font-size: 54px; animation: ballSpin 6s linear infinite; }
+        @keyframes beamA { to { transform: translate(40vw, 30vh); } }
+        @keyframes beamB { to { transform: translate(-45vw, 25vh); } }
+        @keyframes beamC { to { transform: translate(30vw, -40vh); } }
+        @keyframes hueSpin { to { filter: blur(60px) hue-rotate(360deg); } }
+        @keyframes ballSpin { from { transform: translateX(-50%) rotate(0); } to { transform: translateX(-50%) rotate(360deg); } }
+        @media (prefers-reduced-motion: reduce) { #partyLights .beam, #partyLights .ball { animation: none; } }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between bg-slate-950 text-slate-100 select-none">
@@ -216,10 +243,13 @@
             <label class="flex items-center gap-1.5 text-slate-400">
                 <span>Player</span>
                 <input id="playerName" type="text" maxlength="20" placeholder="Your name" class="w-32 bg-slate-900 border border-slate-700 rounded-md px-2 py-1 text-slate-100 placeholder:text-slate-600">
+                <span id="titleShow" class="text-amber-300 font-bold italic"></span>
             </label>
             <button id="statsBtn" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold cursor-pointer">📊 My Stats</button>
             <button id="bagBtn" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold cursor-pointer">🎒 Bag</button>
             <button id="homeBtn" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold cursor-pointer">🏠 Home</button>
+            <button id="shopBtn" class="px-2.5 py-1 rounded-md bg-amber-600 hover:bg-amber-500 border border-amber-400 text-black font-black cursor-pointer">🛒 Shop</button>
+            <button id="partyBtn" class="px-2.5 py-1 rounded-md bg-fuchsia-800 hover:bg-fuchsia-700 border border-fuchsia-500 text-white font-bold cursor-pointer">🪩 Party</button>
             <label class="flex items-center gap-1.5 text-slate-400">
                 <span>Theme</span>
                 <select id="themePicker" class="bg-slate-900 border border-slate-700 rounded-md px-2 py-1 text-slate-200 cursor-pointer"></select>
@@ -380,8 +410,10 @@
                 <div id="hpMsg" class="text-xs text-amber-300 font-bold min-h-[1rem] text-center"></div>
             </div>
             <div class="mt-3 pt-3 border-t border-emerald-900">
-                <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">🐾 Pet shop</div>
-                <div id="petShop" class="grid grid-cols-1 gap-1.5"></div>
+                <div class="flex gap-2 flex-wrap">
+                    <button id="hpPetBtn" class="px-3 py-1.5 rounded bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold cursor-pointer">🐾 Pet shop</button>
+                    <button id="hpShopBtn" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">🎟️ Scratch-offs</button>
+                </div>
             </div>
             <div class="mt-3 pt-3 border-t border-emerald-900">
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">💸 Goblin debt</div>
@@ -392,15 +424,25 @@
                 </div>
                 <div class="text-[11px] text-slate-500 mt-1">Debt grows 1% every 10 minutes. 400% APR, as promised.</div>
             </div>
-            <div class="mt-3 pt-3 border-t border-emerald-900">
-                <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">🎟️ Goblin Scratch-Off (50g)</div>
-                <div class="flex items-center gap-2">
-                    <div id="scratchCells" class="flex gap-1.5"></div>
-                    <button id="scratchBuy" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">Buy ticket</button>
-                </div>
-                <div id="scratchMsg" class="text-xs text-slate-300 mt-1 min-h-[1rem]"></div>
-                <div class="text-[11px] text-slate-500">Match 3: 💰 100g · 🍺 250g · 🔨 1,000g · 👑 5,000g. Scratch all three cells.</div>
+        </div>
+    </div>
+    <div id="partyLights" aria-hidden="true"><div class="beam b1"></div><div class="beam b2"></div><div class="beam b3"></div><div class="ball">🪩</div></div>
+    <div id="garageDock" style="z-index: 61; left: 16px; bottom: 12px;" class="fixed flex items-end gap-2"></div>
+    <div id="aipacBadge" style="z-index: 55; right: 16px; bottom: 12px; background: rgba(2,6,23,.88);" class="fixed hidden px-2.5 py-1 rounded-md border-2 text-[11px] font-black text-right leading-tight select-none"></div>
+    <div id="announceBar" style="z-index: 66; top: 8px; max-width: min(760px, calc(100vw - 32px));" class="fixed left-1/2 -translate-x-1/2 hidden items-start gap-3 px-4 py-2.5 rounded-xl border-2 border-sky-400 bg-sky-950/95 text-sky-50 shadow-2xl">
+        <div class="text-lg leading-none">📢</div>
+        <div><div class="text-[10px] font-black uppercase tracking-widest text-sky-300">Guild announcement</div><div id="announceText" class="text-sm font-bold whitespace-pre-line"></div></div>
+        <button id="announceClose" class="text-sky-300 hover:text-white text-sm font-bold cursor-pointer">✕</button>
+    </div>
+    <div id="shopPanel" style="z-index: 72" class="fixed inset-0 hidden items-center justify-center bg-slate-950/85 backdrop-blur-sm p-4">
+        <div class="w-full max-w-2xl flex flex-col rounded-2xl p-5 shadow-2xl border-2 border-amber-500" style="max-height:90vh;max-width:42rem;background: linear-gradient(170deg,#1c1402,#0f172a 45%,#052e16);">
+            <div class="flex items-center justify-between mb-2">
+                <div class="text-lg font-black uppercase tracking-tight text-amber-300">🛒 The Goblin Shop</div>
+                <div class="flex items-center gap-3"><span id="shopGold" class="mono text-yellow-300 font-bold text-sm"></span><button id="shopClose" class="text-slate-400 hover:text-white text-sm font-bold cursor-pointer">✕</button></div>
             </div>
+            <div id="shopTabs" class="flex flex-wrap gap-1.5 mb-2"></div>
+            <div id="shopMsg" class="text-xs text-amber-300 font-bold min-h-[1rem] mb-1"></div>
+            <div id="shopBody" class="grid grid-cols-1 gap-1.5 pr-1" style="flex:1;min-height:0;overflow-y:auto;align-content:start"></div>
         </div>
     </div>
     <div id="eventBanner" style="z-index: 77; top: 84px;" class="fixed left-1/2 -translate-x-1/2 hidden px-5 py-2.5 rounded-xl border-2 border-red-500 bg-red-950/95 text-red-100 font-black text-base md:text-lg shadow-2xl text-center"></div>
@@ -516,8 +558,10 @@
                     <div class="relative flex-1 h-3 rounded bg-black/60 border border-slate-700 overflow-hidden"><div id="liverFill" style="position:absolute;inset:0 auto 0 0;width:100%;background:#22c55e;transition:width .6s,background .6s"></div></div>
                     <span id="liverText" class="mono text-slate-300 shrink-0 w-24 text-right">100%</span>
                 </div>
-                <div class="mt-2 flex items-center gap-2 text-[11px]">
-                    <button id="knobBuy" class="px-2 py-1 rounded bg-emerald-700 hover:bg-emerald-600 text-white font-bold cursor-pointer">Buy 1 share</button>
+                <div class="mt-2 flex flex-wrap items-center gap-1.5 text-[11px]">
+                    <button id="knobBuy" class="px-2 py-1 rounded bg-emerald-700 hover:bg-emerald-600 text-white font-bold cursor-pointer">Buy 1</button>
+                    <button id="knobBuy10" class="px-2 py-1 rounded bg-emerald-700 hover:bg-emerald-600 text-white font-bold cursor-pointer">Buy 10</button>
+                    <button id="knobBuy100" class="px-2 py-1 rounded bg-emerald-800 hover:bg-emerald-700 text-white font-bold cursor-pointer">Buy 100</button>
                     <button id="knobSell1" class="px-2 py-1 rounded bg-slate-700 hover:bg-slate-600 text-white font-bold cursor-pointer">Sell 1</button>
                     <button id="knobSell" class="px-2 py-1 rounded bg-slate-700 hover:bg-slate-600 text-white font-bold cursor-pointer">Sell all</button>
                     <span id="knobHold" class="text-slate-400 mono truncate">You own 0 shares</span>
@@ -623,6 +667,11 @@
                     "Tôi đang theo dõi bạn đấy, G.I."
                     <div class="text-[11px] text-slate-400 font-normal mt-0.5">(I am watching you, G.I.)</div>
                 </div>
+            </div>
+
+            <div id="smokesScene" class="hidden flex-col items-center justify-center my-3">
+                <img id="smokesImg" alt="Smokes, let's go" class="hidden max-h-[40vh] max-w-full rounded-2xl border-2 border-stone-500 shadow-xl">
+                <div id="smokesEmoji" class="text-7xl leading-none select-none">🚬🚗💨</div>
             </div>
 
             <div id="modalVideoWrap" class="hidden flex-col items-center justify-center my-3">
@@ -1011,10 +1060,30 @@
                      "Biblehumping \"saved\" you. Straight into the boss's frontal.", "Leap of Faith: a holy priest's favorite way to say \"not my problem.\"",
                      "Yanked out of the void zone and into a bigger void zone. Thanks, Platemage.", "Cause of death: Biblehumping. Logs don't lie.",
                      "Two holy priests, two lassos, zero survivors."]) } },
-        { id: "AOTC", n: 1, label: "🏆 AOTC 🏆", pill: "AOTC", bg: "#b45309", text: "#fffbeb", border: "#fde68a", fill: "gold", color: "text-yellow-300", glow: "bg-yellow-400", key: "!", rig: "AOTC", odds: "0.01%",
+        { id: "SUSAN_EXPRESS", n: 2, label: "💸 Susan Express: WTS Gold 💸", pill: "SUSAN EXPRESS", bg: "#2a0a2e", text: "#ff80ff", border: "#ff80ff", color: "text-fuchsia-300", glow: "bg-fuchsia-500", key: ",", rig: "SUS",
+          win: { title: "💸 SUSAN EXPRESS 💸", size: SIZE.mid,
+                 sub: () => pick(["[Whisper] Susanexpress: WTS 100K GOLD CHEAP!!! FAST DELIVERY!!! TRUSTED SELLER!!!", "40 level-1 bots named Xjkqplzt have spelled SUSAN EXPRESS in Stormwind with their bodies.",
+                     "Your account has been suspended for buying gold. Susan Express thanks you for your business.", "Reported for spam. Susan has 4,000 more bots ready.",
+                     "Gold delivered in 5 minutes. Your account delivered to Blizzard in 6.", "Ignore list full. Susan Express is still whispering."]) } },
+        { id: "WINRAR", n: 2, label: "📚 WinRAR 📚", pill: "WINRAR", bg: "#6b21a8", text: "#fef9c3", border: "#facc15", color: "text-purple-300", glow: "bg-purple-600", key: "<", rig: "RAR",
+          win: { title: "📚 YOU ARE WINRAR 📚", size: SIZE.big,
+                 sub: () => pick(["Is winrar! Not loser! (+40g)", "Your 40-day free trial ended in 2009. You are still a winrar. (+40g)",
+                     "Congratulations, you are a winrar. Your prize: a nag screen. (+40g)", "Nobody has ever paid for WinRAR. Nobody ever will. Winrar. (+40g)"]) } },
+        { id: "SMOKES", n: 2, label: "🚬 Smokes, Let's Go 🚬", pill: "SMOKES LET'S GO", bg: "#57534e", text: "#fef3c7", border: "#a8a29e", color: "text-stone-300", glow: "bg-stone-500", key: ">", rig: "SMK",
+          win: { title: "🚬 SMOKES, LET'S GO 🚬", size: SIZE.big,
+                 sub: () => pick(["Grab the smokes. Somebody's driving the shopping cart.", "The trailer park supervisor would like a word.",
+                     "Out of smokes. Raid is on hold until the gas station run.", "Reb's coming too. He knows a liquor store that's still open.",
+                     "Decent."]) } },
+        { id: "FLASHBANG", n: 1, label: "💥 9-Bang Flashbang 💥", pill: "9-BANG", bg: "#e5e7eb", text: "#111827", border: "#ffffff", color: "text-slate-100", glow: "bg-white", key: "+", rig: "BNG",
+          win: { title: "💥 9-BANG 💥", size: SIZE.big,
+                 sub: () => pick(["Dylan threw a 9-bang. Everyone's ears are ringing. eeeeeeeeeeeee", "FLASH OUT! (Kevin was looking right at it.)",
+                     "Nine bangs, zero survivors, one very happy Dylan.", "You can't see. You can't hear. You can still lose gold."]) } },
+        { id: "THEY_THEM", n: 1, label: "🏳️‍🌈 They/Them 🏳️‍🌈", pill: "THEY/THEM", bg: "#7c3aed", text: "#ffffff", border: "#f0abfc", fill: "rainbow", color: "text-violet-300", glow: "bg-violet-500", key: "}", rig: "THM",
+          win: { title: "THEY/THEM 🏳️‍🌈", size: SIZE.big, sub: () => "Pronouns noted. Spin again." } },
+        { id: "AOTC", n: 1, label: "🏆 AOTC 🏆", pill: "AOTC", bg: "#b45309", text: "#fffbeb", border: "#fde68a", fill: "gold", color: "text-yellow-300", glow: "bg-yellow-400", key: "!", rig: "AOTC", odds: "0.1%",
           win: { title: "🏆 AHEAD OF THE CURVE 🏆", size: SIZE.big, sound: "aotc", aotc: true, extra: "drop-shadow-[0_0_22px_rgba(250,204,21,0.95)]",
                  confetti: true, confettiEmoji: ['🏆', '✨', '⭐', '👑'], confettiColors: ['#ffd700', '#fde68a', '#facc15', '#fff7cc', '#ffffff'], confettiAmount: 1,
-                 sub: (s) => `1 in 10,000 and you hit it (Slice #${s}). Screenshot this. Nobody will believe you.` } }
+                 sub: (s) => `1 in 1,000 and you hit it (Slice #${s}). Screenshot this. Nobody will believe you.` } }
     ];
     const TYPE = Object.fromEntries(TYPES.map(t => [t.id, t]));
     TYPE.KEVIN.n = TOTAL_SLICES - TYPES.filter(t => t.id !== "KEVIN").reduce((a, t) => a + t.n, 0);
@@ -1031,8 +1100,8 @@
         return arr[bag.pop()];
     }
     function oddsOf(t) { return t.odds || (t.n / TOTAL_SLICES * 100).toFixed(2) + "%"; }
-    // AOTC is one real slice on the wheel, but only 1 in 10,000 landings are allowed to stay on it
-    const AOTC_KEEP = 0.0001 * TOTAL_SLICES;
+    // AOTC is one real slice on the wheel, but only 1 in 1,000 landings are allowed to stay on it
+    const AOTC_KEEP = 0.001 * TOTAL_SLICES;
 
     /* ===================== JOKES, ADS & TICKER COPY ===================== */
     const kevinJokesAndRants = [
@@ -1905,8 +1974,10 @@
         for (let i = 0; i < len; i++) d[i] = d[i] / peak * 0.9;
         return wofClickBuffer;
     }
+    var tickPack = 'classic';   // spin sound pack from the shop
     function playTickSound(isSpecial) {
         if (!soundOn() || chirpSpin) return;
+        if (tickPack !== 'classic') { try { playPackTick(isSpecial); } catch (e) {} return; }
         try {
             ensureAudio();
             const now = audioCtx.currentTime;
@@ -2837,7 +2908,7 @@
     }
 
     function wheelScale() {
-        return performance.now() < pixelUntil ? 0.16 : (window.devicePixelRatio || 1);  // 8-bit mode = chunky pixels
+        return performance.now() < pixelUntil ? 0.16 : activeThemeId === 'eightbit' ? 0.3 : (window.devicePixelRatio || 1);  // 8-bit mode = chunky pixels
     }
     function resizeCanvases() {
         const dpr = window.devicePixelRatio || 1, ws = wheelScale();
@@ -3164,7 +3235,7 @@
         }
         // random event: Wrong Spec (1 in 40 fair spins) sends the wheel backwards
         if (target === null && Math.random() < 1 / 40) { distance = -distance; funEvent('🔄 WRONG SPEC! The wheel is spinning backwards.'); }
-        // a fair landing on AOTC only sticks 1 time in 10,000; otherwise it slides onto the next slice
+        // a fair landing on AOTC only sticks 1 time in 1,000; otherwise it slides onto the next slice
         if (target === null && slices[getActiveSliceIndex(currentRotation + distance)].type === "AOTC" && Math.random() >= AOTC_KEEP) distance += Math.sign(distance) * SLICE_ANGLE;
         if (turboNext) { turboNext = false; distance += Math.sign(distance) * 14 * Math.PI * 2; }
         const startRot = currentRotation, finalRot = startRot + distance;
@@ -3253,7 +3324,7 @@
         { id: 'kevin5',     name: 'Kevin Is My Main Now',     desc: 'Land on Kevin 5 times in a row.' },
         { id: 'kevin50',    name: 'Kevin Collector',          desc: 'Land on Kevin 50 times.' },
         { id: 'noone',      name: 'Against All Odds',         desc: 'Land on No One.' },
-        { id: 'penis',      name: 'Jackpot (Unfortunately)', desc: 'Land on the one slice nobody wants to explain.' },
+        { id: 'penis',      name: 'Jackpot (Unfortunately)', desc: 'Land on the one slice nobody wants to explain.', secret: true },
         { id: 'ret',        name: 'The Light Provides',       desc: 'Land on Buff Ret Paladin.' },
         { id: 'retmax',     name: 'Fully Buffed',             desc: 'Max out a Ret Paladin slice (+30%).' },
         { id: 'clussy',     name: 'Clown Car',                desc: 'Land on Clussy.' },
@@ -3287,7 +3358,20 @@
         { id: 'jackpot',    name: 'Scratch That',             desc: 'Win 1,000g or more on a goblin scratch-off.' },
         { id: 'konami',     name: '+30 Lives',                desc: 'Enter the Konami code.' },
         { id: 'adclick',    name: 'Shut Up and Take My Gold', desc: "Click a popup ad's big button." },
-        { id: 'ashbringer', name: 'Server First!',            desc: 'Obtain [Ashbringer] (1-in-500 spin).' }
+        { id: 'ashbringer', name: 'Server First!',            desc: 'Obtain [Ashbringer] (1-in-500 spin).', secret: true },
+        { id: 'aipac1',     name: 'Thoughts and Donations',   desc: 'Donate to AIPAC (Basic tier).' },
+        { id: 'aipac2',     name: 'Bought a Lunch Meeting',   desc: 'Reach the Bronze lobbying tier (100g).' },
+        { id: 'aipac3',     name: 'Bought a Committee Seat',  desc: 'Reach the Silver lobbying tier (1,000g).' },
+        { id: 'aipac4',     name: 'Bought a Senator',         desc: 'Reach the Gold lobbying tier (1,000,000g).' },
+        { id: 'aipac5',     name: 'Bought Congress',          desc: 'Reach the Platinum lobbying tier (1,000,000,000g).' },
+        { id: 'rocket',     name: 'Billionaire Space Race',   desc: 'Buy the 100,000,000g rocket.' },
+        { id: 'weewoo',     name: 'Wee-Woo',                  desc: "Buy Nick's ambulance." },
+        { id: 'golddonut',  name: 'To Protect and Serve',     desc: "Find Justin's Golden Chocolate Donut." },
+        { id: 'rugpull',    name: 'Rug Pulled',               desc: 'Ape into $KEVCOIN.' },
+        { id: 'taxman',     name: 'Death and Taxes',          desc: 'Pay the Tuesday reset income tax.' },
+        { id: 'drip',       name: 'Drip',                     desc: 'Buy something cosmetic from the shop.' },
+        { id: 'boughtaotc', name: 'Pulled a Krom',            desc: "Buy Krom's AOTC carry. Shameful." },
+        { id: 'clippy',     name: "It Looks Like You're Adopting a Paperclip", desc: 'Find and adopt the secret pet.', secret: true, secretName: true }
     ];
     let achQueue = [], achShowing = false;
     const achPosts = [];
@@ -3381,6 +3465,8 @@
             const cnt = document.createElement('div'); cnt.className = 'w-10 text-right text-slate-300 mono'; cnt.textContent = n;
             r.append(name, barWrap, cnt); top.appendChild(r);
         });
+        const fav = favoriteType();
+        if (fav) { const f = document.createElement('div'); f.className = 'text-xs text-slate-300 pt-1'; f.textContent = `⭐ Favorite slice (besides Kevin): ${TYPE[fav].pill} (${stats.byType[fav]}×)`; top.appendChild(f); }
         const got = ACHIEVEMENTS.filter(a => achieved[a.id]).length;
         $('achCount').textContent = `${got} / ${ACHIEVEMENTS.length}`;
         const list = $('achList'); list.innerHTML = '';
@@ -3390,8 +3476,8 @@
             d.className = `flex items-start gap-2 rounded-lg p-2 border ${has ? 'border-amber-500/60 bg-amber-950/30' : 'border-slate-800 bg-slate-950/50 opacity-60'}`;
             const ic = document.createElement('div'); ic.className = 'text-lg'; ic.textContent = has ? '🏆' : '🔒';
             const tx = document.createElement('div');
-            const n = document.createElement('div'); n.className = `text-sm font-bold ${has ? 'text-amber-200' : 'text-slate-300'}`; n.textContent = a.name;
-            const ds = document.createElement('div'); ds.className = 'text-[11px] text-slate-400'; ds.textContent = has ? a.desc : (a.id === 'ashbringer' || a.id === 'penis' ? '???' : a.desc);
+            const n = document.createElement('div'); n.className = `text-sm font-bold ${has ? 'text-amber-200' : 'text-slate-300'}`; n.textContent = has || !a.secretName ? a.name : '???';
+            const ds = document.createElement('div'); ds.className = 'text-[11px] text-slate-400'; ds.textContent = has ? a.desc : (a.secret ? '???' : a.desc);
             tx.append(n, ds); d.append(ic, tx); list.appendChild(d);
         });
     }
@@ -3421,7 +3507,7 @@
         if (!LEADERBOARD_URL || !playerName) { achPosts.length = 0; return; }
         const body = JSON.stringify({ name: playerName, type: s.type, label: TYPE[s.type].label || TYPE[s.type].pill || s.type,
             fair: !!fair, ashbringer: !!ash, achievements: Object.keys(achieved).length, unlocked: achPosts.splice(0, 4),
-            gold: Math.round(gold), loot: lootPost.splice(0, 1)[0] || null });
+            gold: Math.round(gold), loot: lootPost.splice(0, 1)[0] || null, favorite: favoriteLabel(), title: titleChoice, donated: aipacTotal });
         setTimeout(refreshGuild, 3500);
         try { fetch(LEADERBOARD_URL, { method: 'POST', mode: 'no-cors', body, keepalive: true }).catch(() => {}); } catch (e) {}
     }
@@ -3436,17 +3522,18 @@
             status.textContent = (d.totalSpins || 0).toLocaleString() + ' guild spins';
             table.innerHTML = '';
             const head = document.createElement('tr'); head.className = 'text-[10px] uppercase tracking-wider text-slate-500';
-            ['#', 'Name', 'Spins', 'Kevins', 'Best streak', 'Ret', 'No One', '🏆'].forEach((h, i) => {
+            ['#', 'Name', 'Spins', 'Kevins', 'Best streak', 'Ret', 'No One', '🏆', '⭐ Fave'].forEach((h, i) => {
                 const th = document.createElement('th'); th.textContent = h; th.className = 'py-1 px-1.5 font-bold ' + (i < 2 ? 'text-left' : 'text-right'); head.appendChild(th);
             });
             table.appendChild(head);
-            if (!rows.length) { const tr = document.createElement('tr'); const td = document.createElement('td'); td.colSpan = 8; td.className = 'text-slate-500 py-2'; td.textContent = 'Nobody has spun yet.'; tr.appendChild(td); table.appendChild(tr); }
+            if (!rows.length) { const tr = document.createElement('tr'); const td = document.createElement('td'); td.colSpan = 9; td.className = 'text-slate-500 py-2'; td.textContent = 'Nobody has spun yet.'; tr.appendChild(td); table.appendChild(tr); }
             rows.forEach((p, i) => {
                 const tr = document.createElement('tr');
                 const me = playerName && p.name.toLowerCase() === playerName.toLowerCase();
                 tr.className = 'border-t border-slate-800 ' + (me ? 'text-amber-300 font-bold' : 'text-slate-200');
-                [i + 1, p.name + (p.ashbringers ? ' ⚔️' : ''), p.spins, p.kevins, p.bestStreak, p.ret, p.noone, p.achievements].forEach((v, j) => {
-                    const td = document.createElement('td'); td.textContent = v; td.className = 'py-1 px-1.5 ' + (j < 2 ? 'text-left' : 'text-right'); tr.appendChild(td);
+                [i + 1, p.name + (p.ashbringers ? ' ⚔️' : ''), p.spins, p.kevins, p.bestStreak, p.ret, p.noone, p.achievements, p.favorite || '—'].forEach((v, j) => {
+                    const td = document.createElement('td'); td.textContent = v; td.className = 'py-1 px-1.5 ' + (j < 2 ? 'text-left' : j === 8 ? 'text-right text-[10px] text-slate-400' : 'text-right'); tr.appendChild(td);
+                    if (j === 1 && p.title) { const t = document.createElement('div'); t.className = 'text-[10px] italic text-amber-400/80 font-normal'; t.textContent = p.title; td.appendChild(t); }
                 });
                 table.appendChild(tr);
             });
@@ -4045,6 +4132,7 @@
     function updateShieldBadge() {
         const b = $('shieldBadge');
         b.textContent = kevinShield > 0 ? `🛡️ KEVIN SHIELD ×${kevinShield}` : '';
+        try { localStorage.setItem('painWheelRepel', String(kevinShield)); } catch (e) {}
     }
     window.addEventListener('keydown', (e) => {
         if (e.code === 'Space') {
@@ -4254,6 +4342,106 @@
     const BASE_ADS = twoAmAds.slice(), BASE_NEWS = guildNews.slice(), BASE_CALLOUTS = spinCalloutMessages.slice();
     let themeChoice = 'auto';
     try { themeChoice = localStorage.getItem('painWheelTheme') || 'auto'; } catch (e) {}
+    // ---------- Shop themes: bought with gold, never turn on by themselves ----------
+    function shopTheme(id, name, cost, group, c1, c2, pain, badge, kevin, kevinLabel, drift, tagline, ads, news, callouts) {
+        return { id, name, cost, group, shop: true, when: () => false,
+            tint: `radial-gradient(ellipse at 50% 0%, ${c1}, transparent 60%), radial-gradient(ellipse at 50% 100%, ${c2}, transparent 60%)`,
+            pain, badge, tagline, kevin, kevinLabel, drift, ads, news, callouts };
+    }
+    THEMES.push(
+        shopTheme('holyret', 'Holy Ret ✨', 25000, 'joke', 'rgba(250,204,21,0.25)', 'rgba(255,255,255,0.12)', '#facc15', ['✨ ', ' 🔨'],
+            [['#78350f', '🔨', '✨', '#fde68a'], ['#a16207', '🛡️', '☀️', '#fffbeb']], '🔨 Kevin', ['✨', '🔨', '☀️'],
+            'Light-Powered Decision Engine • Now With 6% More Holy',
+            ['✨ AXA & CORRINNE PRESENT: RET PALADIN, THE MUSICAL. ALL SEATS ARE IN THE FIRE.', '🔨 THE LIGHT HAS HEARD YOUR PRAYERS AND LEFT THEM ON READ'],
+            ['BLIZZARD PROMISES RET BUFF "SOON". RET PALADINS HAVE HEARD THIS SINCE 2004.', 'AXA CASTS DIVINE SHIELD DURING DPS CHECK. CALLS IT "PLAYING AROUND MECHANICS".'],
+            ['BY THE LIGHT!', 'THE LIGHT PROVIDES (NOT DAMAGE)']),
+        shopTheme('allkevin', 'All Kevin 🤡', 25000, 'joke', 'rgba(185,28,28,0.3)', 'rgba(185,28,28,0.2)', '#ef4444', ['🤡 ', ' 🤡'],
+            [['#7f1d1d', '🤡', '🔥', '#fecaca'], ['#991b1b', '🤡', '🤡', '#fee2e2']], '🤡 KEVIN', ['🤡', '🔥'],
+            'Kevin-Powered Decision Engine • It Was Always Kevin',
+            ['🤡 KEVIN: HE IS NOT JUST A SLICE. HE IS A LIFESTYLE.', '🤡 YOU PAID GOLD TO SEE MORE KEVIN. THINK ABOUT THAT.'],
+            ['LOCAL MAN PAYS 25,000 GOLD TO SEE MORE KEVIN. FAMILY CONCERNED.', 'KEVIN STOOD IN FIRE AGAIN. SOURCES CONFIRM THE FIRE IS FINE.'],
+            ['KEVIN KEVIN KEVIN', 'YOU CHOSE THIS']),
+        shopTheme('casino', 'Goblin Casino 🎰', 25000, 'joke', 'rgba(22,163,74,0.25)', 'rgba(202,138,4,0.25)', '#22c55e', ['🎰 ', ' 💰'],
+            [['#14532d', '🎰', '💰', '#bbf7d0'], ['#713f12', '🪙', '🎲', '#fef08a']], '🎰 Kevin', ['🪙', '💰', '🎲'],
+            'Gallywix-Approved Decision Engine • The House Always Wins',
+            ['🎰 NEW AT THE GOBLIN CASINO: THE SLOT MACHINE THAT ONLY PAYS OUT KEVIN', '💰 ALL-YOU-CAN-EAT BUFFET (YOU ARE THE BUFFET)'],
+            ['GOBLIN CASINO REPORTS RECORD PROFITS. THE GUILD BANK REPORTS RECORD LOSSES.', 'PIT BOSS ASKS REB TO LEAVE. REB WAS THE PIT BOSS.'],
+            ['PLACE YOUR BETS', 'THE HOUSE ALWAYS WINS']),
+        shopTheme('barrens', 'Barrens Chat 💬', 25000, 'joke', 'rgba(217,119,6,0.22)', 'rgba(120,53,15,0.25)', '#f59e0b', ['💬 ', ' 🌵'],
+            [['#78350f', '💬', '🌵', '#fde68a'], ['#92400e', '🦒', '💬', '#fffbeb']], '💬 Kevin', ['🌵', '💬', '🦒'],
+            'Crossroads-Powered Decision Engine • Where Is Mankrik\'s Wife',
+            ['💬 WHERE IS MANKRIK\'S WIFE? WE STILL DON\'T KNOW. KEVIN MIGHT.', '🌵 LFG BARRENS: NEED HEALER, TANK, DPS, AND A REASON TO LIVE'],
+            ['BARRENS CHAT DEBATE ENTERS DAY 7,300. NOBODY HAS WON.', 'THE LOCAL GIRAFFE HAS SEEN THINGS. IT WILL NOT TALK.'],
+            ['ANYONE KNOW WHERE MANKRIK\'S WIFE IS?', 'LF1M BARRENS']),
+        shopTheme('discordleak', 'Discord Leak 🔥', 25000, 'joke', 'rgba(88,101,242,0.28)', 'rgba(220,38,38,0.2)', '#818cf8', ['🔥 ', ' 📜'],
+            [['#312e81', '📜', '🔥', '#c7d2fe'], ['#1e1b4b', '🎧', '🔥', '#e0e7ff']], '🔥 Kevin', ['🔥', '📜', '🎧'],
+            'Leaked-Logs Decision Engine • Screenshots Are Forever',
+            ['📜 OFFICER CHAT HAS BEEN LEAKED. EVERYONE IS IN TROUBLE. ESPECIALLY KEVIN.', '🔥 BURN THE LOGS. BURN THEM ALL.'],
+            ['SOMEONE SCREENSHOTTED THE OFFICER CHANNEL. THE GUILD IS ON FIRE.', '"IT WAS A JOKE" SAYS MAN WHO HAS BEEN SAYING IT FOR THREE YEARS.'],
+            ['THE LOGS HAVE BEEN LEAKED', 'WHO SCREENSHOTTED THIS']),
+        shopTheme('clowncar', 'Clown Car 🤡🚗', 25000, 'joke', 'rgba(236,72,153,0.25)', 'rgba(59,130,246,0.22)', '#f472b6', ['🤡 ', ' 🚗'],
+            [['#831843', '🤡', '🚗', '#fbcfe8'], ['#1e3a8a', '🎈', '🤡', '#dbeafe']], '🚗 Kevin', ['🎈', '🤡', '🚗'],
+            'Honk-Powered Decision Engine • 40 Raiders, 1 Car',
+            ['🚗 THE GUILD HAS ARRIVED. ALL 40 OF THEM. IN ONE CAR.', '🎈 CLUSSY\'S BIRTHDAY PARTY SERVICES: NOW WITH 100% MORE HONK'],
+            ['CLOWN CAR SEEN LEAVING THE RAID. IT WAS THE WHOLE RAID.', 'HONK HONK SAYS RAID LEADER. NOBODY DISAGREES.'],
+            ['HONK HONK', 'EVERYONE GET IN']),
+        shopTheme('eightbit', '8-Bit Forever 👾', 25000, 'joke', 'rgba(34,197,94,0.22)', 'rgba(168,85,247,0.22)', '#4ade80', ['👾 ', ' 🕹️'],
+            [['#052e16', '👾', '🕹️', '#86efac'], ['#3b0764', '🕹️', '👾', '#e9d5ff']], '👾 KEVIN', ['👾', '🕹️'],
+            '8-Bit Decision Engine • Press Start To Lose',
+            ['👾 INSERT COIN TO CONTINUE. OR DON\'T. KEVIN IS STILL HERE.', '🕹️ 1 PLAYER 2 PLAYER 40 PLAYER (ALL KEVIN)'],
+            ['HIGH SCORE BEATEN BY KEVIN. HE DIED ON LEVEL 1.', 'PIXELS ARE BACK. RESOLUTION IS NOT.'],
+            ['PRESS START', 'GAME OVER (IT WAS KEVIN)'])
+    );
+    // one theme per class, in class colors
+    [
+        ['dk', 'Death Knight 💀', '#C41E3A', ['💀', '❄️'], 'Rune-Powered Decision Engine • Death Grip Included',
+            ['💀 TIRED OF YOUR RAID? DEATH GRIP THEM BACK. DEATH GRIP THEM ALL BACK.', '❄️ OBLITERATE YOUR PROBLEMS. KEVIN IS STILL A PROBLEM.'],
+            ['DEATH KNIGHT GRIPS BOSS INTO RAID. RAID WIPES. "WORKED ON MY MACHINE."', 'RUNE WEAPON SUMMONED. IT ALSO STOOD IN FIRE.'], ['GET OVER HERE', 'RUNES ON COOLDOWN']],
+        ['dh', 'Demon Hunter 🦇', '#A330C9', ['🦇', '🔥'], 'Fel-Powered Decision Engine • You Are Not Prepared',
+            ['🦇 BLINDFOLDS 50% OFF. YOU WON\'T SEE THE FIRE ANYWAY.', '🔥 FEL RUSH INTO THE PACK. WHAT COULD GO WRONG.'],
+            ['DEMON HUNTER FEL RUSHES OFF A CLIFF. "MOVEMENT SPEED IS A DPS INCREASE."', 'DYLAN SEEN DOUBLE JUMPING IN THE GUILD HALL AGAIN.'], ['YOU ARE NOT PREPARED', 'FEL RUSH (OFF A LEDGE)']],
+        ['druid', 'Druid 🐻', '#FF7C0A', ['🐻', '🌿'], 'Shapeshift-Powered Decision Engine • Four Specs, Zero Answers',
+            ['🐻 WHY BE ONE THING WHEN YOU CAN BE BAD AT FOUR?', '🌿 MOONFIRE EVERYTHING. WE MEAN EVERYTHING.'],
+            ['DRUID CAN\'T DECIDE WHAT FORM TO BE. RAID STARTS WITHOUT THEM.', 'TRAVEL FORM SEEN LEAVING DURING TRASH. CALLS IT "SCOUTING."'], ['BEAR FORM!', 'MOONFIRE THE WHEEL']],
+        ['evoker', 'Evoker 🐲', '#33937F', ['🐲', '✨'], 'Dragon-Powered Decision Engine • 25-Yard Range Edition',
+            ['🐲 HOVER ACROSS FIRE IN STYLE. STILL STANDING IN IT.', '✨ EMPOWER YOUR SPELLS. EMPOWER YOUR LOSSES.'],
+            ['EVOKER TOO SHORT-RANGED TO REACH BOSS. BLAMES THE BOSS.', 'DRAGON IN THE RAID ASKS IF IT CAN FLY. IT CANNOT.'], ['DRACTHYR SUPREMACY', 'HOVER HOVER HOVER']],
+        ['hunter', 'Hunter 🏹', '#AAD372', ['🏹', '🐾'], 'Pet-Powered Decision Engine • Growl Is On',
+            ['🏹 YOUR PET PULLED THE BOSS. AGAIN. GROWL IS ON. AGAIN.', '🐾 TAME A SPIRIT BEAST TODAY. IT WILL NOT TAME KEVIN.'],
+            ['HUNTER ROLLS NEED ON PLATE "FOR MY PET".', 'FEIGN DEATH USED DURING A WIPE. HUNTER IS THE ONLY ONE ALIVE. AGAIN.'], ['HUNTER WEAPON', 'TURN GROWL OFF']],
+        ['mage', 'Mage 🔮', '#3FC7EB', ['🔮', '🧊'], 'Arcane-Powered Decision Engine • Table Is Up',
+            ['🧊 FREE CONJURED FOOD FOR EVERYONE (CLICK THE TABLE, KEVIN)', '🔮 PORTALS 2G. TO MURDER ROW? FREE.'],
+            ['MAGE POSTS PORTAL TO DALARAN. TWO PEOPLE CLICK IT MID-PULL.', 'FROST NOVA ROOTS RAID IN FIRE. MAGE SAYS "MY BAD".'], ['TABLE IS UP', 'POLYMORPH KEVIN']],
+        ['monk', 'Monk 🥋', '#00FF98', ['🥋', '🍵'], 'Chi-Powered Decision Engine • Roll Roll Roll',
+            ['🥋 ROLL INTO THE PULL. ROLL OUT OF THE RAID.', '🍵 BREWMASTER TEA (100% STAGGER, 0% FLAVOR)'],
+            ['MONK ROLLS OFF EDGE. ROLLS AGAIN. GONE.', 'KEG SMASH SMASHES KEG. TAVERN CLOSED.'], ['ROLL ROLL ROLL', 'CHI ON THE WHEEL']],
+        ['paladin', 'Paladin 🛡️', '#F48CBA', ['🛡️', '🔨'], 'Bubble-Powered Decision Engine • Bubble Hearth Certified',
+            ['🛡️ BUBBLE. HEARTH. REPEAT. IT\'S A LIFESTYLE.', '🔨 BLESSING OF PROTECTION ON THE TANK. TANK LOSES AGGRO. WHOOPS.'],
+            ['PALADIN BUBBLES DURING WIPE. LIVES. FEELS NOTHING.', 'LAY ON HANDS USED ON KEVIN. KEVIN DIES ANYWAY.'], ['BUBBLE HEARTH', 'FOR THE LIGHT']],
+        ['priest', 'Priest ✝️', '#FFFFFF', ['✝️', '🕯️'], 'Holy-Powered Decision Engine • Leap Of Faith Ready',
+            ['🕯️ LEAP OF FAITH: NOW WITH 100% MORE YANKING', '✝️ MIND CONTROL THE BOSS. IT FEELS THE SAME AS MIND CONTROLLING KEVIN.'],
+            ['PRIEST LIFE GRIPS TANK INTO FIRE. "I HAD A FEELING."', 'SHADOW PRIEST SAYS "I CAN HEAL TOO". DOES NOT.'], ['LEAP OF FAITH', 'HEALS ON THE WHEEL']],
+        ['rogue', 'Rogue 🗡️', '#FFF468', ['🗡️', '🌑'], 'Stealth-Powered Decision Engine • You Didn\'t See This',
+            ['🗡️ SAP KEVIN. SAP HIM AGAIN. HE STAYS SAPPED.', '🌑 VANISH FROM THE RAID. NOBODY NOTICES. NOBODY EVER NOTICES.'],
+            ['ROGUE PICKPOCKETS RAID LEADER. FINDS ONLY KNOB CREEK.', 'SHROUD OF CONCEALMENT USED TO SKIP RAID ENTIRELY.'], ['VANISH', 'SAP THE WHEEL']],
+        ['shaman', 'Shaman ⚡', '#0070DD', ['⚡', '🌊'], 'Totem-Powered Decision Engine • Bloodlust On Pull',
+            ['⚡ BLOODLUST ON PULL? BLOODLUST AT 3% WHILE EVERYONE IS DEAD? BOTH!', '🌊 TOTEMS 2 FOR 1. NOBODY KNOWS WHAT THEY DO.'],
+            ['SHAMAN PRESSES BLOODLUST BEFORE BOSS IS PULLED. TRUE STORY.', 'ANCESTRAL SPIRIT CAST ON KEVIN. KEVIN IS NOT GRATEFUL.'], ['LUST IS UP', 'DROP THE TOTEMS']],
+        ['warlock', 'Warlock 😈', '#8788EE', ['😈', '🍬'], 'Soul-Powered Decision Engine • Grab A Cookie',
+            ['🍬 FREE HEALTHSTONES! (NOBODY PRESSES THEM)', '😈 SUMMONING KEVIN TO RAID. NOBODY ASKED FOR THIS.'],
+            ['WARLOCK SUMMONS KEVIN. RAID REVOLTS.', 'GATEWAY PLACED INTO FIRE. EVERYONE TAKES IT.'], ['CLICK THE COOKIE', 'SUMMONING STONE']],
+        ['warrior', 'Warrior ⚔️', '#C69B6D', ['⚔️', '🪓'], 'Rage-Powered Decision Engine • Charge!',
+            ['⚔️ CHARGE INTO THE PACK. CHARGE INTO THE NEXT PACK. CHARGE INTO THE WIPE.', '🪓 BLADESTORM EVERYTHING. LOOT IS FOR LATER.'],
+            ['WARRIOR CHARGES BEFORE PULL TIMER. RAID LEADER SIGHS.', 'HEROIC LEAP OFF MURDER ROW. NOT A RAT, JUST BRAVE.'], ['CHARGE!', 'BLADESTORM THE WHEEL']]
+    ].forEach(([id, name, col, [e1, e2], tagline, ads, news, callouts]) => {
+        const rgb = [1, 3, 5].map(i => parseInt(col.slice(i, i + 2), 16)).join(',');
+        THEMES.push(shopTheme('class-' + id, name, 10000, 'class', `rgba(${rgb},0.26)`, `rgba(${rgb},0.14)`, col, [e1 + ' ', ' ' + e2],
+            [['#0f172a', e1, e2, col], ['#1e293b', e2, e1, col]], e1 + ' Kevin', [e1, e2], tagline, ads, news, callouts));
+    });
+    let ownedThemes = store.get('painWheelOwnedThemes', {});
+    const themeAllowed = (t) => !t.shop || ownedThemes[t.id];
+    if (!['auto', 'none'].includes(themeChoice) && THEMES.some(t => t.id === themeChoice && !themeAllowed(t))) themeChoice = 'auto';
+
     function autoTheme() { const d = new Date(); return THEMES.find(t => t.when(d)) || null; }
     function currentTheme() { return themeChoice === 'auto' ? autoTheme() : (THEMES.find(t => t.id === themeChoice) || null); }
     // Kevin tiles for each theme: a background color with two emoji, drawn once
@@ -4302,7 +4490,7 @@
     }
     (function setupThemePicker() {
         const el = $('themePicker');
-        const opts = [['auto', 'Auto'], ['none', 'Normal']].concat(THEMES.map(t => [t.id, t.name]));
+        const opts = [['auto', 'Auto'], ['none', 'Normal']].concat(THEMES.filter(themeAllowed).map(t => [t.id, t.name]));
         opts.forEach(([v, n]) => { const o = document.createElement('option'); o.value = v; o.textContent = n; el.appendChild(o); });
         el.value = themeChoice;
         el.addEventListener('change', () => {
@@ -4464,6 +4652,11 @@
         { id: 'clippy', theme: 'error', effect: 'clippy', header: "📎 IT LOOKS LIKE YOU'RE TRYING TO SPIN A WHEEL!", body: 'Would you like help? Clippy has been reading your logs and has some notes. A lot of notes.', primary: 'YES, HELP ME CLIPPY', close: 'Never again, Clippy', reply: "Clippy is on his way. You can't get rid of him now." },
         { id: 'overclock', theme: 'spam', effect: 'turbo', header: '⚡ WHEEL OVERCLOCKING: +300% RPM', body: 'Tired of slow spins? Install WheelTurbo.exe and your next spin goes WAY faster and WAY longer. Overheating is normal.', primary: 'OVERCLOCK MY WHEEL', close: 'My wheel is fine', reply: 'Next spin is overclocked. Fire extinguisher not included.' }
     );
+    GEMINI_ADS.push(
+        { id: 'rugpull', theme: 'spam', effect: 'rugpull', header: '🚀 $KEVCOIN PRESALE: 10,000× GUARANTEED 🚀', body: "Kevin is launching a coin. The dev is doxxed (it's Kevin). Liquidity is locked (the lock is also Kevin). Put in ALL your gold before it moons!", primary: '💎 APE IN (ALL MY GOLD)', reply: 'Transaction confirmed... wait, where did the website go?', close: "I've met Kevin" },
+        { id: 'aotc-carry', theme: 'gold', effect: 'aotccarry', header: "🏆 KROM'S AOTC CARRY SERVICE 🏆", body: "Why earn it like a guild when you can BUY it like a GM? Krom did it, and he only lost every single raider. Now you can too. Everyone will know. Everyone.", primary: '💳 DO A KROM (UNLOCK IN SHOP)', reply: "Krom's AOTC Carry is now in the Shop (Consumables → Black market). Discord will be told when you buy it. :)", close: 'I have dignity (unlike Krom)' },
+        { id: 'kanarenew', theme: 'vip', header: '📺 YOUR KANA+ PREMIUM HAS EXPIRED', body: 'We noticed you have been enjoying ad-free spinning. That was a mistake on our part. Renew now and the brooding demon hunters return, ad-free!', primary: 'RENEW (10,000g IN THE SHOP)', reply: 'Renewal is in the Shop → Consumables. We will be waiting. Right here. In this ad.', close: 'I like ads now' }
+    );
     GEMINI_ADS.forEach(a => {
         const st = AD_STYLES[a.theme];
         POPUP_ADS.push({ id: a.id, html: `
@@ -4490,7 +4683,16 @@
         } else if (fx === 'retvision') {
             root.style.transition = 'filter 0.8s'; root.style.filter = 'blur(3px) grayscale(1) contrast(0.8)';
             setTimeout(() => { root.style.filter = ''; setTimeout(() => root.style.transition = '', 850); }, 10000);
+        } else if (fx === 'rugpull') {
+            const lost = gold; setGold(0);
+            funEvent(lost ? `🧶 RUG PULLED! $KEVCOIN went to zero. You lost ${lost.toLocaleString()}g.` : '🧶 RUG PULLED! (You had no gold. Kevin is disappointed.)', 5000);
+            chatBurst(['RUG PULLED', 'he aped in KEKW', 'not your keys not your gold', 'Kevin is on a yacht now', 'F', 'financially ruined'], 5, 2500);
+            unlock('rugpull'); if (lost >= 1000) sendEvent({ k: 'rugpull', lost });
+        } else if (fx === 'aotccarry') {
+            aotcCarryUnlocked = true; store.set('painWheelAotcCarry', true);
+            moveToast('🏆 AOTC Carry unlocked in the Shop (Consumables). It will be marked as rigged. Discord will know.');
         } else if (fx === 'clippy') {
+            if (!clippyUnlocked) { clippyUnlocked = true; store.set('painWheelClippyUnlocked', true); setTimeout(() => moveToast('📎 Clippy wants to come home with you. Check the Shop → Pets.'), 3000); }
             if ($('clippyBuddy')) return;
             const tips = ["It looks like you're standing in fire. Would you like to keep doing that?", 'Tip: Kevin is not a valid strategy.',
                 "I see you're a Ret Paladin. I'm so sorry.", 'Have you tried pressing Wake of Ashes? No? Me neither.',
@@ -4500,7 +4702,7 @@
                 'Did you know? Kevin is 30% of this wheel and 100% of your problems.', 'Tip: if you hear MEPHISTO, it is already too late.',
                 'It looks like you bought the top on $KNOB. Classic.', 'Would you like me to schedule your Murder Row port for 3% boss HP?',
                 'Tip: Uwutek is weak to spinning. Spin more.', "I'm not saying the healers hate you. I'm saying the logs do.",
-                'It looks like you have a timeshare in Undermine. My condolences.', 'Tip: AOTC is 1 in 10,000. You are not the one.',
+                'It looks like you have a timeshare in Undermine. My condolences.', 'Tip: AOTC is 1 in 1,000. You are still not the one.',
                 'Clippy has been watching you spin for a while now. Are you okay?', 'Tip: you can close me by waiting. I am very patient.'];
             const c = document.createElement('div'); c.id = 'clippyBuddy';
             c.innerHTML = '📎<div class="bubble"></div>'; document.body.appendChild(c);
@@ -4518,14 +4720,14 @@
         const getNum = (k) => { try { return parseInt(localStorage.getItem(k), 10) || 0; } catch (e) { return 0; } };
         const set = (k, v) => { try { localStorage.setItem(k, String(v)); } catch (e) {} };
         let lastShown = getNum('painWheelAdLastShown'), memLast = 0;
-        function due() { lastShown = Math.max(lastShown, getNum('painWheelAdLastShown')); return Date.now() - Math.max(lastShown, memLast) >= HOUR; }
+        function due() { lastShown = Math.max(lastShown, getNum('painWheelAdLastShown')); return Date.now() >= store.get('painWheelKanaUntil', 0) && Date.now() - Math.max(lastShown, memLast) >= HOUR; }
         let waiting = false;   // only one ad can ever be waiting to show
         function tryShow() {
             if (waiting || !due() || !ad.classList.contains('hidden')) return;
             waiting = true;
             (function attempt() {
                 if (!due() || !ad.classList.contains('hidden')) { waiting = false; return; }
-                const overlayOpen = ['welcome', 'statsPanel', 'cheatSheet', 'ashbringer', 'moveModal', 'bagPanel', 'housePanel'].some(id => !$(id).classList.contains('hidden'));
+                const overlayOpen = ['welcome', 'statsPanel', 'cheatSheet', 'ashbringer', 'moveModal', 'bagPanel', 'housePanel', 'shopPanel'].some(id => !$(id).classList.contains('hidden'));
                 if (isSpinning || !winnerModal.classList.contains('hidden') || overlayOpen) return setTimeout(attempt, 1500);
                 waiting = false;
                 show();
@@ -4688,7 +4890,7 @@
         RET_PALADIN: ['RET BUFF POG', 'blizz pls', '6% EZ Clap', 'The Light provides', 'still not enough'],
         NO_ONE: ['NO ONE??? POG', 'CLIP IT', 'RIGGED', 'HOLY', 'actually insane'],
         PENIS: ['LMAOOO', 'KEKW', 'mods??', 'PENIS POG', 'not on stream'],
-        AOTC: ['AOTC??????', 'HOLY', 'CLIP IT CLIP IT', 'NO WAY', '1 IN 10000', 'WE ARE WITNESSING HISTORY'],
+        AOTC: ['AOTC??????', 'HOLY', 'CLIP IT CLIP IT', 'NO WAY', '1 IN 1000', 'WE ARE WITNESSING HISTORY'],
         MEPHIST: ['MY EARS', 'monkaS', 'turn him DOWN', 'MEPHISTOOOOO', 'deaf now, thanks'],
         YANKED: ['YANKED KEKW', 'holy priest diff', 'Platemage did that', 'not the rope again', 'LMAO GRIPPED'],
         MURDER_ROW: ['rat', 'RAT', 'not a rat btw', 'see you in Undermine KEKW'],
@@ -4726,7 +4928,7 @@
     }
     function idleScreen() {
         return !isSpinning && winnerModal.classList.contains('hidden') && $('lawAd').classList.contains('hidden')
-            && ['welcome', 'statsPanel', 'cheatSheet', 'ashbringer', 'moveModal', 'bagPanel', 'housePanel'].every(id => !$(id) || $(id).classList.contains('hidden'));
+            && ['welcome', 'statsPanel', 'cheatSheet', 'ashbringer', 'moveModal', 'bagPanel', 'housePanel', 'shopPanel'].every(id => !$(id) || $(id).classList.contains('hidden'));
     }
     // Server Shutdown: a fake countdown and a fake disconnect, roughly every 20 minutes of sitting on the page
     setInterval(() => {
@@ -4756,6 +4958,7 @@
         $('goldText').textContent = '🪙 ' + gold.toLocaleString() + 'g' + (goblinDebt ? `  (debt ${goblinDebt.toLocaleString()}g)` : '');
         $('bailoutBtn').classList.toggle('hidden', gold >= 10);
         renderKnobHold();
+        const sg = $('shopGold'); if (sg) sg.textContent = '🪙 ' + gold.toLocaleString() + 'g';
     }
     const BET_AMOUNTS = [10, 50, 100, 250, 'all'];
     const BET_PICKS = [['none', 'No bet', 0], ['kevin', 'Kevin 3×', 3], ['notkevin', 'Not Kevin 1.3×', 1.3], ['ret', 'Ret 15×', 15]];
@@ -4798,7 +5001,8 @@
             $('betMsg').textContent = `WON! +${pay.toLocaleString()}g`;
             chatBurst([`+${pay}g POG`, 'gamba won', 'EZ Clap', 'he actually won'], 2, 1500);
         } else {
-            const back = hasPerk('priest') ? Math.round(b.amt * 0.25) : 0;
+            const back = mulligan > 0 ? b.amt : hasPerk('priest') ? Math.round(b.amt * 0.25) : 0;
+            if (mulligan > 0) { mulligan--; store.set('painWheelMulligan', mulligan); $('betMsg').textContent = `📜 Mulligan Scroll! Your ${b.amt.toLocaleString()}g came back.`; setGold(gold + back); return; }
             if (back) setGold(gold + back);
             $('betMsg').textContent = `Lost ${b.amt.toLocaleString()}g. The goblins thank you.` + (back ? ` (Healer insurance refunded ${back}g)` : '');
             chatBurst(b.allIn ? ['ALL IN LOST OMEGALUL', 'HE WENT ALL IN', 'financially ruined', 'call the bank'] : [`-${b.amt}g KEKW`, 'L gamba', 'unlucky', 'goblins win again'], 2, 1500);
@@ -4812,12 +5016,16 @@
         el.textContent = knobShares ? `You own ${knobShares} share${knobShares > 1 ? 's' : ''} (${Math.round(knobShares * knobNow).toLocaleString()}g)` : 'You own 0 shares · paid in gold';
     }
     window.onKnobTick = (p) => { knobNow = p; renderKnobHold(); };
-    $('knobBuy').addEventListener('click', () => {
-        const cost = Math.max(1, Math.round(knobNow));
-        if (gold < cost) { $('knobNews').textContent = `📉 You need ${cost}g for one share. You have ${gold}g.`; return; }
-        knobShares++; store.set('painWheelKnobShares', knobShares); setGold(gold - cost);
-        chat(pick(['buying the top KEKW', 'diamond hands', 'Reb thanks you', '$KNOB to the moon']));
-    });
+    function buyKnob(n) {
+        const cost = Math.max(1, Math.round(knobNow)) * n;
+        if (gold < cost) { $('knobNews').textContent = `📉 You need ${cost.toLocaleString()}g for ${n} share${n > 1 ? 's' : ''}. You have ${gold.toLocaleString()}g.`; return; }
+        knobShares += n; store.set('painWheelKnobShares', knobShares); setGold(gold - cost);
+        if (n > 1) $('knobNews').textContent = `📈 Bought ${n} shares for ${cost.toLocaleString()}g.`;
+        chat(pick(n >= 100 ? ['WHALE ALERT', 'he bought 100 KEKW', 'Reb is buying a boat', 'market manipulation'] : ['buying the top KEKW', 'diamond hands', 'Reb thanks you', '$KNOB to the moon']));
+    }
+    $('knobBuy').addEventListener('click', () => buyKnob(1));
+    $('knobBuy10').addEventListener('click', () => buyKnob(10));
+    $('knobBuy100').addEventListener('click', () => buyKnob(100));
     $('knobSell1').addEventListener('click', () => {
         if (!knobShares) return;
         const got = Math.round(knobNow); knobShares--; store.set('painWheelKnobShares', knobShares); setGold(gold + got);
@@ -4838,7 +5046,7 @@
             'Murder Row Teleport Scroll', 'Road Beer (Still Cold)'],
         rare: ["Biblehumping's Holy Lasso", "Axa's Defibrillator", 'Knob Creek Single Barrel', "ChAoTiC's Blown-Out Headset", 'M*A*S*H Medevac Voucher'],
         epic: ['Shield of Kevin Avoidance', "Gammon's Saving Grace", "Clussy's Clown Nose of Doom", 'The Undermine Deed', "Uwutek's Pocket Lint"],
-        legendary: ['Ashbringer (Plastic Replica)', "Reb's Liver (Mint Condition)", "Uwutek's Fuzzy Ears", "The Wheel's Rigging Manual"]
+        legendary: ['Ashbringer (Plastic Replica)', "Reb's Liver (Mint Condition)", "Uwutek's Fuzzy Ears", "The Wheel's Rigging Manual", 'Golden Chocolate Donut']
     };
     const Q_ORDER = ['legendary', 'epic', 'rare', 'uncommon', 'common', 'poor'];
     const Q_WEIGHT = { poor: 40, common: 25, uncommon: 20, rare: 10, epic: 4, legendary: 1 };
@@ -4859,7 +5067,7 @@
         "Gammon's Saving Grace": 'Gammon will save us. Allegedly.', "Clussy's Clown Nose of Doom": 'Honk.', 'The Undermine Deed': 'You own a sewer. Congrats.',
         "Uwutek's Pocket Lint": 'Torn from the boss\'s pocket. It\'s fuzzy.', 'Ashbringer (Plastic Replica)': 'Made in Booty Bay. Still hits harder than Ret.',
         "Reb's Liver (Mint Condition)": 'Somehow untouched. Science wants answers.', "Uwutek's Fuzzy Ears": 'The boss wants them back.',
-        "The Wheel's Rigging Manual": 'Chapter 1: Ask ChAoTiC.'
+        "The Wheel's Rigging Manual": 'Chapter 1: Ask ChAoTiC.', 'Golden Chocolate Donut': "Justin's favorite. To protect and serve (with sprinkles)."
     };
     // Collect every item in a set (ever found, selling doesn't undo it) to unlock its perk for good
     const LOOT_SETS = [
@@ -4891,8 +5099,9 @@
         return allowed[allowed.length - 1];
     }
     if (!foundItems) { foundItems = {}; Object.keys(bag).forEach(n => foundItems[n] = true); store.set('painWheelFound', foundItems); }
-    function giveLoot(q, why) {
-        const name = pick(LOOT[q]);
+    function giveLoot(q, why, forced) {
+        const name = forced || pick(LOOT[q]);
+        if (name === 'Golden Chocolate Donut') unlock('golddonut');
         bag[name] = { q, n: ((bag[name] && bag[name].n) || 0) + 1 }; store.set('painWheelBag', bag);
         const isNew = !foundItems[name];
         if (isNew) { foundItems[name] = true; store.set('painWheelFound', foundItems); setTimeout(() => checkSets(name), 900); }
@@ -5033,6 +5242,7 @@
         if (!LEADERBOARD_URL || document.hidden) return;
         fetch(LEADERBOARD_URL + '?action=board').then(r => r.json()).then(d => {
             if (d.boss) { $('bossBar').classList.remove('hidden'); renderBoss(d.boss); }
+            if ('announce' in d) showAnnouncement(d.announce);
             if (d.bounty && d.bounty.type) {
                 const label = TYPE[d.bounty.type] ? TYPE[d.bounty.type].pill : d.bounty.type;
                 $('bountyInfo').textContent = `🎯 Today's bounty: ${label}` + (d.bounty.by ? ` (claimed by ${d.bounty.by})` : ' (unclaimed)');
@@ -5095,7 +5305,6 @@
         else { up.textContent = 'Fully upgraded. You are the goblin now.'; up.disabled = true; }
         $('hpDebt').textContent = goblinDebt ? `You owe ${goblinDebt.toLocaleString()}g` : 'Debt free! 🎉';
         $('hpPay100').style.display = $('hpPayAll').style.display = goblinDebt ? '' : 'none';
-        renderScratch();
     }
     $('hpUpgrade').addEventListener('click', () => {
         const msg = $('hpMsg');
@@ -5124,48 +5333,6 @@
     $('hpPay100').addEventListener('click', () => payDebt(100));
     $('hpPayAll').addEventListener('click', () => payDebt(goblinDebt));
     setInterval(() => { if (goblinDebt && !document.hidden) { goblinDebt = Math.ceil(goblinDebt * 1.01); store.set('painWheelDebt', goblinDebt); renderGold(); } }, 10 * 60 * 1000);
-    // scratch-off: 3 cells, match all three to win
-    const SCRATCH = [['💀', 50], ['💰', 25], ['🍺', 12], ['🔨', 4], ['👑', 1]];
-    const SCRATCH_PAY = { '💰': 100, '🍺': 250, '🔨': 1000, '👑': 5000 };
-    let ticket = null;
-    function scratchSym() { let r = Math.random() * 92; for (const [e, w] of SCRATCH) { r -= w; if (r <= 0) return e; } return '💀'; }
-    function renderScratch() {
-        const c = $('scratchCells'); c.innerHTML = '';
-        for (let i = 0; i < 3; i++) {
-            const b = document.createElement('button');
-            const shown = ticket && ticket.open[i];
-            b.className = 'w-11 h-11 rounded-md border-2 text-2xl font-black cursor-pointer ' + (shown ? 'bg-slate-900 border-amber-500' : 'border-amber-700');
-            b.style.background = shown ? '' : 'repeating-linear-gradient(45deg,#a16207 0 6px,#ca8a04 6px 12px)';
-            b.textContent = shown ? ticket.sym[i] : (ticket ? '?' : '');
-            b.disabled = !ticket || shown;
-            b.addEventListener('click', () => { ticket.open[i] = true; renderScratch(); if (ticket.open.every(Boolean)) settleTicket(); });
-            c.appendChild(b);
-        }
-        $('scratchBuy').disabled = !!ticket;
-    }
-    function settleTicket() {
-        const t = ticket; ticket = null;
-        const win = t.sym[0] === t.sym[1] && t.sym[1] === t.sym[2] ? SCRATCH_PAY[t.sym[0]] || 0 : 0;
-        if (win) { setGold(gold + win); $('scratchMsg').textContent = `WINNER! +${win.toLocaleString()}g`; chatBurst(['SCRATCH WIN POG', 'gamba W', 'lucky goblin'], 2); if (win >= 1000) unlock('jackpot'); }
-        else if (t.sym[0] === '💀' && t.sym[1] === '💀' && t.sym[2] === '💀') $('scratchMsg').textContent = 'Three skulls. The goblins point and laugh.';
-        else $('scratchMsg').textContent = pick(['No match. The goblins thank you.', 'So close. (Not really.)', 'Try again! Gambling is a solid retirement plan.']);
-        setTimeout(() => { $('scratchBuy').disabled = false; }, 300);
-        renderScratchAfter(t);
-    }
-    function renderScratchAfter(t) {   // keep the finished ticket visible until the next one
-        const c = $('scratchCells'); c.innerHTML = '';
-        t.sym.forEach(e => { const d = document.createElement('div'); d.className = 'w-11 h-11 rounded-md border-2 border-slate-600 bg-slate-900 text-2xl flex items-center justify-center'; d.textContent = e; c.appendChild(d); });
-    }
-    $('scratchBuy').addEventListener('click', () => {
-        if (ticket) return;
-        if (gold < 50) { $('scratchMsg').textContent = 'Tickets are 50g. You are broke.'; return; }
-        setGold(gold - 50);
-        // 8% of tickets are rigged to match (the goblins want you hooked)
-        const sym = [scratchSym(), scratchSym(), scratchSym()];
-        if (Math.random() < 0.08) sym[1] = sym[2] = sym[0];
-        ticket = { sym, open: [false, false, false] };
-        $('scratchMsg').textContent = 'Scratch all three!'; renderScratch();
-    });
     function openHousePanel() { renderHousePanel(); $('hpMsg').textContent = ''; const p = $('housePanel'); p.classList.remove('hidden'); p.classList.add('flex'); }
     $('houseClose').addEventListener('click', () => { const p = $('housePanel'); p.classList.add('hidden'); p.classList.remove('flex'); });
     function showHouse() { const h = $('timeshareHouse'); h.classList.remove('hidden'); h.classList.add('flex'); renderHouseIcon(); }
@@ -5234,26 +5401,12 @@
     let pets = store.get('painWheelPets', {});
     function renderPets() {
         const dock = $('petDock'); dock.innerHTML = '';
-        Object.keys(PETS).filter(k => pets[k]).forEach(k => {
+        Object.keys(PETS).filter(k => pets[k] && k !== 'clippy').forEach(k => {
             const w = document.createElement('div'); w.className = 'flex flex-col items-center'; w.id = 'pet-' + k;
             w.innerHTML = '<div class="pet-bubble hidden mb-1 px-2 py-1 rounded-lg bg-slate-900/95 border border-slate-600 text-slate-100 text-[11px] font-bold whitespace-nowrap shadow-lg"></div><div style="font-size:38px;line-height:1;animation:houseBob 1.1s ease-in-out infinite alternate">' + PETS[k].e + '</div>';
             dock.appendChild(w);
         });
-        const shop = $('petShop'); if (!shop) return; shop.innerHTML = '';
-        Object.entries(PETS).forEach(([k, pt]) => {
-            const row = document.createElement('div'); row.className = 'flex items-center justify-between gap-2 bg-slate-950/60 border border-slate-700 rounded-lg px-3 py-1.5 text-sm';
-            const left = document.createElement('div'); left.innerHTML = `<span style="font-size:22px">${pt.e}</span> <b></b><div class="text-[11px] text-slate-400"></div>`;
-            left.querySelector('b').textContent = pt.name; left.querySelector('div').textContent = pt.desc;
-            const b = document.createElement('button'); b.className = 'shrink-0 px-2.5 py-1 rounded text-xs font-bold cursor-pointer ' + (pets[k] ? 'bg-slate-700 text-slate-300' : 'bg-emerald-700 hover:bg-emerald-600 text-white');
-            b.textContent = pets[k] ? 'Owned ✓' : `Adopt: ${pt.cost.toLocaleString()}g`; b.disabled = !!pets[k];
-            b.addEventListener('click', () => {
-                if (gold < pt.cost) { $('hpMsg').textContent = `You need ${(pt.cost - gold).toLocaleString()}g more for ${pt.name}.`; return; }
-                setGold(gold - pt.cost); pets[k] = true; store.set('painWheelPets', pets); renderPets();
-                $('hpMsg').textContent = `${pt.name} has joined you!`; setTimeout(() => petSay(k, k === 'murloc' ? 'MRGLGLGL! (hello!)' : 'Pleasure. I bill hourly.'), 300);
-                chatBurst(['PET POG', 'cute', 'MRGL', 'new friend'], 2);
-            });
-            row.append(left, b); shop.appendChild(row);
-        });
+        renderClippyPet();
     }
     function petSay(k, text) {
         const w = $('pet-' + k); if (!w) return;
@@ -5294,6 +5447,521 @@
     setInterval(() => { if (!document.hidden && !liverDown && liver < 100) { liver = Math.min(100, liver + 1); store.set('painWheelLiver', liver); renderLiver(); } }, 60000);
     renderLiver();
 
+    // =====================================================================
+    //  SHOP, LOBBYING, GARAGE, PARTY, TAXES, NEW SLICE EFFECTS
+    // =====================================================================
+    function sendEvent(ev) {   // non-spin things the Sheet / Discord should know about
+        if (!LEADERBOARD_URL || !playerName) return false;
+        try { fetch(LEADERBOARD_URL, { method: 'POST', mode: 'no-cors', keepalive: true,
+            body: JSON.stringify({ name: playerName, event: ev, gold: Math.round(gold), donated: aipacTotal, title: titleChoice, favorite: favoriteLabel() }) }).catch(() => {}); } catch (e) {}
+        return true;
+    }
+    function shopMsg(t) { const m = $('shopMsg'); if (m) { m.textContent = t; clearTimeout(shopMsg.t); shopMsg.t = setTimeout(() => m.textContent = '', 6000); } }
+    function spend(cost, what) {
+        if (gold < cost) { shopMsg(`You need ${(cost - gold).toLocaleString()}g more for ${what}.`); return false; }
+        setGold(gold - cost); return true;
+    }
+    const fmt = (n) => n.toLocaleString() + 'g';
+
+    // ---------- favorite slice (besides Kevin) ----------
+    function favoriteType() {
+        const rows = Object.entries(stats.byType || {}).filter(([id]) => id !== 'KEVIN' && TYPE[id]).sort((a, b) => b[1] - a[1]);
+        return rows.length ? rows[0][0] : '';
+    }
+    function favoriteLabel() { const f = favoriteType(); return f ? TYPE[f].pill : ''; }
+
+    // ---------- titles ----------
+    const TITLES = [
+        ['the Kevin-Touched', 1000], ['Ret Enjoyer', 2500], ['Liver Donor', 5000], ['of the Murder Row', 10000], ['Certified Degenerate', 25000],
+        ['the Unbuffed', 50000], ['Goblin Tycoon', 100000], ['Patron of Reb', 250000], ['the Lobbyist', 1000000], ['Wheel Emperor', 10000000]
+    ];
+    let ownedTitles = store.get('painWheelTitles', {}), titleChoice = store.get('painWheelTitle', '');
+    function renderTitle() { const el = $('titleShow'); if (el) el.textContent = titleChoice ? `«${titleChoice}»` : ''; }
+
+    // ---------- needle transmogs ----------
+    const NEEDLES = {
+        classic: { name: 'Classic Gold', cost: 0, fill: '#FBBF24', stroke: '#FEF08A' },
+        fel:     { name: 'Fel Green', cost: 1000, fill: '#22c55e', stroke: '#bbf7d0' },
+        frost:   { name: 'Frostmourne Blue', cost: 1000, fill: '#38bdf8', stroke: '#e0f2fe' },
+        void:    { name: 'Void Purple', cost: 2500, fill: '#a855f7', stroke: '#f3e8ff' },
+        blood:   { name: 'Blood Red', cost: 2500, fill: '#dc2626', stroke: '#fecaca' },
+        ash:     { name: 'Ashbringer White', cost: 10000, fill: '#ffffff', stroke: '#fde68a', glow: true },
+        rainbow: { name: 'Rainbow', cost: 15000, fill: 'url(#ndlRainbow)', stroke: '#ffffff' },
+        finger:  { name: "Kevin's Finger 👇", cost: 25000, emoji: '👇' }
+    };
+    let ownedNeedles = store.get('painWheelNeedles', { classic: true }), needleChoice = store.get('painWheelNeedle', 'classic');
+    function applyNeedle() {
+        const n = NEEDLES[needleChoice] || NEEDLES.classic, svg = $('pointerAssembly').querySelector('svg');
+        if (!svg) return;
+        svg.innerHTML = n.emoji
+            ? `<text x="23" y="44" font-size="40" text-anchor="middle">${n.emoji}</text>`
+            : `<defs><linearGradient id="ndlRainbow" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ef4444"/><stop offset=".25" stop-color="#facc15"/><stop offset=".5" stop-color="#22c55e"/><stop offset=".75" stop-color="#3b82f6"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs>
+               <circle cx="23" cy="14" r="10" fill="#1E293B" stroke="#F8FAFC" stroke-width="3"/>
+               <path d="M13 18L23 50L33 18H13Z" fill="${n.fill}" stroke="${n.stroke}" stroke-width="2" stroke-linejoin="round" ${n.glow ? 'style="filter:drop-shadow(0 0 6px #fde68a)"' : ''}/>
+               <circle cx="23" cy="14" r="4" fill="${n.emoji ? '#FBBF24' : n.fill}"/>`;
+    }
+
+    // ---------- spin sound packs (used by playTickSound) ----------
+    const TICK_PACKS = {
+        classic: { name: 'Classic Click', cost: 0 }, murloc: { name: 'Murloc Gurgles', cost: 2000 }, coins: { name: 'Goblin Coins', cost: 3000 },
+        bubbles: { name: 'Bubble Pop', cost: 3000 }, chip: { name: '8-Bit Bleeps', cost: 5000 }, honk: { name: 'Clown Honks', cost: 10000 }
+    };
+    let ownedPacks = store.get('painWheelPacks', { classic: true });
+    tickPack = store.get('painWheelTickPack', 'classic');
+    function playPackTick(isSpecial) {
+        ensureAudio();
+        const t = audioCtx.currentTime, o = audioCtx.createOscillator(), g = audioCtx.createGain();
+        const vol = isSpecial ? 0.09 : 0.07;
+        if (tickPack === 'murloc') { o.type = 'square'; const f = 700 + Math.random() * 500; o.frequency.setValueAtTime(f, t); o.frequency.exponentialRampToValueAtTime(f * 0.6, t + 0.05); }
+        else if (tickPack === 'coins') { o.type = 'sine'; o.frequency.setValueAtTime(2200 + Math.random() * 400, t); o.frequency.setValueAtTime(2900, t + 0.025); }
+        else if (tickPack === 'bubbles') { o.type = 'sine'; o.frequency.setValueAtTime(300, t); o.frequency.exponentialRampToValueAtTime(1000 + Math.random() * 300, t + 0.045); }
+        else if (tickPack === 'chip') { o.type = 'square'; o.frequency.setValueAtTime(Math.random() < 0.5 ? 660 : 880, t); }
+        else { o.type = 'sawtooth'; o.frequency.setValueAtTime(330 + Math.random() * 40, t); o.frequency.linearRampToValueAtTime(260, t + 0.06); }
+        g.gain.setValueAtTime(vol * (tickPack === 'honk' ? 0.7 : 1), t); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.07);
+        o.connect(g); g.connect(masterGain); o.start(t); o.stop(t + 0.08);
+    }
+
+    // ---------- consumables ----------
+    let flaskLoot = store.get('painWheelFlask', 0), mulligan = store.get('painWheelMulligan', 0), kanaUntil = store.get('painWheelKanaUntil', 0);
+    let aotcCarryUnlocked = store.get('painWheelAotcCarry', false);
+    const REPELS = [[1, 50000, 'Kevin Repel'], [5, 200000, 'Kevin Repel ×5'], [25, 750000, 'Kevin Repel ×25 (Billionaire Pack)']];
+
+    // ---------- garage ----------
+    let garage = store.get('painWheelGarage', {});
+    function playSiren(secs) {
+        if (!soundOn()) return;
+        try {
+            ensureAudio();
+            const t = audioCtx.currentTime, o = audioCtx.createOscillator(), lp = audioCtx.createBiquadFilter(), g = audioCtx.createGain();
+            o.type = 'sawtooth'; lp.type = 'lowpass'; lp.frequency.value = 2200;
+            for (let i = 0; i < secs / 0.5; i++) o.frequency.setValueAtTime(i % 2 ? 770 : 960, t + i * 0.5);   // wee-woo
+            g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.08, t + 0.08);
+            g.gain.setValueAtTime(0.08, t + secs - 0.4); g.gain.linearRampToValueAtTime(0.0001, t + secs);
+            o.connect(lp); lp.connect(g); g.connect(outGain); o.start(t); o.stop(t + secs + 0.05);
+        } catch (e) {}
+    }
+    let ambulanceBusy = false;
+    function driveAmbulance() {
+        if (ambulanceBusy) return; ambulanceBusy = true;
+        playSiren(3.5);
+        const a = document.createElement('div');
+        a.style.cssText = 'position:fixed;z-index:77;bottom:70px;left:100vw;font-size:76px;line-height:1;pointer-events:none;transition:left 3.6s linear;text-align:center';
+        a.innerHTML = '<div class="siren-glow" style="font-size:30px">🚨</div>🚑';
+        document.body.appendChild(a);
+        requestAnimationFrame(() => requestAnimationFrame(() => a.style.left = '-160px'));
+        setTimeout(() => { a.remove(); ambulanceBusy = false; }, 3800);
+        chatBurst(['WEE WOO WEE WOO', 'nick is on the way', 'first responders o7', 'except nick', 'someone call nick', '🚑🚑🚑'], 3, 2500);
+    }
+    function launchRocket() {
+        const r = document.createElement('div');
+        r.style.cssText = 'position:fixed;z-index:78;left:50%;bottom:-120px;font-size:110px;line-height:1;pointer-events:none;transform:translateX(-50%) rotate(-45deg);transition:bottom 4s cubic-bezier(.5,0,.9,.4)';
+        r.textContent = '🚀'; document.body.appendChild(r);
+        const smoke = setInterval(() => {
+            const s = document.createElement('div'), rect = r.getBoundingClientRect();
+            s.textContent = '💨'; s.style.cssText = `position:fixed;z-index:77;left:${rect.left + rect.width / 2 - 20 + (Math.random() - .5) * 40}px;top:${rect.bottom - 20}px;font-size:44px;pointer-events:none;transition:opacity 1.6s,transform 1.6s`;
+            document.body.appendChild(s); requestAnimationFrame(() => { s.style.opacity = '0'; s.style.transform = 'scale(2.2)'; }); setTimeout(() => s.remove(), 1700);
+        }, 120);
+        requestAnimationFrame(() => requestAnimationFrame(() => r.style.bottom = '120vh'));
+        setTimeout(() => { clearInterval(smoke); r.remove(); }, 4300);
+        funEvent('🚀 LIFTOFF! Next stop: anywhere Kevin isn\'t.', 4000);
+        chatBurst(['LIFTOFF', 'TO THE MOON', 'billionaire arc', 'he left the planet', 'o7 o7 o7', 'take Kevin with you'], 5, 3000);
+    }
+    function renderGarage() {
+        const d = $('garageDock'); d.innerHTML = '';
+        [['ambulance', '🚑', "Nick's Ambulance (click for siren)", driveAmbulance], ['rocket', '🚀', 'Your rocket (click to launch)', launchRocket]].forEach(([k, e, tip, fn]) => {
+            if (!garage[k]) return;
+            const b = document.createElement('button'); b.textContent = e; b.title = tip;
+            b.style.cssText = 'font-size:40px;line-height:1;cursor:pointer;background:none;border:none;filter:drop-shadow(0 3px 6px rgba(0,0,0,.7))';
+            b.addEventListener('click', () => { fn(); b.blur(); }); d.appendChild(b);
+        });
+    }
+
+    // ---------- AIPAC lobbying ----------
+    const AIPAC_TIERS = [[1, 'Basic', 'aipac1', '#94a3b8'], [100, 'Bronze', 'aipac2', '#d97706'], [1000, 'Silver', 'aipac3', '#cbd5e1'],
+        [1000000, 'Gold', 'aipac4', '#facc15'], [1000000000, 'Platinum', 'aipac5', '#e0f2fe']];
+    let aipacTotal = store.get('painWheelAipac', 0);
+    const aipacTier = () => AIPAC_TIERS.filter(t => aipacTotal >= t[0]).pop() || null;
+    const AIPAC_QUIPS = ['Your representative will now return your calls.', 'A senator just learned your name. He already forgot it.',
+        'This is not a bribe. Legally it is "access".', 'Congratulations, you now own 0.0001% of a committee vote.',
+        'A lobbyist somewhere just bought a second boat.', 'Your thoughts and prayers have been upgraded to thoughts, prayers and a fundraiser dinner.',
+        'Campaign finance reform has been postponed (again).', 'Your donation will be matched by three other lobbyists you\'ve never met.'];
+    function renderAipacBadge() {
+        const b = $('aipacBadge'), t = aipacTier();
+        if (!t) { b.classList.add('hidden'); return; }
+        b.classList.remove('hidden');
+        b.style.borderColor = t[3]; b.style.color = t[3];
+        b.innerHTML = '<div style="font-size:9px;letter-spacing:.14em;opacity:.8">CERTIFIED LOBBYIST</div><div>🇺🇸 AIPAC DONOR · ' + t[1].toUpperCase() + '</div>';
+        b.title = `Lifetime donations: ${fmt(aipacTotal)}`;
+    }
+    function donate(amt) {
+        amt = Math.floor(amt);
+        if (!(amt >= 1)) { shopMsg('Donate at least 1g. Even lobbyists have standards. (They don\'t.)'); return; }
+        if (!spend(amt, 'that donation')) return;
+        const before = aipacTier();
+        aipacTotal += amt; store.set('painWheelAipac', aipacTotal);
+        AIPAC_TIERS.forEach(t => { if (aipacTotal >= t[0]) unlock(t[2]); });
+        const after = aipacTier();
+        renderAipacBadge(); renderShop();
+        shopMsg(`Donated ${fmt(amt)}. ${pick(AIPAC_QUIPS)}`);
+        if (after && after !== before) { funEvent(`🇺🇸 NEW LOBBYING TIER: ${after[1].toUpperCase()}`, 3500); chatBurst(['lobbyist arc', 'bought a senator KEKW', 'campaign finance moment', 'democracy speedrun'], 3); }
+        sendEvent({ k: 'donate', amt, total: aipacTotal, tier: after ? after[1] : '' });
+    }
+
+    // ---------- pets: extra ones + secret Clippy ----------
+    Object.assign(PETS, {
+        chicken: { e: '🐔', name: 'Westfall Chicken', cost: 750, desc: 'Panics every time you land on Kevin.',
+            say: (t) => t === 'KEVIN' ? pick(['BAWK BAWK BAWK!!!', 'BAWK?! (KEVIN AGAIN?!)', '*runs in circles*', 'BAWWWWK']) : pick(['bawk.', 'bok bok', '*pecks the wheel*', 'bawk?']) },
+        whelp: { e: '🐉', name: 'Baby Whelp', cost: 3000, desc: 'Hiccups fire. Especially at Mephisto.',
+            say: (t) => t === 'MEPHIST' ? pick(['*HIC* 🔥🔥🔥', 'HIC! (the yelling scared me) 🔥', '*hic* *hic* 🔥']) : t === 'AOTC' ? 'RAWR!!! 🔥✨' : pick(['*hic* 🔥', 'rawr', '*chews on the needle*', 'smol rawr']) },
+        clippy: { e: '📎', name: 'Clippy', cost: 5000, secret: true, desc: 'Follows your cursor. Has notes. So many notes.',
+            say: () => pick(['It looks like you\'re spinning. Would you like help?', 'Tip: Kevin is not a strategy.', 'I see you landed on that. Interesting choice.',
+                'Would you like me to format your guild application?', 'It looks like you\'re losing gold. Need a hand?', 'I\'ve been here since 1997. I\'ve seen worse.']) }
+    });
+    let clippyUnlocked = store.get('painWheelClippyUnlocked', false);
+    function renderClippyPet() {
+        let c = $('pet-clippy');
+        if (!pets.clippy) { if (c) c.remove(); return; }
+        if (c) return;
+        c = document.createElement('div'); c.id = 'pet-clippy'; c.className = 'clippy-pet';
+        c.innerHTML = '<div class="pet-bubble hidden"></div>📎'; document.body.appendChild(c);
+        let x = innerWidth - 120, y = innerHeight - 120, tx = x, ty = y;
+        c.style.transform = `translate(${x}px,${y}px)`;
+        window.addEventListener('mousemove', (e) => { tx = Math.min(innerWidth - 60, e.clientX + 24); ty = Math.min(innerHeight - 60, e.clientY + 20); }, { passive: true });
+        (function follow() {   // lazy follow, a bit behind the cursor
+            if (!document.hidden) { x += (tx - x) * 0.12; y += (ty - y) * 0.12; c.style.transform = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`; }
+            if (c.isConnected) requestAnimationFrame(follow);
+        })();
+        setInterval(() => { if (!document.hidden && Math.random() < 0.5) petSay('clippy', PETS.clippy.say()); }, 30000);
+    }
+
+    // ---------- scratch-offs: buy, then scratch all ----------
+    const SCRATCHERS = [
+        { id: 'quick', name: 'Goblin Quickie', cost: 50, panels: 3, table: [[1, 22], [2, 9], [3, 4], [10, 2.6], [50, 0.4]] },
+        { id: 'gold', name: 'Goblin Gold', cost: 500, panels: 3, table: [[1, 22], [2, 9], [3, 4], [10, 2.6], [50, 0.4]] },
+        { id: 'six', name: 'Undermine Six-Pack', cost: 2000, panels: 6, table: [[1, 23], [2, 9], [4, 4], [12, 1.75], [100, 0.25]] },
+        { id: 'plat', name: 'Gallywix Platinum', cost: 25000, panels: 6, table: [[1, 23], [2, 9], [4, 4], [12, 1.75], [100, 0.25]] }
+    ];
+    const SYM_FOR = { 1: '🍺', 2: '💰', 3: '🔨', 4: '🔨', 10: '👑', 12: '👑', 50: '💎', 100: '💎' };
+    const SCRATCH_SYMS = ['💀', '🍺', '💰', '🔨', '👑', '💎', '🤡'];
+    let scratchTicket = null;
+    function makeTicket(tk) {
+        let r = Math.random() * 100, mult = 0;
+        for (const [m, w] of tk.table) { r -= w; if (r <= 0) { mult = m; break; } }
+        const win = mult ? SYM_FOR[mult] : null;
+        let sym;
+        do {
+            if (tk.panels === 3) {
+                sym = win ? [win, win, win] : [pick(SCRATCH_SYMS), pick(SCRATCH_SYMS), pick(SCRATCH_SYMS)];
+            } else {
+                const others = SCRATCH_SYMS.filter(s => s !== win), cnt = {};
+                sym = win ? [win, win, win] : [];
+                while (sym.length < 6) { const s = pick(others); if ((cnt[s] || 0) < 2) { cnt[s] = (cnt[s] || 0) + 1; sym.push(s); } }
+                for (let i = 5; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [sym[i], sym[j]] = [sym[j], sym[i]]; }
+            }
+        } while (!win && tk.panels === 3 && sym[0] === sym[1] && sym[1] === sym[2]);
+        return { tk, sym, mult, open: false };
+    }
+
+    // ---------- the shop panel ----------
+    const SHOP_TABS = [['themes', '🎨 Themes'], ['cosmetics', '📍 Cosmetics'], ['consumables', '🧪 Consumables'], ['pets', '🐾 Pets'],
+        ['garage', '🚗 Garage'], ['scratch', '🎟️ Scratch-offs'], ['lobby', '🇺🇸 Lobbying']];
+    let shopTab = 'themes';
+    function shopRow(icon, name, desc, btnLabel, onClick, state) {   // state: 'buy' | 'owned' | 'equip' | 'equipped'
+        const row = document.createElement('div');
+        row.className = 'flex items-center justify-between gap-2 bg-slate-950/60 border border-slate-700 rounded-lg px-3 py-1.5 text-sm';
+        const left = document.createElement('div'); left.className = 'min-w-0';
+        left.innerHTML = '<span style="font-size:20px"></span> <b></b><div class="text-[11px] text-slate-400"></div>';
+        left.querySelector('span').textContent = icon; left.querySelector('b').textContent = name; left.querySelector('div').textContent = desc;
+        const b = document.createElement('button');
+        const cls = { buy: 'bg-emerald-700 hover:bg-emerald-600 text-white', equip: 'bg-sky-700 hover:bg-sky-600 text-white', equipped: 'bg-amber-500 text-black', owned: 'bg-slate-700 text-slate-300' }[state || 'buy'];
+        b.className = 'shrink-0 px-2.5 py-1 rounded text-xs font-bold cursor-pointer ' + cls;
+        b.textContent = btnLabel; b.disabled = state === 'owned' || state === 'equipped';
+        b.addEventListener('click', (e) => { e.stopPropagation(); onClick && onClick(); });
+        row.append(left, b); return row;
+    }
+    function shopHead(text) { const h = document.createElement('div'); h.className = 'text-xs font-bold uppercase tracking-wider text-slate-400 mt-2'; h.textContent = text; return h; }
+    function renderShop() {
+        const body = $('shopBody'); if (!body) return;
+        $('shopGold').textContent = '🪙 ' + fmt(gold);
+        $('shopTabs').querySelectorAll('button').forEach(b => b.classList.toggle('shop-tab-on', b.dataset.tab === shopTab));
+        body.innerHTML = '';
+        const add = (el) => body.appendChild(el);
+        if (shopTab === 'themes') {
+            add(shopHead('Joke themes · 25,000g'));
+            THEMES.filter(t => t.group === 'joke').forEach(t => add(themeRow(t)));
+            add(shopHead('Class themes · 10,000g'));
+            THEMES.filter(t => t.group === 'class').forEach(t => add(themeRow(t)));
+            const n = document.createElement('div'); n.className = 'text-[11px] text-slate-500'; n.textContent = 'Owned themes show up in the theme menu in the header. Holiday themes still come for free.'; add(n);
+        } else if (shopTab === 'cosmetics') {
+            add(shopHead('📍 Needle transmogs'));
+            Object.entries(NEEDLES).forEach(([k, n]) => add(ownRow('📍', n.name, n.emoji ? 'Points at Kevin. Accusingly.' : 'A new paint job for the needle.', n.cost, ownedNeedles[k], needleChoice === k,
+                () => { if (!spend(n.cost, n.name)) return; ownedNeedles[k] = true; store.set('painWheelNeedles', ownedNeedles); unlock('drip'); equipNeedle(k); },
+                () => equipNeedle(k))));
+            add(shopHead('🔊 Spin sound packs'));
+            Object.entries(TICK_PACKS).forEach(([k, p]) => add(ownRow('🔊', p.name, 'What the wheel sounds like while it spins.', p.cost, ownedPacks[k], tickPack === k,
+                () => { if (!spend(p.cost, p.name)) return; ownedPacks[k] = true; store.set('painWheelPacks', ownedPacks); unlock('drip'); equipPack(k); },
+                () => equipPack(k))));
+            add(shopHead('🏷️ Titles (shown on the guild leaderboard)'));
+            add(ownRow('🏷️', 'No title', 'Humble. Suspicious.', 0, true, !titleChoice, null, () => equipTitle('')));
+            TITLES.forEach(([t, c]) => add(ownRow('🏷️', t, `${playerName || 'You'}, ${t}`, c, ownedTitles[t], titleChoice === t,
+                () => { if (!spend(c, t)) return; ownedTitles[t] = true; store.set('painWheelTitles', ownedTitles); unlock('drip'); equipTitle(t); },
+                () => equipTitle(t))));
+        } else if (shopTab === 'consumables') {
+            add(shopRow('🧪', 'Flask of Loot', `Your next 10 spins all drop loot. (${flaskLoot} charges left)`, 'Buy: 2,500g', () => { if (!spend(2500, 'a Flask of Loot')) return; flaskLoot += 10; store.set('painWheelFlask', flaskLoot); shopMsg('Glug glug. Next 10 spins drop loot.'); renderShop(); }));
+            add(shopRow('📜', 'Mulligan Scroll', `If your next bet loses, you get it all back. (${mulligan} held)`, 'Buy: 1,500g', () => { if (!spend(1500, 'a Mulligan Scroll')) return; mulligan++; store.set('painWheelMulligan', mulligan); shopMsg('Scroll ready. Go lose a bet.'); renderShop(); }));
+            add(shopRow('🥃', 'Bottle for Reb', "Fully restores Reb's liver. Somehow.", 'Buy: 500g', () => {
+                if (liverDown) { shopMsg("Reb is in the hospital. They won't let you bring that in."); return; }
+                if (!spend(500, 'a bottle for Reb')) return; liver = 100; store.set('painWheelLiver', liver); renderLiver(); shopMsg('Reb thanks you. His liver does not.'); chatBurst(['REB IS BACK', 'liver restored KEKW', 'enabler'], 2); }));
+            const kanaLeft = Math.max(0, Math.ceil((kanaUntil - Date.now()) / 60000));
+            add(shopRow('📺', 'Kana+ Premium (30 min)', kanaLeft ? `Ad-free for ${kanaLeft} more minutes.` : 'No popup ads for 30 minutes. Then Kana+ will ask you to renew.', 'Buy: 10,000g', () => {
+                if (!spend(10000, 'Kana+ Premium')) return; kanaUntil = Math.max(Date.now(), kanaUntil) + 30 * 60000; store.set('painWheelKanaUntil', kanaUntil); shopMsg('Welcome to Kana+ Premium. Enjoy the brooding demon hunters, ad-free.'); renderShop(); }));
+            add(shopHead("🛡️ Kevin Repel (Kevin's lawyers are billionaires; priced accordingly)"));
+            REPELS.forEach(([n, c, name]) => add(shopRow('🛡️', name, `The next ${n} spin${n > 1 ? 's' : ''} can't land on Kevin. Still counts as a fair spin. (Active: ${kevinShield})`, 'Buy: ' + fmt(c),
+                () => { if (!spend(c, name)) return; kevinShield += n; updateShieldBadge(); shopMsg(`Repel applied. ${kevinShield} Kevin-free spin${kevinShield > 1 ? 's' : ''} queued.`); renderShop(); })));
+            add(shopHead('📣 Buy a Shoutout (posts in Discord)'));
+            const w = document.createElement('div'); w.className = 'flex gap-2';
+            w.innerHTML = '<input id="shoutText" maxlength="140" placeholder="Say something to the guild..." class="flex-1 min-w-0 bg-slate-950 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-200"><button id="shoutBtn" class="shrink-0 px-3 rounded bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold cursor-pointer">Post: 10,000g</button>';
+            add(w);
+            w.querySelector('input').addEventListener('keydown', e => e.stopPropagation());
+            w.querySelector('button').addEventListener('click', () => {
+                const txt = $('shoutText').value.trim();
+                if (!txt) { shopMsg('Type something first.'); return; }
+                if (!LEADERBOARD_URL || !playerName) { shopMsg('Shoutouts need the guild wheel and a player name.'); return; }
+                if (!spend(10000, 'a shoutout')) return;
+                sendEvent({ k: 'shout', text: txt.slice(0, 140) }); $('shoutText').value = ''; shopMsg('Shoutout sent to Discord. No refunds.');
+            });
+            if (aotcCarryUnlocked) {
+                add(shopHead('🏆 Black market'));
+                add(shopRow('🏆', "Krom's AOTC Carry", 'Pull a Krom: your next spin lands on AOTC. It is rigged, everyone will see it is rigged, and Discord will be told.', 'Buy: 250,000g', () => {
+                    if (!spend(250000, 'an AOTC carry')) return;
+                    setRigMode('AOTC'); unlock('boughtaotc'); sendEvent({ k: 'boughtaotc' });
+                    shopMsg('Carry purchased. Spin to collect your "achievement". Shame has been sent to Discord.'); closeShop();
+                    funEvent('💳 YOU PULLED A KROM. SPIN TO COLLECT YOUR SHAME.', 4000);
+                    chatBurst(['BOUGHT AOTC KEKW', 'he pulled a Krom', 'Krom energy', 'this is how guilds die', 'gkick', 'shameful'], 5);
+                }));
+            }
+        } else if (shopTab === 'pets') {
+            Object.entries(PETS).forEach(([k, p]) => {
+                if (p.secret && !clippyUnlocked && !pets[k]) return;
+                add(shopRow(p.e, p.name, p.desc, pets[k] ? 'Owned ✓' : 'Adopt: ' + fmt(p.cost), () => {
+                    if (!spend(p.cost, p.name)) return; pets[k] = true; store.set('painWheelPets', pets); renderPets();
+                    if (k === 'clippy') unlock('clippy');
+                    shopMsg(`${p.name} has joined you!`); setTimeout(() => petSay(k, PETS[k].say('', {})), 400);
+                    chatBurst(['PET POG', 'cute', 'new friend', 'pet collector'], 2); renderShop();
+                }, pets[k] ? 'owned' : 'buy'));
+            });
+            if (!clippyUnlocked) { const n = document.createElement('div'); n.className = 'text-[11px] text-slate-500'; n.textContent = '??? — one pet is hiding somewhere. It looks like it\'s waiting for you to click something.'; add(n); }
+        } else if (shopTab === 'garage') {
+            add(shopRow('🚑', "Nick's Ambulance", 'Parks in the corner. Click it for lights and siren. Thank you to our first responders (except Nick).', garage.ambulance ? 'Owned ✓' : 'Buy: 25,000g', () => {
+                if (!spend(25000, 'the ambulance')) return; garage.ambulance = true; store.set('painWheelGarage', garage); renderGarage(); unlock('weewoo'); driveAmbulance(); renderShop();
+            }, garage.ambulance ? 'owned' : 'buy'));
+            add(shopRow('🚀', 'Gallywix Rocket', 'For when you\'ve made it. Launches on purchase and every time you click it.', garage.rocket ? 'Owned ✓' : 'Buy: 100,000,000g', () => {
+                if (!spend(100000000, 'the rocket')) return; garage.rocket = true; store.set('painWheelGarage', garage); renderGarage(); unlock('rocket'); closeShop(); launchRocket(); sendEvent({ k: 'rocket' }); renderShop();
+            }, garage.rocket ? 'owned' : 'buy'));
+        } else if (shopTab === 'scratch') {
+            add(shopHead('Click a ticket to buy it, then Scratch All'));
+            const g = document.createElement('div'); g.className = 'grid grid-cols-2 gap-2';
+            SCRATCHERS.forEach(tk => {
+                const b = document.createElement('button');
+                b.className = 'rounded-lg border-2 border-amber-600 p-2 text-left cursor-pointer hover:brightness-110';
+                b.style.background = 'linear-gradient(135deg,#78350f,#a16207)';
+                b.innerHTML = `<div class="font-black text-amber-100 text-sm"></div><div class="text-[11px] text-amber-200"></div><div class="mono font-bold text-white text-sm mt-1"></div>`;
+                b.children[0].textContent = tk.name; b.children[1].textContent = `${tk.panels} panels · top prize ${fmt(tk.cost * tk.table[tk.table.length - 1][0])}`; b.children[2].textContent = fmt(tk.cost);
+                b.disabled = !!(scratchTicket && !scratchTicket.open);
+                b.addEventListener('click', () => {
+                    if (scratchTicket && !scratchTicket.open) return;
+                    if (!spend(tk.cost, 'a ticket')) return;
+                    scratchTicket = makeTicket(tk); $('scratchOut').textContent = 'Scratch it!'; renderShop();
+                });
+                g.appendChild(b);
+            });
+            add(g);
+            const card = document.createElement('div'); card.className = 'mt-2 rounded-lg border border-slate-700 bg-slate-950/70 p-3 flex flex-col items-center gap-2';
+            if (scratchTicket) {
+                const t = scratchTicket;
+                const cells = document.createElement('div'); cells.className = 'grid gap-1.5'; cells.style.gridTemplateColumns = `repeat(${t.tk.panels === 3 ? 3 : 3}, 48px)`;
+                t.sym.forEach((s, i) => {
+                    const c = document.createElement('div'); c.className = 'scratch-cell' + (t.open ? ' open' : ''); c.style.animationDelay = (i * 0.12) + 's';
+                    c.textContent = t.open ? s : ''; cells.appendChild(c);
+                });
+                const lbl = document.createElement('div'); lbl.className = 'text-xs font-bold text-amber-200'; lbl.textContent = t.tk.name;
+                card.append(lbl, cells);
+                if (!t.open) {
+                    const sb = document.createElement('button'); sb.className = 'px-4 py-1.5 rounded bg-amber-500 hover:bg-amber-400 text-black font-black text-sm cursor-pointer';
+                    sb.id = 'scratchAllBtn'; sb.textContent = '🪙 SCRATCH ALL'; sb.addEventListener('click', settleScratch); card.appendChild(sb);
+                }
+            } else card.innerHTML = '<div class="text-xs text-slate-500">Buy a ticket above.</div>';
+            const out = document.createElement('div'); out.id = 'scratchOut'; out.className = 'text-sm font-bold text-amber-300 min-h-[1.25rem] text-center'; out.textContent = settleScratch.last || '';
+            card.appendChild(out); add(card);
+            const pay = document.createElement('div'); pay.className = 'text-[11px] text-slate-500';
+            pay.textContent = '3-panel: match all 3 · 🍺 money back · 💰 2× · 🔨 3× · 👑 10× · 💎 50×.   6-panel: find 3 of a kind · 🍺 money back · 💰 2× · 🔨 4× · 👑 12× · 💎 100×.';
+            add(pay);
+        } else if (shopTab === 'lobby') {
+            const t = aipacTier(), next = AIPAC_TIERS.find(x => aipacTotal < x[0]);
+            const box = document.createElement('div'); box.className = 'rounded-lg border border-slate-700 bg-slate-950/70 p-3 text-sm';
+            box.innerHTML = '<div class="font-black text-lg text-sky-200">🇺🇸 Pain Wheel Lobbying Office</div><div class="text-slate-300 text-xs mt-1">Donate to AIPAC and climb the lobbyist tiers. Donations are repeatable and count on the guild Top Donors board. You will receive nothing in return except influence (none) and a badge (small).</div><div class="mono mt-2"></div><div class="text-xs text-slate-400 mt-1"></div>';
+            box.children[2].textContent = `Lifetime donated: ${fmt(aipacTotal)}  ·  Tier: ${t ? t[1] : 'none (you are a regular citizen)'}`;
+            box.children[3].textContent = next ? `Next tier: ${next[1]} at ${fmt(next[0])} (${fmt(next[0] - aipacTotal)} to go)` : 'Max tier. You own Congress. Please stop.';
+            add(box);
+            const g = document.createElement('div'); g.className = 'flex flex-wrap gap-1.5 mt-2';
+            [1, 100, 1000, 10000, 1000000, 1000000000].forEach(a => {
+                const b = document.createElement('button'); b.className = 'px-2.5 py-1 rounded bg-sky-800 hover:bg-sky-700 text-white text-xs font-bold cursor-pointer';
+                b.textContent = 'Donate ' + fmt(a); b.addEventListener('click', () => donate(a)); g.appendChild(b);
+            });
+            add(g);
+            const w = document.createElement('div'); w.className = 'flex gap-2 mt-2';
+            w.innerHTML = '<input id="donateAmt" type="number" min="1" placeholder="Custom amount" class="flex-1 min-w-0 bg-slate-950 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-200"><button class="shrink-0 px-3 rounded bg-sky-700 hover:bg-sky-600 text-white text-xs font-bold cursor-pointer">Donate</button>';
+            w.querySelector('input').addEventListener('keydown', e => e.stopPropagation());
+            w.querySelector('button').addEventListener('click', () => donate(+$('donateAmt').value)); add(w);
+            add(shopHead('Tiers'));
+            AIPAC_TIERS.forEach(x => { const d = document.createElement('div'); d.className = 'text-xs ' + (aipacTotal >= x[0] ? 'text-emerald-300 font-bold' : 'text-slate-400'); d.textContent = `${aipacTotal >= x[0] ? '✓' : '○'} ${x[1]}: ${fmt(x[0])}`; add(d); });
+        }
+    }
+    function themeRow(t) {
+        return ownRow(t.badge[0].trim() || '🎨', t.name, t.tagline, t.cost, ownedThemes[t.id], themeChoice === t.id,
+            () => { if (!spend(t.cost, t.name)) return; ownedThemes[t.id] = true; store.set('painWheelOwnedThemes', ownedThemes); unlock('drip'); rebuildThemePicker(); equipTheme(t.id); },
+            () => equipTheme(t.id));
+    }
+    function ownRow(icon, name, desc, cost, owned, equipped, buy, equip) {
+        if (equipped) return shopRow(icon, name, desc, 'Equipped', null, 'equipped');
+        if (owned) return shopRow(icon, name, desc, 'Equip', equip, 'equip');
+        return shopRow(icon, name, desc, cost ? 'Buy: ' + fmt(cost) : 'Free', buy, 'buy');
+    }
+    function equipTheme(id) { themeChoice = id; try { localStorage.setItem('painWheelTheme', id); } catch (e) {} $('themePicker').value = id; applyTheme(); renderShop(); }
+    function equipNeedle(k) { needleChoice = k; store.set('painWheelNeedle', k); applyNeedle(); renderShop(); }
+    function equipPack(k) { tickPack = k; store.set('painWheelTickPack', k); renderShop(); playTickSound(true); }
+    function equipTitle(t) { titleChoice = t; store.set('painWheelTitle', t); renderTitle(); renderShop(); sendEvent({ k: 'title' }); }
+    function rebuildThemePicker() {
+        const el = $('themePicker'), v = el.value; el.innerHTML = '';
+        [['auto', 'Auto'], ['none', 'Normal']].concat(THEMES.filter(themeAllowed).map(t => [t.id, t.name]))
+            .forEach(([val, n]) => { const o = document.createElement('option'); o.value = val; o.textContent = n; el.appendChild(o); });
+        el.value = [...el.options].some(o => o.value === v) ? v : 'auto';
+        applyTheme();
+    }
+    function settleScratch() {
+        const t = scratchTicket; if (!t || t.open) return;
+        t.open = true;
+        const win = t.tk.cost * t.mult;
+        if (win) setGold(gold + win);
+        settleScratch.last = !win ? pick(['No luck. The goblins thank you.', 'So close. (Not really.)', 'Loser! Try again!', 'The house wins. As always.'])
+            : t.mult === 1 ? `Money back! +${fmt(win)} (break even)` : `WINNER! ${t.sym.find((s, i) => t.sym.filter(x => x === s).length >= 3)} ×${t.mult} → +${fmt(win)}`;
+        if (t.mult >= 10) { chatBurst(['SCRATCH JACKPOT', 'HOLY', 'goblin W', 'he hit it'], 4); launchConfetti(['💰', '🪙', '✨'], ['#facc15', '#4ade80', '#ffffff'], 0.6, 0.5); }
+        else if (t.mult > 1) chatBurst(['SCRATCH WIN POG', 'gamba W', 'lucky goblin'], 2);
+        if (win >= 1000 && t.mult > 1) unlock('jackpot');
+        renderShop();
+    }
+    function openShop(tab) {
+        if (tab) shopTab = tab;
+        renderShop(); const p = $('shopPanel'); p.classList.remove('hidden'); p.classList.add('flex');
+    }
+    function closeShop() { const p = $('shopPanel'); p.classList.add('hidden'); p.classList.remove('flex'); }
+    (function setupShop() {
+        const tabs = $('shopTabs');
+        SHOP_TABS.forEach(([id, label]) => {
+            const b = document.createElement('button'); b.dataset.tab = id; b.textContent = label;
+            b.className = 'shop-tab px-2.5 py-1 rounded-md text-xs font-bold cursor-pointer';
+            b.addEventListener('click', () => { shopTab = id; renderShop(); }); tabs.appendChild(b);
+        });
+        $('shopBtn').addEventListener('click', () => { openShop(); $('shopBtn').blur(); });
+        $('shopClose').addEventListener('click', closeShop);
+        $('hpShopBtn').addEventListener('click', () => { $('houseClose').click(); openShop('scratch'); });
+        $('hpPetBtn').addEventListener('click', () => { $('houseClose').click(); openShop('pets'); });
+    })();
+
+    // ---------- party mode: slow sweeping club lights, no strobe ----------
+    $('partyBtn').addEventListener('click', () => {
+        const on = !document.body.classList.contains('party-on');
+        document.body.classList.toggle('party-on', on);
+        $('partyBtn').textContent = on ? '🪩 Stop' : '🪩 Party';
+        if (on) chatBurst(['PARTY', 'club pain wheel', 'untz untz untz', 'DJ Kevin in the house', '🕺💃'], 4, 2500);
+        $('partyBtn').blur();
+    });
+
+    // ---------- Tuesday reset: Goblin IRS income tax ----------
+    function checkTax() {
+        const d = new Date(); if (d.getDay() !== 2) return;
+        const key = d.toDateString(); if (store.get('painWheelTaxDay', '') === key) return;
+        store.set('painWheelTaxDay', key);
+        if (gold < 100) { moveToast('🧾 Tuesday reset: the Goblin IRS checked your wallet and left disappointed.'); return; }
+        const tax = Math.round(gold * 0.15); setGold(gold - tax); unlock('taxman');
+        funEvent(`🧾 TUESDAY RESET: Goblin IRS collected ${fmt(tax)} in income tax (15%)`, 5500);
+        chatBurst(['TAXED KEKW', 'the goblin IRS got him', 'death and taxes', 'reset day tax LUL', 'should have bought $KNOB'], 3, 2500);
+    }
+    setTimeout(checkTax, 5000); setInterval(checkTax, 60000);
+
+    // ---------- guild announcements (from the Sheet's Announcements tab) ----------
+    function showAnnouncement(a) {
+        const bar = $('announceBar');
+        if (!a || !a.text || store.get('painWheelAnnounceSeen', '') === a.id) { bar.classList.add('hidden'); bar.classList.remove('flex'); return; }
+        $('announceText').textContent = a.text; bar.dataset.id = a.id;
+        bar.classList.remove('hidden'); bar.classList.add('flex');
+    }
+    $('announceClose').addEventListener('click', () => { const bar = $('announceBar'); store.set('painWheelAnnounceSeen', bar.dataset.id || ''); bar.classList.add('hidden'); bar.classList.remove('flex'); });
+
+    // ---------- new slice effects ----------
+    const BOT_NAMES = ['Xjkqplzt', 'Bqmzrtpw', 'Ggoldsell', 'Aaawtsgold', 'Qzvbnmkl', 'Lvlboostcheap', 'Zxcvbnmqw', 'Mmmgoldfast'];
+    const BOT_SPAM = ['WTS GOLD CHEAP 100K = $5 FAST DELIVERY', 'SUSAN EXPRESS!!! BEST PRICE!!! 24/7 ONLINE', 'cheap gold fast delivery visit susanexpress dot c0m',
+        'WTS POWERLEVEL 1-80 IN 3 HOURS SAFE NO BAN', 'hello friend u want buy gold? very cheap', 'SUSAN EXPRESS DELIVERS BEFORE YOUR MAILBOX DOES',
+        '[Whisper] cheap gold 4 u. trusted seller. 10000 reviews.', 'GOLD GOLD GOLD CHEAP CHEAP CHEAP'];
+    function susanSpam() {
+        for (let i = 0; i < 7; i++) setTimeout(() => {
+            if (!chatLog) return;
+            const d = document.createElement('div'); d.className = 'chat-line'; d.style.color = '#ff80ff';
+            d.textContent = `[${pick(BOT_NAMES)}] whispers: ${pick(BOT_SPAM)}`;
+            chatLog.appendChild(d); while (chatLog.children.length > 40) chatLog.firstChild.remove(); chatLog.scrollTop = chatLog.scrollHeight;
+        }, 300 + i * 350);
+        setTimeout(() => chatBurst(['/report', 'REPORTED', 'how are they still here', 'ignore list full', 'susan pls'], 3, 2000), 2800);
+    }
+    function winrarNag() {
+        if ($('winrarNag')) return;
+        const n = document.createElement('div'); n.id = 'winrarNag';
+        n.style.cssText = 'position:fixed;z-index:79;left:50%;top:30%;transform:translateX(-50%);width:min(380px,90vw);background:#ece9d8;border:2px solid #0a246a;box-shadow:4px 4px 0 rgba(0,0,0,.5);font-family:Tahoma,Verdana,sans-serif;color:#000';
+        n.innerHTML = `<div style="background:linear-gradient(90deg,#0a246a,#a6caf0);color:#fff;font-weight:bold;font-size:12px;padding:3px 6px;display:flex;justify-content:space-between"><span>📦 Please purchase WinRAR license</span><span style="cursor:pointer" data-x>✕</span></div>
+            <div style="padding:12px;font-size:12px;line-height:1.4">WinRAR is not free. Your 40 day trial ended a long, long time ago.<br><br>You have been a <b>winrar</b> anyway. Congratulations.</div>
+            <div style="display:flex;gap:8px;justify-content:flex-end;padding:0 12px 12px"><button data-buy style="padding:3px 14px;border:1px solid #003c74;background:#f4f3ee;cursor:pointer;font-size:12px">Buy</button><button data-x style="padding:3px 14px;border:1px solid #003c74;background:#f4f3ee;cursor:pointer;font-size:12px">Close</button></div>`;
+        document.body.appendChild(n);
+        n.querySelector('[data-buy]').addEventListener('click', () => { n.querySelector('div:nth-child(2)').innerHTML = 'Nobody has ever clicked this before. We don\'t know what to do. Closing.'; setTimeout(() => n.remove(), 1600); });
+        n.querySelectorAll('[data-x]').forEach(x => x.addEventListener('click', () => n.remove()));
+        setTimeout(() => n.isConnected && n.remove(), 15000);
+    }
+    function flashbang() {
+        const f = document.createElement('div');
+        f.style.cssText = 'position:fixed;inset:0;z-index:95;background:#fff;opacity:.95;pointer-events:none;transition:opacity 2.8s ease-out';
+        document.body.appendChild(f);
+        requestAnimationFrame(() => requestAnimationFrame(() => f.style.opacity = '0'));
+        setTimeout(() => f.remove(), 3000);
+        if (soundOn()) try {   // the ringing in your ears
+            ensureAudio();
+            const t = audioCtx.currentTime, o = audioCtx.createOscillator(), g = audioCtx.createGain();
+            o.type = 'sine'; o.frequency.value = 3400;
+            g.gain.setValueAtTime(0.045, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 3.5);
+            o.connect(g); g.connect(outGain); o.start(t); o.stop(t + 3.6);
+        } catch (e) {}
+    }
+    const SMOKES_IMG = '';   // put the Trailer Park Boys picture path here (e.g. 'media/smokes.jpg') when it arrives
+    Object.assign(CHAT_LAND, {
+        SUSAN_EXPRESS: ['SUSAN EXPRESS LUL', 'BOTS', '/report', 'not again', 'who invited susan', 'ignore ignore ignore'],
+        WINRAR: ['WINRAR', 'is winrar', 'u r winrar', 'buy a license KEKW', 'not loser!', 'W'],
+        SMOKES: ["SMOKES LET'S GO", 'grab the smokes', 'trailer park vibes', 'liquor store run', 'decent'],
+        FLASHBANG: ['MY EYES', 'eeeeeeeeeeeee', 'I CANT SEE', 'DYLAN WHY', 'turn your brightness down LUL', 'cant hear'],
+        THEY_THEM: ['noted', 'o7', 'gg', 'spin again']
+    });
+    function newSliceFx(type) {
+        const sc = $('smokesScene');
+        if (sc) { sc.classList.toggle('hidden', type !== 'SMOKES'); sc.classList.toggle('flex', type === 'SMOKES'); }
+        if (type === 'SMOKES' && SMOKES_IMG && !$('smokesImg').src) { $('smokesImg').src = SMOKES_IMG; $('smokesImg').classList.remove('hidden'); $('smokesEmoji').classList.add('hidden'); }
+        if (type === 'SUSAN_EXPRESS') susanSpam();
+        else if (type === 'WINRAR') { setTimeout(winrarNag, 1600); setGold(gold + 40); const m = $('betMsg'); m.textContent = (m.textContent ? m.textContent + ' · ' : '') + '+40g winrar bonus'; }
+        else if (type === 'FLASHBANG') flashbang();
+    }
+
+    // ---------- start-up ----------
+    renderTitle(); applyNeedle(); renderGarage(); renderAipacBadge(); renderClippyPet();
+    kevinShield = store.get('painWheelRepel', 0); updateShieldBadge();
+    setInterval(() => {   // Kana+ ran out: Kana+ would like you to renew
+        if (kanaUntil && Date.now() > kanaUntil) { kanaUntil = 0; store.set('painWheelKanaUntil', 0); setTimeout(() => window.showAdById && window.showAdById('kanarenew'), 4000); }
+    }, 30000);
+
     // ---------- spin hooks ----------
     function onSpinStartFun(rigged) {
         lockBet(rigged);
@@ -5310,7 +5978,11 @@
         if (ash) chatBurst(['ASHBRINGER???', 'SERVER FIRST', 'HOLY', 'CLIP IT'], 4);
         // loot: about 1 in 3 spins; better odds on the rare slices
         const minQ = s.type === 'AOTC' ? 'legendary' : (s.type === 'NO_ONE' || ash) ? 'epic' : null;
-        if (minQ || Math.random() < (hasPerk('raid') ? 0.45 : 0.33)) setTimeout(() => giveLoot(rollQuality(minQ)), 1400);
+        const flask = flaskLoot > 0; if (flask) { flaskLoot--; store.set('painWheelFlask', flaskLoot); }
+        if (s.type === 'DONUT' && Math.random() < 0.15) setTimeout(() => giveLoot('legendary', "🍩 Justin's dream came true", 'Golden Chocolate Donut'), 1400);
+        else if (minQ || flask || Math.random() < (hasPerk('raid') ? 0.45 : 0.33)) setTimeout(() => giveLoot(rollQuality(minQ), flask ? '🧪 Flask of Loot' : undefined), 1400);
+        newSliceFx(s.type);
+        if (s.type === 'KROM' && Math.random() < 0.25) setTimeout(() => { if (window.showAdById) window.showAdById('aotc-carry'); }, 6000);
         // set perks that pay out on landings
         let bonus = 0;
         if (hasPerk('bar') && ['KNOB_CREEK', 'ROAD_BEERS', 'GARAGE_BEERS'].includes(s.type)) bonus += 100;
