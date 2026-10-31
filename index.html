@@ -6523,6 +6523,9 @@
             TITLES.forEach(([t, c]) => add(ownRow('🏷️', t, `${playerName || 'You'}, ${t}`, c, ownedTitles[t], titleChoice === t,
                 () => { if (!spend(c, t)) return; ownedTitles[t] = true; store.set('painWheelTitles', ownedTitles); unlock('drip'); equipTitle(t); },
                 () => equipTitle(t))));
+            add(shopRow('📞', "Vince's 1980s Brick Phone", "A genuine 1983 car phone from Vince the stock broker. Four pounds. Twenty minutes of battery. It sits in the bottom-left corner. Click it and Vince calls with a stock tip (he's right about 60% of the time). Note: comes lightly dusted with a white powder Vince insists is \"just baby powder\" and an alarming amount of stripper glitter. Do not ask Vince about either.", garage.phone ? 'Owned ✓' : 'Buy: 3,995,000g', () => {
+                if (!spend(3995000, "Vince's brick phone")) return; garage.phone = true; store.set('painWheelGarage', garage); renderGarage(); unlock('brickphone'); renderShop(); closeShop(); vinceBusyUntil = 0; vinceCall();
+            }, garage.phone ? 'owned' : 'buy'));
         } else if (shopTab === 'consumables') {
             add(shopRow('🧪', 'Flask of Loot', `Your next 10 spins all drop loot. (${flaskLoot} charges left)`, 'Buy: 250,000g', () => { if (!spend(250000, 'a Flask of Loot')) return; flaskLoot += 10; store.set('painWheelFlask', flaskLoot); shopMsg('Glug glug. Next 10 spins drop loot.'); renderShop(); }));
             add(shopRow('📜', 'Mulligan Scroll', `If your next bet loses, you get it all back. (${mulligan} held)`, 'Buy: 150,000g', () => { if (!spend(150000, 'a Mulligan Scroll')) return; mulligan++; store.set('painWheelMulligan', mulligan); shopMsg('Scroll ready. Go lose a bet.'); renderShop(); }));
@@ -6574,6 +6577,12 @@
                 }, pets[k] ? 'owned' : 'buy'));
             });
             if (!clippyUnlocked) { const n = document.createElement('div'); n.className = 'text-[11px] text-slate-500'; n.textContent = '??? — one pet is hiding somewhere. It looks like it\'s waiting for you to click something.'; add(n); }
+            add(shopRow('🖐️', "Biblehumping's Finger", "He lost it at work. He'd want you to have it. It gets laid to rest on the SPIN button with full honors. Some say the right kind of dark magic makes it move...", garage.finger ? 'Owned ✓' : 'Buy: 6,700,000g', () => {
+                if (!spend(6700000, "Biblehumping's Finger")) return; garage.finger = true; store.set('painWheelGarage', garage); renderShop(); closeShop();
+                playTapsSynth(); funEvent("🎺 LAYING BIBLEHUMPING'S FINGER TO REST", 5000);
+                setTimeout(() => { renderFinger(); unlock('finger'); moveToast("🖐️ Biblehumping's Finger now rests on the SPIN button. Gone, but never forgotten. (It's still pointing.)"); }, 1800);
+                chatBurst(['o7', 'F', 'press F for the finger', 'rest easy little guy', 'he would have wanted this', '🎺🎺🎺'], 6, 4000);
+            }, garage.finger ? 'owned' : 'buy'));
         } else if (shopTab === 'garage') {
             add(shopRow('🏜️', 'Shack in the Desert', 'The one from the meme. Its own property (not a house upgrade). Sits in the corner, pays +40g every 10 minutes.', garage.shack ? 'Owned ✓' : 'Buy: 1,350g', () => {
                 if (!spend(1350, 'the Shack in the Desert')) return; garage.shack = true; store.set('painWheelGarage', garage); renderGarage(); renderShop();
@@ -6589,15 +6598,6 @@
             add(shopRow('🚀', 'Gallywix Rocket', 'For when you\'ve made it (10 billion gold). Launches on purchase and every time you click it.', garage.rocket ? 'Owned ✓' : 'Buy: 10,000,000,000g', () => {
                 if (!spend(10000000000, 'the rocket')) return; garage.rocket = true; store.set('painWheelGarage', garage); renderGarage(); unlock('rocket'); closeShop(); launchRocket(); sendEvent({ k: 'rocket' }); renderShop();
             }, garage.rocket ? 'owned' : 'buy'));
-            add(shopRow('📞', "Vince's 1980s Brick Phone", "A genuine 1983 car phone from Vince the stock broker. Four pounds. Twenty minutes of battery. Click it in the corner and Vince calls with a stock tip (he's right about 60% of the time). Note: comes lightly dusted with a white powder Vince insists is \"just baby powder\" and an alarming amount of stripper glitter. Do not ask Vince about either.", garage.phone ? 'Owned ✓' : 'Buy: 3,995,000g', () => {
-                if (!spend(3995000, "Vince's brick phone")) return; garage.phone = true; store.set('painWheelGarage', garage); renderGarage(); unlock('brickphone'); renderShop(); closeShop(); vinceBusyUntil = 0; vinceCall();
-            }, garage.phone ? 'owned' : 'buy'));
-            add(shopRow('🖐️', "Biblehumping's Finger", "He lost it at work. He'd want you to have it. It gets laid to rest on the SPIN button with full honors. Some say the right kind of dark magic makes it move...", garage.finger ? 'Owned ✓' : 'Buy: 6,700,000g', () => {
-                if (!spend(6700000, "Biblehumping's Finger")) return; garage.finger = true; store.set('painWheelGarage', garage); renderShop(); closeShop();
-                playTapsSynth(); funEvent("🎺 LAYING BIBLEHUMPING'S FINGER TO REST", 5000);
-                setTimeout(() => { renderFinger(); unlock('finger'); moveToast("🖐️ Biblehumping's Finger now rests on the SPIN button. Gone, but never forgotten. (It's still pointing.)"); }, 1800);
-                chatBurst(['o7', 'F', 'press F for the finger', 'rest easy little guy', 'he would have wanted this', '🎺🎺🎺'], 6, 4000);
-            }, garage.finger ? 'owned' : 'buy'));
         } else if (shopTab === 'society') {
             const intro = document.createElement('div'); intro.className = 'text-xs text-slate-300';
             intro.textContent = 'Pay your initiation dues and climb the secret societies, one rank at a time. Each rank gets its own badge, achievement, and a guild-wide alert. Nobody is supposed to know about this tab.';
