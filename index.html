@@ -5073,6 +5073,8 @@
         { id: 'kanarenew', theme: 'vip', header: '📺 YOUR KANA+ PREMIUM HAS EXPIRED', body: 'We noticed you have been enjoying ad-free spinning. That was a mistake on our part. Renew now and the brooding demon hunters return, ad-free!', primary: 'RENEW (1,000,000g IN THE SHOP)', reply: 'Renewal is in the Shop → Consumables. We will be waiting. Right here. In this ad.', close: 'I like ads now' }
     );
     GEMINI_ADS.push(
+        { id: 'lemonade', theme: 'food', effect: 'invest:lemonade', header: "🍋 KEVIN'S LEMONADE STAND: SEED ROUND NOW OPEN", body: 'Kevin is raising money for a lemonade stand. He has no lemons, no stand, and no plan. Minimum investment: 10% of your gold. Returns: "trust me".', primary: 'INVEST 10% 🍋', close: 'I have eyes', reply: 'Thank you for your investment! Kevin has already spent it.' },
+        { id: 'rebliver', theme: 'warning', effect: 'invest:rebliver', header: '🫀 GOFUNDME: A NEW LIVER FOR REB', body: "Reb's liver has filed for divorce. Help fund a replacement. Every 5% of your gold buys roughly one (1) ice cube.", primary: 'DONATE 5% 🫀', close: 'Reb made his choices', reply: 'Thank you! Reb has spent your donation on Knob Creek.' },
         { id: 'goblincard', theme: 'gold', effect: 'goblincard', header: "💳 YOU'RE PRE-APPROVED: GOBLIN EXPRESS PLATINUM", body: 'No credit check! No income check! No pulse check! Buy anything in the shop today and pay later at a low, low 400% APR. Your credit limit is set personally by Gallywix, based on vibes.', primary: 'APPLY NOW (ALREADY APPROVED)', close: 'I enjoy owning my soul', reply: 'APPROVED! Your card is in the mail. The mail is a goblin. He is already behind you.' }
     );
     GEMINI_ADS.forEach(a => {
@@ -5091,9 +5093,54 @@
             </div>` });
     });
 
+    // the stupid investments: the money is gone... until, sometimes, it comes back bigger
+    const INVESTMENTS = {
+        lemonade: { e: '🍋', name: "Kevin's Lemonade Stand", take: 0.1, chance: 0.4, mult: 4, broke: '🍋 You have no gold to invest. Kevin is still accepting IOUs.', sq: ['kevin', 'my lemonade stand is going PUBLIC. i still do not have lemons'],
+            win: (g) => `Even though it seemed stupid, Kevin's Lemonade Stand went viral on Squawkr and Elan bought it. Your investment paid off: +${g}!`,
+            lose: "Update on Kevin's Lemonade Stand: Kevin drank all the lemonade. It was, in fact, a stupid investment." },
+        rebliver: { e: '🫀', name: "Reb's new liver", take: 0.05, chance: 0.35, mult: 3, broke: '🫀 You have no gold. Reb understands. Reb also has no liver.', sq: ['reb', 'i have been replaced. the new liver is younger and drinks more. i am so proud'],
+            win: (g) => `Reb got the new liver! He's so grateful he paid you back in $KNOB dividends, which somehow went up. +${g}!`,
+            lose: "Update on Reb's liver fund: the money went to Knob Creek. The new liver is also Knob Creek." },
+        rugpull: { e: '🧶', name: '$KEVCOIN', take: 0, chance: 0.2, mult: 3, sq: ['kevin', '$KEVCOIN IS BACK. this was the plan all along. (it was not)'],
+            win: (g) => `Plot twist: $KEVCOIN came back from the dead and mooned. Kevin swears this was the plan. Even though it seemed stupid, it paid off: +${g}!`,
+            lose: 'Update on $KEVCOIN: still zero. Kevin has changed his phone number.' } };
+    function addInvestment(k, amt) {
+        const list = store.get('painWheelInvestments', []);
+        list.push({ k, amt, due: Date.now() + (4 + Math.random() * 14) * 60000 }); store.set('painWheelInvestments', list);
+    }
+    function investPopup(title, text, good) {
+        const o = document.createElement('div');
+        o.style.cssText = 'position:fixed;inset:0;z-index:88;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(2,6,23,.72)';
+        o.innerHTML = `<div style="width:min(420px,100%);background:#0f172a;border:2px solid ${good ? '#4ade80' : '#64748b'};border-radius:18px;padding:22px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6)">
+            <div style="font-size:11px;font-weight:900;letter-spacing:.18em;color:${good ? '#86efac' : '#94a3b8'}">📬 INVESTMENT UPDATE</div>
+            <div data-h style="font-size:22px;font-weight:900;margin-top:6px;color:#fff"></div><div data-t style="margin-top:8px;font-size:14px;line-height:1.5;color:#cbd5e1"></div>
+            <button data-x style="margin-top:14px;padding:8px 18px;border-radius:10px;border:0;background:${good ? '#16a34a' : '#334155'};color:#fff;font-weight:900;cursor:pointer">${good ? 'I knew it all along' : 'Yeah, figured'}</button></div>`;
+        o.querySelector('[data-h]').textContent = title; o.querySelector('[data-t]').textContent = text;
+        o.querySelector('[data-x]').addEventListener('click', () => o.remove()); document.body.appendChild(o);
+    }
+    setInterval(() => {
+        if (document.hidden || isSpinning) return;
+        const list = store.get('painWheelInvestments', []), now = Date.now(), i = list.findIndex(x => x.due <= now); if (i < 0) return;
+        const x = list.splice(i, 1)[0]; store.set('painWheelInvestments', list);
+        const inv = INVESTMENTS[x.k]; if (!inv) return;
+        if (Math.random() < inv.chance) {
+            const back = Math.round(x.amt * inv.mult); setGold(gold + back);
+            investPopup(`${inv.e} It actually worked?!`, inv.win(fmt(back)), true);
+            launchConfetti(['💰', inv.e, '✨'], ['#4ade80', '#facc15', '#ffffff'], 0.7, 0.4);
+            chatBurst(['IT PAID OFF', 'NO WAY', 'financial genius', 'he was right??', 'buy high sell higher', 'W investor'], 5, 2500);
+            if (typeof sqPost === 'function') sqPost(inv.sq[0], inv.sq[1]);
+        } else moveToast(`${inv.e} ${inv.lose}`);
+    }, 30000);
     function runAdEffect(fx) {
         const root = document.documentElement;
         if (fx === 'freespin') { if (!isSpinning) triggerSpin(); }
+        else if (fx.startsWith('invest:')) {
+            const k = fx.slice(7), inv = INVESTMENTS[k], amt = Math.round(gold * inv.take);
+            if (amt <= 0) { moveToast(inv.broke); return; }
+            setGold(gold - amt); addInvestment(k, amt);
+            funEvent(`${inv.e} You put ${fmt(amt)} into ${inv.name}. Bold.`, 4000);
+            chatBurst(['WHY', 'he actually did it', 'financial advisor in shambles', 'that money is gone', 'L', 'believe'], 4, 2500);
+        }
         else if (fx === 'goblincard') getGoblinCard();
         else if (fx === 'turbo') { turboNext = true; moveToast('⚡ Next spin is OVERCLOCKED. Brace yourself.'); }
         else if (fx === 'flip') {
@@ -5108,6 +5155,7 @@
             funEvent(lost ? `🧶 RUG PULLED! $KEVCOIN went to zero. You lost ${lost.toLocaleString()}g.` : '🧶 RUG PULLED! (You had no gold. Kevin is disappointed.)', 5000);
             chatBurst(['RUG PULLED', 'he aped in KEKW', 'not your keys not your gold', 'Kevin is on a yacht now', 'F', 'financially ruined'], 5, 2500);
             unlock('rugpull'); if (lost >= 1000) sendEvent({ k: 'rugpull', lost });
+            if (lost > 0) addInvestment('rugpull', lost);
         } else if (fx === 'aotccarry') {
             aotcCarryUnlocked = true; store.set('painWheelAotcCarry', true);
             moveToast('🏆 AOTC Carry unlocked in the Shop (Consumables). It will be marked as rigged. Discord will know.');
@@ -5156,7 +5204,8 @@
         let currentAdId = null;
         function show(forceId) {
             let lastId = null; try { lastId = localStorage.getItem('painWheelAdLastId'); } catch (e) {}
-            const pool = POPUP_ADS.filter(a => a.id !== lastId);
+            const done = (id) => (id === 'timeshare' && store.get('painWheelTimeshare', false)) || (id === 'goblincard' && store.get('painWheelGoblinCard', false));
+            const pool = POPUP_ADS.filter(a => a.id !== lastId && !done(a.id));
             const pickAd = POPUP_ADS.find(a => a.id === forceId) || pool[Math.floor(Math.random() * pool.length)];
             currentAdId = pickAd.id;
             slot.innerHTML = pickAd.html;
