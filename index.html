@@ -3476,6 +3476,7 @@
         { id: 'drip',       name: 'Drip',                     desc: 'Buy something cosmetic from the shop.' },
         { id: 'boughtaotc', name: 'Pulled a Krom',            desc: "Buy Krom's AOTC carry. Shameful." },
         { id: 'aotclegit',  name: 'Ahead of the Curve (Legit)', desc: 'Land on AOTC naturally. No rigs, no Krom carries, no excuses.' },
+        { id: 'fenderbender', name: 'Whose Fault Is It?',      desc: "Crash Nick's ambulance into Justin's cop car.", secret: true, secretName: true },
         { id: 'cluck',      name: 'CLUCK!',                   desc: 'Complete the Westfall chicken\'s quest.' },
         { id: 'clippy',     name: "It Looks Like You're Adopting a Paperclip", desc: 'Find and adopt the secret pet.', secret: true, secretName: true }
     ];
@@ -5653,7 +5654,7 @@
     // ---------- garage ----------
     let garage = store.get('painWheelGarage', {});
     function playSiren(secs) {
-        if (!soundOn()) return;
+        if (!soundOn()) return () => {};
         try {
             ensureAudio();
             const t = audioCtx.currentTime, o = audioCtx.createOscillator(), lp = audioCtx.createBiquadFilter(), g = audioCtx.createGain();
@@ -5662,19 +5663,118 @@
             g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.08, t + 0.08);
             g.gain.setValueAtTime(0.08, t + secs - 0.4); g.gain.linearRampToValueAtTime(0.0001, t + secs);
             o.connect(lp); lp.connect(g); g.connect(outGain); o.start(t); o.stop(t + secs + 0.05);
+            return () => { try { g.gain.cancelScheduledValues(audioCtx.currentTime); g.gain.setValueAtTime(0.0001, audioCtx.currentTime); o.stop(); } catch (e) {} };
+        } catch (e) { return () => {}; }
+    }
+    function playWhoop(times) {   // the police "whoop whoop" chirp
+        if (!soundOn()) return () => {};
+        try {
+            ensureAudio();
+            const t = audioCtx.currentTime, o = audioCtx.createOscillator(), lp = audioCtx.createBiquadFilter(), g = audioCtx.createGain();
+            o.type = 'sawtooth'; lp.type = 'lowpass'; lp.frequency.value = 2600;
+            g.gain.setValueAtTime(0.0001, t);
+            for (let i = 0; i < times; i++) {
+                const at = t + i * 0.42;
+                o.frequency.setValueAtTime(420, at); o.frequency.exponentialRampToValueAtTime(1500, at + 0.24); o.frequency.exponentialRampToValueAtTime(700, at + 0.34);
+                g.gain.setValueAtTime(0.0001, at); g.gain.linearRampToValueAtTime(0.085, at + 0.03); g.gain.setValueAtTime(0.085, at + 0.26); g.gain.linearRampToValueAtTime(0.0001, at + 0.36);
+            }
+            o.connect(lp); lp.connect(g); g.connect(outGain); o.start(t); o.stop(t + times * 0.42 + 0.05);
+            return () => { try { o.stop(); } catch (e) {} };
+        } catch (e) { return () => {}; }
+    }
+    function playCrash() {
+        if (!soundOn()) return;
+        try {
+            ensureAudio();
+            const t = audioCtx.currentTime, len = 0.9, buf = audioCtx.createBuffer(1, audioCtx.sampleRate * len, audioCtx.sampleRate), d = buf.getChannelData(0);
+            for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 2.5);
+            const src = audioCtx.createBufferSource(), lp = audioCtx.createBiquadFilter(), g = audioCtx.createGain();
+            src.buffer = buf; lp.type = 'lowpass'; lp.frequency.value = 1800; g.gain.value = 0.35;
+            src.connect(lp); lp.connect(g); g.connect(outGain); src.start(t);
+            [180, 260, 340].forEach((f, i) => { const o = audioCtx.createOscillator(), og = audioCtx.createGain(); o.type = 'square'; o.frequency.setValueAtTime(f, t + 0.05 + i * 0.07);
+                og.gain.setValueAtTime(0.06, t + 0.05 + i * 0.07); og.gain.exponentialRampToValueAtTime(0.0001, t + 0.3 + i * 0.07); o.connect(og); og.connect(outGain); o.start(t + 0.05 + i * 0.07); o.stop(t + 0.35 + i * 0.07); });
         } catch (e) {}
     }
-    let ambulanceBusy = false;
+
+    // ---------- emergency vehicles: one lane, one shared animator (so they can crash) ----------
+    const vehicles = {};
+    const VEH_Y = 70, VEH_W = 90;
+    function vehicleEl(html) {
+        const el = document.createElement('div');
+        el.style.cssText = `position:fixed;z-index:77;bottom:${VEH_Y}px;left:0;font-size:76px;line-height:1;pointer-events:none;text-align:center;will-change:transform`;
+        el.innerHTML = html; document.body.appendChild(el); return el;
+    }
     function driveAmbulance() {
-        if (ambulanceBusy) return; ambulanceBusy = true;
-        playSiren(3.5);
-        const a = document.createElement('div');
-        a.style.cssText = 'position:fixed;z-index:77;bottom:70px;left:100vw;font-size:76px;line-height:1;pointer-events:none;transition:left 3.6s linear;text-align:center';
-        a.innerHTML = '<div class="siren-glow" style="font-size:30px">🚨</div>🚑';
-        document.body.appendChild(a);
-        requestAnimationFrame(() => requestAnimationFrame(() => a.style.left = '-160px'));
-        setTimeout(() => { a.remove(); ambulanceBusy = false; }, 3800);
+        if (vehicles.amb) return;
+        const v = vehicles.amb = { el: vehicleEl('<div class="siren-glow" style="font-size:30px">🚨</div>🚑'), x: innerWidth + 20, vx: -(innerWidth + 180) / 3.6, stop: playSiren(3.5) };
         chatBurst(['WEE WOO WEE WOO', 'nick is on the way', 'first responders o7', 'except nick', 'someone call nick', '🚑🚑🚑'], 3, 2500);
+        startTraffic();
+        return v;
+    }
+    function drivePolice() {
+        if (vehicles.cop) return;
+        const v = vehicles.cop = { el: vehicleEl('<div class="siren-glow" style="font-size:30px">🚨</div><span style="display:inline-block;transform:scaleX(-1)">🚓</span>'),
+            x: -160, vx: (innerWidth / 2 + 80) / 1.6, stopAt: innerWidth / 2 - 45, paused: 0, stop: () => {} };
+        chatBurst(['WOOP WOOP', "justin's on patrol", 'pull over', 'license and registration', '🚓🚓🚓', 'that is the sound of da police'], 3, 2500);
+        startTraffic();
+        return v;
+    }
+    let trafficOn = false, trafficLast = 0;
+    function startTraffic() { if (trafficOn) return; trafficOn = true; trafficLast = performance.now(); requestAnimationFrame(trafficStep); }
+    function trafficStep(now) {
+        const dt = Math.min(0.05, (now - trafficLast) / 1000); trafficLast = now;
+        const amb = vehicles.amb, cop = vehicles.cop;
+        if (cop) {
+            if (cop.stopAt != null && cop.x >= cop.stopAt) {   // pull up, whoop whoop, then peel off
+                cop.x = cop.stopAt; cop.stopAt = null; cop.paused = 1.3; cop.stop = playWhoop(3);
+            }
+            if (cop.paused > 0) cop.paused -= dt; else cop.x += cop.vx * dt;
+        }
+        if (amb) amb.x += amb.vx * dt;
+        if (amb && cop && Math.abs(amb.x - cop.x) < VEH_W) return vehicleCrash((amb.x + cop.x) / 2);
+        [['amb', amb], ['cop', cop]].forEach(([k, v]) => {
+            if (!v) return;
+            v.el.style.transform = `translateX(${v.x.toFixed(1)}px)`;
+            if (v.x < -200 || v.x > innerWidth + 200) { v.el.remove(); v.stop(); delete vehicles[k]; }
+        });
+        if (vehicles.amb || vehicles.cop) requestAnimationFrame(trafficStep); else trafficOn = false;
+    }
+    const CRASH_ARGUMENTS = [
+        ['Nick', 'You pulled out right in front of me!'], ['Justin', 'I had my lights on! You had your lights on! Everyone had their lights on!'],
+        ['Nick', 'I was responding to a call!'], ['Justin', 'So was I! The call was about YOU.'],
+        ['Nick', 'This is going on the incident report.'], ['Justin', 'I AM the incident report.'],
+        ['Nick', 'Who is going to save the farmers now?'], ['Justin', 'The farmers are finally safe.']];
+    function vehicleCrash(x) {
+        trafficOn = false;
+        const amb = vehicles.amb, cop = vehicles.cop;
+        [amb, cop].forEach(v => { v.stop(); v.el.style.transition = 'transform .5s ease-out, opacity 1.2s 1.2s'; });
+        amb.el.style.transform = `translateX(${(x + 30).toFixed(1)}px) rotate(18deg)`; cop.el.style.transform = `translateX(${(x - 60).toFixed(1)}px) rotate(-14deg)`;
+        playCrash();
+        const boom = document.createElement('div'); boom.textContent = '💥';
+        boom.style.cssText = `position:fixed;z-index:78;bottom:${VEH_Y + 10}px;left:${x}px;font-size:40px;pointer-events:none;transform:translateX(-30%) scale(.3);transition:transform .35s ease-out, opacity .8s .9s`;
+        document.body.appendChild(boom); requestAnimationFrame(() => boom.style.transform = 'translateX(-30%) scale(3.2)');
+        document.body.animate([{ transform: 'translate(0,0)' }, { transform: 'translate(-8px,4px)' }, { transform: 'translate(7px,-5px)' }, { transform: 'translate(-4px,3px)' }, { transform: 'translate(0,0)' }], { duration: 450 });
+        setTimeout(() => { boom.style.opacity = '0'; amb.el.style.opacity = '0'; cop.el.style.opacity = '0'; }, 400);
+        setTimeout(() => { boom.remove(); amb.el.remove(); cop.el.remove(); delete vehicles.amb; delete vehicles.cop; }, 2600);
+        chatBurst(['CRASH', 'FENDER BENDER', 'OH NO', 'first responders responding to each other', 'insurance claim incoming', 'who had the right of way'], 6, 2500);
+        unlock('fenderbender'); sendEvent({ k: 'crash' });
+        setTimeout(() => {
+            const o = document.createElement('div');
+            o.style.cssText = 'position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(2,6,23,.75)';
+            o.innerHTML = `<div style="width:min(440px,100%);background:#0f172a;border:2px solid #f97316;border-radius:18px;padding:20px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6)">
+                <div style="font-size:46px;line-height:1">🚑💥🚓</div>
+                <div style="font-weight:900;font-size:22px;color:#fdba74;margin-top:8px">Nick and Justin are now arguing whose fault it is.</div>
+                <div data-arg style="margin-top:12px;text-align:left;font-size:13px;line-height:1.5;min-height:120px"></div>
+                <button data-x style="margin-top:12px;padding:6px 18px;border-radius:8px;background:#334155;color:#fff;font-weight:800;cursor:pointer;border:none">File the insurance claim</button></div>`;
+            document.body.appendChild(o);
+            const box = o.querySelector('[data-arg]');
+            CRASH_ARGUMENTS.forEach(([who, line], i) => setTimeout(() => {
+                if (!o.isConnected) return;
+                const d = document.createElement('div'); d.innerHTML = `<b style="color:${who === 'Nick' ? '#f87171' : '#60a5fa'}"></b> <span style="color:#e2e8f0"></span>`;
+                d.children[0].textContent = (who === 'Nick' ? '🚑 ' : '🚓 ') + who + ':'; d.children[1].textContent = line; box.appendChild(d);
+            }, 400 + i * 1100));
+            o.querySelector('[data-x]').addEventListener('click', () => o.remove());
+        }, 900);
     }
     function launchRocket() {
         const r = document.createElement('div');
@@ -5694,7 +5794,7 @@
         const d = $('garageDock'); d.innerHTML = '';
         [['shack', '🏜️', 'Your Shack in the Desert', () => moveToast('🏜️ ' + pick(['The shack is quiet. The desert is quiet. Kevin cannot find you here.', 'You sit on the shack porch and think about your parses.',
             'A tumbleweed rolls by. It has better DPS than Kevin.', 'No WiFi out here. Somehow the wheel still loads.', 'Rent collected from a lizard: it paid in gold.']))],
-         ['ambulance', '🚑', "Nick's Ambulance (click for siren)", driveAmbulance], ['rocket', '🚀', 'Your rocket (click to launch)', launchRocket]].forEach(([k, e, tip, fn]) => {
+         ['ambulance', '🚑', "Nick's Ambulance (click for siren)", driveAmbulance], ['police', '🚓', "Justin's Cop Car (click for whoop whoop)", drivePolice], ['rocket', '🚀', 'Your rocket (click to launch)', launchRocket]].forEach(([k, e, tip, fn]) => {
             if (!garage[k]) return;
             const b = document.createElement('button'); b.textContent = e; b.title = tip;
             b.style.cssText = 'font-size:40px;line-height:1;cursor:pointer;background:none;border:none;filter:drop-shadow(0 3px 6px rgba(0,0,0,.7))';
@@ -5903,6 +6003,10 @@
             add(shopRow('🚑', "Nick's Ambulance", 'Parks in the corner. Click it for lights and siren. Thank you to our first responders (except Nick).', garage.ambulance ? 'Owned ✓' : 'Buy: 2,500,000g', () => {
                 if (!spend(2500000, 'the ambulance')) return; garage.ambulance = true; store.set('painWheelGarage', garage); renderGarage(); unlock('weewoo'); driveAmbulance(); renderShop();
             }, garage.ambulance ? 'owned' : 'buy'));
+            add(shopRow('🚓', "Justin's Cop Car", "Comes with Justin's Golden Chocolate Donut. Parks in the corner; click it: it rolls in, does the WHOOP WHOOP, and peels off. (Try it while the ambulance is out...)", garage.police ? 'Owned ✓' : 'Buy: 2,500,000g', () => {
+                if (!spend(2500000, 'the cop car')) return; garage.police = true; store.set('painWheelGarage', garage); renderGarage(); drivePolice(); renderShop();
+                setTimeout(() => giveLoot('legendary', '🍩 Justin left this in the cruiser', 'Golden Chocolate Donut'), 1500);
+            }, garage.police ? 'owned' : 'buy'));
             add(shopRow('🚀', 'Gallywix Rocket', 'For when you\'ve made it (10 billion gold). Launches on purchase and every time you click it.', garage.rocket ? 'Owned ✓' : 'Buy: 10,000,000,000g', () => {
                 if (!spend(10000000000, 'the rocket')) return; garage.rocket = true; store.set('painWheelGarage', garage); renderGarage(); unlock('rocket'); closeShop(); launchRocket(); sendEvent({ k: 'rocket' }); renderShop();
             }, garage.rocket ? 'owned' : 'buy'));
