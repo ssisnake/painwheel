@@ -7227,7 +7227,7 @@
         $('sqHead').addEventListener('pointerup', end); $('sqHead').addEventListener('pointercancel', end);
         $('sqMin').addEventListener('click', () => { sqState.min = !sqState.min; sqRenderMin(); sqPlace(); sqSaveState(); });
         addEventListener('resize', sqPlace);
-        setInterval(() => { if (!document.hidden && Math.random() < 1 / 3) { const a = pick(SQ_AMBIENT); sqPost(a[0], a[1]); } }, 4 * 60000);   // the bird site never sleeps
+        setInterval(() => { if (!document.hidden && Math.random() < 1 / 2) { const a = pick(SQ_AMBIENT); sqPost(a[0], a[1]); } }, 2.5 * 60000);   // about every 5 minutes   // the bird site never sleeps
         setInterval(() => { if (!sqState.min) sqRender(); }, 60000);   // keep the "5m ago" times fresh
     })();
     function squawk(post) {   // Elan posts move the market
@@ -7238,8 +7238,8 @@
         if (sqState.min) moveToast(`🐦 Elan just posted: "${post.text}" ($${post.sym} ${pct >= 0 ? '+' : ''}${pct.toLocaleString()}%)`);
         chatBurst(pct >= 0 ? ['ELAN POSTED', `$${post.sym} TO THE MOON`, 'buy buy buy', 'market manipulation', 'SEC where'] : ['ELAN POSTED', `$${post.sym} IS DEAD`, 'sell sell sell', 'bag holders in shambles', 'thanks Elan'], 4, 2500);
     }
-    setInterval(() => {   // about once every 40 minutes while the page is open
-        if (document.hidden || isSpinning || Math.random() > 1 / 40) return;
+    setInterval(() => {   // about once every 20 minutes while the page is open
+        if (document.hidden || isSpinning || Math.random() > 1 / 20) return;
         const bagW = ELAN_POSTS.flatMap(p => Array(p.w).fill(p)); squawk(pick(bagW));
     }, 60000);
 
