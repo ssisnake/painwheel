@@ -5920,9 +5920,15 @@
                 if (renderShop.lastCurseTarget && others.includes(renderShop.lastCurseTarget)) sel.value = renderShop.lastCurseTarget;
                 sel.addEventListener('change', () => renderShop.lastCurseTarget = sel.value);
                 const w = document.createElement('div'); w.className = 'flex items-center gap-2'; w.innerHTML = '<span class="text-xs font-bold text-slate-400">Victim:</span>'; w.appendChild(sel); add(w);
+                const fast = store.get('painWheelHexFast', false);
+                add(shopRow('⏱️', "Warlock's Hex Accelerator", fast ? 'Owned: your curse cooldown is 10 seconds.' : 'Permanently drops your curse cooldown from 30 seconds to 10.', fast ? 'Owned ✓' : 'Buy: 1,000,000g', () => {
+                    if (!spend(1000000, "the Hex Accelerator")) return; store.set('painWheelHexFast', true); renderShop.lastCurse = 0;
+                    shopMsg('⏱️ Hex Accelerator installed. Cooldown is now 10 seconds. Go wild.'); chatBurst(['warlock speedrun', 'curse spam incoming', 'monkaS', 'nobody is safe'], 3); renderShop();
+                }, fast ? 'owned' : 'buy'));
                 Object.entries(CURSES).filter(([id, c]) => !c.adminOnly || isAdmin()).forEach(([id, c]) => add(shopRow(c.e, c.name, c.desc, c.adminOnly ? 'ABUSE (free)' : 'Curse: ' + fmt(c.cost), () => {
                     const target = $('curseTarget').value; if (!target) { shopMsg('Pick a victim first.'); return; }
-                    if (Date.now() - (renderShop.lastCurse || 0) < 30000) { shopMsg('Your hex is still on cooldown (30s). Patience, warlock.'); return; }
+                    const cd = store.get('painWheelHexFast', false) ? 10000 : 30000, wait = Math.ceil((cd - (Date.now() - (renderShop.lastCurse || 0))) / 1000);
+                    if (wait > 0) { shopMsg(`Your hex is still on cooldown (${wait}s). Patience, warlock.`); return; }
                     if (!spend(c.cost, c.name)) return;
                     renderShop.lastCurse = Date.now(); renderShop.lastCurseTarget = target;
                     sendEvent({ k: 'curse', target, curse: id });
