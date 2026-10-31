@@ -3294,7 +3294,7 @@
         if (riggedMode !== "FAIR") return pick(indicesOf[riggedMode]);
         if (retBoostStacks > 0) {
             if (Math.random() < retChance()) return pick(indicesOf.RET_PALADIN);
-            return pick(slices.filter(x => x.type !== "RET_PALADIN" && x.type !== "AOTC").map(x => x.index));
+            return pick(slices.filter(x => x.type !== "RET_PALADIN" && x.type !== "AOTC" && !(kevinShield > 0 && x.type === "KEVIN")).map(x => x.index));   // the Repel still works during a Ret boost
         }
         if (kevinShield > 0) return pick(slices.filter(x => x.type !== "KEVIN" && x.type !== "AOTC").map(x => x.index));
         return null;
