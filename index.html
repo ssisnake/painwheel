@@ -677,9 +677,12 @@
                     <span id="liverText" class="mono text-slate-300 shrink-0 w-24 text-right">100%</span>
                 </div>
                 <div class="mt-2 flex flex-wrap items-center gap-1.5 text-[11px]">
-                    <button id="knobBuy" class="px-2 py-1 rounded bg-emerald-700 hover:bg-emerald-600 text-white font-bold cursor-pointer">Buy 1</button>
-                    <button id="knobBuy10" class="px-2 py-1 rounded bg-emerald-700 hover:bg-emerald-600 text-white font-bold cursor-pointer">Buy 10</button>
-                    <button id="knobBuy100" class="px-2 py-1 rounded bg-emerald-800 hover:bg-emerald-700 text-white font-bold cursor-pointer">Buy 100</button>
+                    <button data-kb="1" class="px-2 py-1 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#047857">Buy 1</button>
+                    <button data-kb="10" class="px-2 py-1 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#047857">10</button>
+                    <button data-kb="100" class="px-2 py-1 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#047857">100</button>
+                    <button data-kb="1000" class="px-2 py-1 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#047857">1K</button>
+                    <button data-kb="10000" class="px-2 py-1 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#047857">10K</button>
+                    <button data-kb="max" class="px-2 py-1 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#047857">Max</button>
                     <button data-ks="1" class="px-2 py-1 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#475569">Sell 1</button>
                     <button data-ks="10" class="px-2 py-1 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#475569">10</button>
                     <button data-ks="100" class="px-2 py-1 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#475569">100</button>
@@ -5446,12 +5449,14 @@
         const cost = Math.max(1, Math.round(knobNow)) * n;
         if (gold < cost) { $('knobNews').textContent = `📉 You need ${cost.toLocaleString()}g for ${n} share${n > 1 ? 's' : ''}. You have ${gold.toLocaleString()}g.`; return; }
         knobShares += n; store.set('painWheelKnobShares', knobShares); setGold(gold - cost);
-        if (n > 1) $('knobNews').textContent = `📈 Bought ${n} shares for ${cost.toLocaleString()}g.`;
+        if (n > 1) $('knobNews').textContent = `📈 Bought ${n.toLocaleString()} shares for ${cost.toLocaleString()}g.`;
+        renderKnobHold();
         chat(pick(n >= 100 ? ['WHALE ALERT', 'he bought 100 KEKW', 'Reb is buying a boat', 'market manipulation'] : ['buying the top KEKW', 'diamond hands', 'Reb thanks you', '$KNOB to the moon']));
     }
-    $('knobBuy').addEventListener('click', () => buyKnob(1));
-    $('knobBuy10').addEventListener('click', () => buyKnob(10));
-    $('knobBuy100').addEventListener('click', () => buyKnob(100));
+    document.querySelectorAll('[data-kb]').forEach(b => b.addEventListener('click', () => {
+        let n = b.dataset.kb === 'max' ? Math.floor(gold / Math.max(1, Math.round(knobNow))) : +b.dataset.kb;   // Max = as many as you can afford
+        if (n < 1) n = 1; buyKnob(n); b.blur();
+    }));
     function sellKnob(n) {   // sells n shares, or everything you have if you own fewer than n
         if (!knobShares) { $('knobNews').textContent = '📉 You own 0 shares of $KNOB. Reb is disappointed.'; return; }
         n = n === 'all' ? knobShares : Math.min(knobShares, n);
@@ -7505,6 +7510,9 @@
                 <button data-b="1" class="px-2 py-0.5 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#047857">Buy 1</button>
                 <button data-b="10" class="px-2 py-0.5 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#047857">10</button>
                 <button data-b="100" class="px-2 py-0.5 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#047857">100</button>
+                <button data-b="1000" class="px-2 py-0.5 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#047857">1K</button>
+                <button data-b="10000" class="px-2 py-0.5 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#047857">10K</button>
+                <button data-b="max" class="px-2 py-0.5 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#047857">Max</button>
                 <button data-s="1" class="px-2 py-0.5 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#475569">Sell 1</button>
                 <button data-s="10" class="px-2 py-0.5 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#475569">10</button>
                 <button data-s="100" class="px-2 py-0.5 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#475569">100</button>
@@ -7512,7 +7520,10 @@
                 <button data-s="10000" class="px-2 py-0.5 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#475569">10K</button>
                 <button data-s="all" class="px-2 py-0.5 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#475569">All</button>
                 <span data-h class="text-slate-400 mono truncate"></span></div>`;
-            r.querySelectorAll('[data-b]').forEach(b => b.addEventListener('click', () => { exBuy(st, +b.dataset.b); b.blur(); }));
+            r.querySelectorAll('[data-b]').forEach(b => b.addEventListener('click', () => {
+                let n = b.dataset.b === 'max' ? Math.floor(gold / Math.max(0.01, exPrice[st.sym])) : +b.dataset.b;   // Max = as many as you can afford
+                if (n < 1) n = 1; exBuy(st, n); b.blur();
+            }));
             r.querySelectorAll('[data-s]').forEach(b => b.addEventListener('click', () => { exSell(st, b.dataset.s === 'all' ? 'all' : +b.dataset.s); b.blur(); }));
             box.appendChild(r);
         });
@@ -7533,7 +7544,7 @@
         const cost = Math.max(1, Math.round(exPrice[st.sym] * n));
         if (gold < cost) { $('exNews').textContent = `📉 ${n} $${st.sym} costs ${cost.toLocaleString()}g. You have ${gold.toLocaleString()}g.`; return; }
         setGold(gold - cost); exHold[st.sym] = (exHold[st.sym] || 0) + n; store.set('painWheelStocks', exHold);
-        $('exNews').textContent = `📈 Bought ${n} $${st.sym} for ${cost.toLocaleString()}g.`; exRender();
+        $('exNews').textContent = `📈 Bought ${n.toLocaleString()} $${st.sym} for ${cost.toLocaleString()}g.`; exRender();
         if (n >= 100) chat(pick(['WHALE ALERT', `${st.sym} TO THE MOON`, 'insider trading?', 'SEC has entered the chat']));
     }
     function exSell(st, want) {   // want: a number of shares or 'all' (sells whatever you have if you own fewer)
