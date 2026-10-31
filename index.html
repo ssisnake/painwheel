@@ -5966,6 +5966,11 @@
         ['Justin', 'I am writing the wheel a ticket for spinning under the influence.'], ['Nick', 'Kevin is fine. Kevin was the one who aimed it.'],
         ['Justin', 'Casimir says this is a feature.'], ['Nick', 'Stop, drop and roll. The wheel only knows how to roll.']];
     let rocketMishap = false, rocketBag = [];
+    let rocketTargets = [];
+    function rocketTargetWheel() {   // misses alternate yacht / wheel (shuffled in pairs), so you see both
+        if (!rocketTargets.length) rocketTargets = Math.random() < 0.5 ? [true, false] : [false, true];
+        return rocketTargets.pop();
+    }
     function rocketGoesAstray() {   // 1 in 2, dealt in shuffled pairs so it never goes long without missing
         if (!rocketBag.length) rocketBag = Math.random() < 0.5 ? [true, false] : [false, true];
         return rocketBag.pop();
@@ -6002,7 +6007,7 @@
         const pad = document.querySelector('#garageDock [data-k="shack"]') || document.querySelector('#garageDock [data-k="rocket"]') || $('garageDock');
         const p0 = pad.getBoundingClientRect(), sx = p0.left + p0.width / 2, sy = p0.top;
         const house = $('houseEmoji'), h = house.getBoundingClientRect();
-        const toWheel = Math.random() < 0.35 || $('timeshareHouse').classList.contains('hidden'), wc = $('wheelCanvas').getBoundingClientRect();
+        const toWheel = rocketTargetWheel() || $('timeshareHouse').classList.contains('hidden'), wc = $('wheelCanvas').getBoundingClientRect();
         const tx = toWheel ? wc.left + wc.width / 2 : h.left + h.width / 2, ty = toWheel ? Math.max(90, Math.min(innerHeight - 140, wc.top + wc.height / 2)) : h.top + h.height / 2;
         const r = document.createElement('div'); r.textContent = '🚀';
         r.style.cssText = `position:fixed;z-index:80;left:${sx}px;top:${sy - 70}px;font-size:80px;line-height:1;pointer-events:none;transform:translate(-50%,-50%) rotate(-45deg);transition:top 1.5s cubic-bezier(.5,0,.9,.4)`;
