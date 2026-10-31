@@ -203,7 +203,45 @@
         body.party-on #garageDock button { animation: petDance .6s ease-in-out infinite alternate; }
         body.is-spinning #petDock *, body.is-spinning #garageDock *, body.is-spinning #houseEmoji, body.is-spinning .siren-glow, body.is-spinning #goldenCookie { animation-play-state: paused !important; }
         #petDock > div > div:last-child { will-change: transform; }
-        body.has-hearth header { padding-right: 76px; }   /* room for the Hearthstone in the top-right corner */
+        body.has-hearth header { padding-right: 76px; }
+        /* launch pad */
+        .lp-wrap { position: relative; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; min-height: 176px; padding: 14px 18px 0; border-radius: 16px; overflow: hidden;
+            border: 1px solid rgba(250,204,21,.4); background: linear-gradient(180deg, #070b1f 0%, #0f1630 60%, #1e293b 100%); box-shadow: 0 10px 30px rgba(0,0,0,.45); }
+        .lp-stars { position: absolute; inset: 0; pointer-events: none; opacity: .7;
+            background: radial-gradient(1.5px 1.5px at 12% 22%, #fff, transparent), radial-gradient(1px 1px at 30% 60%, #fff, transparent), radial-gradient(1.5px 1.5px at 48% 14%, #fde68a, transparent),
+                radial-gradient(1px 1px at 66% 40%, #fff, transparent), radial-gradient(1.5px 1.5px at 82% 18%, #fff, transparent), radial-gradient(1px 1px at 92% 52%, #bae6fd, transparent), radial-gradient(1px 1px at 22% 8%, #fff, transparent); }
+        .lp-info { position: relative; align-self: center; padding-bottom: 14px; min-width: 0; flex: 1; }
+        .lp-title { font-weight: 900; text-transform: uppercase; letter-spacing: .04em; color: #fde68a; font-size: 15px; }
+        .lp-sub { font-size: 11px; color: #94a3b8; }
+        .lp-status { margin-top: 8px; font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 12px; color: #4ade80; }
+        .lp-status.busy { color: #fb923c; }
+        .lp-stats { margin-top: 4px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #cbd5e1; line-height: 1.5; }
+        .lp-site { position: relative; width: 210px; height: 162px; flex: none; }
+        .lp-gantry { position: absolute; left: 34px; bottom: 18px; width: 22px; height: 128px; border: 2px solid #f97316; border-bottom: 0;
+            background: repeating-linear-gradient(45deg, transparent 0 9px, #f97316 9px 11px), repeating-linear-gradient(-45deg, transparent 0 9px, #f97316 9px 11px); }
+        .lp-beacon { position: absolute; left: 50%; top: -9px; width: 9px; height: 9px; margin-left: -4.5px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 10px #ef4444; animation: lpBeacon 2.4s ease-in-out infinite; }
+        @keyframes lpBeacon { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+        .lp-rocket { position: absolute; left: 62px; bottom: 16px; font-size: 92px; line-height: 1; background: none; border: 0; padding: 0; cursor: pointer; transform: rotate(-45deg); transform-origin: 50% 60%;
+            filter: drop-shadow(0 0 14px rgba(250,204,21,.35)); animation: lpIdle 2.8s ease-in-out infinite; transition: opacity .3s; }
+        .lp-rocket:hover { filter: drop-shadow(0 0 22px rgba(250,204,21,.8)); }
+        @keyframes lpIdle { 0%, 100% { transform: rotate(-45deg) translate(0, 0); } 50% { transform: rotate(-44deg) translate(1px, -2px); } }
+        .lp-rocket.gone { opacity: 0; pointer-events: none; }
+        .lp-rocket.empty { filter: grayscale(1) brightness(.5); opacity: .45; animation: none; }
+        .lp-base { position: absolute; left: 10px; right: 10px; bottom: 0; height: 18px; border-radius: 4px 4px 0 0; border-top: 2px solid #475569;
+            background: repeating-linear-gradient(135deg, #facc15 0 12px, #111827 12px 24px); }
+        .lp-steam { position: absolute; bottom: 14px; width: 46px; height: 30px; border-radius: 50%; background: radial-gradient(closest-side, rgba(226,232,240,.75), transparent); animation: lpSteam 3s ease-out infinite; pointer-events: none; }
+        .lp-steam.s1 { left: 48px; } .lp-steam.s2 { left: 122px; animation-delay: 1.5s; }
+        @keyframes lpSteam { 0% { transform: translate(0, 0) scale(.4); opacity: 0; } 25% { opacity: .9; } 100% { transform: translate(var(--dx, -26px), -30px) scale(1.6); opacity: 0; } }
+        .lp-steam.s2 { --dx: 26px; }
+        .lp-go { position: relative; align-self: center; padding-bottom: 14px; text-align: center; }
+        .lp-btn { cursor: pointer; padding: 12px 22px; border-radius: 12px; border: 2px solid #fecaca; background: linear-gradient(180deg, #ef4444, #b91c1c); color: #fff; font-weight: 900; font-size: 18px; letter-spacing: .12em;
+            box-shadow: 0 0 0 0 rgba(239,68,68,.6); animation: lpPulse 2.2s ease-in-out infinite; }
+        .lp-btn:hover { filter: brightness(1.12); }
+        .lp-btn:disabled { animation: none; opacity: .5; cursor: default; filter: grayscale(.5); }
+        @keyframes lpPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,.55); } 50% { box-shadow: 0 0 0 10px rgba(239,68,68,0); } }
+        .lp-hint { margin-top: 6px; font-size: 11px; color: #94a3b8; max-width: 170px; }
+        body.is-spinning #launchPad * { animation-play-state: paused !important; }
+        @media (max-width: 640px) { .lp-wrap { flex-wrap: wrap; justify-content: center; } .lp-info { flex-basis: 100%; text-align: center; } }   /* room for the Hearthstone in the top-right corner */
         @keyframes fireFlicker { from { translate: 0 0; filter: brightness(1); } to { translate: 0 -6px; filter: brightness(1.25); } }
         @keyframes petDance { from { transform: translateY(0) rotate(-12deg); } to { transform: translateY(-8px) rotate(12deg); } }
         @media (prefers-reduced-motion: reduce) { body.party-on #petDock > div > div:last-child, body.party-on #garageDock button { animation: none !important; } }
@@ -707,6 +745,24 @@
                 <div class="flex gap-1" id="betPicks"></div>
                 <span id="betMsg" class="text-slate-400 mono truncate"></span>
                 <button id="bailoutBtn" class="hidden px-2 py-1 rounded bg-emerald-800 hover:bg-emerald-700 text-white font-bold cursor-pointer">🪙 Goblin bailout (400% APR)</button>
+            </div>
+            <div id="launchPad" style="max-width: min(1150px, calc(100vh - 380px));" class="w-full mt-3">
+                <div class="lp-wrap">
+                    <div class="lp-stars"></div>
+                    <div class="lp-info">
+                        <div class="lp-title">🚀 Goblin Space Program</div>
+                        <div class="lp-sub">Launch Complex 1 · Safety record: no</div>
+                        <div id="lpStatus" class="lp-status">STATUS: GO FOR LAUNCH</div>
+                        <div id="lpStats" class="lp-stats"></div>
+                    </div>
+                    <div class="lp-site">
+                        <div class="lp-gantry"><div class="lp-beacon"></div></div>
+                        <button id="padRocket" class="lp-rocket" title="Click to launch">🚀</button>
+                        <div class="lp-steam s1"></div><div class="lp-steam s2"></div>
+                        <div class="lp-base"></div>
+                    </div>
+                    <div class="lp-go"><button id="lpLaunch" class="lp-btn">LAUNCH</button><div id="lpHint" class="lp-hint">Where will it land? Nobody knows.</div></div>
+                </div>
             </div>
         </div>
     </main>
@@ -5940,15 +5996,16 @@
         // with the yacht parked out front, half the time the rocket goes there instead (and sometimes it drifts into the wheel)
         if (store.get('painWheelHouseLevel', 0) >= 6 && !rocketMishap && rocketGoesAstray()) return rocketYachtCrash();
         if (garage.shack && shack) return rocketShackCrash(shack);
-        const r = document.createElement('div');
-        r.style.cssText = 'position:fixed;z-index:78;left:50%;bottom:-120px;font-size:110px;line-height:1;pointer-events:none;transform:translateX(-50%) rotate(-45deg);transition:bottom 4s cubic-bezier(.5,0,.9,.4)';
+        padState(5000, '🛰️ IN ORBIT (probably)'); padHit('space');
+        const o = padOrigin(), r = document.createElement('div');
+        r.style.cssText = `position:fixed;z-index:78;left:${o.x}px;top:${o.y}px;font-size:92px;line-height:1;pointer-events:none;transform:translate(-50%,-50%) rotate(-45deg);transition:top 4s cubic-bezier(.5,0,.9,.4)`;
         r.textContent = '🚀'; document.body.appendChild(r);
         const smoke = setInterval(() => {
             const s = document.createElement('div'), rect = r.getBoundingClientRect();
             s.textContent = '💨'; s.style.cssText = `position:fixed;z-index:77;left:${rect.left + rect.width / 2 - 20 + (Math.random() - .5) * 40}px;top:${rect.bottom - 20}px;font-size:44px;pointer-events:none;transition:opacity 1.6s,transform 1.6s`;
             document.body.appendChild(s); requestAnimationFrame(() => { s.style.opacity = '0'; s.style.transform = 'scale(2.2)'; }); setTimeout(() => s.remove(), 1700);
         }, 120);
-        requestAnimationFrame(() => requestAnimationFrame(() => r.style.bottom = '120vh'));
+        requestAnimationFrame(() => requestAnimationFrame(() => r.style.top = '-200px'));
         setTimeout(() => { clearInterval(smoke); r.remove(); }, 4300);
         funEvent('🚀 LIFTOFF! Next stop: anywhere Kevin isn\'t.', 4000);
         chatBurst(['LIFTOFF', 'TO THE MOON', 'billionaire arc', 'he left the planet', 'o7 o7 o7', 'take Kevin with you'], 5, 3000);
@@ -6004,10 +6061,11 @@
     }
     function rocketYachtCrash() {
         rocketMishap = true;
-        const pad = document.querySelector('#garageDock [data-k="shack"]') || document.querySelector('#garageDock [data-k="rocket"]') || $('garageDock');
-        const p0 = pad.getBoundingClientRect(), sx = p0.left + p0.width / 2, sy = p0.top;
+        const o = padOrigin(), sx = o.x, sy = o.y + 70;
         const house = $('houseEmoji'), h = house.getBoundingClientRect();
-        const toWheel = rocketTargetWheel() || $('timeshareHouse').classList.contains('hidden'), wc = $('wheelCanvas').getBoundingClientRect();
+        const toWheel = rocketTargetWheel() || $('timeshareHouse').classList.contains('hidden');
+        padState(16000, toWheel ? '🔥 THE WHEEL IS ON FIRE' : '⚓ RECOVERING DEBRIS (THE YACHT)'); padHit(toWheel ? 'wheel' : 'yacht');
+        const wc = $('wheelCanvas').getBoundingClientRect();
         const tx = toWheel ? wc.left + wc.width / 2 : h.left + h.width / 2, ty = toWheel ? Math.max(90, Math.min(innerHeight - 140, wc.top + wc.height / 2)) : h.top + h.height / 2;
         const r = document.createElement('div'); r.textContent = '🚀';
         r.style.cssText = `position:fixed;z-index:80;left:${sx}px;top:${sy - 70}px;font-size:80px;line-height:1;pointer-events:none;transform:translate(-50%,-50%) rotate(-45deg);transition:top 1.5s cubic-bezier(.5,0,.9,.4)`;
@@ -6050,9 +6108,10 @@
         }, 3350);
     }
     function rocketShackCrash(shack) {
-        const r0 = shack.getBoundingClientRect(), sx = r0.left + r0.width / 2, sy = r0.top;
+        padState(9500, '💥 RECOVERING DEBRIS (THE SHACK)'); padHit('shack');
+        const r0 = shack.getBoundingClientRect(), sx = r0.left + r0.width / 2, sy = r0.top, o = padOrigin();
         const r = document.createElement('div'); r.textContent = '🚀';
-        r.style.cssText = `position:fixed;z-index:78;left:${sx}px;top:${sy - 70}px;font-size:80px;line-height:1;pointer-events:none;transform:translate(-50%,0) rotate(-45deg);transition:top 1.6s cubic-bezier(.5,0,.9,.4)`;
+        r.style.cssText = `position:fixed;z-index:78;left:${o.x}px;top:${o.y}px;font-size:80px;line-height:1;pointer-events:none;transform:translate(-50%,-50%) rotate(-45deg);transition:top 1.6s cubic-bezier(.5,0,.9,.4)`;
         document.body.appendChild(r);
         const smoke = setInterval(() => {
             const s2 = document.createElement('div'), b = r.getBoundingClientRect(); s2.textContent = '💨';
@@ -6063,8 +6122,8 @@
         funEvent('🚀 LIFTOFF FROM THE SHACK IN THE DESERT!', 2200);
         setTimeout(() => {   // ...what goes up
             clearInterval(smoke);
-            r.style.transition = 'top 1.1s cubic-bezier(.6,0,1,1)'; r.style.transform = 'translate(-50%,0) rotate(135deg)';
-            requestAnimationFrame(() => r.style.top = `${sy - 40}px`);
+            r.style.transition = 'top 1.1s cubic-bezier(.6,0,1,1), left 1.1s ease-in'; r.style.transform = 'translate(-50%,0) rotate(135deg)';
+            requestAnimationFrame(() => { r.style.left = sx + 'px'; r.style.top = `${sy - 40}px`; });
         }, 1900);
         setTimeout(() => {
             r.remove(); playCrash();
@@ -6083,13 +6142,52 @@
         const d = $('garageDock'); d.innerHTML = '';
         [['shack', '🏜️', 'Your Shack in the Desert', () => moveToast('🏜️ ' + pick(['The shack is quiet. The desert is quiet. Kevin cannot find you here.', 'You sit on the shack porch and think about your parses.',
             'A tumbleweed rolls by. It has better DPS than Kevin.', 'No WiFi out here. Somehow the wheel still loads.', 'Rent collected from a lizard: it paid in gold.']))],
-         ['ambulance', '🚑', "Nick's Ambulance (click for siren)", driveAmbulance], ['police', '🚓', "Justin's Cop Car (click for whoop whoop)", drivePolice], ['rocket', '🚀', 'Your rocket (click to launch)', launchRocket]].forEach(([k, e, tip, fn]) => {
+         ['ambulance', '🚑', "Nick's Ambulance (click for siren)", driveAmbulance], ['police', '🚓', "Justin's Cop Car (click for whoop whoop)", drivePolice]].forEach(([k, e, tip, fn]) => {
             if (!garage[k]) return;
             const b = document.createElement('button'); b.textContent = e; b.title = tip; b.dataset.k = k;
             b.style.cssText = 'font-size:40px;line-height:1;cursor:pointer;background:none;border:none;filter:drop-shadow(0 3px 6px rgba(0,0,0,.7))';
             b.addEventListener('click', () => { fn(); b.blur(); }); d.appendChild(b);
         });
+        renderPad();
     }
+    // ---------- launch pad ----------
+    var padBusy = false;
+    var rocketStats = Object.assign({ launches: 0, space: 0, shack: 0, yacht: 0, wheel: 0 }, store.get('painWheelRocketStats', {}));
+    var PAD_HINTS = ['Where will it land? Nobody knows.', 'Engineering signed off. Engineering is Kevin.', 'Fuel: 90% goblin gas, 10% Mountain Dew.',
+        'Our GPS is a murloc in the nose cone.', 'Please stand behind the yellow line. There is no yellow line.', 'Insurance: no.'];
+    function renderPad() {
+        const owned = !!garage.rocket, r = $('padRocket');
+        r.classList.toggle('empty', !owned); r.title = owned ? 'Click to launch' : 'No rocket on the pad';
+        if (!padBusy) {
+            $('lpStatus').className = 'lp-status' + (owned ? '' : ' busy');
+            $('lpStatus').textContent = owned ? 'STATUS: GO FOR LAUNCH' : 'STATUS: NO ROCKET ON THE PAD';
+            $('lpLaunch').disabled = false; $('lpLaunch').textContent = owned ? 'LAUNCH' : 'BUY A ROCKET';
+            r.classList.remove('gone');
+        }
+        $('lpHint').textContent = owned ? pick(PAD_HINTS) : 'Gallywix Rocket: 10B gold in the Shop (Garage tab).';
+        const st = rocketStats;
+        $('lpStats').innerHTML = owned ? `Launches: ${st.launches.toLocaleString()}<br>Hit the shack: ${st.shack} · the yacht: ${st.yacht} · the wheel: ${st.wheel}` : 'Launches: 0<br>The pad is very clean.';
+    }
+    function padLaunch() {
+        if (!garage.rocket) { openShop('garage'); return; }
+        if (padBusy) return;
+        launchRocket();
+    }
+    function padState(busyFor, label) {   // the pad shows liftoff, then debris recovery, then it's ready again
+        padBusy = true; $('padRocket').classList.add('gone'); $('lpLaunch').disabled = true; $('lpLaunch').textContent = 'T+';
+        $('lpStatus').className = 'lp-status busy'; $('lpStatus').textContent = 'STATUS: 🔥 LIFTOFF';
+        rocketStats.launches++; store.set('painWheelRocketStats', rocketStats); renderPad();
+        setTimeout(() => { $('lpStatus').textContent = 'STATUS: ' + label; }, 3200);
+        setTimeout(() => { $('lpStatus').textContent = 'STATUS: REFUELING...'; }, busyFor - 2200);
+        setTimeout(() => { padBusy = false; renderPad(); }, busyFor);
+    }
+    function padHit(where) { rocketStats[where] = (rocketStats[where] || 0) + 1; store.set('painWheelRocketStats', rocketStats); renderPad(); }
+    function padOrigin() {   // where the rocket lifts off from: the pad if it's on screen, otherwise the bottom of the screen
+        const b = $('padRocket').getBoundingClientRect();
+        if (b.width && b.bottom > 0 && b.top < innerHeight) return { x: b.left + b.width / 2, y: b.top + b.height / 2 };
+        return { x: innerWidth / 2, y: innerHeight + 60 };
+    }
+    $('padRocket').addEventListener('click', padLaunch); $('lpLaunch').addEventListener('click', padLaunch);
 
     // ---------- AIPAC lobbying ----------
     const AIPAC_TIERS = [[1, 'Basic', 'aipac1', '#94a3b8'], [100, 'Bronze', 'aipac2', '#d97706'], [1000, 'Silver', 'aipac3', '#cbd5e1'],
