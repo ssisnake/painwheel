@@ -371,6 +371,17 @@
                 </div>
                 <div class="overflow-x-auto"><table id="guildTable" class="w-full text-sm" style="font-variant-numeric: tabular-nums"></table></div>
             </div>
+            <div id="deviceSection" class="mt-5 pt-4 border-t border-slate-800 text-sm">
+                <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">📱 Play on another device</div>
+                <div class="text-[11px] text-slate-400 mb-2">Copies everything (stats, gold, bag, house, pets, shop stuff, achievements) to your phone or another PC. Send the link to yourself (Discord DM works) and open it there. Use the same player name on both so the guild board stays together. After that each device keeps its own gold.</div>
+                <div class="flex flex-wrap gap-2">
+                    <button id="xferLinkBtn" class="px-3 py-1.5 rounded bg-sky-700 hover:bg-sky-600 text-white text-xs font-bold cursor-pointer">🔗 Copy transfer link</button>
+                    <button id="xferCodeBtn" class="px-3 py-1.5 rounded bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold cursor-pointer">Copy code only</button>
+                </div>
+                <div class="flex gap-2 mt-2"><input id="xferInput" placeholder="Paste a transfer code or link here" class="flex-1 min-w-0 bg-slate-950 border border-slate-700 rounded px-2 py-1.5 text-xs mono text-slate-200">
+                <button id="xferImportBtn" class="shrink-0 px-3 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold cursor-pointer">Import</button></div>
+                <div id="xferMsg" class="text-xs mt-1.5 text-amber-300 font-bold min-h-[1rem]"></div>
+            </div>
             <div id="moveSection" class="mt-5 pt-4 border-t border-slate-800 text-sm"></div>
             <p id="statsNote" class="text-[11px] text-slate-500 mt-4">Stats are saved in this browser only.</p>
         </div>
@@ -6364,6 +6375,68 @@
         el.classList.remove('hidden'); el.classList.add('flex');
         el.animate([{ transform: 'translateX(40px)', opacity: 0 }, { transform: 'translateX(0)', opacity: 1 }], { duration: 300, easing: 'ease-out' });
         setTimeout(nextAlert, 6000);
+    }
+
+    // ---------- device transfer: copy this browser's whole save to a phone / another PC ----------
+    const XFER_PREFIX = 'PW1.';
+    const b64u = { enc: (u8) => { let s = ''; u8.forEach(b => s += String.fromCharCode(b)); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); },
+        dec: (t) => { t = t.replace(/-/g, '+').replace(/_/g, '/'); while (t.length % 4) t += '='; const s = atob(t); return Uint8Array.from(s, c => c.charCodeAt(0)); } };
+    async function pipeThrough(u8, stream) { return new Uint8Array(await new Response(new Blob([u8]).stream().pipeThrough(stream)).arrayBuffer()); }
+    async function makeTransferCode() {
+        const data = {};
+        for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k && k.startsWith('painWheel') && k !== 'painWheelXferUsed') data[k] = localStorage.getItem(k); }
+        const json = new TextEncoder().encode(JSON.stringify({ v: 1, id: Date.now().toString(36) + Math.random().toString(36).slice(2, 7), at: new Date().toISOString(), d: data }));
+        if (window.CompressionStream) return XFER_PREFIX + 'z' + b64u.enc(await pipeThrough(json, new CompressionStream('deflate-raw')));
+        return XFER_PREFIX + 'p' + b64u.enc(json);
+    }
+    async function readTransferCode(text) {
+        let t = String(text || '').trim(); const h = t.indexOf('#transfer='); if (h >= 0) t = t.slice(h + 10);
+        t = decodeURIComponent(t).replace(/\s+/g, '');
+        if (!t.startsWith(XFER_PREFIX)) throw new Error('That is not a Pain Wheel transfer code.');
+        const kind = t[XFER_PREFIX.length], raw = b64u.dec(t.slice(XFER_PREFIX.length + 1));
+        const bytes = kind === 'z' ? await pipeThrough(raw, new DecompressionStream('deflate-raw')) : raw;
+        const o = JSON.parse(new TextDecoder().decode(bytes));
+        if (!o || o.v !== 1 || !o.d) throw new Error('That code is broken or incomplete.');
+        return o;
+    }
+    async function importTransfer(text) {
+        const msg = $('xferMsg');
+        try {
+            const o = await readTransferCode(text);
+            const used = store.get('painWheelXferUsed', []);
+            if (used.includes(o.id)) { msg.textContent = 'This code was already imported on this device. Make a fresh one on the other device.'; return; }
+            Object.keys(localStorage).filter(k => k.startsWith('painWheel') && k !== 'painWheelXferUsed').forEach(k => localStorage.removeItem(k));
+            Object.entries(o.d).forEach(([k, v]) => { if (k.startsWith('painWheel')) localStorage.setItem(k, v); });
+            store.set('painWheelXferUsed', used.concat(o.id).slice(-50));
+            try { sessionStorage.setItem('painWheelMoveMsg', '📱 Save loaded! Welcome back' + (o.d.painWheelPlayer ? ', ' + JSON.parse(o.d.painWheelPlayer) : '') + '.'); } catch (e) {}
+            msg.textContent = 'Loaded! Reloading...'; setTimeout(() => location.reload(), 700);
+        } catch (e) { msg.textContent = (e && e.message) || 'Could not read that code.'; }
+    }
+    async function copyText(t) {
+        try { await navigator.clipboard.writeText(t); return true; }
+        catch (e) { const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); let ok = false; try { ok = document.execCommand('copy'); } catch (e2) {} ta.remove(); return ok; }
+    }
+    $('xferLinkBtn').addEventListener('click', async () => {
+        const code = await makeTransferCode(), link = NEW_WHEEL_URL + '#transfer=' + code;
+        const ok = await copyText(link); $('xferInput').value = '';
+        $('xferMsg').textContent = ok ? `Link copied (${Math.round(link.length / 1024 * 10) / 10} KB). Send it to yourself and open it on the other device.` : 'Could not copy automatically. Try "Copy code only".';
+    });
+    $('xferCodeBtn').addEventListener('click', async () => {
+        const code = await makeTransferCode(); const ok = await copyText(code);
+        if (!ok) { $('xferInput').value = code; $('xferInput').select(); }
+        $('xferMsg').textContent = ok ? 'Code copied. On the other device: My Stats → paste it in the box → Import.' : 'Select the code in the box and copy it.';
+    });
+    $('xferInput').addEventListener('keydown', e => e.stopPropagation());
+    $('xferImportBtn').addEventListener('click', () => importTransfer($('xferInput').value));
+    if (location.hash.startsWith('#transfer=')) {   // opened a transfer link: show it in My Stats, ready to import
+        const link = location.hash; history.replaceState(null, '', location.pathname + location.search);
+        setTimeout(() => {
+            const w = $('welcome'); w.classList.add('hidden'); w.classList.remove('flex');
+            renderStats(); const sp = $('statsPanel'); sp.classList.remove('hidden'); sp.classList.add('flex');
+            $('xferInput').value = link;
+            $('xferMsg').textContent = '📱 Transfer link detected. Tap Import to load that save on this device (it replaces what is here).';
+            $('deviceSection').scrollIntoView({ block: 'center' });
+        }, 700);
     }
 
     // ---------- start-up ----------
