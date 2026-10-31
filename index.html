@@ -716,6 +716,16 @@
                     </svg>
                 </div>
                 <div class="absolute inset-0 rounded-full shadow-[0_0_70px_rgba(220,38,38,0.18)] pointer-events-none"></div>
+                <div id="nickFinger" aria-hidden="true" style="display:none;position:absolute;left:50%;top:50%;width:74px;z-index:12;pointer-events:none;transform:translate(-50%,-102%) rotate(-24deg);transition:transform .25s">
+                    <svg viewBox="0 0 120 52" width="74" height="32">
+                        <ellipse cx="62" cy="7" rx="26" ry="5" fill="none" stroke="#facc15" stroke-width="3" opacity=".9"/>
+                        <rect x="6" y="18" width="108" height="26" rx="13" fill="#f2c6a0" stroke="#b07a52" stroke-width="2"/>
+                        <rect x="88" y="21" width="22" height="20" rx="8" fill="#fde7d6" stroke="#c99470" stroke-width="1.5"/>
+                        <path d="M44 22 q-4 9 0 18 M60 22 q-4 9 0 18" fill="none" stroke="#c99470" stroke-width="2" stroke-linecap="round"/>
+                        <rect x="6" y="15" width="22" height="32" rx="4" fill="#f5deb3" stroke="#c4a574" stroke-width="1.5"/>
+                        <circle cx="13" cy="25" r="1.4" fill="#c4a574"/><circle cx="21" cy="25" r="1.4" fill="#c4a574"/><circle cx="13" cy="37" r="1.4" fill="#c4a574"/><circle cx="21" cy="37" r="1.4" fill="#c4a574"/>
+                    </svg>
+                </div>
                 <canvas id="wheelCanvas" class="block pointer-events-none" style="position:absolute; width:130%; height:130%; left:-15%; top:-15%;"></canvas>
                 <button id="centerSpinBtn" title="Click to Spin" class="absolute w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-slate-950 border-4 border-amber-400/90 shadow-[0_0_25px_rgba(0,0,0,0.9)] flex flex-col items-center justify-center hover:scale-105 active:scale-95 transition cursor-pointer z-10 group">
                     <span class="text-[10px] mono uppercase tracking-widest text-slate-400 group-hover:text-amber-300"><span class="slice-total">117</span><span id="rigTell" class="text-slate-400"></span></span>
@@ -1538,7 +1548,7 @@
         "🪦 HOGGER'S CEMETERY: HE KILLED YOU AT LEVEL 11, NOW LET HIM BURY YOU TOO! PLOTS STILL AVAILABLE!",
         "🧽 THE OXI-KLEEN PROMISE: GETS OUT GRASS STAINS, BLOOD STAINS, AND THE STAIN OF LAST NIGHT'S PARSES!",
         "🐶 THIS IS FINE INSURANCE: WHEN YOUR HOUSE, YOUR KEY, AND YOUR LIFE ARE ON FIRE, WE'LL SEND A NICE CARD",
-        "🍩 DONUT DEFENSE ATTORNEYS: SPECIALIZING IN FIRST RESPONDERS SINCE NICK GOT CAUGHT",
+        "🍩 DONUT DEFENSE ATTORNEYS: SPECIALIZING IN FIRST RESPONDERS SINCE BIBLEHUMPING GOT CAUGHT",
         "🔔 ATTENTION KMART SHOPPERS: CLEAN-UP ON AISLE 5. KEVIN FEL RUSHED INTO THE PICKLE JARS AGAIN.",
         "☎️ MISS CLEO'S PSYCHIC HOTLINE: 'DE CARDS SAY... YOU WILL WIPE ON TRASH. CALL ME NOW FOR YOUR FREE READIN'!'",
         "🍕 30 MINUTES OR IT'S FREE! THE PIZZA, NOT THE RAID. THE RAID IS 4 HOURS AND IT IS NEVER FREE.",
@@ -1571,15 +1581,47 @@
         "❄️ FROST DK CENTRAL AIR — SIGMASCOURGE WILL REMORSELESSLY WINTER YOUR ENTIRE HOUSE",
         "📅 RAID STARTS AT 7:00 SHARP. 'QUICK KEY BEFORE RAID' STARTS AT 6:59. YOU DO THE MATH.",
         "⚖️ HAVE YOU OR A LOVED ONE DIED IN A RAID WHILE BIBLEHUMPING AND PLATEMAGE WERE 'ON THEIR WAY'? YOU MAY BE ENTITLED TO A CLASS-ACTION SETTLEMENT! VICTIMS OF NEGLIGENT HEALING, CALL 1-800-NO-HEALS. (SETTLEMENT PAID IN HEALTHSTONES. HEALTHSTONES MAY BE EXPIRED.)",
+        "📞 VINCE'S BRICK PHONE EMPORIUM: 4 POUNDS, 20 MINUTES OF BATTERY, UNLIMITED SHOUTING. CALL NOW (FROM A PAYPHONE)",
+        "🧼 KEVIN-B-GONE: SPRAY IT ON THE WHEEL. IT WILL NOT WORK. NOTHING WORKS. ONLY $19.99",
+        "🎰 GOBLIN CASINO NIGHT: THE HOUSE ALWAYS WINS. THE HOUSE IS A YACHT NOW.",
+        "🚀 GOBLIN SPACE PROGRAM: NOW BOOKING TOURS OF LAUNCH COMPLEX 1. HARD HATS REQUIRED. SHACK NOT INCLUDED.",
+        "🏦 OFFSHORE BANKING WITH GALLYWIX: FDIC* INSURED UP TO 250,000G. *FEDERAL DEPOSIT INSURANCE CARTEL",
+        "🍪 GRANDMA'S GOLDEN COOKIES: BAKED WITH LOVE, SUGAR, AND AN UNSETTLING AMOUNT OF CLICKING",
+        "🚑 BIBLEHUMPING'S AMBULANCE RIDE-SHARE: FIVE STARS FROM EVERY PATIENT WHO SURVIVED (ONE PATIENT)",
+        "🚓 CHAOTIC'S DONUT PATROL: TO PROTECT AND SERVE (GLAZED, CHOCOLATE, OR GOLDEN)",
+        "🛥️ YACHT WEEK AT GALLYWIX'S: SWORDFISH SINGS NIGHTLY. DO NOT CALL THE OTHER SWORDFISH GARY.",
+        "🪨 HEARTHSTONE REPAIR SHOP: IS YOUR HEARTHSTONE ON A 30-MINUTE COOLDOWN? SO IS OUR CUSTOMER SERVICE.",
+        "🔧 CASIMIR'S WHEEL RIGGING SERVICES: DISCREET. PROFESSIONAL. ALREADY DONE BEFORE YOU CALLED.",
+        "🧙 PLATEMAGE LIFE COACHING: ARE YOU A PRIEST? A MAGE? PLATE? LET'S FIND OUT TOGETHER. $49.99/SESSION",
+        "🥃 KNOB CREEK: THE OFFICIAL SPONSOR OF REB'S 9:30 PM DISAPPEARANCE",
+        "🐢 WHISTLETHY'S TURTLE TOOT ACADEMY: ONE NOTE. PERFECTED. TOOT RESPONSIBLY.",
+        "📼 BLOCKBUSTER NIGHT AT THE GUILD HALL: BE KIND, REWIND, DON'T STAND IN THE FIRE",
+        "🧯 FIRE EXTINGUISHERS 4 LESS: TRY OUR BESTSELLER, THE 'WHEEL IS ON FIRE AGAIN' 12-PACK",
+        "🎮 GAME TIPS HOTLINE: STUCK ON A BOSS? CALL 1-900-WIPE-LOL AND ASK FOR KEVIN. KEVIN IS ALSO STUCK.",
+        "🧲 MAGNETIC DPS BRACELETS: IMPROVES YOUR DAMAGE BY 0%. CLINICALLY UNTESTED. KEVIN WEARS FOUR.",
+        "🍔 GOBLIN DRIVE-THRU: YOU WANT FRIES WITH THAT REPAIR BILL?",
+        "🛋️ AFK RECLINERS: SO COMFORTABLE YOU'LL MISS THE ENTIRE PULL. AFKGHOUL APPROVED.",
+        "🔺 THE SECRET SOCIETY TAB DOES NOT EXIST. STOP ASKING ABOUT THE SECRET SOCIETY TAB. — NOBODY",
+        "📈 REB'S LIVER IS NOW A PUBLICLY TRADED COMPANY. ANALYSTS RATE IT 'HOLD (YOUR BREATH)'",
+        "🦖 BARRENS RAPTOR RENTALS: GUARANTEED TO DROP SILVER. (THEY DO NOT DROP SILVER.)",
+        "🎤 KARAOKE NIGHT WITH MEPHISTO: EARPLUGS SOLD AT THE DOOR. EARPLUGS DO NOT HELP.",
+        "🔔 HOGGER-BRAND SMOKE DETECTORS: CHIRPS EVERY 40 SECONDS FOREVER. YOU WILL NEVER FIND IT.",
+        "🏋️ TSUKAAR'S SHIELD WALL WORKOUT: 1 SET. 1 REP. 0 COOLDOWNS. GUARANTEED RESULTS (DEATH).",
+        "📠 KANA+ BUSINESS FAX: FAX US YOUR PARSES. WE FAX BACK ONE (1) CLOWN EMOJI.",
+        "🌽 FARMERS MUTUAL INSURANCE: NOW EXCLUDING AMBULANCES BY NAME",
+        "🧸 BUILD-A-KEVIN WORKSHOP: STUFF HIM, DRESS HIM, WATCH HIM STAND IN FIRE. PINS SOLD SEPARATELY.",
+        "💈 AXAZON'S RET PALADIN BARBERSHOP: WE CUT HAIR, NOT DPS. THAT'S BLIZZARD'S JOB.",
+        "👏 THE CLAPPER 2: CLAP ONCE, LIGHTS OFF. CLAP TWICE, CHAOTIC SWITCHES ALTS.",
+        "🕺 SIGMASCOURGE'S 4 AM AEROBICS: LEG WARMERS, OBLITERATE, REPEAT",
         "📢 PUBLIC SERVICE ANNOUNCEMENT: LISA IS NOT AXAZON'S SISTER. SHE IS HIS WIFE. DNA CONFIRMS 0% SIBLING. PLEASE STOP ASKING IN DISCORD."
     ];
 
     const guildNews = [
         "BREAKING: GUILD BANK DOWN 4,000 GOLD; KEVIN 'HAS NO IDEA HOW THAT HAPPENED'",
         "WEATHER: 100% CHANCE OF VOID ZONES WITH SCATTERED KEVIN",
-        "SPORTS: NICK FINISHES #1 ON DAMAGE METERS; ENTIRE RAID DEAD",
+        "SPORTS: BIBLEHUMPING FINISHES #1 ON DAMAGE METERS; ENTIRE RAID DEAD",
         "MARKETS: KNOB CREEK FUTURES PLUMMET AFTER REB'S BOTTLE FOUND EMPTY",
-        "TRAFFIC: JUSTIN STILL AT CHARACTER SELECT. EXPECT DELAYS.",
+        "TRAFFIC: CHAOTIC STILL AT CHARACTER SELECT. EXPECT DELAYS.",
         "HEALTH ALERT: EVELYN STILL AWAKE. EXPERTS CONCERNED.",
         "LOCAL: HIYO DESCRIBED AS 'COMPLETELY CALM'; SOURCES DISAGREE",
         "SCIENCE: RESEARCHERS CONFIRM RET PALADIN STILL NEEDS 6%",
@@ -1605,10 +1647,10 @@
         "CRIME BLOTTER: SEWER PICKLES REPORTED MISSING FROM STORM DRAIN; RAT UNION ON STRIKE",
         "SCIENCE: MOLDY CROISSANT CONTAINS MORE CULTURE THAN BARRENS CHAT, STUDY FINDS",
         "WEATHER: SCATTERED CONFETTI WITH A 2% CHANCE OF CLOWNS",
-        "BREAKING: JUSTIN HAS PICKED AN ALT. JUSTIN HAS UN-PICKED THE ALT.",
+        "BREAKING: CHAOTIC HAS PICKED AN ALT. CHAOTIC HAS UN-PICKED THE ALT.",
         "BREAKING: WHEEL GROWS TO MAKE ROOM FOR 15 MORE KEVINS; KEVIN CALLS IT 'LONG OVERDUE REPRESENTATION'",
         "POLL: 9 OUT OF 10 GUILDIES WOULD RATHER LAND ON SEWER PICKLES THAN KEVIN. THE 10TH WAS KEVIN.",
-        "OBITUARIES: TANK, 34, DIED DOING WHAT HE LOVED — WAITING FOR NICK TO STOP DPSING",
+        "OBITUARIES: TANK, 34, DIED DOING WHAT HE LOVED — WAITING FOR BIBLEHUMPING TO STOP DPSING",
         "OBITUARIES: REB'S KNOB CREEK BOTTLE, GONE TOO SOON. SURVIVED BY ONE EMPTY ICE CUBE AND A SENSE OF REGRET.",
         "LOCAL MAN FARMS MOUNT FOR 4 YEARS; MOUNT DROPS FOR GUILDIE WHO WAS AFK IN THE BATHROOM",
         "COURT RULES 'I WAS LAGGING' INADMISSIBLE AS A DEFENSE IN ONGOING WIPE TRIAL",
@@ -1628,7 +1670,7 @@
         "BREAKING: HIYO SAYS HE IS 'TOTALLY CALM.' HE SAID IT VERY, VERY LOUDLY.",
         "MARKETS: DONUT PRICES SPIKE AFTER FIRST RESPONDERS ARE SPOTTED NEAR THE GUILD HALL",
         "FAMILY: LOCAL 1950S NUCLEAR FAMILY DECLINES RAID INVITE, CITING 'A LAWN TO MOW AND A WILL TO LIVE'",
-        "GAMING: JUSTIN'S ALT COUNT REACHES 52. ALL LEVEL 12. ALL NAMED SOME VARIATION OF 'CHAOTIC.'",
+        "GAMING: CHAOTIC'S ALT COUNT REACHES 52. ALL LEVEL 12. ALL NAMED SOME VARIATION OF 'CHAOTIC.'",
         "TECH: GUILD DISCORD BOT ACHIEVES SENTIENCE, IMMEDIATELY SERVER-MUTES KEVIN",
         "WORLD: GOBLIN CARTEL RAISES AUCTION HOUSE PRICES 400%, CITING 'VIBES'",
         "LOCAL: MAN SPENDS 45 MINUTES SEARCHING THE BARRENS FOR MANKRIK'S WIFE. FINDS NOTHING. AGAIN.",
@@ -1649,7 +1691,7 @@
         "SCIENCE: MOLDY CROISSANT STARTS ITS OWN DISCORD, ALREADY HAS BETTER ATTENDANCE THAN RAID NIGHT",
         "OPINION: 'I'M NOT SAYING THE WHEEL IS RIGGED, BUT HOW DOES IT KEEP KNOWING MY NAME' — BY KEVIN",
         "BREAKING: EVELYN HAS NOT GONE TO BED. SCIENTISTS NOW BELIEVE EVELYN CANNOT GO TO BED.",
-        "LOCAL: NICK FINALLY HEALS SOMEONE. TARGET WAS A TRAINING DUMMY. DUMMY STILL DIED.",
+        "LOCAL: BIBLEHUMPING FINALLY HEALS SOMEONE. TARGET WAS A TRAINING DUMMY. DUMMY STILL DIED.",
         "LEGAL: CASINO TOKENS RULED VALID CURRENCY IN 49 STATES. VERMONT IS NOT RETURNING CALLS.",
         "CORRECTION: WE PREVIOUSLY REPORTED KEVIN DID 'LOW DPS.' WE REGRET THE ERROR. IT WAS 'NO DPS.'",
         "THIS JUST IN: WAR GLAIVES STILL HAVEN'T DROPPED. KEVIN STILL 'PREPARED.' NOBODY ASKED.",
@@ -1664,6 +1706,38 @@
         "BREAKING: GUILD STILL ASKING 'WHY DO WE HAVE A PROT WARRIOR?' TSUKAAR DECLINES TO COMMENT, PULLS BOSS.",
         "DEGENERATE REJECTS CLEAR 8/8 HEROIC; KEVIN CREDITS 'TEAMWORK,' TEAM CREDITS 'KEVIN BEING DEAD'",
         "OFFICER MRCHAOTIC UPLOADS 'HEROIC TAKE 420'; FBI REQUESTS TAKES 1 THROUGH 419",
+        "BREAKING: GOBLIN SPACE PROGRAM LAUNCHES ROCKET; ROCKET LANDS ON YACHT; PROGRAM CALLS IT 'A SUCCESS'",
+        "LOCAL: BIBLEHUMPING FIRST ON SCENE OF ROCKET CRASH; FARMERS NATIONWIDE PLACED ON HIGH ALERT",
+        "CRIME: CHAOTIC WRITES HIMSELF A TICKET FOR PARKING THE CRUISER INSIDE A DONUT SHOP",
+        "FINANCE: VINCE SAYS '$KNOB IS GOING TO THE MOON.' VINCE HAS SAID THIS SINCE 1987.",
+        "MARKETS: SPLIT DAY SPARKS PANIC AS INVESTORS DISCOVER THEY OWN 10 TIMES AS MANY SHARES OF NOTHING",
+        "REAL ESTATE: GALLYWIX'S YACHT NOW HAS A TROPHY ROOM; KEVIN'S SHELF REMAINS EMPTY",
+        "BANKING: GUILD VAULT COMBINATION LEAKED. IT WAS 1234. IT HAS ALWAYS BEEN 1234.",
+        "INVESTIGATION: KEVIN 'BORROWED' FROM THE VAULT AGAIN; CRAYON IOU RULED 'LEGALLY BINDING'",
+        "SCIENCE: GOLDEN COOKIES LINKED TO GRANDMA ACTIVITY; RESEARCHERS 'DEEPLY UNSETTLED'",
+        "LOCAL: MAN HEARTHS MID-RAID, CLAIMS HE 'LEFT THE STOVE ON' ON HIS YACHT",
+        "WEATHER: SCATTERED ROCKET DEBRIS WITH A 50% CHANCE OF YACHT",
+        "SOCIETY: ILLUMINATI DENIES EXISTING; LIZARD PEOPLE HIGH COUNCIL HAS 'NO COMMENT, BROTHER'",
+        "SPORTS: TSUKAAR PULLS BOSS DURING READY CHECK; READY CHECK DECLARED 'MORE OF A SUGGESTION'",
+        "HEALTH: REB'S LIVER FILES FOR UNEMPLOYMENT, CITING 'UNSAFE WORKING CONDITIONS'",
+        "ENTERTAINMENT: YACHT SWORDFISH SINGS SEA SHANTY; RECORD LABELS ENTER BIDDING WAR",
+        "LOCAL: CASIMIR SPOTTED NEAR THE WHEEL WITH A SCREWDRIVER AND 'NO PARTICULAR REASON'",
+        "TECH: WHEEL NOW HAS 175 SLICES. KEVIN STILL HAS MOST OF THEM.",
+        "TRAFFIC: AMBULANCE AND COP CAR COLLIDE AGAIN; BOTH DRIVERS FILE INSURANCE CLAIMS AGAINST EACH OTHER",
+        "AGRICULTURE: COMBINE HARVESTER SALES DROP 40%; DEALERS BLAME 'ONE SPECIFIC AMBULANCE'",
+        "OBITUARIES: THE SHACK IN THE DESERT, HIT BY A ROCKET FOR THE 9TH TIME. REBUILT BY TUESDAY.",
+        "EDUCATION: PSYCHSHAMMY TEACHES HEALING RAIN 101; ENTIRE CLASS STANDS OUTSIDE THE RAIN",
+        "LOCAL: SIGMASCOURGE WAKES UP AT 4 AM, OBLITERATES BREAKFAST",
+        "WILDLIFE: MURLOC PRESSES FACE AGAINST YACHT PORTHOLE; GUESTS 'MILDLY UNCOMFORTABLE'",
+        "ARCHAEOLOGY: ANCIENT RET PALADIN BUFF UNEARTHED IN PATCH NOTES FROM 2008",
+        "LOCAL: HIAHIO STANDS STILL FOR 3 FULL SECONDS; BALANCE DRUIDS HOLD PARADE",
+        "CONSUMER ALERT: KANA+ RAISES PRICE AGAIN; NEW FEATURE IS 'THE SAME FEATURE, BUT LOUDER'",
+        "BREAKING: CHAOTIC LOGS IN ON HIS MAIN. REPEAT, CHAOTIC IS ON HIS MAIN. ...HE SWITCHED.",
+        "MYSTERY: CHAINED HATCH ON THE YACHT GLOWS TEAL; UNCLE TOUCHY 'NOT AVAILABLE FOR INTERVIEW'",
+        "LABOR: EXPIATION'S IMPS UNIONIZE; DEMANDS INCLUDE 'FEWER TYRANTS' AND DENTAL",
+        "HEALTH: BIBLEHUMPING'S FINGER DOING GREAT; REPORTEDLY 'MORE ACTIVE THAN SOME RAIDERS'",
+        "SPORTS: KROM SELLS 400TH AOTC CARRY; BUYER WAS ALSO KEVIN",
+        "LOCAL: PLATEMAGE CORRECTS STRANGER: 'HOLY PRIEST.' STRANGER HAD NOT SPOKEN.",
         "WARCRAFT LOGS RECEIVES 'ULAKEK TAKE 123456789'; SERVER FANS NOW SPINNING AT FULL SPEED",
         "SCIENTISTS STILL UNABLE TO TYPE CHÅÓTÌC'S NAME; INVITES SENT TO 'CHAOTIC' ACCIDENTALLY RECRUIT 4 GNOMES",
         "RET PALADIN POPULATION REACHES 3; RAID LEADER DECLARES A STATE OF EMERGENCY",
@@ -3579,14 +3653,14 @@
         { id: 'aipac9',     name: 'Bought Democracy (Final Sale)', desc: 'Reach the Ascended lobbying tier (1 sextillion gold).' },
         { id: 'aipac10',    name: 'You ARE the Lobby',        desc: 'Reach the Super PAC lobbying tier (1 septillion gold).' },
         { id: 'rocket',     name: 'Billionaire Space Race',   desc: 'Buy the 10,000,000,000g rocket.' },
-        { id: 'weewoo',     name: 'Wee-Woo',                  desc: "Buy Nick's ambulance." },
-        { id: 'golddonut',  name: 'To Protect and Serve',     desc: "Find Justin's Golden Chocolate Donut." },
+        { id: 'weewoo',     name: 'Wee-Woo',                  desc: "Buy Biblehumping's ambulance." },
+        { id: 'golddonut',  name: 'To Protect and Serve',     desc: "Find ChAoTiC's Golden Chocolate Donut." },
         { id: 'rugpull',    name: 'Rug Pulled',               desc: 'Ape into $KEVCOIN.' },
         { id: 'taxman',     name: 'Death and Taxes',          desc: 'Pay the monthly Tuesday reset income tax.' },
         { id: 'drip',       name: 'Drip',                     desc: 'Buy something cosmetic from the shop.' },
         { id: 'boughtaotc', name: 'Pulled a Krom',            desc: "Buy Krom's AOTC carry. Shameful." },
         { id: 'aotclegit',  name: 'Ahead of the Curve (Legit)', desc: 'Land on AOTC naturally. No rigs, no Krom carries, no excuses.' },
-        { id: 'fenderbender', name: 'Whose Fault Is It?',      desc: "Crash Nick's ambulance into Justin's cop car.", secret: true, secretName: true },
+        { id: 'fenderbender', name: 'Whose Fault Is It?',      desc: "Crash Biblehumping's ambulance into ChAoTiC's cop car.", secret: true, secretName: true },
         { id: 'goldcookie', name: 'Grandmapocalypse Survivor', desc: 'Click a golden cookie. A nod to Cookie Clicker: this wheel is basically that, but with Kevin.', secret: true, secretName: true },
         { id: 'soc1', name: 'The Secret Handshake',      desc: 'Become a Freemason, 3rd Degree.' },
         { id: 'soc2', name: 'Coffin Confessions',        desc: 'Get tapped for Skull and Bones.' },
@@ -3598,6 +3672,9 @@
         { id: 'vault',      name: 'Offshore Account',         desc: 'Stash gold in the Guild Bank Vault, where the Goblin IRS cannot reach it.' },
         { id: 'chocobar',   name: 'It Was Chocolate',         desc: "Bite Gallywix's solid gold bar. Keep biting.", secret: true, secretName: true },
         { id: 'hearth',     name: 'Hearthed Mid-Raid',        desc: 'Use your Hearthstone to go home to the yacht.' },
+        { id: 'brickphone', name: 'Car Phone Money',          desc: "Buy Vince's 1980s brick phone." },
+        { id: 'finger',     name: 'Pour One Out',             desc: "Lay Biblehumping's Finger to rest on the SPIN button." },
+        { id: 'voodoo',     name: 'Dark Arts Degree',         desc: 'Get the Kevin Voodoo Doll from a cursed golden cookie.', secret: true, secretName: true },
         { id: 'cluck',      name: 'CLUCK!',                   desc: 'Complete the Westfall chicken\'s quest.' },
         { id: 'clippy',     name: "It Looks Like You're Adopting a Paperclip", desc: 'Find and adopt the secret pet.', secret: true, secretName: true }
     ];
@@ -3973,6 +4050,7 @@
     }
 
     function showWinnerModal(s) {
+        if (voodooArmed && s.type === 'KEVIN') voodooHit();
         clearModalTimers();
         clearCardEffects();
         modalCard.classList.remove('chuck-kick-animate', 'clussy-shake');
@@ -5149,11 +5227,17 @@
     const CHAT_IDLE = ['who is this streamer', 'first time chatter, long time Kevin', '!discord', 'Reb drinking again?', 'is this pre-recorded',
         'modCheck', 'where is ret buff', 'catJAM', 'PogU', 'Kappa', 'raid tonight?', 'ChAoTiC rigging again', 'gamba time', 'L wheel',
         'spin it coward', 'how many Kevins is this wheel', 'Uwutek is so back', 'buy $KNOB', 'sell $KNOB', 'this chat is bots', 'hi mom',
-        '!uptime', 'PepeHands', 'Clippy where', 'the wheel knows', '5Head play', 'monkaS', 'Sadge', 'OMEGALUL', 'W streamer', 'any healers here?'];
-    const CHAT_START = ['here we go', 'spin it', 'Kevin incoming', 'I bet Kevin', 'PogChamp', 'monkaS', 'gamba gamba', 'pray', 'no Kevin no Kevin', 'RIGGED', 'come on ret buff'];
+        '!uptime', 'PepeHands', 'Clippy where', 'the wheel knows', '5Head play', 'monkaS', 'Sadge', 'OMEGALUL', 'W streamer', 'any healers here?',
+        'is the rocket gonna hit the yacht again', 'vince called me', 'who has the vault combo', 'its 1234 lol', 'FDIC insured KEKW', 'hearth out',
+        'not the shack again', 'yacht tour when', 'cookie when', 'the grandmas are watching', 'chaotic on an alt again', 'biblehumping kill any farmers today?',
+        'o7 farmers', 'reb is on his 3rd', 'Casimir rigged this', 'buy $DEDFRMR', '$KEVN to the moon', 'split day soon', 'Tsukaar pulled', 'ready check? lol',
+        'where is mankriks wife', 'gary the swordfish W', 'murloc in the porthole', 'whistlethy toot', 'did someone say thunderfury', 'Kana+ subscriber here',
+        'evelyn go to bed', 'the hatch is glowing', 'uncle touchy?', 'Platemage is a priest btw', '67', 'Krom carry when', 'the finger moved', 'chaotic rigging the rocket'];
+    const CHAT_START = ['here we go', 'spin it', 'Kevin incoming', 'I bet Kevin', 'PogChamp', 'monkaS', 'gamba gamba', 'pray', 'no Kevin no Kevin', 'RIGGED', 'come on ret buff',
+        'finger on the button', 'this is the one', 'all in', 'vince says buy', 'kevin kevin kevin', 'here comes the pain', 'clip it if kevin', 'spin2win', 'o7', 'ret ret ret'];
     const CHAT_LAND = {
-        KEVIN: ['KEVIN AGAIN LUL', 'kevin diff', 'Kevin main btw', 'KEKW', 'of course', 'unlucky', 'Kevin is 30% of this wheel KEKW', 'L'],
-        RET_PALADIN: ['RET BUFF POG', 'blizz pls', '6% EZ Clap', 'The Light provides', 'still not enough'],
+        KEVIN: ['KEVIN AGAIN LUL', 'kevin diff', 'Kevin main btw', 'KEKW', 'of course', 'unlucky', 'Kevin is 30% of this wheel KEKW', 'L', 'pin him', 'KEVIN STRIKES', 'unsurprising', 'kevin moment', 'the doll felt that', 'kevin diff again'],
+        RET_PALADIN: ['RET BUFF POG', 'blizz pls', '6% EZ Clap', 'The Light provides', 'still not enough', 'Light be praised', 'AXA POG', 'ret W'],
         NO_ONE: ['NO ONE??? POG', 'CLIP IT', 'RIGGED', 'HOLY', 'actually insane'],
         PENIS: ['LMAOOO', 'KEKW', 'mods??', 'PENIS POG', 'not on stream'],
         AOTC: ['AOTC??????', 'HOLY', 'CLIP IT CLIP IT', 'NO WAY', '1 IN 1000', 'WE ARE WITNESSING HISTORY'],
@@ -5337,7 +5421,7 @@
         "Gammon's Saving Grace": 'Gammon will save us. Allegedly.', "Clussy's Clown Nose of Doom": 'Honk.', 'The Undermine Deed': 'You own a sewer. Congrats.',
         "Uwutek's Pocket Lint": 'Torn from the boss\'s pocket. It\'s fuzzy.', 'Ashbringer (Plastic Replica)': 'Made in Booty Bay. Still hits harder than Ret.',
         "Reb's Liver (Mint Condition)": 'Somehow untouched. Science wants answers.', "Uwutek's Fuzzy Ears": 'The boss wants them back.',
-        "The Wheel's Rigging Manual": 'Chapter 1: Ask ChAoTiC.', 'Golden Chocolate Donut': "Justin's favorite. To protect and serve (with sprinkles)."
+        "The Wheel's Rigging Manual": 'Chapter 1: Ask ChAoTiC.', 'Golden Chocolate Donut': "ChAoTiC's favorite. To protect and serve (with sprinkles)."
     };
     // Collect every item in a set (ever found, selling doesn't undo it) to unlock its perk for good
     const LOOT_SETS = [
@@ -5873,7 +5957,7 @@
             v.combine = vehicleEl('<div style="font-size:11px;font-weight:900;color:#facc15;letter-spacing:.1em;text-shadow:0 1px 2px #000">COMBINE</div><span style="font-size:40px">🌾</span>🚜');
             v.combine.style.transform = `translateX(${v.combineX}px)`;
         }
-        chatBurst(['WEE WOO WEE WOO', 'nick is on the way', 'first responders o7', 'except nick', 'someone call nick', '🚑🚑🚑'], 3, 2500);
+        chatBurst(['WEE WOO WEE WOO', 'biblehumping is on the way', 'first responders o7', 'except biblehumping', 'someone call biblehumping', '🚑🚑🚑'], 3, 2500);
         startTraffic();
         return v;
     }
@@ -5886,7 +5970,7 @@
         const v = vehicles.cop = { el: vehicleEl('<div class="veh-bub" style="display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);white-space:nowrap;background:#fffbe6;color:#111;font-size:13px;font-weight:800;padding:3px 9px;border-radius:9px;border:1.5px solid #111"></div><div class="siren-glow" style="font-size:30px">🚨</div><span style="display:inline-block;transform:scaleX(-1)">🚓</span>'),
             x: -160, vx: (innerWidth / 2 + 80) / 1.6, stopAt: innerWidth / 2 - 45, paused: 0, stop: () => {}, donut };
         if (donut) chatBurst(['he stopped for a donut', 'JUSTIN NO', 'priorities', 'the golden donut', 'code 7: donut break'], 3, 3000);
-        else chatBurst(['WOOP WOOP', "justin's on patrol", 'pull over', 'license and registration', '🚓🚓🚓', 'that is the sound of da police'], 3, 2500);
+        else chatBurst(['WOOP WOOP', "chaotic's on patrol", 'pull over', 'license and registration', '🚓🚓🚓', 'that is the sound of da police'], 3, 2500);
         startTraffic();
         return v;
     }
@@ -5915,9 +5999,11 @@
         });
         if (vehicles.amb || vehicles.cop) requestAnimationFrame(trafficStep); else trafficOn = false;
     }
-    const COMBINE_LINES = ["Well... that's one way to harvest a farmer.", "Nick, that's the third combine this month.", "Sir, I'm gonna need you to step out of the fireball.",
-        "Dispatch, we've got a 10-50... Nick again.", "The farmers called 911 about Nick. Nick was the 911.", "Ambulance vs. combine. The corn won.",
-        "I'm writing you a ticket for reckless farming.", "This is why the farmers moved to the city."];
+    const COMBINE_LINES = ["Well... that's one way to harvest a farmer.", "Biblehumping, that's the third combine this month.", "Sir, I'm gonna need you to step out of the fireball.",
+        "Dispatch, we've got a 10-50... Biblehumping again.", "The farmers called 911 about Biblehumping. Biblehumping was the 911.", "Ambulance vs. combine. The corn won.",
+        "I'm writing you a ticket for reckless farming.", "This is why the farmers moved to the city.",
+        "Biblehumping, you can't keep calling this 'triage'.", "That combine had a family. A whole tractor family.", "Adding 'one combine' to your list of victims, Biblehumping.",
+        "The corn is pressing charges.", "Sir, this is the fourth harvest season you've ruined.", "Dispatch, cancel the farmer call. Biblehumping got there first."];
     function combineCrash(amb) {
         trafficOn = false;
         const x = amb.combineX; amb.stop(); delete vehicles.amb;
@@ -5941,24 +6027,32 @@
         }
         document.body.appendChild(fire);
         requestAnimationFrame(() => requestAnimationFrame(() => fire.querySelectorAll('span').forEach(f => f.style.transform = 'scale(1)')));
-        // Justin rolls up above the fire with commentary
+        // ChAoTiC rolls up above the fire with commentary
         const cop = document.createElement('div');
         cop.style.cssText = `position:fixed;z-index:78;bottom:${VEH_Y + 95}px;left:${Math.min(innerWidth - 300, Math.max(20, x - 40))}px;font-size:62px;line-height:1;pointer-events:none;opacity:0;transform:translateY(20px);transition:opacity .5s, transform .5s`;
         cop.innerHTML = '<div style="position:absolute;bottom:100%;left:0;margin-bottom:6px;width:max-content;max-width:280px;background:#fffbe6;color:#111;font-size:14px;font-weight:800;padding:5px 10px;border-radius:10px;border:2px solid #111;box-shadow:2px 2px 0 #111"></div><span style="display:inline-block;transform:scaleX(-1)">🚓</span>';
-        cop.firstChild.textContent = '🚓 Justin: ' + pickFresh(COMBINE_LINES);   // no repeats until all 8 have shown
+        cop.firstChild.textContent = '🚓 ChAoTiC: ' + pickFresh(COMBINE_LINES);   // no repeats until all 8 have shown
         document.body.appendChild(cop);
         setTimeout(() => { cop.style.opacity = '1'; cop.style.transform = 'translateY(0)'; }, 1200);
         setTimeout(() => { fire.style.opacity = '0'; cop.style.opacity = '0'; }, 7500);
         setTimeout(() => { boom.remove(); amb.el.remove(); amb.combine.remove(); fire.remove(); cop.remove(); }, 9000);
         funEvent('🚜🔥 THE AMBULANCE HIT A COMBINE HARVESTER 🔥🚑', 4000);
-        chatBurst(['NOT THE COMBINE', 'FARMER DOWN', 'nick strikes again', 'the corn is burning', 'F for the farmer', '$DEDFRMR TO THE MOON'], 6, 3000);
+        chatBurst(['NOT THE COMBINE', 'FARMER DOWN', 'biblehumping strikes again', 'the corn is burning', 'F for the farmer', '$DEDFRMR TO THE MOON'], 6, 3000);
         if (typeof exHold !== 'undefined') { const st = STOCKS.find(t => t.sym === 'DEDFRMR'); if (st) { exMove(st, 0.15, 'The ambulance hit a combine. Farmers in shambles'); store.set('painWheelStockPrices2', exPrice); exRender(); } }
     }
-    const CRASH_ARGUMENTS = [
-        ['Nick', 'You pulled out right in front of me!'], ['Justin', 'I had my lights on! You had your lights on! Everyone had their lights on!'],
-        ['Nick', 'I was responding to a call!'], ['Justin', 'So was I! The call was about YOU.'],
-        ['Nick', 'This is going on the incident report.'], ['Justin', 'I AM the incident report.'],
-        ['Nick', 'Who is going to save the farmers now?'], ['Justin', 'The farmers are finally safe.']];
+    const CRASH_ARG_SETS = [[
+        ['Biblehumping', 'You pulled out right in front of me!'], ['ChAoTiC', 'I had my lights on! You had your lights on! Everyone had their lights on!'],
+        ['Biblehumping', 'I was responding to a call!'], ['ChAoTiC', 'So was I! The call was about YOU.'],
+        ['Biblehumping', 'This is going on the incident report.'], ['ChAoTiC', 'I AM the incident report.'],
+        ['Biblehumping', 'Who is going to save the farmers now?'], ['ChAoTiC', 'The farmers are finally safe.']], [
+        ['Biblehumping', 'Why were you driving on the left?'], ['ChAoTiC', 'I was on my alt! My alt is British!'],
+        ['Biblehumping', 'You have 52 alts!'], ['ChAoTiC', 'And every one of them has the right of way.'],
+        ['Biblehumping', 'I am writing this up.'], ['ChAoTiC', 'I am writing YOU up.'],
+        ['Biblehumping', '...want to split a donut?'], ['ChAoTiC', 'The golden one is mine.']], [
+        ['ChAoTiC', 'Step out of the ambulance, sir.'], ['Biblehumping', 'I AM the ambulance.'],
+        ['ChAoTiC', 'Have you been drinking?'], ['Biblehumping', 'No. Reb has.'],
+        ['ChAoTiC', 'Fair. Who rigged this intersection?'], ['Biblehumping', 'You did. You rig everything.'],
+        ['ChAoTiC', "I'll allow it."], ['Biblehumping', 'Somewhere, a farmer is cheering.']]];
     function vehicleCrash(x) {
         trafficOn = false;
         const amb = vehicles.amb, cop = vehicles.cop;
@@ -5978,15 +6072,15 @@
             o.style.cssText = 'position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(2,6,23,.75)';
             o.innerHTML = `<div style="width:min(440px,100%);background:#0f172a;border:2px solid #f97316;border-radius:18px;padding:20px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6)">
                 <div style="font-size:46px;line-height:1">🚑💥🚓</div>
-                <div style="font-weight:900;font-size:22px;color:#fdba74;margin-top:8px">Nick and Justin are now arguing whose fault it is.</div>
+                <div style="font-weight:900;font-size:22px;color:#fdba74;margin-top:8px">Biblehumping and ChAoTiC are now arguing whose fault it is.</div>
                 <div data-arg style="margin-top:12px;text-align:left;font-size:13px;line-height:1.5;min-height:120px"></div>
                 <button data-x style="margin-top:12px;padding:6px 18px;border-radius:8px;background:#334155;color:#fff;font-weight:800;cursor:pointer;border:none">File the insurance claim</button></div>`;
             document.body.appendChild(o);
             const box = o.querySelector('[data-arg]');
-            CRASH_ARGUMENTS.forEach(([who, line], i) => setTimeout(() => {
+            pickFresh(CRASH_ARG_SETS).forEach(([who, line], i) => setTimeout(() => {
                 if (!o.isConnected) return;
-                const d = document.createElement('div'); d.innerHTML = `<b style="color:${who === 'Nick' ? '#f87171' : '#60a5fa'}"></b> <span style="color:#e2e8f0"></span>`;
-                d.children[0].textContent = (who === 'Nick' ? '🚑 ' : '🚓 ') + who + ':'; d.children[1].textContent = line; box.appendChild(d);
+                const d = document.createElement('div'); d.innerHTML = `<b style="color:${who === 'Biblehumping' ? '#f87171' : '#60a5fa'}"></b> <span style="color:#e2e8f0"></span>`;
+                d.children[0].textContent = (who === 'Biblehumping' ? '🚑 ' : '🚓 ') + who + ':'; d.children[1].textContent = line; box.appendChild(d);
             }, 400 + i * 1100));
             o.querySelector('[data-x]').addEventListener('click', () => o.remove());
         }, 900);
@@ -6010,18 +6104,24 @@
         funEvent('🚀 LIFTOFF! Next stop: anywhere Kevin isn\'t.', 4000);
         chatBurst(['LIFTOFF', 'TO THE MOON', 'billionaire arc', 'he left the planet', 'o7 o7 o7', 'take Kevin with you'], 5, 3000);
     }
-    // ---------- 🚀 → 🛥️ (or 🎡): the rocket misses, Nick and Justin respond to the scene ----------
+    // ---------- 🚀 → 🛥️ (or 🎡): the rocket misses, Biblehumping and ChAoTiC respond to the scene ----------
     const YACHT_CRASH_LINES = [
-        ['Justin', 'Sir, this is a no-rocket zone. It is also a no-yacht zone now.'], ['Nick', 'Good news, no farmers on board.'],
-        ['Justin', 'I need to see your pilot license. And your yacht license. And your boat-rocket license.'], ['Nick', "I'm not saying I'm happy, but I'm not NOT happy."],
-        ['Justin', "That's the most expensive fireball I've ever written a ticket for."], ['Nick', 'Do yachts count as farmers? Asking for the stats.'],
-        ['Justin', 'Gallywix is going to want the deposit back.'], ['Nick', 'Applying burn cream. To the yacht.'],
-        ['Justin', 'The vault is fine. The vault is always fine.'], ['Nick', 'I can save the swordfish. I cannot save the other swordfish.']];
+        ['ChAoTiC', 'Sir, this is a no-rocket zone. It is also a no-yacht zone now.'], ['Biblehumping', 'Good news, no farmers on board.'],
+        ['ChAoTiC', 'I need to see your pilot license. And your yacht license. And your boat-rocket license.'], ['Biblehumping', "I'm not saying I'm happy, but I'm not NOT happy."],
+        ['ChAoTiC', "That's the most expensive fireball I've ever written a ticket for."], ['Biblehumping', 'Do yachts count as farmers? Asking for the stats.'],
+        ['ChAoTiC', 'Gallywix is going to want the deposit back.'], ['Biblehumping', 'Applying burn cream. To the yacht.'],
+        ['ChAoTiC', 'The vault is fine. The vault is always fine.'], ['Biblehumping', 'I can save the swordfish. I cannot save the other swordfish.'],
+        ['ChAoTiC', 'I was on my alt. Had to log over to my cop for this.'], ['Biblehumping', 'I brought the defib. For the yacht.'],
+        ['ChAoTiC', 'License, registration, and proof of yacht insurance.'], ['Biblehumping', 'The swordfish is stable. Gary is not.'],
+        ['ChAoTiC', 'Nobody touch the vault. The vault is evidence now.'], ['Biblehumping', 'Rocket vs. yacht. Still better odds than a farmer vs. me.']];
     const WHEEL_CRASH_LINES = [
-        ['Justin', 'Who rigged the rocket? ...ChAoTiC, put your hand down.'], ['Nick', "The wheel is on fire. That's... honestly normal."],
-        ['Justin', "Don't worry, the odds are still rigged. Fire can't fix that."], ['Nick', "Clear! ...no wait, that's for people."],
-        ['Justin', 'I am writing the wheel a ticket for spinning under the influence.'], ['Nick', 'Kevin is fine. Kevin was the one who aimed it.'],
-        ['Justin', 'Casimir says this is a feature.'], ['Nick', 'Stop, drop and roll. The wheel only knows how to roll.']];
+        ['Biblehumping', 'Who rigged the rocket? ...ChAoTiC, put your hand down.'], ['Biblehumping', "The wheel is on fire. That's... honestly normal."],
+        ['ChAoTiC', "Don't worry, the odds are still rigged. Fire can't fix that."], ['Biblehumping', "Clear! ...no wait, that's for people."],
+        ['ChAoTiC', 'I am writing the wheel a ticket for spinning under the influence.'], ['Biblehumping', 'Kevin is fine. Kevin was the one who aimed it.'],
+        ['ChAoTiC', 'Casimir says this is a feature.'], ['Biblehumping', 'Stop, drop and roll. The wheel only knows how to roll.'],
+        ['ChAoTiC', "I'm confiscating this wheel. ...Okay, one more spin first."], ['Biblehumping', 'I can save the wheel. I cannot save the Kevin slices.'],
+        ['ChAoTiC', 'I rigged it to land on No One. The rocket un-rigged it.'], ['Biblehumping', 'Good news: no farmers on the wheel. I checked twice.'],
+        ['ChAoTiC', 'Somebody call the fire department. Not my alt. The real one.'], ['Biblehumping', 'The wheel is now medium rare.']];
     let rocketMishap = false, rocketBag = [];
     let rocketTargets = [];
     function rocketTargetWheel() {   // misses alternate yacht / wheel (shuffled in pairs), so you see both
@@ -6032,30 +6132,30 @@
         if (!rocketBag.length) rocketBag = Math.random() < 0.5 ? [true, false] : [false, true];
         return rocketBag.pop();
     }
-    function rocketScene(x, lines) {   // Nick and Justin pull up from opposite sides and trade a few lines, then leave
+    function rocketScene(x, lines) {   // Biblehumping and ChAoTiC pull up from opposite sides and trade a few lines, then leave
         const mk = (emoji, flip, from) => {
             const el = document.createElement('div');
             el.style.cssText = `position:fixed;z-index:79;bottom:${VEH_Y}px;left:${from}px;font-size:66px;line-height:1;pointer-events:none;transition:left 1.4s cubic-bezier(.2,.8,.3,1), opacity .8s`;
             el.innerHTML = `<div style="display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:6px;width:max-content;max-width:min(300px,40vw);background:#fffbe6;color:#111;font-size:14px;font-weight:800;line-height:1.3;padding:5px 10px;border-radius:10px;border:2px solid #111;box-shadow:2px 2px 0 #111;white-space:normal;text-align:left"></div><div class="siren-glow" style="font-size:24px;text-align:center">🚨</div><span style="display:inline-block;${flip ? 'transform:scaleX(-1)' : ''}">${emoji}</span>`;
             document.body.appendChild(el); return el;
         };
-        const nick = mk('🚑', false, innerWidth + 40), justin = mk('🚓', true, -140);
+        const ambV = mk('🚑', false, innerWidth + 40), copV = mk('🚓', true, -140);
         const stopSiren = playSiren(1.6);
         requestAnimationFrame(() => requestAnimationFrame(() => {
-            nick.style.left = Math.min(innerWidth - 100, x + 70) + 'px'; justin.style.left = Math.max(10, x - 170) + 'px';
+            ambV.style.left = Math.min(innerWidth - 100, x + 70) + 'px'; copV.style.left = Math.max(10, x - 170) + 'px';
         }));
         const picked = []; while (picked.length < 3) { const l = pickFresh(lines); if (!picked.includes(l)) picked.push(l); }
         let t = 1700;
         picked.forEach(([who, line]) => {
             setTimeout(() => {
-                [nick, justin].forEach(v => v.firstChild.style.display = 'none');
-                const v = who === 'Nick' ? nick : justin; v.firstChild.style.display = 'block'; v.firstChild.textContent = (who === 'Nick' ? '🚑 Nick: ' : '🚓 Justin: ') + line;
+                [ambV, copV].forEach(v => v.firstChild.style.display = 'none');
+                const v = who === 'Biblehumping' ? ambV : copV; v.firstChild.style.display = 'block'; v.firstChild.textContent = (who === 'Biblehumping' ? '🚑 Biblehumping: ' : '🚓 ChAoTiC: ') + line;
             }, t); t += 2600;
         });
         setTimeout(() => {
-            stopSiren(); [nick, justin].forEach(v => v.firstChild.style.display = 'none');
-            nick.style.left = (innerWidth + 60) + 'px'; justin.style.left = '-160px';
-            setTimeout(() => { nick.remove(); justin.remove(); rocketMishap = false; }, 1600);
+            stopSiren(); [ambV, copV].forEach(v => v.firstChild.style.display = 'none');
+            ambV.style.left = (innerWidth + 60) + 'px'; copV.style.left = '-160px';
+            setTimeout(() => { ambV.remove(); copV.remove(); rocketMishap = false; }, 1600);
         }, t + 400);
         return t + 2000;
     }
@@ -6142,13 +6242,102 @@
         const d = $('garageDock'); d.innerHTML = '';
         [['shack', '🏜️', 'Your Shack in the Desert', () => moveToast('🏜️ ' + pick(['The shack is quiet. The desert is quiet. Kevin cannot find you here.', 'You sit on the shack porch and think about your parses.',
             'A tumbleweed rolls by. It has better DPS than Kevin.', 'No WiFi out here. Somehow the wheel still loads.', 'Rent collected from a lizard: it paid in gold.']))],
-         ['ambulance', '🚑', "Nick's Ambulance (click for siren)", driveAmbulance], ['police', '🚓', "Justin's Cop Car (click for whoop whoop)", drivePolice]].forEach(([k, e, tip, fn]) => {
+         ['ambulance', '🚑', "Biblehumping's Ambulance (click for siren)", driveAmbulance], ['police', '🚓', "ChAoTiC's Cop Car (click for whoop whoop)", drivePolice],
+         ['phone', SVG_PHONE, "Vince's 1980s Brick Phone (click to take the call)", vinceCall], ['voodoo', SVG_DOLL, 'Kevin Voodoo Doll (click to poke)', pokeVoodoo]].forEach(([k, e, tip, fn]) => {
             if (!garage[k]) return;
-            const b = document.createElement('button'); b.textContent = e; b.title = tip; b.dataset.k = k;
+            const b = document.createElement('button'); if (e[0] === '<') b.innerHTML = e; else b.textContent = e; b.title = tip; b.dataset.k = k;
             b.style.cssText = 'font-size:40px;line-height:1;cursor:pointer;background:none;border:none;filter:drop-shadow(0 3px 6px rgba(0,0,0,.7))';
             b.addEventListener('click', () => { fn(); b.blur(); }); d.appendChild(b);
         });
-        renderPad();
+        renderPad(); renderFinger();
+    }
+    var SVG_PHONE = '<svg viewBox="0 0 26 50" width="26" height="48" aria-hidden="true"><rect x="16" y="0" width="4" height="13" rx="1.5" fill="#27272a"/><rect x="3" y="10" width="20" height="38" rx="3.5" fill="#3f3f46" stroke="#18181b" stroke-width="1.5"/>' +
+        '<rect x="6" y="14" width="14" height="6" rx="1" fill="#84cc16"/>' + [0, 1, 2, 3].map(r => [0, 1, 2].map(c => `<rect x="${6.5 + c * 4.6}" y="${24 + r * 5}" width="3.4" height="3" rx=".8" fill="#d4d4d8"/>`).join('')).join('') +
+        '<circle cx="8" cy="44" r=".9" fill="#f9a8d4"/><circle cx="17" cy="45" r=".8" fill="#fde047"/><circle cx="12" cy="12.5" r=".7" fill="#f9a8d4"/><circle cx="20" cy="22" r=".7" fill="#fde047"/></svg>';
+    var SVG_DOLL = '<svg viewBox="0 0 40 50" width="38" height="48" aria-hidden="true"><path d="M20 20 L9 26 M20 20 L31 26" stroke="#a07a45" stroke-width="5" stroke-linecap="round"/>' +
+        '<path d="M14 21 h12 l2 16 l-4 11 h-3 l-1-8 l-1 8 h-3 l-4-11 z" fill="#c8a26a" stroke="#7c5a2a" stroke-width="1.4"/><circle cx="20" cy="12" r="10" fill="#c8a26a" stroke="#7c5a2a" stroke-width="1.4"/>' +
+        '<path d="M14 9 l4 4 M18 9 l-4 4 M22 9 l4 4 M26 9 l-4 4" stroke="#1f2937" stroke-width="1.6"/><path d="M15 17 h10" stroke="#7c5a2a" stroke-width="1.2" stroke-dasharray="1.5 1.5"/>' +
+        '<rect x="16.5" y="25" width="7" height="7" rx="1" fill="#ef4444"/><text x="20" y="31" font-size="6" font-weight="900" text-anchor="middle" fill="#fff" font-family="Arial">K</text>' +
+        '<path d="M28 4 L22 12 M33 24 L24 29" stroke="#9ca3af" stroke-width="1.2"/><circle cx="28" cy="4" r="2" fill="#3b82f6"/><circle cx="33" cy="24" r="2" fill="#22c55e"/></svg>';
+
+    // ---------- 📞 Vince's 1980s brick phone ----------
+    const VINCE_LINES = ["BUY BUY BUY! ...wait, SELL! No, BUY! I'm on a car phone, I can't hear you!", "Kid, I've got a hot tip on $KEVN. It's going to the moon. The moon is Kevin's house.",
+        "I just shorted Reb's liver. Don't tell Reb.", "This thing weighs four pounds and the battery lasts twenty minutes. It's the FUTURE, baby.",
+        "Put it ALL on $RET. Ret Paladins can't stay bad forever. ...Can they?", "My guy at Blizzard says hotfix Tuesday. My guy at Blizzard is Kevin.",
+        "Suspenders, pinstripes, and a Rolodex full of goblins. That's how you win, kid.", "Call 1-800-KNOB-NOW and ask for Vince. I AM Vince.",
+        "I'm calling you from my Lamborghini. It's in the shop. I'm calling from the shop.", "Never trust a stock that ends in -FRMR. Unless Biblehumping is driving.",
+        "Buy low, sell high, and never, EVER let ChAoTiC touch your portfolio. He'll make it an alt.", "Hold on, my other brick is ringing."];
+    let vinceBusyUntil = 0;
+    function playBrickRing() {   // the old two-tone ring, twice
+        if (!soundOn()) return;
+        try { ensureAudio(); const t = audioCtx.currentTime;
+            [0, 0.6].forEach(st => [440, 480].forEach(f => { const o = audioCtx.createOscillator(), g = audioCtx.createGain(); o.type = 'sine'; o.frequency.value = f;
+                g.gain.setValueAtTime(0.0001, t + st); g.gain.linearRampToValueAtTime(0.06, t + st + 0.02); g.gain.setValueAtTime(0.06, t + st + 0.42); g.gain.linearRampToValueAtTime(0.0001, t + st + 0.46);
+                for (let k = 0; k < 9; k++) { g.gain.setValueAtTime(k % 2 ? 0.02 : 0.06, t + st + k * 0.05); }
+                o.connect(g); g.connect(outGain); o.start(t + st); o.stop(t + st + 0.5); }));
+        } catch (e) {}
+    }
+    function vinceCall() {
+        if (performance.now() < vinceBusyUntil) { moveToast("📞 Vince is on the other line. (He has two bricks.)"); return; }
+        vinceBusyUntil = performance.now() + 90000;
+        playBrickRing();
+        const box = document.createElement('div');
+        box.style.cssText = 'position:fixed;z-index:79;left:16px;bottom:84px;width:min(340px,calc(100vw - 32px));padding:12px 14px;border-radius:12px;border:2px solid #84cc16;background:linear-gradient(170deg,#18181b,#27272a);color:#e4e4e7;box-shadow:0 12px 30px rgba(0,0,0,.6);font-size:13px;line-height:1.4';
+        box.innerHTML = '<div style="font-family:\'JetBrains Mono\',monospace;font-weight:800;color:#84cc16;font-size:11px;letter-spacing:.12em">📞 INCOMING CALL · VINCE (CAR PHONE)</div><div data-l style="margin-top:6px;font-weight:700"></div><div data-t style="margin-top:6px;font-size:12px;color:#a1a1aa"></div>';
+        document.body.appendChild(box);
+        box.querySelector('[data-l]').textContent = '"' + pickFresh(VINCE_LINES) + '"';
+        setTimeout(() => {   // the tip actually moves a stock (Vince is right about 60% of the time)
+            const st = pick(STOCKS), good = Math.random() < 0.6;
+            exMove(st, good ? 0.08 : -0.06, good ? "Vince's hot tip. Somehow it worked" : "Vince's hot tip was wrong. Vince blames the reception");
+            store.set('painWheelStockPrices2', exPrice); exRender();
+            box.querySelector('[data-t]').textContent = good ? `📈 Tip: BUY $${st.sym}. It went up 8%.` : `📉 Tip: BUY $${st.sym}. It went down 6%. *click*`;
+        }, 2200);
+        setTimeout(() => { box.style.transition = 'opacity .6s'; box.style.opacity = '0'; setTimeout(() => box.remove(), 700); }, 8000);
+        chatBurst(['VINCE ON THE LINE', 'is that a car phone', 'brick phone W', 'sell sell sell', 'vince said buy', '1987 called'], 3, 2500);
+    }
+
+    // ---------- 🖐️ Biblehumping's Finger: rests on the SPIN button ----------
+    function renderFinger() { $('nickFinger').style.display = garage.finger ? 'block' : 'none'; }
+    function fingerPress(then) {
+        const f = $('nickFinger'); f.style.transform = 'translate(-50%,-62%) rotate(-24deg) scale(.95)';
+        setTimeout(() => { f.style.transform = ''; then && then(); }, 260);
+    }
+    // with the voodoo doll, the dark magic makes the finger push SPIN on its own every once in a while
+    setInterval(() => {
+        if (!garage.finger || !garage.voodoo || isSpinning || document.hidden) return;
+        if (!$('winnerModal').classList.contains('hidden') || !$('shopPanel').classList.contains('hidden')) return;
+        if (Math.random() > 1 / 6) return;
+        fingerPress(() => triggerSpin());
+        chatBurst(['THE FINGER MOVED', 'did that finger just spin', 'monkaS', 'dark magic', 'biblehumping is that you', 'possessed finger'], 4, 2000);
+        moveToast("🖐️ Biblehumping's Finger pressed SPIN by itself. The voodoo doll is smiling.");
+    }, 60000);
+
+    // ---------- 🪡 Kevin Voodoo Doll (secret: a cursed golden cookie) ----------
+    let voodooArmed = false, voodooAt = 0;
+    const VOODOO_LINES = ['You poke the doll. Somewhere, Kevin yelps.', 'Pin in the left foot. Kevin just tripped over a murloc.', 'Pin in the head. Kevin forgot his own name. (No change.)',
+        'You poke the doll. Kevin drops his keys in the Barrens.', 'The doll whispers "why". You poke it again.'];
+    function playOw() {
+        if (!soundOn()) return;
+        try { ensureAudio(); const t = audioCtx.currentTime, o = audioCtx.createOscillator(), g = audioCtx.createGain(); o.type = 'square';
+            o.frequency.setValueAtTime(700, t); o.frequency.exponentialRampToValueAtTime(240, t + 0.35);
+            g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.06, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.4);
+            o.connect(g); g.connect(outGain); o.start(t); o.stop(t + 0.45); } catch (e) {}
+    }
+    function pokeVoodoo() {
+        if (performance.now() - voodooAt < 8000) { moveToast('🪡 The doll needs a minute. So does Kevin.'); return; }
+        voodooAt = performance.now(); voodooArmed = true; playOw();
+        moveToast('🪡 ' + pick(VOODOO_LINES) + ' The next Kevin landing will hurt.');
+        chatBurst(['OW', 'poor kevin', 'pin him again', 'dark arts W', 'kevin felt that'], 3, 2000);
+    }
+    function voodooHit() {   // called when the wheel lands on Kevin while the doll is armed
+        voodooArmed = false;
+        setTimeout(() => {
+            modalCard.classList.remove('clussy-shake'); void modalCard.offsetWidth; modalCard.classList.add('clussy-shake'); playOw();
+            const ow = document.createElement('div'); ow.textContent = 'OW!';
+            ow.style.cssText = 'position:absolute;right:18px;top:14px;z-index:40;font-size:44px;font-weight:900;color:#ef4444;text-shadow:0 3px 0 #000;transform:rotate(12deg);pointer-events:none';
+            modalCard.appendChild(ow); setTimeout(() => ow.remove(), 2600);
+            chatBurst(['KEVIN FELT THAT', 'OW KEKW', 'the doll works', 'voodoo diff'], 3, 1500);
+        }, 700);
     }
     // ---------- launch pad ----------
     var padBusy = false;
@@ -6390,16 +6579,25 @@
                 if (!spend(1350, 'the Shack in the Desert')) return; garage.shack = true; store.set('painWheelGarage', garage); renderGarage(); renderShop();
                 shopMsg('You bought a shack in the desert. Very peaceful. Nobody can find you.'); chatBurst(['SHACK IN THE DESERT', 'he moved to the desert', 'the meme lives', 'peaceful'], 3);
             }, garage.shack ? 'owned' : 'buy'));
-            add(shopRow('🚑', "Nick's Ambulance", 'Parks in the corner. Click it for lights and siren. Thank you to our first responders (except Nick).', garage.ambulance ? 'Owned ✓' : 'Buy: 2,500,000g', () => {
+            add(shopRow('🚑', "Biblehumping's Ambulance", 'Parks in the corner. Click it for lights and siren. Thank you to our first responders (except Biblehumping).', garage.ambulance ? 'Owned ✓' : 'Buy: 2,500,000g', () => {
                 if (!spend(2500000, 'the ambulance')) return; garage.ambulance = true; store.set('painWheelGarage', garage); renderGarage(); unlock('weewoo'); driveAmbulance(); renderShop();
             }, garage.ambulance ? 'owned' : 'buy'));
-            add(shopRow('🚓', "Justin's Cop Car", "Comes with Justin's Golden Chocolate Donut. Parks in the corner; click it: it rolls in, does the WHOOP WHOOP, and peels off. (Try it while the ambulance is out...)", garage.police ? 'Owned ✓' : 'Buy: 2,500,000g', () => {
+            add(shopRow('🚓', "ChAoTiC's Cop Car", "Comes with ChAoTiC's Golden Chocolate Donut. Parks in the corner; click it: it rolls in, does the WHOOP WHOOP, and peels off. (Try it while the ambulance is out...)", garage.police ? 'Owned ✓' : 'Buy: 2,500,000g', () => {
                 if (!spend(2500000, 'the cop car')) return; garage.police = true; store.set('painWheelGarage', garage); renderGarage(); drivePolice(); renderShop();
-                setTimeout(() => giveLoot('legendary', '🍩 Justin left this in the cruiser', 'Golden Chocolate Donut'), 1500);
+                setTimeout(() => giveLoot('legendary', '🍩 ChAoTiC left this in the cruiser', 'Golden Chocolate Donut'), 1500);
             }, garage.police ? 'owned' : 'buy'));
             add(shopRow('🚀', 'Gallywix Rocket', 'For when you\'ve made it (10 billion gold). Launches on purchase and every time you click it.', garage.rocket ? 'Owned ✓' : 'Buy: 10,000,000,000g', () => {
                 if (!spend(10000000000, 'the rocket')) return; garage.rocket = true; store.set('painWheelGarage', garage); renderGarage(); unlock('rocket'); closeShop(); launchRocket(); sendEvent({ k: 'rocket' }); renderShop();
             }, garage.rocket ? 'owned' : 'buy'));
+            add(shopRow('📞', "Vince's 1980s Brick Phone", "A genuine 1983 car phone from Vince the stock broker. Four pounds. Twenty minutes of battery. Click it in the corner and Vince calls with a stock tip (he's right about 60% of the time). Note: comes lightly dusted with a white powder Vince insists is \"just baby powder\" and an alarming amount of stripper glitter. Do not ask Vince about either.", garage.phone ? 'Owned ✓' : 'Buy: 3,995,000g', () => {
+                if (!spend(3995000, "Vince's brick phone")) return; garage.phone = true; store.set('painWheelGarage', garage); renderGarage(); unlock('brickphone'); renderShop(); closeShop(); vinceBusyUntil = 0; vinceCall();
+            }, garage.phone ? 'owned' : 'buy'));
+            add(shopRow('🖐️', "Biblehumping's Finger", "He lost it at work. He'd want you to have it. It gets laid to rest on the SPIN button with full honors. Some say the right kind of dark magic makes it move...", garage.finger ? 'Owned ✓' : 'Buy: 6,700,000g', () => {
+                if (!spend(6700000, "Biblehumping's Finger")) return; garage.finger = true; store.set('painWheelGarage', garage); renderShop(); closeShop();
+                playTapsSynth(); funEvent("🎺 LAYING BIBLEHUMPING'S FINGER TO REST", 5000);
+                setTimeout(() => { renderFinger(); unlock('finger'); moveToast("🖐️ Biblehumping's Finger now rests on the SPIN button. Gone, but never forgotten. (It's still pointing.)"); }, 1800);
+                chatBurst(['o7', 'F', 'press F for the finger', 'rest easy little guy', 'he would have wanted this', '🎺🎺🎺'], 6, 4000);
+            }, garage.finger ? 'owned' : 'buy'));
         } else if (shopTab === 'society') {
             const intro = document.createElement('div'); intro.className = 'text-xs text-slate-300';
             intro.textContent = 'Pay your initiation dues and climb the secret societies, one rank at a time. Each rank gets its own badge, achievement, and a guild-wide alert. Nobody is supposed to know about this tab.';
@@ -6622,13 +6820,22 @@
         'Grandma says you spin too much. Grandma also says take this cookie.', 'Somewhere, a grandma is knitting a Kevin sweater.', 'The grandmas demand more spins.'];
     function goldenCookie() {
         if ($('goldenCookie')) return;
-        const c = document.createElement('button'); c.id = 'goldenCookie'; c.textContent = '🍪'; c.title = 'A golden cookie!';
+        const cursed = societyRank >= 2 && !garage.voodoo && Math.random() < 0.3;   // the secret societies taught you the dark arts...
+        const c = document.createElement('button'); c.id = 'goldenCookie'; c.textContent = '🍪'; c.title = cursed ? 'This cookie looks... wrong.' : 'A golden cookie!';
         const x = 60 + Math.random() * (innerWidth - 160), y = 120 + Math.random() * (innerHeight - 260);
         c.style.cssText = `position:fixed;z-index:75;left:${x}px;top:${y}px;font-size:58px;line-height:1;background:none;border:none;cursor:pointer;filter:sepia(1) saturate(3) brightness(1.15) drop-shadow(0 0 14px #facc15) drop-shadow(0 0 30px #f59e0b);opacity:0;transition:opacity .6s, transform .2s;animation:houseBob 1.2s ease-in-out infinite alternate`;
+        if (cursed) c.style.filter = 'hue-rotate(230deg) saturate(2.2) brightness(.8) drop-shadow(0 0 14px #a855f7) drop-shadow(0 0 30px #581c87)';
         document.body.appendChild(c); requestAnimationFrame(() => c.style.opacity = '1');
         const gone = setTimeout(() => { c.style.opacity = '0'; setTimeout(() => c.remove(), 700); }, 12000);
         c.addEventListener('click', () => {
             clearTimeout(gone); c.remove(); unlock('goldcookie');
+            if (cursed) {
+                garage.voodoo = true; store.set('painWheelGarage', garage); renderGarage(); unlock('voodoo'); playOw();
+                funEvent('🕯️ THE COOKIE WAS CURSED. YOU GOT THE KEVIN VOODOO DOLL.', 5000);
+                moveToast('🪡 A grandma hands you a little doll with a K on it. "Poke him, dear." It sits in your garage corner now.' + (garage.finger ? " Biblehumping's Finger twitches..." : ''));
+                chatBurst(['CURSED COOKIE', 'that grandma is a witch', 'oh no', 'dark arts', 'kevin is in danger', '👁️👁️👁️'], 5);
+                return;
+            }
             const roll = Math.random(); let msg;
             if (roll < 0.5) { const won = Math.round(gold * 0.13) + 7777; setGold(gold + won); msg = `🍪 LUCKY! +${won.toLocaleString()}g`; }
             else if (roll < 0.8) { flaskLoot += 7; store.set('painWheelFlask', flaskLoot); msg = "🍪 GRANDMA'S BLESSING: your next 7 spins drop loot"; }
@@ -7217,7 +7424,7 @@
         // loot: about 1 in 3 spins; better odds on the rare slices
         const minQ = s.type === 'AOTC' ? 'legendary' : (s.type === 'NO_ONE' || ash) ? 'epic' : null;
         const flask = flaskLoot > 0; if (flask) { flaskLoot--; store.set('painWheelFlask', flaskLoot); }
-        if (s.type === 'DONUT' && Math.random() < 0.15) setTimeout(() => giveLoot('legendary', "🍩 Justin's dream came true", 'Golden Chocolate Donut'), 1400);
+        if (s.type === 'DONUT' && Math.random() < 0.15) setTimeout(() => giveLoot('legendary', "🍩 ChAoTiC's dream came true", 'Golden Chocolate Donut'), 1400);
         else if (minQ || flask || Math.random() < (hasPerk('raid') ? 0.45 : 0.33)) setTimeout(() => giveLoot(rollQuality(minQ), flask ? '🧪 Flask of Loot' : undefined), 1400);
         newSliceFx(s.type); exOnLand(s.type);
         if (s.type === 'AOTC' && fair) unlock('aotclegit');   // only a natural landing counts
