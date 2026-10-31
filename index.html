@@ -199,6 +199,10 @@
         /* party mode: big soft lights that drift and change color slowly (no flashing) */
         #partyLights { position: fixed; inset: 0; z-index: 58; pointer-events: none; display: none; overflow: hidden; mix-blend-mode: screen; }
         body.party-on #partyLights { display: block; }
+        body.party-on #petDock > div > div:last-child { animation: petDance .45s ease-in-out infinite alternate !important; }
+        body.party-on #garageDock button { animation: petDance .6s ease-in-out infinite alternate; }
+        @keyframes petDance { from { transform: translateY(0) rotate(-12deg); } to { transform: translateY(-8px) rotate(12deg); } }
+        @media (prefers-reduced-motion: reduce) { body.party-on #petDock > div > div:last-child, body.party-on #garageDock button { animation: none !important; } }
         #partyLights .beam { position: absolute; width: 70vmax; height: 70vmax; border-radius: 50%; filter: blur(60px); opacity: .32; }
         #partyLights .b1 { background: #ec4899; left: -20vmax; top: -20vmax; animation: beamA 9s ease-in-out infinite alternate, hueSpin 14s linear infinite; }
         #partyLights .b2 { background: #22d3ee; right: -25vmax; top: 10vh; animation: beamB 11s ease-in-out infinite alternate, hueSpin 17s linear infinite; }
@@ -4360,6 +4364,20 @@
                  'BREAKING: CEILING CAT HAS DRESSED AS FLOOR CAT FOR HALLOWEEN. NOBODY IS SAFE.',
                  'EVELYN STILL NOT IN BED. SHE IS NOW, TECHNICALLY, A GHOST.'],
           callouts: ['THE SPIRITS ARE SPINNING THE WHEEL', 'DON\'T LOOK BEHIND YOU. IT\'S KEVIN.', 'TRICK OR TREAT! (IT\'S A TRICK)'] },
+        { id: 'veterans', name: "Veterans Day 🎖️", when: d => inRange(d, 11, 8, 11, 12),
+          tint: 'radial-gradient(ellipse at 50% 0%, rgba(30,64,175,0.25), transparent 60%), radial-gradient(ellipse at 50% 100%, rgba(185,28,28,0.2), transparent 60%)',
+          pain: '#60a5fa', badge: ['🎖️ ', ' 🇺🇸'], tagline: 'Honoring Our Veterans • Thank You For Your Service',
+          kevin: [['#1e3a8a', '⭐', '🎖️', '#dbeafe'], ['#4d5d2a', '🇺🇸', '⭐', '#ecfccb']], kevinLabel: '🎖️ Kevin',
+          drift: ['⭐', '🎖️', '🇺🇸'],
+          ads: ['🎖️ TO EVERY VETERAN IN DEGENERATE REJECTS: THANK YOU FOR YOUR SERVICE. YOU HAVE SURVIVED WORSE THAN KEVIN.',
+                '🇺🇸 VETERANS DAY: FREE BATTLE REZ FOR EVERYONE WHO EVER STOOD A REAL WATCH',
+                '⭐ THIS RAID IS DEDICATED TO THE VETS. PLEASE DO NOT LET KEVIN RUIN IT.',
+                '🎖️ OUR VETS: DISCIPLINED, BRAVE, AND STILL SOMEHOW WILLING TO RAID WITH US'],
+          news: ['GUILD SALUTES ITS VETERANS. THEY HAVE HANDLED WORSE THAN A MYTHIC WIPE.',
+                 'VETERANS REPORT RAID CALLOUTS ARE "LESS ORGANIZED THAN BASIC TRAINING." NO ONE DISAGREES.',
+                 'KEVIN ATTEMPTS A SALUTE. HITS HIMSELF IN THE FACE. VETS ARE GRACIOUS ABOUT IT.',
+                 'THANK YOU TO EVERY VETERAN WHO HAS EVER CARRIED THIS GUILD, IN GAME AND OUT.'],
+          callouts: ['THANK YOU FOR YOUR SERVICE', 'SALUTE TO OUR VETS', 'HOOAH / OORAH / HOOYAH']},
         { id: 'thanksgiving', name: 'Thanksgiving 🦃', when: d => inRange(d, 11, 2, 11, 30),
           tint: 'radial-gradient(ellipse at 50% 0%, rgba(180,83,9,0.22), transparent 60%)',
           pain: '#d97706', badge: ['🦃 ', ' 🥧'], tagline: 'Gravy-Powered Decision Engine • 4x Stuffing Zoom',
@@ -4793,6 +4811,7 @@
             root.style.transition = 'transform 0.9s ease-in-out'; root.style.transform = 'rotate(180deg)';
             setTimeout(() => { root.style.transform = ''; setTimeout(() => root.style.transition = '', 950); }, 10000);
         } else if (fx === 'retvision') {
+            horrorMode(10000);
             root.style.transition = 'filter 0.8s'; root.style.filter = 'blur(3px) grayscale(1) contrast(0.8)';
             setTimeout(() => { root.style.filter = ''; setTimeout(() => root.style.transition = '', 850); }, 10000);
         } else if (fx === 'rugpull') {
@@ -5378,14 +5397,16 @@
             // boss-kill rewards for everyone who did damage
             const k = d.lastKill;
             if (k && playerName) {
-                const seen = store.get('painWheelBossRewarded', 0);
+                const seenAt = store.get('painWheelBossRewardedAt', '');
                 const me = (k.participants || []).some(n => n.toLowerCase() === playerName.toLowerCase());
-                if (k.level > seen) {
-                    store.set('painWheelBossRewarded', k.level);
+                if (k.at && k.at !== seenAt && (!seenAt || new Date(k.at) > new Date(seenAt))) {
+                    store.set('painWheelBossRewardedAt', k.at);
                     if (me && Date.now() - new Date(k.at).getTime() < 24 * 3600 * 1000) {
-                        setGold(gold + 500);
-                        const item = giveLoot(Math.random() < 0.2 ? 'legendary' : 'epic', `☠️ ${k.name} defeated! Reward: +500g and`);
-                        chatBurst(['BOSS DOWN', 'GG GG GG', 'UWUTEK DOWN', 'loot loot loot', 'EZ Clap'], 5);
+                        const base = 2500000 * (k.level || 1), rank = (k.top || []).findIndex(x => String(x[0]).toLowerCase() === playerName.toLowerCase());
+                        const bonusPct = [1, 0.75, 0.5, 0.35, 0.2][rank] || 0, pay = Math.round(base * (1 + bonusPct));
+                        setGold(gold + pay);
+                        giveLoot(Math.random() < 0.2 ? 'legendary' : 'epic', `☠️ ${k.name} defeated! +${pay.toLocaleString()}g${rank >= 0 ? ` (#${rank + 1} damage bonus +${Math.round(bonusPct * 100)}%)` : ''} and`);
+                        chatBurst(['BOSS DOWN', 'GG GG GG', 'UWUTEK DOWN', 'loot loot loot', 'EZ Clap', 'PAYDAY'], 5);
                     }
                 }
             }
@@ -5711,11 +5732,16 @@
         startTraffic();
         return v;
     }
+    let copClicks = 0, donutEvery = 2 + Math.floor(Math.random() * 2);
     function drivePolice() {
         if (vehicles.cop) return;
-        const v = vehicles.cop = { el: vehicleEl('<div class="siren-glow" style="font-size:30px">🚨</div><span style="display:inline-block;transform:scaleX(-1)">🚓</span>'),
-            x: -160, vx: (innerWidth / 2 + 80) / 1.6, stopAt: innerWidth / 2 - 45, paused: 0, stop: () => {} };
-        chatBurst(['WOOP WOOP', "justin's on patrol", 'pull over', 'license and registration', '🚓🚓🚓', 'that is the sound of da police'], 3, 2500);
+        const hasDonut = !!(bag['Golden Chocolate Donut'] && bag['Golden Chocolate Donut'].n > 0);
+        const donut = hasDonut && ++copClicks >= donutEvery;
+        if (donut) { copClicks = 0; donutEvery = 2 + Math.floor(Math.random() * 2); }
+        const v = vehicles.cop = { el: vehicleEl('<div class="veh-bub" style="display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);white-space:nowrap;background:#fffbe6;color:#111;font-size:13px;font-weight:800;padding:3px 9px;border-radius:9px;border:1.5px solid #111"></div><div class="siren-glow" style="font-size:30px">🚨</div><span style="display:inline-block;transform:scaleX(-1)">🚓</span>'),
+            x: -160, vx: (innerWidth / 2 + 80) / 1.6, stopAt: innerWidth / 2 - 45, paused: 0, stop: () => {}, donut };
+        if (donut) chatBurst(['he stopped for a donut', 'JUSTIN NO', 'priorities', 'the golden donut', 'code 7: donut break'], 3, 3000);
+        else chatBurst(['WOOP WOOP', "justin's on patrol", 'pull over', 'license and registration', '🚓🚓🚓', 'that is the sound of da police'], 3, 2500);
         startTraffic();
         return v;
     }
@@ -5725,8 +5751,12 @@
         const dt = Math.min(0.05, (now - trafficLast) / 1000); trafficLast = now;
         const amb = vehicles.amb, cop = vehicles.cop;
         if (cop) {
-            if (cop.stopAt != null && cop.x >= cop.stopAt) {   // pull up, whoop whoop, then peel off
-                cop.x = cop.stopAt; cop.stopAt = null; cop.paused = 1.3; cop.stop = playWhoop(3);
+            if (cop.stopAt != null && cop.x >= cop.stopAt) {   // pull up, whoop whoop (or a donut break), then peel off
+                cop.x = cop.stopAt; cop.stopAt = null;
+                if (cop.donut) {
+                    cop.paused = 3; const bub = cop.el.querySelector('.veh-bub'); bub.style.display = 'block';
+                    bub.textContent = '🍩 *pulls over* one sec...'; setTimeout(() => { bub.textContent = '🍩 *nom nom nom*'; }, 1100); setTimeout(() => { bub.textContent = "ok we're good 👍"; }, 2200);
+                } else { cop.paused = 1.3; cop.stop = playWhoop(3); }
             }
             if (cop.paused > 0) cop.paused -= dt; else cop.x += cop.vx * dt;
         }
@@ -5777,6 +5807,8 @@
         }, 900);
     }
     function launchRocket() {
+        const shack = document.querySelector('#garageDock [data-k="shack"]');
+        if (garage.shack && shack) return rocketShackCrash(shack);
         const r = document.createElement('div');
         r.style.cssText = 'position:fixed;z-index:78;left:50%;bottom:-120px;font-size:110px;line-height:1;pointer-events:none;transform:translateX(-50%) rotate(-45deg);transition:bottom 4s cubic-bezier(.5,0,.9,.4)';
         r.textContent = '🚀'; document.body.appendChild(r);
@@ -5790,13 +5822,43 @@
         funEvent('🚀 LIFTOFF! Next stop: anywhere Kevin isn\'t.', 4000);
         chatBurst(['LIFTOFF', 'TO THE MOON', 'billionaire arc', 'he left the planet', 'o7 o7 o7', 'take Kevin with you'], 5, 3000);
     }
+    function rocketShackCrash(shack) {
+        const r0 = shack.getBoundingClientRect(), sx = r0.left + r0.width / 2, sy = r0.top;
+        const r = document.createElement('div'); r.textContent = '🚀';
+        r.style.cssText = `position:fixed;z-index:78;left:${sx}px;top:${sy - 70}px;font-size:80px;line-height:1;pointer-events:none;transform:translate(-50%,0) rotate(-45deg);transition:top 1.6s cubic-bezier(.5,0,.9,.4)`;
+        document.body.appendChild(r);
+        const smoke = setInterval(() => {
+            const s2 = document.createElement('div'), b = r.getBoundingClientRect(); s2.textContent = '💨';
+            s2.style.cssText = `position:fixed;z-index:77;left:${b.left + b.width / 2 - 20}px;top:${b.bottom - 20}px;font-size:40px;pointer-events:none;transition:opacity 1.4s,transform 1.4s`;
+            document.body.appendChild(s2); requestAnimationFrame(() => { s2.style.opacity = '0'; s2.style.transform = 'scale(2)'; }); setTimeout(() => s2.remove(), 1500);
+        }, 130);
+        requestAnimationFrame(() => requestAnimationFrame(() => r.style.top = '-160px'));
+        funEvent('🚀 LIFTOFF FROM THE SHACK IN THE DESERT!', 2200);
+        setTimeout(() => {   // ...what goes up
+            clearInterval(smoke);
+            r.style.transition = 'top 1.1s cubic-bezier(.6,0,1,1)'; r.style.transform = 'translate(-50%,0) rotate(135deg)';
+            requestAnimationFrame(() => r.style.top = `${sy - 40}px`);
+        }, 1900);
+        setTimeout(() => {
+            r.remove(); playCrash();
+            const boom = document.createElement('div'); boom.textContent = '💥';
+            boom.style.cssText = `position:fixed;z-index:78;left:${sx}px;top:${sy - 30}px;font-size:30px;pointer-events:none;transform:translate(-50%,0) scale(.4);transition:transform .35s ease-out,opacity .8s .8s`;
+            document.body.appendChild(boom); requestAnimationFrame(() => { boom.style.transform = 'translate(-50%,-30%) scale(3.4)'; });
+            setTimeout(() => { boom.style.opacity = '0'; }, 300); setTimeout(() => boom.remove(), 1700);
+            document.body.animate([{ transform: 'translate(0,0)' }, { transform: 'translate(-7px,4px)' }, { transform: 'translate(6px,-4px)' }, { transform: 'translate(0,0)' }], { duration: 400 });
+            shack.textContent = '🔥';
+            setTimeout(() => { shack.textContent = '🏚️'; }, 2500); setTimeout(() => { shack.textContent = '🏜️'; moveToast('🏜️ The shack has been rebuilt. Insurance did not cover rockets.'); }, 7000);
+            funEvent('💥 HOUSTON, WE HAVE A SHACK PROBLEM 💥', 3500);
+            chatBurst(['HE CRASHED INTO HIS OWN SHACK', 'what goes up', 'billionaire space program KEKW', 'the shack 😭', 'insurance claim #2'], 5, 2500);
+        }, 3050);
+    }
     function renderGarage() {
         const d = $('garageDock'); d.innerHTML = '';
         [['shack', '🏜️', 'Your Shack in the Desert', () => moveToast('🏜️ ' + pick(['The shack is quiet. The desert is quiet. Kevin cannot find you here.', 'You sit on the shack porch and think about your parses.',
             'A tumbleweed rolls by. It has better DPS than Kevin.', 'No WiFi out here. Somehow the wheel still loads.', 'Rent collected from a lizard: it paid in gold.']))],
          ['ambulance', '🚑', "Nick's Ambulance (click for siren)", driveAmbulance], ['police', '🚓', "Justin's Cop Car (click for whoop whoop)", drivePolice], ['rocket', '🚀', 'Your rocket (click to launch)', launchRocket]].forEach(([k, e, tip, fn]) => {
             if (!garage[k]) return;
-            const b = document.createElement('button'); b.textContent = e; b.title = tip;
+            const b = document.createElement('button'); b.textContent = e; b.title = tip; b.dataset.k = k;
             b.style.cssText = 'font-size:40px;line-height:1;cursor:pointer;background:none;border:none;filter:drop-shadow(0 3px 6px rgba(0,0,0,.7))';
             b.addEventListener('click', () => { fn(); b.blur(); }); d.appendChild(b);
         });
@@ -6156,8 +6218,38 @@
         document.body.classList.toggle('party-on', on);
         $('partyBtn').textContent = on ? '🪩 Stop' : '🪩 Party';
         if (on) chatBurst(['PARTY', 'club pain wheel', 'untz untz untz', 'DJ Kevin in the house', '🕺💃'], 4, 2500);
+        if (on) partyPets();
         $('partyBtn').blur();
     });
+
+    const PARTY_LINES = { murloc: ['MRGL MRGL MRGL (dancing)', 'mrglglgl! 🕺', '*murloc shuffle*'], accountant: ['I bill for dancing too.', 'This is NOT in the budget.', '*reluctant two-step*'],
+        chicken: ['BAWK BAWK BAWK (in rhythm)', '*does the chicken dance*', 'bok bok 🕺'], whelp: ['*hic* 🔥 *hic* 🔥 (on beat)', 'RAWR 🎶', '*breathes a little fire on the dance floor*'],
+        clippy: ["It looks like you're trying to dance. Would you like help?", '*paperclip worm*', 'I have been waiting 25 years for this.'] };
+    function partyPets() {
+        Object.keys(PARTY_LINES).filter(k => pets[k]).forEach((k, i) => setTimeout(() => { if (document.body.classList.contains('party-on')) petSay(k, pick(PARTY_LINES[k])); }, 600 + i * 900));
+    }
+    setInterval(() => { if (document.body.classList.contains('party-on') && !document.hidden) partyPets(); }, 9000);
+
+    // ---------- Ret Paladin Vision: everything turns cursed (ironic, since Paladins are supposed to be holy) ----------
+    const HORROR = { murloc: '🧟', accountant: '💀', chicken: '🦴', whelp: '👹', clippy: '🔪', shack: '🏚️', ambulance: '⚰️', police: '🩸', rocket: '☄️' };
+    const HORROR_LINES = { murloc: ['mrrrgl... (it is behind you)', '*wet gurgling*'], accountant: ['Your account balance... is... DEAD.', 'I have audited your soul. It is overdrawn.'],
+        chicken: ['b a w k', '*the chicken stares into your soul*'], whelp: ['*hic* 🩸', 'the Light cannot save you'], clippy: ['It looks like you are about to die. Would you like help?', 'I see you. I always see you.'] };
+    let horrorOn = false;
+    function horrorMode(ms) {
+        if (horrorOn) return; horrorOn = true;
+        const undo = [];
+        const swap = (el, txt) => { if (!el) return; const old = el.textContent; el.textContent = txt; undo.push(() => { el.textContent = old; }); };
+        Object.keys(HORROR).forEach(k => {
+            const dock = $('pet-' + k);
+            if (dock && k !== 'clippy') swap(dock.lastElementChild, HORROR[k]);
+            if (k === 'clippy' && dock) { const tn = [...dock.childNodes].find(n => n.nodeType === 3); if (tn) { const old = tn.textContent; tn.textContent = HORROR.clippy; undo.push(() => { tn.textContent = old; }); } }
+            swap(document.querySelector(`#garageDock [data-k="${k}"]`), HORROR[k]);
+        });
+        if (!$('timeshareHouse').classList.contains('hidden')) swap($('houseEmoji'), '👻');
+        Object.keys(HORROR_LINES).filter(k => pets[k]).forEach((k, i) => setTimeout(() => petSay(k, pick(HORROR_LINES[k])), 1200 + i * 1100));
+        chatBurst(['WHY IS EVERYTHING CURSED', 'the Light did this??', 'holy my ass', 'monkaS', 'ret vision is a horror game'], 3, 3000);
+        setTimeout(() => { undo.forEach(f => f()); horrorOn = false; renderGarage(); }, ms);   // redraw the garage fresh in case something changed mid-horror
+    }
 
     // ---------- Tuesday reset: Goblin IRS income tax ----------
     function checkTax() {
@@ -6214,6 +6306,11 @@
         n.querySelector('[data-buy]').addEventListener('click', () => { n.querySelector('div:nth-child(2)').innerHTML = 'Nobody has ever clicked this before. We don\'t know what to do. Closing.'; setTimeout(() => n.remove(), 1600); });
         n.querySelectorAll('[data-x]').forEach(x => x.addEventListener('click', () => n.remove()));
         setTimeout(() => n.isConnected && n.remove(), 15000);
+        if (pets.clippy) {   // Clippy can't help himself
+            setTimeout(() => petSay('clippy', "It looks like you're trying to close WinRAR. Would you like help buying a license?"), 900);
+            n.querySelector('[data-buy]').addEventListener('click', () => setTimeout(() => petSay('clippy', 'WOW. Nobody has ever done that. I need to sit down.'), 300));
+            n.querySelectorAll('[data-x]').forEach(x => x.addEventListener('click', () => petSay('clippy', 'Classic. Another winrar who will never pay.')));
+        }
     }
     function flashbang() {
         const f = document.createElement('div');
