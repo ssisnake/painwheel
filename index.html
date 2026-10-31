@@ -5936,6 +5936,8 @@
     }
     function launchRocket() {
         const shack = document.querySelector('#garageDock [data-k="shack"]');
+        // with the yacht parked out front, half the time the rocket goes there instead (and sometimes it drifts into the wheel)
+        if (store.get('painWheelHouseLevel', 0) >= 6 && !$('timeshareHouse').classList.contains('hidden') && !rocketMishap && Math.random() < 0.5) return rocketYachtCrash();
         if (garage.shack && shack) return rocketShackCrash(shack);
         const r = document.createElement('div');
         r.style.cssText = 'position:fixed;z-index:78;left:50%;bottom:-120px;font-size:110px;line-height:1;pointer-events:none;transform:translateX(-50%) rotate(-45deg);transition:bottom 4s cubic-bezier(.5,0,.9,.4)';
@@ -5949,6 +5951,93 @@
         setTimeout(() => { clearInterval(smoke); r.remove(); }, 4300);
         funEvent('🚀 LIFTOFF! Next stop: anywhere Kevin isn\'t.', 4000);
         chatBurst(['LIFTOFF', 'TO THE MOON', 'billionaire arc', 'he left the planet', 'o7 o7 o7', 'take Kevin with you'], 5, 3000);
+    }
+    // ---------- 🚀 → 🛥️ (or 🎡): the rocket misses, Nick and Justin respond to the scene ----------
+    const YACHT_CRASH_LINES = [
+        ['Justin', 'Sir, this is a no-rocket zone. It is also a no-yacht zone now.'], ['Nick', 'Good news, no farmers on board.'],
+        ['Justin', 'I need to see your pilot license. And your yacht license. And your boat-rocket license.'], ['Nick', "I'm not saying I'm happy, but I'm not NOT happy."],
+        ['Justin', "That's the most expensive fireball I've ever written a ticket for."], ['Nick', 'Do yachts count as farmers? Asking for the stats.'],
+        ['Justin', 'Gallywix is going to want the deposit back.'], ['Nick', 'Applying burn cream. To the yacht.'],
+        ['Justin', 'The vault is fine. The vault is always fine.'], ['Nick', 'I can save the swordfish. I cannot save the other swordfish.']];
+    const WHEEL_CRASH_LINES = [
+        ['Justin', 'Who rigged the rocket? ...ChAoTiC, put your hand down.'], ['Nick', "The wheel is on fire. That's... honestly normal."],
+        ['Justin', "Don't worry, the odds are still rigged. Fire can't fix that."], ['Nick', "Clear! ...no wait, that's for people."],
+        ['Justin', 'I am writing the wheel a ticket for spinning under the influence.'], ['Nick', 'Kevin is fine. Kevin was the one who aimed it.'],
+        ['Justin', 'Casimir says this is a feature.'], ['Nick', 'Stop, drop and roll. The wheel only knows how to roll.']];
+    let rocketMishap = false;
+    function rocketScene(x, lines) {   // Nick and Justin pull up from opposite sides and trade a few lines, then leave
+        const mk = (emoji, flip, from) => {
+            const el = document.createElement('div');
+            el.style.cssText = `position:fixed;z-index:79;bottom:${VEH_Y}px;left:${from}px;font-size:66px;line-height:1;pointer-events:none;transition:left 1.4s cubic-bezier(.2,.8,.3,1), opacity .8s`;
+            el.innerHTML = `<div style="display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:6px;width:max-content;max-width:min(300px,40vw);background:#fffbe6;color:#111;font-size:14px;font-weight:800;line-height:1.3;padding:5px 10px;border-radius:10px;border:2px solid #111;box-shadow:2px 2px 0 #111;white-space:normal;text-align:left"></div><div class="siren-glow" style="font-size:24px;text-align:center">🚨</div><span style="display:inline-block;${flip ? 'transform:scaleX(-1)' : ''}">${emoji}</span>`;
+            document.body.appendChild(el); return el;
+        };
+        const nick = mk('🚑', false, innerWidth + 40), justin = mk('🚓', true, -140);
+        const stopSiren = playSiren(1.6);
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+            nick.style.left = Math.min(innerWidth - 100, x + 70) + 'px'; justin.style.left = Math.max(10, x - 170) + 'px';
+        }));
+        const picked = []; while (picked.length < 3) { const l = pickFresh(lines); if (!picked.includes(l)) picked.push(l); }
+        let t = 1700;
+        picked.forEach(([who, line]) => {
+            setTimeout(() => {
+                [nick, justin].forEach(v => v.firstChild.style.display = 'none');
+                const v = who === 'Nick' ? nick : justin; v.firstChild.style.display = 'block'; v.firstChild.textContent = (who === 'Nick' ? '🚑 Nick: ' : '🚓 Justin: ') + line;
+            }, t); t += 2600;
+        });
+        setTimeout(() => {
+            stopSiren(); [nick, justin].forEach(v => v.firstChild.style.display = 'none');
+            nick.style.left = (innerWidth + 60) + 'px'; justin.style.left = '-160px';
+            setTimeout(() => { nick.remove(); justin.remove(); rocketMishap = false; }, 1600);
+        }, t + 400);
+        return t + 2000;
+    }
+    function rocketYachtCrash() {
+        rocketMishap = true;
+        const pad = document.querySelector('#garageDock [data-k="shack"]') || document.querySelector('#garageDock [data-k="rocket"]') || $('garageDock');
+        const p0 = pad.getBoundingClientRect(), sx = p0.left + p0.width / 2, sy = p0.top;
+        const house = $('houseEmoji'), h = house.getBoundingClientRect();
+        const toWheel = Math.random() < 0.35, wc = $('wheelCanvas').getBoundingClientRect();
+        const tx = toWheel ? wc.left + wc.width / 2 : h.left + h.width / 2, ty = toWheel ? Math.max(90, Math.min(innerHeight - 140, wc.top + wc.height / 2)) : h.top + h.height / 2;
+        const r = document.createElement('div'); r.textContent = '🚀';
+        r.style.cssText = `position:fixed;z-index:80;left:${sx}px;top:${sy - 70}px;font-size:80px;line-height:1;pointer-events:none;transform:translate(-50%,-50%) rotate(-45deg);transition:top 1.5s cubic-bezier(.5,0,.9,.4)`;
+        document.body.appendChild(r);
+        const smoke = setInterval(() => {
+            const s2 = document.createElement('div'), b = r.getBoundingClientRect(); s2.textContent = '💨';
+            s2.style.cssText = `position:fixed;z-index:77;left:${b.left + b.width / 2 - 20}px;top:${b.top + b.height / 2}px;font-size:40px;pointer-events:none;transition:opacity 1.4s,transform 1.4s`;
+            document.body.appendChild(s2); requestAnimationFrame(() => { s2.style.opacity = '0'; s2.style.transform = 'scale(2)'; }); setTimeout(() => s2.remove(), 1500);
+        }, 130);
+        requestAnimationFrame(() => requestAnimationFrame(() => r.style.top = '-160px'));
+        funEvent('🚀 LIFTOFF!', 1800);
+        setTimeout(() => {   // it comes back down... somewhere else
+            const ang = Math.atan2(ty - (-160), tx - sx) * 180 / Math.PI + 45;
+            r.style.transition = 'left 1.5s cubic-bezier(.4,0,.9,.6), top 1.5s cubic-bezier(.6,0,1,1), transform .6s';
+            r.style.transform = `translate(-50%,-50%) rotate(${ang}deg)`;
+            requestAnimationFrame(() => { r.style.left = tx + 'px'; r.style.top = ty + 'px'; });
+            chatBurst(toWheel ? ['uh oh', 'IT IS HEADING FOR THE WHEEL', 'NOT THE WHEEL', 'who aimed this'] : ['wrong way', 'THAT IS NOT THE SHACK', 'NOT THE YACHT', 'gps recalculating'], 3, 1200);
+        }, 1800);
+        setTimeout(() => {
+            clearInterval(smoke); r.remove(); playCrash();
+            const boom = document.createElement('div'); boom.textContent = '💥';
+            boom.style.cssText = `position:fixed;z-index:80;left:${tx}px;top:${ty}px;font-size:34px;pointer-events:none;transform:translate(-50%,-50%) scale(.4);transition:transform .35s ease-out,opacity .8s .8s`;
+            document.body.appendChild(boom); requestAnimationFrame(() => { boom.style.transform = `translate(-50%,-50%) scale(${toWheel ? 6 : 3.6})`; });
+            setTimeout(() => { boom.style.opacity = '0'; }, 300); setTimeout(() => boom.remove(), 1700);
+            document.body.animate([{ transform: 'translate(0,0)' }, { transform: 'translate(-9px,5px)' }, { transform: 'translate(8px,-5px)' }, { transform: 'translate(-4px,2px)' }, { transform: 'translate(0,0)' }], { duration: 500 });
+            let dur;
+            if (toWheel) {
+                setWheelOnFire(9);
+                funEvent('🔥 THE ROCKET HIT THE WHEEL 🔥', 4000);
+                chatBurst(['THE WHEEL IS ON FIRE', 'this is fine', 'RIGGED', 'insurance claim #3', 'Casimir did this', 'F'], 6, 2500);
+                dur = rocketScene(innerWidth / 2, WHEEL_CRASH_LINES);
+            } else {
+                const was = house.textContent; house.textContent = '🔥';
+                setTimeout(() => { house.textContent = '⚓'; }, 3200);
+                setTimeout(() => { house.textContent = was; moveToast("🛥️ The yacht has been repaired. Gallywix's insurance covered it. Somehow."); }, 11000);
+                funEvent("💥 THE ROCKET HIT GALLYWIX'S YACHT 💥", 4000);
+                chatBurst(['HE HIT THE YACHT', 'MAN OVERBOARD', 'the trophies 😭', 'insurance claim #2', 'yacht.exe has stopped working', 'not the swordfish'], 6, 2500);
+                dur = rocketScene(h.left + h.width / 2, YACHT_CRASH_LINES);
+            }
+        }, 3350);
     }
     function rocketShackCrash(shack) {
         const r0 = shack.getBoundingClientRect(), sx = r0.left + r0.width / 2, sy = r0.top;

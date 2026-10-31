@@ -30,6 +30,11 @@
     /* ambient light: transform/opacity only so it stays cheap */
     .glow { position: absolute; pointer-events: none; border-radius: 50%; will-change: opacity; }
     #chandGlow { left: 46%; top: -10%; width: 22%; height: 45%; background: radial-gradient(closest-side, rgba(253,224,71,.28), transparent); animation: flicker 4s ease-in-out infinite alternate; }
+    #sticky { position: absolute; left: 64.6%; top: 33.5%; width: 3.6%; height: 6.6%; z-index: 4; cursor: pointer; border: 0; padding: .3cqw .25cqw;
+        background: linear-gradient(170deg, #fef08a, #fde047 70%, #facc15); color: #3b2210; transform: rotate(-7deg); box-shadow: .15cqw .3cqw .5cqw rgba(0,0,0,.55);
+        font-family: "Comic Sans MS", "Comic Neue", cursive; font-size: .62cqw; font-weight: 700; line-height: 1.15; text-align: left; transition: transform .15s; }
+    #sticky::before { content: ""; position: absolute; left: 30%; top: -.35cqw; width: 40%; height: .7cqw; background: rgba(255,255,255,.45); transform: rotate(3deg); }
+    #sticky:hover { transform: rotate(-3deg) scale(1.15); }
     #hatchGlow { left: 74%; top: 74%; width: 26%; height: 30%; background: radial-gradient(closest-side, rgba(45,212,191,.32), transparent); animation: breathe 3.2s ease-in-out infinite alternate; }
     @keyframes flicker { 0% { opacity: .55 } 40% { opacity: .9 } 55% { opacity: .7 } 100% { opacity: 1 } }
     @keyframes breathe { from { opacity: .35 } to { opacity: 1 } }
@@ -136,6 +141,7 @@
     <div id="cabNav"><button id="pgPrev" aria-label="Previous shelf page">◀</button><div id="cabCount"></div><button id="pgNext" aria-label="Next shelf page">▶</button></div>
 
     <!-- hotspots (percent of the room image) -->
+    <button id="sticky" title="A sticky note">combo:<br><b style="font-size:1.3em">1234</b><br>—Reb</button>
     <button class="hs round" id="hsVault" data-label="🏦 Guild Bank Vault" style="left:63.2%;top:24%;width:20.4%;height:51%"></button>
     <button class="hs below" id="hsHatch" data-label="⛓️ ???" style="left:77%;top:81%;width:21%;height:17.5%"></button>
     <button class="hs" id="hsBar" data-label="🥇 Solid Gold Bar" style="left:61.7%;top:86.2%;width:6.1%;height:9.6%"></button>
@@ -368,6 +374,8 @@
         $('vNote').textContent = pick(NOTES.slice(1));
         renderIou(); renderGold();
     }
+    $('sticky').addEventListener('click', () => { sfx.click(); say('📝 ' + pick(['"combo is 1-2-3-4. do NOT tell kevin. —Reb"', 'On the back of the note: "kevin if ur reading this the combo is NOT 1234"',
+        'The note is held on with chewing gum. The gum is also Reb\'s.', 'Reb wrote this in crayon. Kevin stole his pens.']), 4500); });
     $('hsVault').addEventListener('click', () => { sfx.clunk(); entered = ''; drawDial(); $('vaultMsg').textContent = ''; showVault(); if (!vaultOpen) say('📝 ' + NOTES[0], 5000); open('vModal'); });
     document.querySelectorAll('[data-dep]').forEach(b => b.addEventListener('click', () => {
         const amt = Math.floor(gold * +b.dataset.dep);
