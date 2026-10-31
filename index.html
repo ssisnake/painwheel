@@ -443,6 +443,10 @@
         <div><div class="text-[10px] font-black uppercase tracking-widest text-sky-300">Guild announcement</div><div id="announceText" class="text-sm font-bold whitespace-pre-line"></div></div>
         <button id="announceClose" class="text-sky-300 hover:text-white text-sm font-bold cursor-pointer">✕</button>
     </div>
+    <div id="guildAlert" style="z-index: 76; top: 132px; right: 16px; max-width: min(380px, calc(100vw - 32px));" class="fixed hidden items-start gap-2 px-3.5 py-2.5 rounded-xl border-2 border-violet-400 bg-violet-950/95 text-violet-50 shadow-2xl">
+        <div class="text-lg leading-none">📣</div>
+        <div><div class="text-[10px] font-black uppercase tracking-widest text-violet-300">Guild alert</div><div id="guildAlertText" class="text-sm font-bold"></div></div>
+    </div>
     <div id="questTracker" style="z-index: 57; right: 16px; top: 180px; width: 230px;" class="fixed hidden flex-col text-right select-none">
         <div style="color:#ffd100;font-weight:900;font-size:14px;text-shadow:0 1px 2px #000">CLUCK!</div>
         <div id="questObj" style="color:#fff;font-size:12px;text-shadow:0 1px 2px #000;line-height:1.4"></div>
@@ -3298,13 +3302,13 @@
         }
 
         // random event: Kevin Takeover (1 in 75 spins) paints every slice Kevin for this spin
-        if (Math.random() < 1 / 75) {
+        if (Math.random() < 1 / 75 || curseTake('kevin')) {
             setKevinTakeover(true);
             funEvent('🤡 KEVIN HAS TAKEN OVER THE WHEEL 🤡', 3500);
             chatBurst(['KEVIN TAKEOVER', 'ITS ALL KEVIN', 'KEVIN KEVIN KEVIN', 'monkaS', 'the wheel is compromised', 'kevinpocalypse'], 6, 3000);
         }
         // random event: Wrong Spec (1 in 40 fair spins) sends the wheel backwards
-        if (target === null && Math.random() < 1 / 40) { distance = -distance; funEvent('🔄 WRONG SPEC! The wheel is spinning backwards.'); }
+        if (target === null && (Math.random() < 1 / 40 || curseTake('wrongspec'))) { distance = -distance; funEvent('🔄 WRONG SPEC! The wheel is spinning backwards.'); }
         // a fair landing on AOTC only sticks 1 time in 1,000; otherwise it slides onto the next slice
         if (target === null && slices[getActiveSliceIndex(currentRotation + distance)].type === "AOTC" && Math.random() >= AOTC_KEEP) distance += Math.sign(distance) * SLICE_ANGLE;
         if (turboNext) { turboNext = false; distance += Math.sign(distance) * 14 * Math.PI * 2; }
@@ -4979,6 +4983,7 @@
     function chat(msg, who) {
         if (!chatLog) return;
         const n = who ? CHAT_NAMES.find(x => x[0] === who) || [who, '#e2e8f0'] : pick(CHAT_NAMES);
+        if (Date.now() < (window.__murlocUntil || 0)) msg = pick(['Mrglglgl!', 'mrgl mrgl', 'MRGLGLGLGL', 'Aaaaaughibbrgubugbugrguburgle!', 'mrrrgl?', 'blub blub']);
         const d = document.createElement('div'); d.className = 'chat-line text-slate-200';
         const a = document.createElement('span'); a.className = 'font-bold'; a.style.color = n[1]; a.textContent = n[0];
         d.append(a, document.createTextNode(': ' + msg));
@@ -5318,7 +5323,10 @@
     }
     function refreshGuild() {
         if (!LEADERBOARD_URL || document.hidden) return;
-        fetch(LEADERBOARD_URL + '?action=board').then(r => r.json()).then(d => {
+        fetch(LEADERBOARD_URL + '?action=board' + (playerName ? '&name=' + encodeURIComponent(playerName) : '')).then(r => r.json()).then(d => {
+            if (Array.isArray(d.players)) guildPlayers = d.players.map(p => p.name);
+            if (Array.isArray(d.myCurses)) d.myCurses.forEach(applyCurse);
+            if (Array.isArray(d.events)) guildAlerts(d.events);
             if (d.boss) { $('bossBar').classList.remove('hidden'); renderBoss(d.boss); }
             if ('announce' in d) showAnnouncement(d.announce);
             if (d.bounty && d.bounty.type) {
@@ -5762,8 +5770,9 @@
 
     // ---------- the shop panel ----------
     const SHOP_TABS = [['themes', '🎨 Themes'], ['cosmetics', '📍 Cosmetics'], ['consumables', '🧪 Consumables'], ['pets', '🐾 Pets'],
-        ['garage', '🚗 Garage'], ['scratch', '🎟️ Scratch-offs'], ['lobby', '🇺🇸 Lobbying']];
+        ['garage', '🚗 Garage'], ['curses', '🧿 Curses'], ['scratch', '🎟️ Scratch-offs'], ['lobby', '🇺🇸 Lobbying']];
     let shopTab = 'themes';
+    var guildPlayers = [];
     function shopRow(icon, name, desc, btnLabel, onClick, state) {   // state: 'buy' | 'owned' | 'equip' | 'equipped'
         const row = document.createElement('div');
         row.className = 'flex items-center justify-between gap-2 bg-slate-950/60 border border-slate-700 rounded-lg px-3 py-1.5 text-sm';
@@ -5865,6 +5874,30 @@
             add(shopRow('🚀', 'Gallywix Rocket', 'For when you\'ve made it (10 billion gold). Launches on purchase and every time you click it.', garage.rocket ? 'Owned ✓' : 'Buy: 10,000,000,000g', () => {
                 if (!spend(10000000000, 'the rocket')) return; garage.rocket = true; store.set('painWheelGarage', garage); renderGarage(); unlock('rocket'); closeShop(); launchRocket(); sendEvent({ k: 'rocket' }); renderShop();
             }, garage.rocket ? 'owned' : 'buy'));
+        } else if (shopTab === 'curses') {
+            const note = document.createElement('div'); note.className = 'text-xs text-slate-300';
+            note.textContent = 'Curse a guildmate. It posts in Discord, pops up on everyone\'s wheel, and hits them the next time their wheel checks in (within a minute if they have it open). All curses are cosmetic: nobody loses gold or stats.';
+            add(note);
+            if (!LEADERBOARD_URL || !playerName) { add(shopHead('Curses need the guild wheel and a player name.')); }
+            else {
+                const sel = document.createElement('select'); sel.id = 'curseTarget';
+                sel.className = 'bg-slate-950 border border-slate-700 rounded px-2 py-1.5 text-sm text-slate-200 cursor-pointer';
+                const others = guildPlayers.filter(n => n.toLowerCase() !== playerName.toLowerCase()).sort((a, b) => a.localeCompare(b));
+                if (!others.length) { const o = document.createElement('option'); o.textContent = 'Loading guildmates...'; o.value = ''; sel.appendChild(o); refreshGuild(); setTimeout(() => shopTab === 'curses' && renderShop(), 2500); }
+                others.forEach(n => { const o = document.createElement('option'); o.value = n; o.textContent = n; sel.appendChild(o); });
+                if (renderShop.lastCurseTarget && others.includes(renderShop.lastCurseTarget)) sel.value = renderShop.lastCurseTarget;
+                sel.addEventListener('change', () => renderShop.lastCurseTarget = sel.value);
+                const w = document.createElement('div'); w.className = 'flex items-center gap-2'; w.innerHTML = '<span class="text-xs font-bold text-slate-400">Victim:</span>'; w.appendChild(sel); add(w);
+                Object.entries(CURSES).forEach(([id, c]) => add(shopRow(c.e, c.name, c.desc, 'Curse: ' + fmt(c.cost), () => {
+                    const target = $('curseTarget').value; if (!target) { shopMsg('Pick a victim first.'); return; }
+                    if (Date.now() - (renderShop.lastCurse || 0) < 30000) { shopMsg('Your hex is still on cooldown (30s). Patience, warlock.'); return; }
+                    if (!spend(c.cost, c.name)) return;
+                    renderShop.lastCurse = Date.now(); renderShop.lastCurseTarget = target;
+                    sendEvent({ k: 'curse', target, curse: id });
+                    shopMsg(`🧿 ${target} has been hit with the ${c.name}. Discord has been informed.`);
+                    chatBurst(['CURSED', 'hex incoming', 'warlock behavior', `rip ${target}`, 'monkaS'], 3);
+                })));
+            }
         } else if (shopTab === 'scratch') {
             add(shopHead('Click a ticket to buy it, then Scratch All'));
             const g = document.createElement('div'); g.className = 'grid grid-cols-2 gap-2';
@@ -6156,7 +6189,7 @@
         const c = wildChicken; c.style.transitionDuration = '0s'; c.style.left = c.getBoundingClientRect().left + 'px';
         setTimeout(() => {
             c.remove(); wildChicken = null;
-            pets.chicken = true; store.set('painWheelPets', pets); renderPets(); setCluck(3); unlock('cluck');
+            pets.chicken = true; store.set('painWheelPets', pets); renderPets(); setCluck(3); unlock('cluck'); sendEvent({ k: 'cluck' });
             launchConfetti(['🐔', '🥚', '🌾'], ['#fde68a', '#ffffff', '#facc15'], 0.6, 0.6);
             chatBurst(['CLUCK COMPLETE', 'CHICKEN POG', 'best quest in the game', 'bawk bawk', 'he did the chicken quest'], 4);
             showQuest('done');
@@ -6266,6 +6299,57 @@
         if (STOCKS.some(st => st.land && st.land[type])) { store.set('painWheelStockPrices2', exPrice); exRender(); }
     }
     exRender();
+
+    // ---------- Curse a Guildmate (cosmetic only) ----------
+    const CURSES = {
+        kevin:     { e: '🤡', name: 'Curse of Kevin', cost: 50000, desc: 'Their next 3 spins look like every slice is Kevin. (It still lands where it lands.)' },
+        wrongspec: { e: '🔄', name: 'Curse of the Wrong Spec', cost: 50000, desc: 'Their next 2 spins go backwards.' },
+        murloc:    { e: '🐸', name: 'Curse of the Murloc', cost: 50000, desc: 'Their stream chat only speaks Murloc for 5 minutes.' },
+        oceanic:   { e: '🦘', name: 'Curse of Oceanic', cost: 50000, desc: 'Their whole screen goes upside down for 10 seconds.' },
+        retvision: { e: '👓', name: 'Curse of Ret Vision', cost: 50000, desc: 'Blurry, gray and confused for 10 seconds. Like a real Ret Paladin.' },
+        liver:     { e: '🥃', name: "Curse of Reb's Liver", cost: 50000, desc: "Reb's liver takes a 50% hit on their wheel." }
+    };
+    function curseTake(kind) {   // spends one charge of a pending spin curse
+        const c = store.get('painWheelCursed', {}); if (!(c[kind] > 0)) return false;
+        c[kind]--; store.set('painWheelCursed', c); return true;
+    }
+    function applyCurse(cu) {
+        const c = CURSES[cu.c]; if (!c) return;
+        const from = String(cu.by || 'Someone').slice(0, 20);
+        const pend = store.get('painWheelCursed', {});
+        if (cu.c === 'kevin') pend.kevin = (pend.kevin || 0) + 3;
+        else if (cu.c === 'wrongspec') pend.wrongspec = (pend.wrongspec || 0) + 2;
+        else if (cu.c === 'murloc') window.__murlocUntil = Date.now() + 5 * 60000;
+        else if (cu.c === 'oceanic') setTimeout(() => runAdEffect('flip'), 2500);
+        else if (cu.c === 'retvision') setTimeout(() => runAdEffect('retvision'), 2500);
+        else if (cu.c === 'liver') setTimeout(() => hurtLiver(50, `Cursed by ${from}`), 2500);
+        store.set('painWheelCursed', pend);
+        funEvent(`🧿 ${from.toUpperCase()} CURSED YOU: ${c.name.toUpperCase()} ${c.e}`, 5500);
+        chatBurst([`${from} cursed you KEKW`, 'CURSED', 'hexed', 'get rekt', 'revenge time?'], 4, 2500);
+    }
+
+    // ---------- guild alerts: big moments from anyone in the guild pop up on everyone's wheel ----------
+    let alertQueue = [], alertShowing = false;
+    function guildAlerts(events) {
+        let seen = store.get('painWheelAlertSeen', -1);
+        const maxId = events.reduce((m, e) => Math.max(m, +e.id || 0), 0);
+        if (seen < 0) {   // first visit: only show the last 10 minutes
+            seen = Math.max(0, ...events.filter(e => Date.now() - new Date(e.t).getTime() > 10 * 60000).map(e => +e.id || 0));
+        }
+        events.filter(e => +e.id > seen).sort((a, b) => a.id - b.id).slice(-4)
+            .filter(e => !playerName || ![e.n, e.v].some(x => String(x || '').toLowerCase() === playerName.toLowerCase()))
+            .forEach(e => alertQueue.push(String(e.x || '')));
+        store.set('painWheelAlertSeen', Math.max(seen, maxId));
+        if (!alertShowing) nextAlert();
+    }
+    function nextAlert() {
+        const el = $('guildAlert'), x = alertQueue.shift();
+        if (!x) { alertShowing = false; el.classList.add('hidden'); el.classList.remove('flex'); return; }
+        alertShowing = true; $('guildAlertText').textContent = x;
+        el.classList.remove('hidden'); el.classList.add('flex');
+        el.animate([{ transform: 'translateX(40px)', opacity: 0 }, { transform: 'translateX(0)', opacity: 1 }], { duration: 300, easing: 'ease-out' });
+        setTimeout(nextAlert, 6000);
+    }
 
     // ---------- start-up ----------
     // "add two zeros to everything in the shop so they actually have to work for it"
