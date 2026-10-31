@@ -3490,6 +3490,11 @@
         { id: 'aipac3',     name: 'Bought a Committee Seat',  desc: 'Reach the Silver lobbying tier (1,000g).' },
         { id: 'aipac4',     name: 'Bought a Senator',         desc: 'Reach the Gold lobbying tier (1,000,000g).' },
         { id: 'aipac5',     name: 'Bought Congress',          desc: 'Reach the Platinum lobbying tier (1,000,000,000g).' },
+        { id: 'aipac6',     name: 'Bought the Supreme Court', desc: 'Reach the Diamond lobbying tier (1 trillion gold).' },
+        { id: 'aipac7',     name: 'Bought the United Nations', desc: 'Reach the Obsidian lobbying tier (1 quadrillion gold).' },
+        { id: 'aipac8',     name: 'Bought the Moon',          desc: 'Reach the Mythic lobbying tier (1 quintillion gold).' },
+        { id: 'aipac9',     name: 'Bought Democracy (Final Sale)', desc: 'Reach the Ascended lobbying tier (1 sextillion gold).' },
+        { id: 'aipac10',    name: 'You ARE the Lobby',        desc: 'Reach the Shadow Government lobbying tier (1 septillion gold).' },
         { id: 'rocket',     name: 'Billionaire Space Race',   desc: 'Buy the 10,000,000,000g rocket.' },
         { id: 'weewoo',     name: 'Wee-Woo',                  desc: "Buy Nick's ambulance." },
         { id: 'golddonut',  name: 'To Protect and Serve',     desc: "Find Justin's Golden Chocolate Donut." },
@@ -5941,7 +5946,9 @@
 
     // ---------- AIPAC lobbying ----------
     const AIPAC_TIERS = [[1, 'Basic', 'aipac1', '#94a3b8'], [100, 'Bronze', 'aipac2', '#d97706'], [1000, 'Silver', 'aipac3', '#cbd5e1'],
-        [1000000, 'Gold', 'aipac4', '#facc15'], [1000000000, 'Platinum', 'aipac5', '#e0f2fe']];
+        [1000000, 'Gold', 'aipac4', '#facc15'], [1000000000, 'Platinum', 'aipac5', '#e0f2fe'],
+        [1e12, 'Diamond', 'aipac6', '#67e8f9'], [1e15, 'Obsidian', 'aipac7', '#a78bfa'], [1e18, 'Mythic', 'aipac8', '#f472b6'],
+        [1e21, 'Ascended', 'aipac9', '#fb923c'], [1e24, 'Shadow Government', 'aipac10', '#ef4444']];
     let aipacTotal = store.get('painWheelAipac', 0);
     const aipacTier = () => AIPAC_TIERS.filter(t => aipacTotal >= t[0]).pop() || null;
     const AIPAC_QUIPS = ['Your representative will now return your calls.', 'A senator just learned your name. He already forgot it.',
@@ -6221,10 +6228,10 @@
             const box = document.createElement('div'); box.className = 'rounded-lg border border-slate-700 bg-slate-950/70 p-3 text-sm';
             box.innerHTML = '<div class="font-black text-lg text-sky-200">🇺🇸 Pain Wheel Lobbying Office</div><div class="text-slate-300 text-xs mt-1">Donate to AIPAC and climb the lobbyist tiers. Donations are repeatable and count on the guild Top Donors board. You will receive nothing in return except influence (none) and a badge (small).</div><div class="mono mt-2"></div><div class="text-xs text-slate-400 mt-1"></div>';
             box.children[2].textContent = `Lifetime donated: ${fmt(aipacTotal)}  ·  Tier: ${t ? t[1] : 'none (you are a regular citizen)'}`;
-            box.children[3].textContent = next ? `Next tier: ${next[1]} at ${fmt(next[0])} (${fmt(next[0] - aipacTotal)} to go)` : 'Max tier. You own Congress. Please stop.';
+            box.children[3].textContent = next ? `Next tier: ${next[1]} at ${fmt(next[0])} (${fmt(next[0] - aipacTotal)} to go)` : 'Max tier. You ARE the shadow government now. Please, for the love of god, stop.';
             add(box);
             const g = document.createElement('div'); g.className = 'flex flex-wrap gap-1.5 mt-2';
-            [1, 100, 1000, 10000, 1000000, 1000000000].forEach(a => {
+            [1, 100, 1000, 10000, 1000000, 1e9, 1e12, 1e15, 1e18, 1e21, 1e24].forEach(a => {
                 const b = document.createElement('button'); b.className = 'px-2.5 py-1 rounded bg-sky-800 hover:bg-sky-700 text-white text-xs font-bold cursor-pointer';
                 b.textContent = 'Donate ' + fmt(a); b.addEventListener('click', () => donate(a)); g.appendChild(b);
             });
