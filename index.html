@@ -3450,6 +3450,9 @@
         { id: 'spins250',   name: 'Seek Help',                desc: 'Spin 250 times.' },
         { id: 'spins500',   name: 'Touch Grass',              desc: 'Spin 500 times.' },
         { id: 'spins1000',  name: 'The Wheel Is My Life',     desc: 'Spin 1,000 times.' },
+        { id: 'spins2000',  name: 'Have You Considered Therapy', desc: 'Spin 2,000 times.' },
+        { id: 'spins5000',  name: 'The Wheel Spins You Now',  desc: 'Spin 5,000 times.' },
+        { id: 'spins10000', name: 'Ascended Degenerate',      desc: 'Spin 10,000 times. Kevin is proud of you.' },
         { id: 'kevin10',    name: 'Kevin Incarnate',          desc: 'Land on Kevin 10 times in a row.' },
         { id: 'murderrow',  name: "I'm Not a Rat",            desc: 'Take the Murder Row port.' },
         { id: 'mash',       name: 'Incoming Wounded',         desc: 'Land on M*A*S*H.' },
@@ -3537,7 +3540,7 @@
         if (stats.kromSeen.length >= 4) unlock('kromall');
         if (Object.keys(stats.byType).length >= 40) unlock('collector');
         const total = Math.max(stats.spins, allTimeSpins);   // old spins count too
-        [[10, 'spins10'], [25, 'spins25'], [50, 'spins50'], [100, 'spins100'], [250, 'spins250'], [500, 'spins500'], [1000, 'spins1000']]
+        [[10, 'spins10'], [25, 'spins25'], [50, 'spins50'], [100, 'spins100'], [250, 'spins250'], [500, 'spins500'], [1000, 'spins1000'], [2000, 'spins2000'], [5000, 'spins5000'], [10000, 'spins10000']]
             .forEach(([n, id]) => { if (total >= n) unlock(id); });
     }
     function renderStats() {
