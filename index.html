@@ -450,6 +450,7 @@
             </div>
         </div>
     </div>
+    <div id="retVisionFx" aria-hidden="true" style="display:none;position:fixed;inset:0;z-index:56;pointer-events:none;backdrop-filter:grayscale(.9) blur(.6px) contrast(.9);-webkit-backdrop-filter:grayscale(.9) blur(.6px) contrast(.9)"></div>
     <div id="partyLights" aria-hidden="true"><div class="beam b1"></div><div class="beam b2"></div><div class="beam b3"></div><div class="ball">🪩</div></div>
     <div id="garageDock" style="z-index: 61; left: 16px; bottom: 12px;" class="fixed flex items-end gap-2"></div>
     <div id="aipacBadge" style="z-index: 55; right: 16px; bottom: 12px; background: rgba(2,6,23,.88);" class="fixed hidden px-2.5 py-1 rounded-md border-2 text-[11px] font-black text-right leading-tight select-none"></div>
@@ -4532,6 +4533,12 @@
             ['🚗 THE GUILD HAS ARRIVED. ALL 40 OF THEM. IN ONE CAR.', '🎈 CLUSSY\'S BIRTHDAY PARTY SERVICES: NOW WITH 100% MORE HONK'],
             ['CLOWN CAR SEEN LEAVING THE RAID. IT WAS THE WHOLE RAID.', 'HONK HONK SAYS RAID LEADER. NOBODY DISAGREES.'],
             ['HONK HONK', 'EVERYONE GET IN']),
+        shopTheme('retvision', 'Ret Paladin Vision 👓', 25000, 'joke', 'rgba(100,116,139,0.3)', 'rgba(71,85,105,0.3)', '#94a3b8', ['👓 ', ' 🔨'],
+            [['#334155', '👓', '🔨', '#cbd5e1'], ['#1e293b', '❓', '👓', '#e2e8f0']], '👓 Kevin?', ['👓', '❓', '🔨'],
+            'Blurry, Gray & Confused Decision Engine • This Is How Ret Sees The Raid',
+            ['👓 RET PALADIN VISION™: NOW PERMANENT. WE ARE SO SORRY.', '❓ WAS THAT A MECHANIC? NOBODY KNOWS. KEEP PRESSING BUTTONS.'],
+            ['RET PALADIN ASKS WHICH BOSS THIS IS. IT IS THE SAME BOSS FROM LAST WEEK.', 'LOCAL PALADIN PRESSES DIVINE SHIELD. FEELS SAFE. IS STANDING IN FIRE.'],
+            ['WHERE AM I', 'IS THIS THE BOSS?']),
         shopTheme('eightbit', '8-Bit Forever 👾', 25000, 'joke', 'rgba(34,197,94,0.22)', 'rgba(168,85,247,0.22)', '#4ade80', ['👾 ', ' 🕹️'],
             [['#052e16', '👾', '🕹️', '#86efac'], ['#3b0764', '🕹️', '👾', '#e9d5ff']], '👾 KEVIN', ['👾', '🕹️'],
             '8-Bit Decision Engine • Press Start To Lose',
@@ -4613,6 +4620,8 @@
     function applyTheme() {
         const th = currentTheme();
         activeThemeId = th ? th.id : null;
+        const rv = $('retVisionFx'); if (rv) rv.style.display = activeThemeId === 'retvision' ? 'block' : 'none';
+        if (window.syncRetVisionHorror) window.syncRetVisionHorror();
         document.body.style.backgroundImage = th ? th.tint : '';
         document.body.style.backgroundAttachment = 'fixed';
         $('painWord').style.color = th ? th.pain : '';
@@ -6253,6 +6262,23 @@
     const HORROR_LINES = { murloc: ['mrrrgl... (it is behind you)', '*wet gurgling*'], accountant: ['Your account balance... is... DEAD.', 'I have audited your soul. It is overdrawn.'],
         chicken: ['b a w k', '*the chicken stares into your soul*'], whelp: ['*hic* 🩸', 'the Light cannot save you'], clippy: ['It looks like you are about to die. Would you like help?', 'I see you. I always see you.'] };
     let horrorOn = false;
+    // the permanent Ret Paladin Vision theme keeps everything in horror mode
+    function applyHorrorIcons() {
+        Object.keys(HORROR).forEach(k => {
+            const dock = $('pet-' + k);
+            if (dock && k !== 'clippy' && dock.lastElementChild) dock.lastElementChild.textContent = HORROR[k];
+            if (k === 'clippy' && dock) { const tn = [...dock.childNodes].find(n => n.nodeType === 3); if (tn) tn.textContent = HORROR.clippy; }
+            const g = document.querySelector(`#garageDock [data-k="${k}"]`); if (g) g.textContent = HORROR[k];
+        });
+    }
+    let retVisionWasOn = false;
+    window.syncRetVisionHorror = () => {
+        const on = activeThemeId === 'retvision';
+        if (on) applyHorrorIcons();
+        else if (retVisionWasOn && !horrorOn) { renderPets(); renderGarage(); }
+        retVisionWasOn = on;
+    };
+    setInterval(() => { if (activeThemeId === 'retvision' && !horrorOn) applyHorrorIcons(); }, 3000);   // keeps new pets/cars cursed too
     function horrorMode(ms) {
         if (horrorOn) return; horrorOn = true;
         const undo = [];
