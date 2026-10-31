@@ -648,7 +648,7 @@
             <!-- $KNOB stock ticker -->
             <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl">
                 <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                    <span>📈 Guild Stocks · 🥃 $KNOB Knob Creek Holdings</span>
+                    <span>📈 Stonks · 🥃 $KNOB Knob Creek Holdings</span>
                     <span class="flex items-center gap-1.5 text-[10px] text-red-400"><span class="w-1.5 h-1.5 rounded-full bg-red-500 ad-blink"></span>LIVE</span>
                 </div>
                 <div class="flex items-center justify-between gap-3">
@@ -668,8 +668,12 @@
                     <button id="knobBuy" class="px-2 py-1 rounded bg-emerald-700 hover:bg-emerald-600 text-white font-bold cursor-pointer">Buy 1</button>
                     <button id="knobBuy10" class="px-2 py-1 rounded bg-emerald-700 hover:bg-emerald-600 text-white font-bold cursor-pointer">Buy 10</button>
                     <button id="knobBuy100" class="px-2 py-1 rounded bg-emerald-800 hover:bg-emerald-700 text-white font-bold cursor-pointer">Buy 100</button>
-                    <button id="knobSell1" class="px-2 py-1 rounded bg-slate-700 hover:bg-slate-600 text-white font-bold cursor-pointer">Sell 1</button>
-                    <button id="knobSell" class="px-2 py-1 rounded bg-slate-700 hover:bg-slate-600 text-white font-bold cursor-pointer">Sell all</button>
+                    <button data-ks="1" class="px-2 py-1 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#475569">Sell 1</button>
+                    <button data-ks="10" class="px-2 py-1 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#475569">10</button>
+                    <button data-ks="100" class="px-2 py-1 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#475569">100</button>
+                    <button data-ks="1000" class="px-2 py-1 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#475569">1K</button>
+                    <button data-ks="10000" class="px-2 py-1 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#475569">10K</button>
+                    <button data-ks="all" class="px-2 py-1 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#475569">All</button>
                     <span id="knobHold" class="text-slate-400 mono truncate">You own 0 shares</span>
                 </div>
                 <div class="mt-3 pt-3 border-t border-slate-800">
@@ -1613,6 +1617,9 @@
         "💈 AXAZON'S RET PALADIN BARBERSHOP: WE CUT HAIR, NOT DPS. THAT'S BLIZZARD'S JOB.",
         "👏 THE CLAPPER 2: CLAP ONCE, LIGHTS OFF. CLAP TWICE, CHAOTIC SWITCHES ALTS.",
         "🕺 SIGMASCOURGE'S 4 AM AEROBICS: LEG WARMERS, OBLITERATE, REPEAT",
+        "💳 GOBLIN EXPRESS PLATINUM: YOU'RE PRE-APPROVED! WATCH YOUR POP-UPS FOR YOUR PERSONAL OFFER. 400% APR. NO TAKE-BACKS.",
+        "💳 WHY PAY WITH GOLD YOU HAVE WHEN YOU CAN PAY WITH GOLD YOU DON'T? GOBLIN EXPRESS. MEMBERSHIP HAS ITS PENALTIES.",
+        "💳 GOBLIN EXPRESS: DON'T LEAVE THE GUILD HALL WITHOUT IT. (YOU CAN'T. WE HAVE YOUR HEARTHSTONE.)",
         "📢 PUBLIC SERVICE ANNOUNCEMENT: LISA IS NOT AXAZON'S SISTER. SHE IS HIS WIFE. DNA CONFIRMS 0% SIBLING. PLEASE STOP ASKING IN DISCORD."
     ];
 
@@ -1738,6 +1745,9 @@
         "HEALTH: BIBLEHUMPING'S FINGER DOING GREAT; REPORTEDLY 'MORE ACTIVE THAN SOME RAIDERS'",
         "SPORTS: KROM SELLS 400TH AOTC CARRY; BUYER WAS ALSO KEVIN",
         "LOCAL: PLATEMAGE CORRECTS STRANGER: 'HOLY PRIEST.' STRANGER HAD NOT SPOKEN.",
+        "FINANCE: GOBLIN EXPRESS APPROVES KEVIN FOR A CREDIT CARD; ANALYSTS 'HORRIFIED BUT NOT SURPRISED'",
+        "CONSUMER ALERT: GOBLIN EXPRESS 'REWARDS POINTS' REVEALED TO BE ADDITIONAL DEBT",
+        "LOCAL: MAN BUYS SCRATCH-OFF ON HIS GOBLIN EXPRESS, WINS, STILL OWES MORE THAN HE WON",
         "WARCRAFT LOGS RECEIVES 'ULAKEK TAKE 123456789'; SERVER FANS NOW SPINNING AT FULL SPEED",
         "SCIENTISTS STILL UNABLE TO TYPE CHÅÓTÌC'S NAME; INVITES SENT TO 'CHAOTIC' ACCIDENTALLY RECRUIT 4 GNOMES",
         "RET PALADIN POPULATION REACHES 3; RAID LEADER DECLARES A STATE OF EMERGENCY",
@@ -3675,6 +3685,7 @@
         { id: 'brickphone', name: 'Car Phone Money',          desc: "Buy Vince's 1980s brick phone." },
         { id: 'finger',     name: 'Pour One Out',             desc: "Lay Biblehumping's Finger to rest on the SPIN button." },
         { id: 'voodoo',     name: 'Dark Arts Degree',         desc: 'Get the Kevin Voodoo Doll from a cursed golden cookie.', secret: true, secretName: true },
+        { id: 'goblincard', name: 'Pre-Approved',             desc: 'Sign up for the Goblin Express card from a 2 AM pop-up ad.' },
         { id: 'cluck',      name: 'CLUCK!',                   desc: 'Complete the Westfall chicken\'s quest.' },
         { id: 'clippy',     name: "It Looks Like You're Adopting a Paperclip", desc: 'Find and adopt the secret pet.', secret: true, secretName: true }
     ];
@@ -5000,6 +5011,9 @@
         { id: 'aotc-carry', theme: 'gold', effect: 'aotccarry', header: "🏆 KROM'S AOTC CARRY SERVICE 🏆", body: "Why earn it like a guild when you can BUY it like a GM? Krom did it, and he only lost every single raider. Now you can too. Everyone will know. Everyone.", primary: '💳 DO A KROM (UNLOCK IN SHOP)', reply: "Krom's AOTC Carry is now in the Shop (Consumables → Black market). Discord will be told when you buy it. :)", close: 'I have dignity (unlike Krom)' },
         { id: 'kanarenew', theme: 'vip', header: '📺 YOUR KANA+ PREMIUM HAS EXPIRED', body: 'We noticed you have been enjoying ad-free spinning. That was a mistake on our part. Renew now and the brooding demon hunters return, ad-free!', primary: 'RENEW (1,000,000g IN THE SHOP)', reply: 'Renewal is in the Shop → Consumables. We will be waiting. Right here. In this ad.', close: 'I like ads now' }
     );
+    GEMINI_ADS.push(
+        { id: 'goblincard', theme: 'gold', effect: 'goblincard', header: "💳 YOU'RE PRE-APPROVED: GOBLIN EXPRESS PLATINUM", body: 'No credit check! No income check! No pulse check! Buy anything in the shop today and pay later at a low, low 400% APR. Your credit limit is set personally by Gallywix, based on vibes.', primary: 'APPLY NOW (ALREADY APPROVED)', close: 'I enjoy owning my soul', reply: 'APPROVED! Your card is in the mail. The mail is a goblin. He is already behind you.' }
+    );
     GEMINI_ADS.forEach(a => {
         const st = AD_STYLES[a.theme];
         POPUP_ADS.push({ id: a.id, html: `
@@ -5019,6 +5033,7 @@
     function runAdEffect(fx) {
         const root = document.documentElement;
         if (fx === 'freespin') { if (!isSpinning) triggerSpin(); }
+        else if (fx === 'goblincard') getGoblinCard();
         else if (fx === 'turbo') { turboNext = true; moveToast('⚡ Next spin is OVERCLOCKED. Brace yourself.'); }
         else if (fx === 'flip') {
             root.style.transition = 'transform 0.9s ease-in-out'; root.style.transform = 'rotate(180deg)';
@@ -5378,16 +5393,14 @@
     $('knobBuy').addEventListener('click', () => buyKnob(1));
     $('knobBuy10').addEventListener('click', () => buyKnob(10));
     $('knobBuy100').addEventListener('click', () => buyKnob(100));
-    $('knobSell1').addEventListener('click', () => {
-        if (!knobShares) return;
-        const got = Math.round(knobNow); knobShares--; store.set('painWheelKnobShares', knobShares); setGold(gold + got);
-        $('knobNews').textContent = `💸 Sold 1 share for ${got.toLocaleString()}g.`;
-    });
-    $('knobSell').addEventListener('click', () => {
-        if (!knobShares) return;
-        const got = Math.round(knobShares * knobNow); knobShares = 0; store.set('painWheelKnobShares', 0); setGold(gold + got);
-        $('knobNews').textContent = `💸 Sold everything for ${got.toLocaleString()}g.`;
-    });
+    function sellKnob(n) {   // sells n shares, or everything you have if you own fewer than n
+        if (!knobShares) { $('knobNews').textContent = '📉 You own 0 shares of $KNOB. Reb is disappointed.'; return; }
+        n = n === 'all' ? knobShares : Math.min(knobShares, n);
+        const got = Math.round(n * knobNow); knobShares -= n; store.set('painWheelKnobShares', knobShares); setGold(gold + got);
+        $('knobNews').textContent = knobShares ? `💸 Sold ${n.toLocaleString()} share${n > 1 ? 's' : ''} for ${got.toLocaleString()}g.` : `💸 Sold everything (${n.toLocaleString()}) for ${got.toLocaleString()}g.`;
+        renderKnobHold();
+    }
+    document.querySelectorAll('[data-ks]').forEach(b => b.addEventListener('click', () => { sellKnob(b.dataset.ks === 'all' ? 'all' : +b.dataset.ks); b.blur(); }));
 
     // ---------- loot ----------
     const LOOT = {
@@ -5825,9 +5838,35 @@
         return true;
     }
     function shopMsg(t) { const m = $('shopMsg'); if (m) { m.textContent = t; clearTimeout(shopMsg.t); shopMsg.t = setTimeout(() => m.textContent = '', 6000); } }
+    let payWith = 'wallet';   // set by the shop's Vault / Card buttons for one purchase
+    const hasGoblinCard = () => !!store.get('painWheelGoblinCard', false);
+    const cardLimit = () => Math.max(1000000, Math.round((gold + vaultGold()) * 0.5));   // "based on vibes" (half your net worth, at least 1M)
+    const cardAvailable = () => Math.max(0, cardLimit() - goblinDebt);
+    const CARD_DECLINES = ['DECLINED. The goblin at the register is laughing at you.', 'DECLINED. Have you tried being richer?', 'DECLINED. Your card has been cut in half by Gallywix personally.',
+        'DECLINED. Even Kevin got approved for more than this.'];
     function spend(cost, what) {
+        const src = payWith; payWith = 'wallet';
+        if (src === 'vault') {
+            const v = vaultGold();
+            if (v < cost) { shopMsg(`Your vault is ${fmt(cost - v)} short for ${what}.`); return false; }
+            store.set('painWheelVault', Math.round(v - cost)); shopMsg(`🏦 Paid ${fmt(cost)} for ${what} straight from the vault. Kevin watched.`); return true;
+        }
+        if (src === 'card') {
+            if (!hasGoblinCard()) return false;
+            if (cost > cardAvailable()) { shopMsg('💳 ' + pick(CARD_DECLINES) + ` (Available credit: ${fmt(cardAvailable())})`); return false; }
+            goblinDebt += cost; store.set('painWheelDebt', goblinDebt); renderGold();
+            shopMsg(`💳 Charged ${fmt(cost)} to your Goblin Express. You now owe ${fmt(goblinDebt)} at 400% APR. Membership has its penalties.`);
+            return true;
+        }
         if (gold < cost) { shopMsg(`You need ${(cost - gold).toLocaleString()}g more for ${what}.`); return false; }
         setGold(gold - cost); return true;
+    }
+    function getGoblinCard() {
+        if (hasGoblinCard()) { moveToast("💳 You already have a Goblin Express card. They sent you a second one anyway. It's the same card."); return; }
+        store.set('painWheelGoblinCard', true); unlock('goblincard');
+        funEvent('💳 APPROVED: GOBLIN EXPRESS PLATINUM', 4500);
+        moveToast(`💳 Your Goblin Express card has arrived. Limit: ${fmt(cardLimit())} (half your net worth, "based on vibes"). Look for the 💳 Card button in the shop. Charges go on your goblin debt at 400% APR.`);
+        chatBurst(['HE GOT THE CARD', 'credit card arc', '400% APR LMAO', 'financial ruin speedrun', 'membership has its penalties', 'goblin express W?'], 5);
     }
     const fmt = (n) => n.toLocaleString() + 'g';
 
@@ -6493,13 +6532,30 @@
         const cls = { buy: 'bg-emerald-700 hover:bg-emerald-600 text-white', equip: 'bg-sky-700 hover:bg-sky-600 text-white', equipped: 'bg-amber-500 text-black', owned: 'bg-slate-700 text-slate-300' }[state || 'buy'];
         b.className = 'shrink-0 px-2.5 py-1 rounded text-xs font-bold cursor-pointer ' + cls;
         b.textContent = btnLabel; b.disabled = state === 'owned' || state === 'equipped';
-        b.addEventListener('click', (e) => { e.stopPropagation(); onClick && onClick(); });
+        b.addEventListener('click', (e) => { e.stopPropagation(); payWith = 'wallet'; onClick && onClick(); });
+        // when there's more than one way to pay: wallet gold, vault gold, or the Goblin Express card
+        const extra = [];
+        if ((state || 'buy') === 'buy' && onClick && /\d/.test(btnLabel)) {
+            if (vaultGold() > 0) extra.push(['🏦 Vault', 'vault', 'bg-amber-700 hover:bg-amber-600', 'Pay with gold from the Guild Bank Vault']);
+            if (hasGoblinCard()) extra.push(['💳 Card', 'card', 'bg-violet-700 hover:bg-violet-600', 'Put it on the Goblin Express card (goblin debt, 400% APR)']);
+        }
+        if (extra.length) {
+            b.textContent = '💰 ' + btnLabel; b.title = 'Pay with your wallet gold';
+            const wrap = document.createElement('div'); wrap.className = 'shrink-0 flex flex-wrap justify-end gap-1'; wrap.appendChild(b);
+            extra.forEach(([label, src, c, tip]) => {
+                const e2 = document.createElement('button'); e2.className = 'shrink-0 px-2 py-1 rounded text-xs font-bold cursor-pointer text-white ' + c;
+                e2.textContent = label; e2.title = tip;
+                e2.addEventListener('click', (e) => { e.stopPropagation(); payWith = src; try { onClick(); } finally { payWith = 'wallet'; renderShop(); } });
+                wrap.appendChild(e2);
+            });
+            row.append(left, wrap); return row;
+        }
         row.append(left, b); return row;
     }
     function shopHead(text) { const h = document.createElement('div'); h.className = 'text-xs font-bold uppercase tracking-wider text-slate-400 mt-2'; h.textContent = text; return h; }
     function renderShop() {
         const body = $('shopBody'); if (!body) return;
-        $('shopGold').textContent = '🪙 ' + fmt(gold);
+        $('shopGold').textContent = '🪙 ' + fmt(gold) + (vaultGold() > 0 ? '  ·  🏦 ' + fmt(vaultGold()) : '') + (hasGoblinCard() ? '  ·  💳 ' + fmt(cardAvailable()) + ' credit' : '');
         $('shopTabs').querySelectorAll('button').forEach(b => b.classList.toggle('shop-tab-on', b.dataset.tab === shopTab));
         body.innerHTML = '';
         const add = (el) => body.appendChild(el);
@@ -7162,10 +7218,15 @@
                 <button data-b="1" class="px-2 py-0.5 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#047857">Buy 1</button>
                 <button data-b="10" class="px-2 py-0.5 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#047857">10</button>
                 <button data-b="100" class="px-2 py-0.5 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#047857">100</button>
-                <button data-s="all" class="px-2 py-0.5 rounded bg-slate-700 hover:bg-slate-600 text-white font-bold cursor-pointer">Sell all</button>
+                <button data-s="1" class="px-2 py-0.5 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#475569">Sell 1</button>
+                <button data-s="10" class="px-2 py-0.5 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#475569">10</button>
+                <button data-s="100" class="px-2 py-0.5 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#475569">100</button>
+                <button data-s="1000" class="px-2 py-0.5 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#475569">1K</button>
+                <button data-s="10000" class="px-2 py-0.5 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#475569">10K</button>
+                <button data-s="all" class="px-2 py-0.5 rounded text-white font-bold cursor-pointer hover:brightness-125" style="background:#475569">All</button>
                 <span data-h class="text-slate-400 mono truncate"></span></div>`;
             r.querySelectorAll('[data-b]').forEach(b => b.addEventListener('click', () => { exBuy(st, +b.dataset.b); b.blur(); }));
-            r.querySelector('[data-s]').addEventListener('click', (e) => { exSell(st); e.target.blur(); });
+            r.querySelectorAll('[data-s]').forEach(b => b.addEventListener('click', () => { exSell(st, b.dataset.s === 'all' ? 'all' : +b.dataset.s); b.blur(); }));
             box.appendChild(r);
         });
         STOCKS.forEach(st => {
@@ -7188,9 +7249,10 @@
         $('exNews').textContent = `📈 Bought ${n} $${st.sym} for ${cost.toLocaleString()}g.`; exRender();
         if (n >= 100) chat(pick(['WHALE ALERT', `${st.sym} TO THE MOON`, 'insider trading?', 'SEC has entered the chat']));
     }
-    function exSell(st) {
-        const n = exHold[st.sym] || 0; if (!n) return;
-        const got = Math.round(n * exPrice[st.sym]); exHold[st.sym] = 0; store.set('painWheelStocks', exHold); setGold(gold + got);
+    function exSell(st, want) {   // want: a number of shares or 'all' (sells whatever you have if you own fewer)
+        const have = exHold[st.sym] || 0; if (!have) { $('exNews').textContent = `📉 You don't own any $${st.sym}.`; return; }
+        const n = want === 'all' || want === undefined ? have : Math.min(have, want);
+        const got = Math.round(n * exPrice[st.sym]); exHold[st.sym] = have - n; store.set('painWheelStocks', exHold); setGold(gold + got);
         $('exNews').textContent = `💸 Sold ${n.toLocaleString()} $${st.sym} for ${got.toLocaleString()}g.`; exRender();
     }
     function exMove(st, m, news) {
