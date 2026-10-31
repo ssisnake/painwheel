@@ -5889,7 +5889,7 @@
                 if (renderShop.lastCurseTarget && others.includes(renderShop.lastCurseTarget)) sel.value = renderShop.lastCurseTarget;
                 sel.addEventListener('change', () => renderShop.lastCurseTarget = sel.value);
                 const w = document.createElement('div'); w.className = 'flex items-center gap-2'; w.innerHTML = '<span class="text-xs font-bold text-slate-400">Victim:</span>'; w.appendChild(sel); add(w);
-                Object.entries(CURSES).forEach(([id, c]) => add(shopRow(c.e, c.name, c.desc, 'Curse: ' + fmt(c.cost), () => {
+                Object.entries(CURSES).filter(([id, c]) => !c.adminOnly || isAdmin()).forEach(([id, c]) => add(shopRow(c.e, c.name, c.desc, c.adminOnly ? 'ABUSE (free)' : 'Curse: ' + fmt(c.cost), () => {
                     const target = $('curseTarget').value; if (!target) { shopMsg('Pick a victim first.'); return; }
                     if (Date.now() - (renderShop.lastCurse || 0) < 30000) { shopMsg('Your hex is still on cooldown (30s). Patience, warlock.'); return; }
                     if (!spend(c.cost, c.name)) return;
@@ -6308,11 +6308,24 @@
         murloc:    { e: '🐸', name: 'Curse of the Murloc', cost: 50000, desc: 'Their stream chat only speaks Murloc for 5 minutes.' },
         oceanic:   { e: '🦘', name: 'Curse of Oceanic', cost: 50000, desc: 'Their whole screen goes upside down for 10 seconds.' },
         retvision: { e: '👓', name: 'Curse of Ret Vision', cost: 50000, desc: 'Blurry, gray and confused for 10 seconds. Like a real Ret Paladin.' },
-        liver:     { e: '🥃', name: "Curse of Reb's Liver", cost: 50000, desc: "Reb's liver takes a 50% hit on their wheel." }
+        liver:     { e: '🥃', name: "Curse of Reb's Liver", cost: 50000, desc: "Reb's liver takes a 50% hit on their wheel." },
+        admin:     { e: '👑', name: 'ADMIN ABUSE', cost: 0, adminOnly: true, desc: 'Upside down + Ret Vision + $KNOB crash, all at once. Free. Because you can.' }
     };
+    const isAdmin = () => String(playerName || '').toLowerCase() === 'axazon';
     function curseTake(kind) {   // spends one charge of a pending spin curse
         const c = store.get('painWheelCursed', {}); if (!(c[kind] > 0)) return false;
         c[kind]--; store.set('painWheelCursed', c); return true;
+    }
+    function adminAbuse(from) {
+        const o = document.createElement('div');
+        o.style.cssText = 'position:fixed;inset:0;z-index:96;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;text-align:center;background:radial-gradient(circle,rgba(127,29,29,.55),rgba(0,0,0,.75));opacity:0;transition:opacity .4s';
+        o.innerHTML = `<div style="font-size:64px;line-height:1">👑</div>
+            <div style="font-weight:900;font-size:clamp(34px,7vw,88px);color:#fde047;text-shadow:0 0 30px #dc2626,0 4px 0 #7f1d1d;letter-spacing:-.02em">ADMIN ABUSE IS FUN</div>
+            <div style="font-weight:800;font-size:clamp(14px,2vw,22px);color:#fff;margin-top:8px">${String(from).replace(/[<>&"]/g, '')} has used their powers on you. There is no appeal process.</div>`;
+        document.body.appendChild(o); requestAnimationFrame(() => o.style.opacity = '1');
+        setTimeout(() => { o.style.opacity = '0'; setTimeout(() => o.remove(), 500); }, 4200);
+        setTimeout(() => { runAdEffect('flip'); runAdEffect('retvision'); if (window.knobCrash) window.knobCrash(); }, 1800);
+        chatBurst(['ADMIN ABUSE', 'ABUSE OF POWER', 'report the admin', 'who gave him admin', 'corruption', 'this is a dictatorship', 'KEKW'], 6, 3500);
     }
     function applyCurse(cu) {
         const c = CURSES[cu.c]; if (!c) return;
@@ -6324,6 +6337,7 @@
         else if (cu.c === 'oceanic') setTimeout(() => runAdEffect('flip'), 2500);
         else if (cu.c === 'retvision') setTimeout(() => runAdEffect('retvision'), 2500);
         else if (cu.c === 'liver') setTimeout(() => hurtLiver(50, `Cursed by ${from}`), 2500);
+        else if (cu.c === 'admin') { adminAbuse(from); store.set('painWheelCursed', pend); return; }
         store.set('painWheelCursed', pend);
         funEvent(`🧿 ${from.toUpperCase()} CURSED YOU: ${c.name.toUpperCase()} ${c.e}`, 5500);
         chatBurst([`${from} cursed you KEKW`, 'CURSED', 'hexed', 'get rekt', 'revenge time?'], 4, 2500);
