@@ -515,7 +515,15 @@
     <div id="partyLights" aria-hidden="true"><div class="beam b1"></div><div class="beam b2"></div><div class="beam b3"></div><div class="beam b4"></div><div class="ball">🪩</div></div>
     <div id="garageDock" style="z-index: 61; left: 16px; bottom: 12px;" class="fixed flex items-end gap-2"></div>
     <div id="billsBox" style="z-index: 66; right: 16px; bottom: 150px; width: min(300px, calc(100vw - 32px)); display: none;" class="fixed"></div>
-    <div id="squawk" style="z-index: 77; right: 16px; top: 200px; width: min(360px, calc(100vw - 32px)); display: none;" class="fixed"></div>
+    <div id="squawkWin" style="z-index: 63; position: fixed; left: 0; top: 0; width: min(350px, calc(100vw - 24px)); visibility: hidden;">
+        <div id="sqHead" title="Drag to move" style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:#0b0f19;border:1px solid #334155;border-radius:14px 14px 0 0;cursor:grab;touch-action:none;user-select:none">
+            <span style="font-size:16px">🐦</span><b style="font-size:13px;letter-spacing:.04em;color:#e2e8f0">Squawkr</b>
+            <span id="sqBadge" style="display:none;min-width:18px;padding:0 5px;border-radius:9px;background:#ef4444;color:#fff;font-size:11px;font-weight:900;text-align:center"></span>
+            <span style="margin-left:auto;font-size:10px;color:#64748b">drag to move</span>
+            <button id="sqMin" title="Minimize" style="width:24px;height:22px;border-radius:6px;border:1px solid #334155;background:#111827;color:#cbd5e1;font-weight:900;cursor:pointer;line-height:1">—</button>
+        </div>
+        <div id="sqBody" style="max-height:min(380px, 55vh);overflow-y:auto;background:#0b0f19;border:1px solid #334155;border-top:0;border-radius:0 0 14px 14px;box-shadow:0 14px 40px rgba(0,0,0,.55)" class="ex-scroll"></div>
+    </div>
     <div id="societyBadge" style="z-index: 55; right: 16px; bottom: 84px; background: rgba(2,6,23,.88);" class="fixed hidden px-2.5 py-1 rounded-md border-2 text-[11px] font-black text-right leading-tight select-none"></div>
     <div id="aipacBadge" style="z-index: 55; right: 16px; bottom: 12px; background: rgba(2,6,23,.88);" class="fixed hidden px-2.5 py-1 rounded-md border-2 text-[11px] font-black text-right leading-tight select-none"></div>
     <div id="announceBar" style="z-index: 66; top: 8px; max-width: min(760px, calc(100vw - 32px));" class="fixed left-1/2 -translate-x-1/2 hidden items-start gap-3 px-4 py-2.5 rounded-xl border-2 border-sky-400 bg-sky-950/95 text-sky-50 shadow-2xl">
@@ -6240,6 +6248,7 @@
             if (toWheel) {
                 setWheelOnFire(9);
                 funEvent('🔥 THE ROCKET HIT THE WHEEL 🔥', 4000);
+                setTimeout(() => sqPost('chaotic', 'the wheel is on fire. i did not rig this one. (i rigged the other ones)'), 4000);
                 chatBurst(['THE WHEEL IS ON FIRE', 'this is fine', 'RIGGED', 'insurance claim #3', 'Casimir did this', 'F'], 6, 2500);
                 dur = rocketScene(innerWidth / 2, WHEEL_CRASH_LINES);
             } else {
@@ -6247,6 +6256,7 @@
                 setTimeout(() => { house.textContent = '⚓'; }, 3200);
                 setTimeout(() => { house.textContent = was; moveToast("🛥️ The yacht has been repaired. Gallywix's insurance covered it. Somehow."); }, 11000);
                 funEvent("💥 THE ROCKET HIT GALLYWIX'S YACHT 💥", 4000);
+                setTimeout(() => sqPost('bible', 'on scene at the yacht. rocket vs. yacht. no farmers involved for once. ChAoTiC is writing the yacht a ticket'), 4000);
                 chatBurst(['HE HIT THE YACHT', 'MAN OVERBOARD', 'the trophies 😭', 'insurance claim #2', 'yacht.exe has stopped working', 'not the swordfish'], 6, 2500);
                 dur = rocketScene(h.left + h.width / 2, YACHT_CRASH_LINES);
             }
@@ -7017,6 +7027,7 @@
         debts.tax = null;
         const took = takeAssets(0.8, 250000); saveDebts(); unlock('seized');
         funEvent('🏛️ THE IRS SEIZED YOUR ASSETS (-80%)', 6000);
+        sqPost('irs', `we have seized 80% of ${playerName || 'someone'}'s assets. pay your taxes, kids. this has been a public service post`);
         moveToast(`🏛️ You didn't pay your taxes. The Internal Revenue Service seized ${fmt(took)}: 80% of your wallet and vault. (The vault's first 250,000g was FDIC insured.)`);
         chatBurst(['ASSETS SEIZED', 'IRS DIFF', 'should have paid', 'F', 'they took the yacht chairs', 'tax evasion speedrun failed'], 6, 3000);
     }
@@ -7035,6 +7046,7 @@
         const owe = Math.round(totalAssets() * 0.5); if (owe <= 0) return;
         debts.cartel += owe; saveDebts(); unlock('cartel');
         funEvent('🌵 THE CARTEL ABDUCTED YOU', 6000);
+        sqPost('shack', `someone blew me up for the 5th time and now ${playerName || 'they'} owe${playerName ? 's' : ''} the Cartel. i just wanted to be a quiet shack`);
         moveToast(`🌵 You've blown up the shack in their desert one too many times. The Cartel abducted you. You now owe them ${fmt(owe)} (50% of your total assets), +10% every hour until it's paid.`);
         chatBurst(['THE CARTEL', 'he blew up the wrong shack', 'not the desert people', 'F', 'pay them bro', 'breaking bad arc'], 6, 3000);
     }
@@ -7053,6 +7065,7 @@
         debts.court += fine; saveDebts(); unlock('rui');
         if (garage.police && !vehicles.cop) drivePolice();
         funEvent('🚔 BUSTED: RAIDING UNDER THE INFLUENCE', 6000);
+        sqPost('chaotic', `just pulled over ${playerName || 'a raider'} for Raiding Under the Influence. he blew a .40 on the DPS meter`);
         const bottles = (bag["Reb's Empty Bottle"] && bag["Reb's Empty Bottle"].n) || 0;
         moveToast(`🚔 ChAoTiC pulled you over for Raiding Under the Influence${bottles ? ` (evidence: ${bottles} empty Knob Creek bottle${bottles > 1 ? 's' : ''} in your bag)` : ''}. Fine: ${fmt(fine)} (20% of your total assets) at 400% interest until paid.`);
         chatBurst(['BUSTED', 'RUI KEKW', 'chaotic got him', 'license and registration', 'he blew a .40 on the dps meter', 'free him'], 6, 3000);
@@ -7066,20 +7079,88 @@
         { text: "$RET is the future of warfare. Also the past. Mostly the past.", sym: 'RET', m: 0.35, w: 2 },
         { text: 'Just bought one share of $ALT. ChAoTiC has to make another alt now. Those are the rules.', sym: 'ALT', m: 0.25, w: 2 },
         { text: '$KEVN is actually genius. I was kidding earlier. Or am I.', sym: 'KEVN', m: 0.6, w: 2 }];
-    function squawk(post) {
+    // the feed window: draggable, minimizable, remembers where you put it
+    const SQ_WHO = {
+        elan: ['Elan', '@ElanOfficial', '🚀', true], kevin: ['Kevin', '@Kevin_Official', '🤡', false], vince: ['Vince', '@VinceOnTheBrick', '📞', false],
+        reb: ["Reb's Liver", '@RebsLiver', '🫀', false], chaotic: ['ChAoTiC', '@ChAoTiC', '🚓', true], alt: ['ChAoTiC (alt)', '@ChAoTiC_alt' + (7 + Math.floor(Math.random() * 40)), '🔄', false],
+        bible: ['Biblehumping', '@Biblehumping_EMT', '🚑', true], grandma: ['Grandma', '@Grandma_Cookies', '👵', false], shack: ['The Shack', '@TheShackInTheDesert', '🏜️', false],
+        gary: ['Gary', '@SwordfishGary', '🐟', false], uwutek: ['Uwutek', '@Uwutek_Boss', '👹', true], goblinx: ['Goblin Express', '@GoblinExpressCard', '💳', true],
+        irs: ['Goblin IRS', '@GoblinIRS', '🧾', true], casimir: ['Casimir', '@Casimir_Rigs', '🔧', false], yacht: ["Gallywix's Yacht Club", '@GallywixYachtClub', '🛥️', true] };
+    const SQ_AMBIENT = [
+        ['kevin', 'just landed on myself again. this wheel is RIGGED. who do i report this to'], ['casimir', 'me'],
+        ['chaotic', 'logging off for the night'], ['alt', 'logging on for the night'],
+        ['bible', 'responded to 3 calls today. 2 were combines. 1 was a rocket. 0 farmers saved. good day'],
+        ['reb', 'day 4,382. he opened another one. please send help (Knob Creek is not help)'],
+        ['vince', 'BUY $KNOB!!!! SELL $KNOB!!!! THIS PHONE COST ME $3,995 AND I CAN STILL ONLY POST ONCE AN HOUR'],
+        ['shack', 'rebuilt. again. if you hear a rocket, no you didn\'t'], ['yacht', 'reminder: the vault is FDIC insured* up to 250,000g. *Federal Deposit Insurance Cartel'],
+        ['goblinx', "you're pre-approved 😊 you were always pre-approved 😊 we know where you hearth 😊"], ['gary', 'my name is not Gary'],
+        ['uwutek', 'back to Normal difficulty at reset. see you tomorrow, nerds'], ['grandma', "baked a golden cookie. it's somewhere on your screen. you'll never find it in time 👵"],
+        ['kevin', "bought the blue check. now people can verify it's really me standing in fire"], ['irs', 'we see you, vault people. we see all of you.'],
+        ['chaotic', 'pulled over a guy for doing 90 in a 45. it was Biblehumping. the ambulance was empty. he was "just vibing"'],
+        ['bible', 'ChAoTiC has been on the same alt for 11 minutes. new record. someone check on him'], ['vince', 'NEVER SELL. ALSO SELL. I AM VERY BUSY.'],
+        ['kevin', 'why does everyone keep poking a doll and then looking at me'], ['reb', 'the wheel landed on Knob Creek. i felt that in my soul (i am the soul)']];
+    const sqFeed = store.get('painWheelSquawkFeed', []);
+    let sqState = Object.assign({ x: null, y: 200, min: innerWidth < 1500 }, store.get('painWheelSquawkPos', {})), sqUnread = 0;
+    function sqSaveState() { store.set('painWheelSquawkPos', sqState); }
+    function sqPlace() {
+        const w = $('squawkWin'), W = w.offsetWidth || 350, H = $('sqHead').offsetHeight || 36;
+        if (sqState.x == null) sqState.x = innerWidth - W - 16;
+        sqState.x = Math.min(Math.max(4, sqState.x), innerWidth - W - 4); sqState.y = Math.min(Math.max(4, sqState.y), innerHeight - H - 4);
+        w.style.transform = `translate(${sqState.x}px, ${sqState.y}px)`;
+    }
+    function sqRenderMin() {
+        $('sqBody').style.display = sqState.min ? 'none' : 'block';
+        $('sqHead').style.borderRadius = sqState.min ? '14px' : '14px 14px 0 0';
+        $('sqMin').textContent = sqState.min ? '▢' : '—'; $('sqMin').title = sqState.min ? 'Open' : 'Minimize';
+        if (!sqState.min) sqUnread = 0;
+        $('sqBadge').style.display = sqUnread ? 'inline-block' : 'none'; $('sqBadge').textContent = sqUnread;
+    }
+    function sqPostEl(p) {
+        const [name, handle, av, check] = SQ_WHO[p.who] || SQ_WHO.kevin;
+        const d = document.createElement('div'); d.style.cssText = 'padding:10px 12px;border-bottom:1px solid #1e293b;font-size:13.5px;color:#e2e8f0';
+        const mins = Math.max(0, Math.round((Date.now() - p.at) / 60000));
+        d.innerHTML = `<div style="display:flex;gap:9px"><div style="flex:none;width:34px;height:34px;border-radius:50%;background:#1e293b;display:grid;place-items:center;font-size:18px">${av}</div>
+            <div style="min-width:0;flex:1"><div style="line-height:1.2"><b></b>${check ? ' <span style="color:#38bdf8">✔</span>' : ''} <span style="color:#64748b;font-size:12px">${handle} · ${mins ? mins + 'm' : 'now'}</span></div>
+            <div data-t style="margin-top:3px;line-height:1.35;word-break:break-word"></div>
+            ${p.impact ? `<div style="margin-top:6px;padding:4px 8px;border-radius:7px;font-weight:900;font-size:12px;${p.up ? 'background:rgba(22,163,74,.18);color:#4ade80' : 'background:rgba(220,38,38,.18);color:#f87171'}"></div>` : ''}
+            <div style="margin-top:5px;display:flex;gap:14px;color:#64748b;font-size:11.5px"><span>💬 ${p.c}</span><span>🔁 ${p.r}</span><span>♥ ${p.l}</span></div></div></div>`;
+        d.querySelector('b').textContent = name; d.querySelector('[data-t]').textContent = p.text;
+        if (p.impact) d.querySelector('[data-t]').nextElementSibling.textContent = p.impact;
+        return d;
+    }
+    function sqRender() { const b = $('sqBody'); b.textContent = ''; sqFeed.slice(0, 30).forEach(p => b.appendChild(sqPostEl(p))); }
+    function sqPost(who, text, impact, up) {
+        const k = () => (Math.random() * 40 + 1).toFixed(1) + 'K';
+        sqFeed.unshift({ who, text, impact: impact || '', up: !!up, at: Date.now(), c: k(), r: k(), l: (Math.random() * 900 + 50).toFixed(1) + 'K' });
+        sqFeed.length = Math.min(sqFeed.length, 30); store.set('painWheelSquawkFeed', sqFeed); sqRender();
+        $('sqBody').scrollTop = 0;
+        const first = $('sqBody').firstChild; if (first) first.animate([{ background: 'rgba(56,189,248,.18)' }, { background: 'transparent' }], { duration: 2500 });
+        if (sqState.min) { sqUnread++; sqRenderMin(); $('sqHead').animate([{ transform: 'scale(1)' }, { transform: 'scale(1.06)' }, { transform: 'scale(1)' }], { duration: 500, iterations: 2 }); }
+    }
+    (function sqInit() {
+        if (!sqFeed.length) { [[1, 7], [0, 14], [3, 21], [2, 28]].forEach(([i, m]) => { const a = SQ_AMBIENT[i]; sqFeed.push({ who: a[0], text: a[1], impact: '', at: Date.now() - m * 60000, c: '1.2K', r: '3.4K', l: '42.0K' }); }); }   // newest on top, replies above what they reply to
+        sqRender(); sqRenderMin(); sqPlace(); $('squawkWin').style.visibility = 'visible';
+        let drag = null;
+        $('sqHead').addEventListener('pointerdown', (e) => {
+            if (e.target.closest('#sqMin')) return;
+            drag = { dx: e.clientX - sqState.x, dy: e.clientY - sqState.y, moved: false }; $('sqHead').setPointerCapture(e.pointerId); $('sqHead').style.cursor = 'grabbing';
+        });
+        $('sqHead').addEventListener('pointermove', (e) => {
+            if (!drag) return; drag.moved = true; sqState.x = e.clientX - drag.dx; sqState.y = e.clientY - drag.dy; sqPlace();
+        });
+        const end = () => { if (!drag) return; const wasClick = !drag.moved; drag = null; $('sqHead').style.cursor = 'grab'; sqSaveState(); if (wasClick && sqState.min) { sqState.min = false; sqRenderMin(); sqSaveState(); } };
+        $('sqHead').addEventListener('pointerup', end); $('sqHead').addEventListener('pointercancel', end);
+        $('sqMin').addEventListener('click', () => { sqState.min = !sqState.min; sqRenderMin(); sqPlace(); sqSaveState(); });
+        addEventListener('resize', sqPlace);
+        setInterval(() => { if (!document.hidden && Math.random() < 1 / 3) { const a = pick(SQ_AMBIENT); sqPost(a[0], a[1]); } }, 4 * 60000);   // the bird site never sleeps
+        setInterval(() => { if (!sqState.min) sqRender(); }, 60000);   // keep the "5m ago" times fresh
+    })();
+    function squawk(post) {   // Elan posts move the market
         const st = STOCKS.find(t => t.sym === post.sym); if (!st) return;
         exMove(st, post.m, 'Elan posted about it'); store.set('painWheelStockPrices2', exPrice); exRender();
-        const pct = post.m * 100, el = $('squawk');
-        el.innerHTML = `<div style="background:#0b0f19;border:1px solid #334155;border-radius:16px;padding:12px 14px;box-shadow:0 14px 40px rgba(0,0,0,.6);color:#e2e8f0;font-size:14px">
-            <div style="display:flex;align-items:center;gap:10px"><div style="width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#334155,#0f172a);display:grid;place-items:center;font-size:22px">🚀</div>
-            <div style="min-width:0;line-height:1.2"><div style="font-weight:900">Elan <span style="color:#38bdf8">✔</span></div><div style="color:#64748b;font-size:12px">@ElanOfficial · just now</div></div>
-            <div style="margin-left:auto;font-size:10px;font-weight:900;letter-spacing:.12em;color:#64748b">SQUAWKR</div></div>
-            <div data-t style="margin-top:8px;font-size:15px;line-height:1.35"></div>
-            <div style="margin-top:8px;padding:6px 8px;border-radius:8px;font-weight:900;font-size:12px;${pct >= 0 ? 'background:rgba(22,163,74,.18);color:#4ade80' : 'background:rgba(220,38,38,.18);color:#f87171'}">${pct >= 0 ? '📈' : '📉'} $${post.sym} ${pct >= 0 ? '+' : ''}${pct.toLocaleString()}%</div>
-            <div style="margin-top:8px;display:flex;gap:16px;color:#64748b;font-size:12px"><span>💬 ${(2 + Math.random() * 40).toFixed(1)}K</span><span>🔁 ${(10 + Math.random() * 90).toFixed(1)}K</span><span>♥ ${(100 + Math.random() * 800).toFixed(1)}K</span></div></div>`;
-        el.querySelector('[data-t]').textContent = post.text;
-        el.style.display = 'block'; el.animate([{ transform: 'translateX(40px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 300, easing: 'ease-out' });
-        clearTimeout(squawk.t); squawk.t = setTimeout(() => { el.style.display = 'none'; }, 9000);
+        const pct = post.m * 100;
+        sqPost('elan', post.text, `${pct >= 0 ? '📈' : '📉'} $${post.sym} ${pct >= 0 ? '+' : ''}${pct.toLocaleString()}%`, pct >= 0);
+        if (sqState.min) moveToast(`🐦 Elan just posted: "${post.text}" ($${post.sym} ${pct >= 0 ? '+' : ''}${pct.toLocaleString()}%)`);
         chatBurst(pct >= 0 ? ['ELAN POSTED', `$${post.sym} TO THE MOON`, 'buy buy buy', 'market manipulation', 'SEC where'] : ['ELAN POSTED', `$${post.sym} IS DEAD`, 'sell sell sell', 'bag holders in shambles', 'thanks Elan'], 4, 2500);
     }
     setInterval(() => {   // about once every 40 minutes while the page is open
