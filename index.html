@@ -197,17 +197,20 @@
         .siren-glow { animation: sirenGlow 1s ease-in-out infinite alternate; }
         @keyframes sirenGlow { from { filter: drop-shadow(0 0 2px #ef4444); } to { filter: drop-shadow(0 0 14px #3b82f6); } }
         /* party mode: big soft lights that drift and change color slowly (no flashing) */
-        #partyLights { position: fixed; inset: 0; z-index: 58; pointer-events: none; display: none; overflow: hidden; mix-blend-mode: screen; }
+        #partyLights { position: fixed; inset: 0; z-index: 58; pointer-events: none; display: none; overflow: hidden; }
         body.party-on #partyLights { display: block; }
         body.party-on #petDock > div > div:last-child { animation: petDance .45s ease-in-out infinite alternate !important; }
         body.party-on #garageDock button { animation: petDance .6s ease-in-out infinite alternate; }
+        body.is-spinning #petDock *, body.is-spinning #garageDock *, body.is-spinning #houseEmoji, body.is-spinning .siren-glow, body.is-spinning #goldenCookie { animation-play-state: paused !important; }
+        #petDock > div > div:last-child { will-change: transform; }
         @keyframes fireFlicker { from { translate: 0 0; filter: brightness(1); } to { translate: 0 -6px; filter: brightness(1.25); } }
         @keyframes petDance { from { transform: translateY(0) rotate(-12deg); } to { transform: translateY(-8px) rotate(12deg); } }
         @media (prefers-reduced-motion: reduce) { body.party-on #petDock > div > div:last-child, body.party-on #garageDock button { animation: none !important; } }
-        #partyLights .beam { position: absolute; width: 70vmax; height: 70vmax; border-radius: 50%; filter: blur(60px); opacity: .32; }
-        #partyLights .b1 { background: #ec4899; left: -20vmax; top: -20vmax; animation: beamA 9s ease-in-out infinite alternate, hueSpin 14s linear infinite; }
-        #partyLights .b2 { background: #22d3ee; right: -25vmax; top: 10vh; animation: beamB 11s ease-in-out infinite alternate, hueSpin 17s linear infinite; }
-        #partyLights .b3 { background: #a3e635; left: 20vw; bottom: -35vmax; animation: beamC 13s ease-in-out infinite alternate, hueSpin 20s linear infinite; }
+        #partyLights .beam { position: absolute; width: 70vmax; height: 70vmax; border-radius: 50%; opacity: .42; will-change: transform; }
+        #partyLights .b1 { background: radial-gradient(circle, #ec4899 0%, rgba(236,72,153,.5) 30%, transparent 68%); left: -20vmax; top: -20vmax; animation: beamA 9s ease-in-out infinite alternate; }
+        #partyLights .b2 { background: radial-gradient(circle, #22d3ee 0%, rgba(34,211,238,.5) 30%, transparent 68%); right: -25vmax; top: 10vh; animation: beamB 11s ease-in-out infinite alternate; }
+        #partyLights .b3 { background: radial-gradient(circle, #a3e635 0%, rgba(163,230,53,.5) 30%, transparent 68%); left: 20vw; bottom: -35vmax; animation: beamC 13s ease-in-out infinite alternate; }
+        #partyLights .b4 { background: radial-gradient(circle, #a855f7 0%, rgba(168,85,247,.5) 30%, transparent 68%); right: 5vw; bottom: -30vmax; animation: beamA 15s ease-in-out infinite alternate-reverse; }
         #partyLights .ball { position: absolute; left: 50%; top: 4px; transform: translateX(-50%); font-size: 54px; animation: ballSpin 6s linear infinite; }
         @keyframes beamA { to { transform: translate(40vw, 30vh); } }
         @keyframes beamB { to { transform: translate(-45vw, 25vh); } }
@@ -341,7 +344,7 @@
     </div>
 
     <!-- First visit: who's spinning? -->
-    <div id="welcome" class="fixed inset-0 z-[72] hidden items-center justify-center bg-slate-950/85 backdrop-blur-sm p-4">
+    <div id="welcome" class="fixed inset-0 z-[72] hidden items-center justify-center bg-slate-950/90 p-4">
         <form id="welcomeForm" class="w-full max-w-sm bg-slate-900 border border-slate-700 rounded-2xl p-6 text-center shadow-2xl">
             <div class="text-4xl mb-2">🎡</div>
             <div class="text-xl font-black uppercase tracking-tight">Who's spinning?</div>
@@ -355,7 +358,7 @@
     </div>
 
     <!-- My Stats -->
-    <div id="statsPanel" class="fixed inset-0 z-[71] hidden items-center justify-center bg-slate-950/85 backdrop-blur-sm p-4">
+    <div id="statsPanel" class="fixed inset-0 z-[71] hidden items-center justify-center bg-slate-950/90 p-4">
         <div class="w-full max-w-2xl max-h-[88vh] overflow-y-auto bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl">
             <div class="flex items-center justify-between mb-3">
                 <div class="text-lg font-black uppercase tracking-tight">📊 <span id="statsName">Your</span> Stats</div>
@@ -393,7 +396,7 @@
     </div>
 
     <!-- Bag -->
-    <div id="bagPanel" style="z-index: 72" class="fixed inset-0 hidden items-center justify-center bg-slate-950/85 backdrop-blur-sm p-4">
+    <div id="bagPanel" style="z-index: 72" class="fixed inset-0 hidden items-center justify-center bg-slate-950/90 p-4">
         <div class="w-full max-w-2xl max-h-[88vh] overflow-y-auto bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl">
             <div class="flex items-center justify-between mb-3">
                 <div class="text-lg font-black uppercase tracking-tight">🎒 Your Bag <span id="bagCount" class="text-slate-400 text-sm normal-case"></span></div>
@@ -418,7 +421,7 @@
         <div id="houseLabel" style="font-size:9px;font-weight:900;letter-spacing:.06em;color:#fde047;background:rgba(0,0,0,.7);padding:0 6px;border-radius:4px;text-transform:uppercase">Your Timeshare (1/52nd)</div>
     </div>
     <div id="petDock" style="z-index: 61; left: calc(50% + 80px); bottom: 10px;" class="fixed flex items-end gap-3 pointer-events-none"></div>
-    <div id="housePanel" style="z-index: 72" class="fixed inset-0 hidden items-center justify-center bg-slate-950/85 backdrop-blur-sm p-4">
+    <div id="housePanel" style="z-index: 72" class="fixed inset-0 hidden items-center justify-center bg-slate-950/90 p-4">
         <div class="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl p-5 shadow-2xl border-2 border-emerald-600" style="background: linear-gradient(170deg,#052e16,#0f172a 45%,#1c1402);">
             <div class="flex items-center justify-between mb-2">
                 <div class="text-lg font-black uppercase tracking-tight text-emerald-300">🏚️ Goblin Property Management</div>
@@ -452,7 +455,7 @@
         </div>
     </div>
     <div id="retVisionFx" aria-hidden="true" style="display:none;position:fixed;inset:0;z-index:56;pointer-events:none;backdrop-filter:grayscale(.9) blur(.6px) contrast(.9);-webkit-backdrop-filter:grayscale(.9) blur(.6px) contrast(.9)"></div>
-    <div id="partyLights" aria-hidden="true"><div class="beam b1"></div><div class="beam b2"></div><div class="beam b3"></div><div class="ball">🪩</div></div>
+    <div id="partyLights" aria-hidden="true"><div class="beam b1"></div><div class="beam b2"></div><div class="beam b3"></div><div class="beam b4"></div><div class="ball">🪩</div></div>
     <div id="garageDock" style="z-index: 61; left: 16px; bottom: 12px;" class="fixed flex items-end gap-2"></div>
     <div id="societyBadge" style="z-index: 55; right: 16px; bottom: 84px; background: rgba(2,6,23,.88);" class="fixed hidden px-2.5 py-1 rounded-md border-2 text-[11px] font-black text-right leading-tight select-none"></div>
     <div id="aipacBadge" style="z-index: 55; right: 16px; bottom: 12px; background: rgba(2,6,23,.88);" class="fixed hidden px-2.5 py-1 rounded-md border-2 text-[11px] font-black text-right leading-tight select-none"></div>
@@ -480,7 +483,7 @@
             </div>
         </div>
     </div>
-    <div id="shopPanel" style="z-index: 72" class="fixed inset-0 hidden items-center justify-center bg-slate-950/85 backdrop-blur-sm p-4">
+    <div id="shopPanel" style="z-index: 72" class="fixed inset-0 hidden items-center justify-center bg-slate-950/90 p-4">
         <div class="w-full max-w-2xl flex flex-col rounded-2xl p-5 shadow-2xl border-2 border-amber-500" style="max-height:90vh;max-width:42rem;background: linear-gradient(170deg,#1c1402,#0f172a 45%,#052e16);">
             <div class="flex items-center justify-between mb-2">
                 <div class="text-lg font-black uppercase tracking-tight text-amber-300">🛒 The Goblin Shop</div>
@@ -500,7 +503,7 @@
     </div>
 
     <!-- Move to the new wheel -->
-    <div id="moveModal" style="z-index: 74" class="fixed inset-0 hidden items-center justify-center bg-slate-950/85 backdrop-blur-sm p-4">
+    <div id="moveModal" style="z-index: 74" class="fixed inset-0 hidden items-center justify-center bg-slate-950/90 p-4">
         <div class="w-full max-w-lg bg-slate-900 border-2 border-emerald-500 rounded-2xl p-5 shadow-2xl">
             <div class="flex items-center justify-between mb-2">
                 <div class="text-lg font-black uppercase tracking-tight text-emerald-300">🚚 Move to the new wheel</div>
@@ -698,7 +701,7 @@
     </section>
 
     <!-- Winner Modal -->
-    <div id="winnerModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+    <div id="winnerModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/88 p-4">
         <div id="modalCard" class="relative w-full max-w-md bg-slate-900 border border-slate-700 rounded-3xl p-6 md:p-8 text-center shadow-2xl overflow-hidden">
             <div id="holyRays" class="hidden absolute inset-0 pointer-events-none" aria-hidden="true"></div>
             <div id="modalGlow" class="absolute -top-24 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full blur-3xl opacity-35 pointer-events-none bg-red-600"></div>
@@ -789,7 +792,7 @@
     </footer>
 
     <!-- Secret cheat sheet: type "kana" anywhere to open/close -->
-    <div id="cheatSheet" class="fixed inset-0 z-[70] hidden items-center justify-center bg-slate-950/85 backdrop-blur-sm p-4">
+    <div id="cheatSheet" class="fixed inset-0 z-[70] hidden items-center justify-center bg-slate-950/90 p-4">
         <div class="w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl">
             <div class="flex items-center justify-between mb-3">
                 <div class="mono text-sm font-bold text-amber-300">🔒 RIG CONTROLS • now: <span id="rigStatusLabel">FAIR</span></div>
@@ -3233,7 +3236,8 @@
         }
     }
 
-    function renderAll() { renderWheel(); renderZoomLens(); updateTelemetry(); }
+    let lensTick = 0;
+    function renderAll() { renderWheel(); if (!isSpinning || (++lensTick & 1)) renderZoomLens(); updateTelemetry(); }
 
     /* ===================== TICKERS ===================== */
     function shuffled(arr) { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
@@ -3312,7 +3316,7 @@
         if (isSpinning) return;
         if (typeof power !== 'number') power = 0.35 + Math.random() * 0.55; // hub button / Spin Again: random strength
         power = Math.min(1, Math.max(0.05, power));
-        isSpinning = true;
+        isSpinning = true; document.body.classList.add('is-spinning');
         spinBtn.disabled = true; spinBtn.classList.add('opacity-60');
         closeModal();
         cheetoCrumbSpin = Math.random() < 1 / 25;
@@ -3380,6 +3384,7 @@
     }
 
     function onSpinComplete() {
+        document.body.classList.remove('is-spinning');
         if (kevinTakeover) { setKevinTakeover(false); setTimeout(() => chatBurst(['oh it was not Kevin', 'phew', 'wait it lied', 'KEVIN WAS A LIE'], 2, 1500), 600); }
         const winner = slices[getActiveSliceIndex(currentRotation)];
         spinCount++;
@@ -4673,7 +4678,7 @@
     const themeFx = $('themeFx'), tfx = themeFx.getContext('2d');
     function stepDrift(now) {
         requestAnimationFrame(stepDrift);
-        if (now - lastDrift < 33 || document.hidden) return;
+        if (now - lastDrift < (isSpinning ? 66 : 33) || document.hidden) return;   // half rate while the wheel spins
         const dt = Math.min(0.1, (now - (lastDrift || now)) / 1000); lastDrift = now;
         const W = window.innerWidth, H = window.innerHeight;
         if (themeFx.width !== W || themeFx.height !== H) { themeFx.width = W; themeFx.height = H; }
