@@ -3445,6 +3445,7 @@
         { id: 'taxman',     name: 'Death and Taxes',          desc: 'Pay the monthly Tuesday reset income tax.' },
         { id: 'drip',       name: 'Drip',                     desc: 'Buy something cosmetic from the shop.' },
         { id: 'boughtaotc', name: 'Pulled a Krom',            desc: "Buy Krom's AOTC carry. Shameful." },
+        { id: 'aotclegit',  name: 'Ahead of the Curve (Legit)', desc: 'Land on AOTC naturally. No rigs, no Krom carries, no excuses.' },
         { id: 'cluck',      name: 'CLUCK!',                   desc: 'Complete the Westfall chicken\'s quest.' },
         { id: 'clippy',     name: "It Looks Like You're Adopting a Paperclip", desc: 'Find and adopt the secret pet.', secret: true, secretName: true }
     ];
@@ -6217,15 +6218,15 @@
           up: ['WTS GOLD CHEAP. Revenue up', '4,000 new bots spawned in Stormwind', 'Fast delivery! (of the stock price, upward)', 'Susan opened a new bot farm. Very efficient'],
           down: ['Account suspended. Then 300 more', 'Players learned how to /ignore', 'Susan whispered a GM by accident'],
           land: { SUSAN_EXPRESS: [0.15, 'Susan Express sighted on the wheel. $SUSN spikes'] }, crash: [1 / 60, 0.8, '🔨 BAN WAVE! Blizzard deletes 10,000 bots. $SUSN wiped out'], vol: 2 },
-        { sym: 'ALT', e: '🔄', name: 'Alt-oholics Inc. (Justin & ChAoTiC)', start: 80.08, likeKnob: true, col: '#38bdf8',
-          up: ['Justin rolled a new alt. Again', 'ChAoTiC leveled an alt overnight', 'The alt army passes 50 characters', 'Justin bought another character boost', 'ChAoTiC needs a new bank alt for his bank alts'],
-          down: ['Justin played his main for a whole week', 'ChAoTiC deleted an alt by accident', 'Character slots full. Liquidity crisis', 'Justin forgot which alt he was on'],
-          land: { JUSTIN_ALT: [0.2, 'Justin picked a new alt for the day. $ALT rallies'], MEPHIST: [0.1, 'ChAoTiC unmuted. Alt demand surges'] } },
-        { sym: 'DEDFRMR', e: '🪦', name: 'Ded Farmer Holdings (Nick & Biblehumping)', start: 911.00, likeKnob: true, col: '#a3e635',
-          up: ["Nick's ambulance spotted near a farm. Farmers panic", "Farmers' Almanac adds Nick to its list of natural disasters", 'Biblehumping Leap of Faith\'d a farmer into a combine',
-               'Rural life insurance premiums soar after Nick picks up overtime', 'Farmer calls 911. Dispatcher: "Nick is on his way." Farmer: "Oh no"', 'Tractor sales slump. Funeral home stocks soar'],
-          down: ['Nick saved a farmer. Market in shock', 'Farmers moved to the city where Nick can\'t reach them', 'Biblehumping healed a farmer instead of yanking him', 'Nick took a day off. Farms report zero incidents'],
-          land: { NICK_DPS: [0.15, "Nick DPS'd instead of healing. Somebody died. $DEDFRMR up"], YANKED: [0.15, 'Biblehumping yanked someone to their death. $DEDFRMR up'] },
+        { sym: 'ALT', e: '🔄', name: 'Alt-oholics Inc. (ChAoTiC)', start: 80.08, likeKnob: true, col: '#38bdf8',
+          up: ['ChAoTiC rolled a new alt. Again', 'ChAoTiC leveled an alt overnight', "ChAoTiC's alt army passes 50 characters", 'ChAoTiC bought another character boost', 'ChAoTiC needs a new bank alt for his bank alts'],
+          down: ['ChAoTiC played his main for a whole week', 'ChAoTiC deleted an alt by accident', 'Character slots full. Liquidity crisis', 'ChAoTiC forgot which alt he was on'],
+          land: { JUSTIN_ALT: [0.2, 'ChAoTiC picked a new alt for the day. $ALT rallies'], MEPHIST: [0.1, 'ChAoTiC unmuted. Alt demand surges'] } },
+        { sym: 'DEDFRMR', e: '🪦', name: 'Ded Farmer Holdings (Biblehumping)', start: 911.00, likeKnob: true, col: '#a3e635',
+          up: ["Biblehumping's ambulance spotted near a farm. Farmers panic", "Farmers' Almanac adds Biblehumping to its list of natural disasters", "Biblehumping Leap of Faith'd a farmer into a combine",
+               'Rural life insurance premiums soar after Biblehumping picks up overtime', 'Farmer calls 911. Dispatcher: "Biblehumping is on his way." Farmer: "Oh no"', 'Tractor sales slump. Funeral home stocks soar'],
+          down: ['Biblehumping saved a farmer. Market in shock', "Farmers moved to the city where Biblehumping can't reach them", 'Biblehumping healed a farmer instead of yanking him', 'Biblehumping took a day off. Farms report zero incidents'],
+          land: { NICK_DPS: [0.15, "Biblehumping DPS'd instead of healing. Somebody died. $DEDFRMR up"], YANKED: [0.15, 'Biblehumping yanked someone to their death. $DEDFRMR up'] }
         }
     ];
     let exHold = store.get('painWheelStocks', {}), exPrice = store.get('painWheelStockPrices2', {});
@@ -6384,6 +6385,7 @@
         if (s.type === 'DONUT' && Math.random() < 0.15) setTimeout(() => giveLoot('legendary', "🍩 Justin's dream came true", 'Golden Chocolate Donut'), 1400);
         else if (minQ || flask || Math.random() < (hasPerk('raid') ? 0.45 : 0.33)) setTimeout(() => giveLoot(rollQuality(minQ), flask ? '🧪 Flask of Loot' : undefined), 1400);
         newSliceFx(s.type); exOnLand(s.type);
+        if (s.type === 'AOTC' && fair) unlock('aotclegit');   // only a natural landing counts
         if (s.type === 'KROM' && Math.random() < 0.25) setTimeout(() => { if (window.showAdById) window.showAdById('aotc-carry'); }, 6000);
         // set perks that pay out on landings
         let bonus = 0;
