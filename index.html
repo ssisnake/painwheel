@@ -5835,7 +5835,7 @@
         const cop = document.createElement('div');
         cop.style.cssText = `position:fixed;z-index:78;bottom:${VEH_Y + 95}px;left:${Math.min(innerWidth - 300, Math.max(20, x - 40))}px;font-size:62px;line-height:1;pointer-events:none;opacity:0;transform:translateY(20px);transition:opacity .5s, transform .5s`;
         cop.innerHTML = '<div style="position:absolute;bottom:100%;left:0;margin-bottom:6px;width:max-content;max-width:280px;background:#fffbe6;color:#111;font-size:14px;font-weight:800;padding:5px 10px;border-radius:10px;border:2px solid #111;box-shadow:2px 2px 0 #111"></div><span style="display:inline-block;transform:scaleX(-1)">🚓</span>';
-        cop.firstChild.textContent = '🚓 Justin: ' + pick(COMBINE_LINES);
+        cop.firstChild.textContent = '🚓 Justin: ' + pickFresh(COMBINE_LINES);   // no repeats until all 8 have shown
         document.body.appendChild(cop);
         setTimeout(() => { cop.style.opacity = '1'; cop.style.transform = 'translateY(0)'; }, 1200);
         setTimeout(() => { fire.style.opacity = '0'; cop.style.opacity = '0'; }, 7500);
