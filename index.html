@@ -606,7 +606,7 @@
                     <span id="knobHold" class="text-slate-400 mono truncate">You own 0 shares</span>
                 </div>
                 <div class="mt-3 pt-3 border-t border-slate-800">
-                    <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">🏦 Degenerate Exchange · scroll for more</div>
+                    <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">🏦 Degenerate Exchange · <span id="exNext"></span> · scroll for more</div>
                     <div id="exRows" class="ex-scroll" style="display:flex;flex-direction:column;gap:10px;max-height:236px;overflow-y:auto;padding-right:6px"></div>
                     <div id="exNews" class="mt-2 text-[11px] text-slate-400 mono truncate">Markets open. Nobody here should be trading.</div>
                 </div>
@@ -6287,7 +6287,7 @@
     const exHist = {};
     STOCKS.forEach(st => {
         if (!(exPrice[st.sym] > 0)) exPrice[st.sym] = st.start;
-        exHist[st.sym] = []; st.open = exPrice[st.sym]; exSplit(st, false);   // an already-huge saved price comes back split and affordable
+        exHist[st.sym] = [];
         st.open = exPrice[st.sym];
         exHist[st.sym] = Array.from({ length: 32 }, () => st.open * (0.98 + Math.random() * 0.04));
     });
@@ -6339,24 +6339,25 @@
         exPrice[st.sym] = Math.max(0.01, exPrice[st.sym] * (1 + m));
         const h = exHist[st.sym]; h.push(exPrice[st.sym]); if (h.length > 32) h.shift();
         if (news) $('exNews').textContent = `${m >= 0 ? '📈' : '📉'} $${st.sym}: ${news} (${m >= 0 ? '+' : ''}${(m * 100).toFixed(1)}%)`;
-        exSplit(st, true);
     }
     // Safety net: once a share costs more than SPLIT_AT, it splits 10-for-1 (price ÷10, your shares ×10, same value)
     function exSplit(st, announce) {
-        const SPLIT_AT = 1500; let n = 0;
+        const SPLIT_AT = 500; let n = 0;
         while (exPrice[st.sym] > SPLIT_AT) {
             exPrice[st.sym] /= 10; st.open /= 10; n++;
             if (exHold[st.sym]) exHold[st.sym] *= 10;
             exHist[st.sym] = exHist[st.sym].map(v => v / 10);
         }
-        if (!n) return;
+        if (!n) return false;
         store.set('painWheelStocks', exHold); store.set('painWheelStockPrices2', exPrice);
         if (announce) {
             const ratio = Math.pow(10, n);
             $('exNews').textContent = `✂️ $${st.sym} STOCK SPLIT ${ratio}-for-1! Now ${exMoney(exPrice[st.sym])} a share.` + (exHold[st.sym] ? ` You now own ${exHold[st.sym].toLocaleString()} shares (same value).` : ' Cheap enough to buy in again.');
             chatBurst([`$${st.sym} SPLIT`, 'stonks split', 'buy the split', 'shares go brrr'], 2);
         }
+        return true;
     }
+    // live prices, same as always
     setInterval(() => {
         if (document.hidden) return;
         STOCKS.forEach(st => {
@@ -6371,7 +6372,23 @@
         STOCKS.forEach(st => { const l = st.land && st.land[type]; if (l) exMove(st, l[0], l[1]); });
         if (STOCKS.some(st => st.land && st.land[type])) { store.set('painWheelStockPrices2', exPrice); exRender(); }
     }
-    exRender();
+    // Split day every 3 hours: let it run up, then split so newcomers have a way in (holders keep their value)
+    const SPLIT_PERIOD = 3 * 3600 * 1000;
+    let exLastSplit = store.get('painWheelExLastSplit', 0);
+    if (!exLastSplit) { exLastSplit = Math.floor(Date.now() / SPLIT_PERIOD) * SPLIT_PERIOD; store.set('painWheelExLastSplit', exLastSplit); }
+    function exSplitDay() {
+        if (Date.now() - exLastSplit >= SPLIT_PERIOD) {
+            exLastSplit = Math.floor(Date.now() / SPLIT_PERIOD) * SPLIT_PERIOD; store.set('painWheelExLastSplit', exLastSplit);
+            const did = STOCKS.filter(st => exSplit(st));
+            $('exNews').textContent = did.length ? `✂️ SPLIT DAY! ${did.map(st => '$' + st.sym).join(', ')} split 10-for-1 (or more). Holders keep their value; new money can jump in.` : '✂️ Split day: every stock is under $500 already. Carry on.';
+            if (did.length) chatBurst(['SPLIT DAY', 'stonks split', 'buy the split', 'cheap shares'], 3);
+            exRender();
+        }
+        const left = exLastSplit + SPLIT_PERIOD - Date.now(), h = Math.floor(left / 3600000), mn = Math.ceil((left % 3600000) / 60000);
+        const el = $('exNext'); if (el) el.textContent = `next split day in ${h ? h + 'h ' : ''}${mn}m`;
+    }
+    setInterval(exSplitDay, 30000);
+    exSplitDay();
 
     // ---------- Curse a Guildmate (cosmetic only) ----------
     const CURSES = {
