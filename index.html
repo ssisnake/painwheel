@@ -201,6 +201,7 @@
         body.party-on #partyLights { display: block; }
         body.party-on #petDock > div > div:last-child { animation: petDance .45s ease-in-out infinite alternate !important; }
         body.party-on #garageDock button { animation: petDance .6s ease-in-out infinite alternate; }
+        @keyframes fireFlicker { from { translate: 0 0; filter: brightness(1); } to { translate: 0 -6px; filter: brightness(1.25); } }
         @keyframes petDance { from { transform: translateY(0) rotate(-12deg); } to { transform: translateY(-8px) rotate(12deg); } }
         @media (prefers-reduced-motion: reduce) { body.party-on #petDock > div > div:last-child, body.party-on #garageDock button { animation: none !important; } }
         #partyLights .beam { position: absolute; width: 70vmax; height: 70vmax; border-radius: 50%; filter: blur(60px); opacity: .32; }
@@ -5752,9 +5753,16 @@
         el.style.cssText = `position:fixed;z-index:77;bottom:${VEH_Y}px;left:0;font-size:76px;line-height:1;pointer-events:none;text-align:center;will-change:transform`;
         el.innerHTML = html; document.body.appendChild(el); return el;
     }
+    let ambClicks = 0, combineEvery = 2 + Math.floor(Math.random() * 2);
     function driveAmbulance() {
         if (vehicles.amb) return;
         const v = vehicles.amb = { el: vehicleEl('<div class="siren-glow" style="font-size:30px">🚨</div>🚑'), x: innerWidth + 20, vx: -(innerWidth + 180) / 3.6, stop: playSiren(3.5) };
+        if (!vehicles.cop && ++ambClicks >= combineEvery) {   // every 2nd or 3rd run there's a combine harvester parked in the lane...
+            ambClicks = 0; combineEvery = 2 + Math.floor(Math.random() * 2);
+            v.combineX = Math.round(innerWidth * (0.22 + Math.random() * 0.2));
+            v.combine = vehicleEl('<div style="font-size:11px;font-weight:900;color:#facc15;letter-spacing:.1em;text-shadow:0 1px 2px #000">COMBINE</div><span style="font-size:40px">🌾</span>🚜');
+            v.combine.style.transform = `translateX(${v.combineX}px)`;
+        }
         chatBurst(['WEE WOO WEE WOO', 'nick is on the way', 'first responders o7', 'except nick', 'someone call nick', '🚑🚑🚑'], 3, 2500);
         startTraffic();
         return v;
@@ -5788,6 +5796,7 @@
             if (cop.paused > 0) cop.paused -= dt; else cop.x += cop.vx * dt;
         }
         if (amb) amb.x += amb.vx * dt;
+        if (amb && amb.combine && amb.x <= amb.combineX + 60) return combineCrash(amb);
         if (amb && cop && Math.abs(amb.x - cop.x) < VEH_W) return vehicleCrash((amb.x + cop.x) / 2);
         [['amb', amb], ['cop', cop]].forEach(([k, v]) => {
             if (!v) return;
@@ -5795,6 +5804,45 @@
             if (v.x < -200 || v.x > innerWidth + 200) { v.el.remove(); v.stop(); delete vehicles[k]; }
         });
         if (vehicles.amb || vehicles.cop) requestAnimationFrame(trafficStep); else trafficOn = false;
+    }
+    const COMBINE_LINES = ["Well... that's one way to harvest a farmer.", "Nick, that's the third combine this month.", "Sir, I'm gonna need you to step out of the fireball.",
+        "Dispatch, we've got a 10-50... Nick again.", "The farmers called 911 about Nick. Nick was the 911.", "Ambulance vs. combine. The corn won.",
+        "I'm writing you a ticket for reckless farming.", "This is why the farmers moved to the city."];
+    function combineCrash(amb) {
+        trafficOn = false;
+        const x = amb.combineX; amb.stop(); delete vehicles.amb;
+        amb.el.style.transition = 'transform .4s ease-out, opacity 1s 1s'; amb.el.style.transform = `translateX(${x + 40}px) rotate(-25deg)`;
+        amb.combine.style.transition = 'transform .4s ease-out, opacity 1s 1s'; amb.combine.style.transform = `translateX(${x - 20}px) rotate(12deg)`;
+        playCrash();
+        const boom = document.createElement('div'); boom.textContent = '💥';
+        boom.style.cssText = `position:fixed;z-index:78;bottom:${VEH_Y + 10}px;left:${x + 40}px;font-size:40px;pointer-events:none;transform:translateX(-30%) scale(.3);transition:transform .35s ease-out, opacity .8s .9s`;
+        document.body.appendChild(boom); requestAnimationFrame(() => boom.style.transform = 'translateX(-30%) scale(3.4)');
+        document.body.animate([{ transform: 'translate(0,0)' }, { transform: 'translate(-8px,4px)' }, { transform: 'translate(7px,-5px)' }, { transform: 'translate(-4px,3px)' }, { transform: 'translate(0,0)' }], { duration: 450 });
+        setTimeout(() => { boom.style.opacity = '0'; amb.el.style.opacity = '0'; amb.combine.style.opacity = '0'; }, 400);
+        // flames spread along the bottom of the screen
+        const fire = document.createElement('div');
+        fire.style.cssText = `position:fixed;z-index:76;left:0;right:0;bottom:${VEH_Y - 18}px;height:70px;pointer-events:none;overflow:hidden;opacity:1;transition:opacity 1.2s`;
+        const n = Math.ceil(innerWidth / 42);
+        for (let i = 0; i < n; i++) {
+            const f = document.createElement('span'); f.textContent = '🔥';
+            const dist = Math.abs(i * 42 - x) / 42;
+            f.style.cssText = `position:absolute;bottom:0;left:${i * 42 - 6}px;font-size:${44 + Math.random() * 18}px;line-height:1;transform:scale(0);transition:transform .35s ease-out ${(dist * 0.06).toFixed(2)}s;animation:fireFlicker ${(0.5 + Math.random() * 0.4).toFixed(2)}s ease-in-out infinite alternate`;
+            fire.appendChild(f);
+        }
+        document.body.appendChild(fire);
+        requestAnimationFrame(() => requestAnimationFrame(() => fire.querySelectorAll('span').forEach(f => f.style.transform = 'scale(1)')));
+        // Justin rolls up above the fire with commentary
+        const cop = document.createElement('div');
+        cop.style.cssText = `position:fixed;z-index:78;bottom:${VEH_Y + 95}px;left:${Math.min(innerWidth - 300, Math.max(20, x - 40))}px;font-size:62px;line-height:1;pointer-events:none;opacity:0;transform:translateY(20px);transition:opacity .5s, transform .5s`;
+        cop.innerHTML = '<div style="position:absolute;bottom:100%;left:0;margin-bottom:6px;width:max-content;max-width:280px;background:#fffbe6;color:#111;font-size:14px;font-weight:800;padding:5px 10px;border-radius:10px;border:2px solid #111;box-shadow:2px 2px 0 #111"></div><span style="display:inline-block;transform:scaleX(-1)">🚓</span>';
+        cop.firstChild.textContent = '🚓 Justin: ' + pick(COMBINE_LINES);
+        document.body.appendChild(cop);
+        setTimeout(() => { cop.style.opacity = '1'; cop.style.transform = 'translateY(0)'; }, 1200);
+        setTimeout(() => { fire.style.opacity = '0'; cop.style.opacity = '0'; }, 7500);
+        setTimeout(() => { boom.remove(); amb.el.remove(); amb.combine.remove(); fire.remove(); cop.remove(); }, 9000);
+        funEvent('🚜🔥 THE AMBULANCE HIT A COMBINE HARVESTER 🔥🚑', 4000);
+        chatBurst(['NOT THE COMBINE', 'FARMER DOWN', 'nick strikes again', 'the corn is burning', 'F for the farmer', '$DEDFRMR TO THE MOON'], 6, 3000);
+        if (typeof exHold !== 'undefined') { const st = STOCKS.find(t => t.sym === 'DEDFRMR'); if (st) { exMove(st, 0.15, 'The ambulance hit a combine. Farmers in shambles'); store.set('painWheelStockPrices2', exPrice); exRender(); } }
     }
     const CRASH_ARGUMENTS = [
         ['Nick', 'You pulled out right in front of me!'], ['Justin', 'I had my lights on! You had your lights on! Everyone had their lights on!'],
