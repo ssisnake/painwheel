@@ -720,7 +720,9 @@
             </div>
 
             <div id="tsussieScene" class="hidden flex-col items-center justify-center my-2">
-                <svg viewBox="0 0 220 210" style="width:min(260px,70vw);height:auto" aria-label="A guy in full makeup with a sword and shield">
+                <div style="position:relative;display:inline-block;max-width:100%">
+                <img id="tsussieImg" alt="Tsukaar in game" class="max-h-[34vh] max-w-full rounded-2xl border-2 border-pink-400 shadow-xl">
+                <svg viewBox="0 0 220 210" style="position:absolute;right:-14px;bottom:-18px;width:96px;height:auto;filter:drop-shadow(0 4px 8px rgba(0,0,0,.7))" aria-label="A guy in full makeup with a sword and shield">
                     <path d="M150 18 L160 120" stroke="#cbd5e1" stroke-width="9" stroke-linecap="round"/><path d="M150 18 L160 120" stroke="#f8fafc" stroke-width="3"/>
                     <rect x="146" y="118" width="26" height="8" rx="3" fill="#a16207" transform="rotate(-5 159 122)"/><rect x="155" y="124" width="8" height="22" rx="3" fill="#78350f"/>
                     <path d="M58 104 C 92 98, 128 98, 162 104 L 168 200 L 52 200 Z" fill="#9ca3af" stroke="#334155" stroke-width="3"/>
@@ -737,6 +739,8 @@
                     <path d="M60 106 L60 172 M38 128 L82 128" stroke="#fde047" stroke-width="6"/>
                     <text x="190" y="40" font-size="22">💅</text><text x="14" y="40" font-size="20">✨</text><text x="186" y="196" font-size="18">💄</text>
                 </svg>
+                </div>
+                <div class="text-[11px] text-pink-200 mt-2 font-bold">Photo by Tsukaar himself</div>
             </div>
 
             <div id="smokesScene" class="hidden flex-col items-center justify-center my-3">
@@ -6129,6 +6133,7 @@
         COMMUNISM: ['OUR KEVIN', 'comrade', 'the Kevin belongs to the people', '☭☭☭', 'seize the means of spinning'],
         SEVEN_ELEVEN: ['SLURPEE', 'brain freeze', 'thank you come again', 'get me a big gulp', '7/11 run']
     });
+    const PHOTO_TSUSSIE = "media/photo_tsussie.jpg?v=0a598549";
     const PHOTO_WHISTLETHY = "media/photo_whistlethy.jpg?v=9a0b537a";
     function playTurtleToot() {   // a soft little whistle
         if (!soundOn()) return;
@@ -6149,6 +6154,7 @@
         if (ws) { ws.classList.toggle('hidden', type !== 'WHISTLETHY'); ws.classList.toggle('flex', type === 'WHISTLETHY'); }
         if (type === 'WHISTLETHY') { if (!$('whistlethyImg').src) $('whistlethyImg').src = PHOTO_WHISTLETHY; setTimeout(playTurtleToot, 700); }
         const ts = $('tsussieScene');
+        if (type === 'TSUSSIE' && !$('tsussieImg').src) $('tsussieImg').src = PHOTO_TSUSSIE;
         if (ts) { ts.classList.toggle('hidden', type !== 'TSUSSIE'); ts.classList.toggle('flex', type === 'TSUSSIE'); }
         if (type === 'SEVEN_ELEVEN') {
             setTimeout(() => giveLoot('uncommon', '🥤 Thank you, come again', pick(['Slurpee (Blue Raspberry)', 'Slurpee (Cherry)', 'Slurpee (Coke)', 'Slurpee (Mystery Flavor)'])), 1200);
