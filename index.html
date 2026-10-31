@@ -3418,6 +3418,19 @@
 
     /* ===================== PLAYER, STATS & ACHIEVEMENTS =====================
        Everything here is saved in each person's own browser (like the volume slider). */
+    // Big numbers: anything 1 trillion+ shows as 1.23T, 4.5Qa ... and past decillions as 1.23e45
+    (function bigNumbers() {
+        const orig = Number.prototype.toLocaleString;
+        const NAMES = ['T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc'];   // 1e12 ... 1e33
+        Number.prototype.toLocaleString = function () {
+            const v = Number(this), a = Math.abs(v);
+            if (!isFinite(v)) return v > 0 ? '∞' : v < 0 ? '-∞' : 'NaN';
+            if (a < 1e12) return orig.apply(this, arguments);
+            const e = Math.floor(Math.log10(a));
+            if (e < 36) { const i = Math.floor((e - 12) / 3); const n = v / Math.pow(10, 12 + i * 3); return (Math.abs(n) >= 100 ? n.toFixed(0) : n.toFixed(2).replace(/\.?0+$/, '')) + NAMES[i] + ' '; }
+            return v.toExponential(2).replace('e+', 'e') + ' ';
+        };
+    })();
     const store = {
         get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
         set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
@@ -3484,6 +3497,7 @@
         { id: 'boughtaotc', name: 'Pulled a Krom',            desc: "Buy Krom's AOTC carry. Shameful." },
         { id: 'aotclegit',  name: 'Ahead of the Curve (Legit)', desc: 'Land on AOTC naturally. No rigs, no Krom carries, no excuses.' },
         { id: 'fenderbender', name: 'Whose Fault Is It?',      desc: "Crash Nick's ambulance into Justin's cop car.", secret: true, secretName: true },
+        { id: 'goldcookie', name: 'Grandmapocalypse Survivor', desc: 'Click a golden cookie. A nod to Cookie Clicker: this wheel is basically that, but with Kevin.', secret: true, secretName: true },
         { id: 'cluck',      name: 'CLUCK!',                   desc: 'Complete the Westfall chicken\'s quest.' },
         { id: 'clippy',     name: "It Looks Like You're Adopting a Paperclip", desc: 'Find and adopt the secret pet.', secret: true, secretName: true }
     ];
@@ -5087,8 +5101,9 @@
     });
 
     // ---------- gold & goblin betting ----------
-    let gold = store.get('painWheelGold', 1000), goblinDebt = store.get('painWheelDebt', 0);
-    function setGold(v) { gold = Math.max(0, Math.round(v)); store.set('painWheelGold', gold); renderGold(); }
+    let gold = Math.min(1e300, Number(store.get('painWheelGold', 1000)) || 0), goblinDebt = store.get('painWheelDebt', 0);
+    const GOLD_CAP = 1e300;   // the psychos stop here instead of breaking the game with Infinity
+    function setGold(v) { v = Number(v); if (!isFinite(v) || v > GOLD_CAP) v = isNaN(v) ? gold : GOLD_CAP; gold = Math.max(0, Math.round(v)); store.set('painWheelGold', gold); renderGold(); }
     function renderGold() {
         $('goldText').textContent = '🪙 ' + gold.toLocaleString() + 'g' + (goblinDebt ? `  (debt ${goblinDebt.toLocaleString()}g)` : '');
         $('bailoutBtn').classList.toggle('hidden', gold >= 10);
@@ -6254,6 +6269,32 @@
         setTimeout(() => { undo.forEach(f => f()); horrorOn = false; renderGarage(); }, ms);   // redraw the garage fresh in case something changed mid-horror
     }
 
+    // ---------- 🍪 golden cookie (a Cookie Clicker nod): after 200 spins one sometimes floats by ----------
+    const COOKIE_LINES = ['The grandmas are restless.', 'A grandma baked this. Do not ask what is in it.', 'The grandmas have been watching you spin.',
+        'Grandma says you spin too much. Grandma also says take this cookie.', 'Somewhere, a grandma is knitting a Kevin sweater.', 'The grandmas demand more spins.'];
+    function goldenCookie() {
+        if ($('goldenCookie')) return;
+        const c = document.createElement('button'); c.id = 'goldenCookie'; c.textContent = '🍪'; c.title = 'A golden cookie!';
+        const x = 60 + Math.random() * (innerWidth - 160), y = 120 + Math.random() * (innerHeight - 260);
+        c.style.cssText = `position:fixed;z-index:75;left:${x}px;top:${y}px;font-size:58px;line-height:1;background:none;border:none;cursor:pointer;filter:sepia(1) saturate(3) brightness(1.15) drop-shadow(0 0 14px #facc15) drop-shadow(0 0 30px #f59e0b);opacity:0;transition:opacity .6s, transform .2s;animation:houseBob 1.2s ease-in-out infinite alternate`;
+        document.body.appendChild(c); requestAnimationFrame(() => c.style.opacity = '1');
+        const gone = setTimeout(() => { c.style.opacity = '0'; setTimeout(() => c.remove(), 700); }, 12000);
+        c.addEventListener('click', () => {
+            clearTimeout(gone); c.remove(); unlock('goldcookie');
+            const roll = Math.random(); let msg;
+            if (roll < 0.5) { const won = Math.round(gold * 0.13) + 7777; setGold(gold + won); msg = `🍪 LUCKY! +${won.toLocaleString()}g`; }
+            else if (roll < 0.8) { flaskLoot += 7; store.set('painWheelFlask', flaskLoot); msg = "🍪 GRANDMA'S BLESSING: your next 7 spins drop loot"; }
+            else { STOCKS.forEach(st => exMove(st, 0.177, null)); store.set('painWheelStockPrices2', exPrice); exRender(); msg = '🍪 COOKIE STORM: every exchange stock +17.7%'; }
+            funEvent(msg, 4500); moveToast('👵 ' + pick(COOKIE_LINES));
+            launchConfetti(['🍪', '👵', '✨'], ['#facc15', '#f59e0b', '#fde68a'], 0.7, 0.4);
+            chatBurst(['GOLDEN COOKIE', 'grandma W', 'cookie clicker flashbacks', 'click the cookie', 'the grandmas approve'], 4);
+        });
+    }
+    setInterval(() => {   // only for players past 200 spins, roughly once every 5 minutes
+        if (document.hidden || Math.max(stats.spins, allTimeSpins) < 200 || isSpinning) return;
+        if (Math.random() < 1 / 10) goldenCookie();
+    }, 30000);
+
     // ---------- Tuesday reset: Goblin IRS income tax ----------
     function checkTax() {
         const d = new Date(); if (d.getDay() !== 2) return;   // Tuesdays only (WoW reset day), once a month
@@ -6573,8 +6614,8 @@
         STOCKS.forEach(st => {
             const v = st.vol || 1;
             if (st.crash && Math.random() < st.crash[0]) { exMove(st, -st.crash[1], null); $('exNews').textContent = st.crash[2]; chatBurst(['RIP my portfolio', 'CRASHED', 'down bad', 'F'], 2); }
-            else if (Math.random() < (st.likeKnob ? 0.22 : 0.12)) { const good = Math.random() < 0.62; exMove(st, (good ? 0.03 + Math.random() * (st.likeKnob ? 0.09 : 0.08) : -(0.02 + Math.random() * (st.likeKnob ? 0.07 : 0.06))) * v, pick(good ? st.up : st.down)); }
-            else exMove(st, (0.002 + (Math.random() - 0.5) * 0.024) * v);
+            else if (Math.random() < (st.likeKnob ? 0.24 : 0.2)) { const good = Math.random() < 0.7; exMove(st, (good ? 0.04 + Math.random() * 0.1 : -(0.02 + Math.random() * 0.06)) * v, pick(good ? st.up : st.down)); }
+            else exMove(st, (0.005 + (Math.random() - 0.5) * 0.024) * v);
         });
         store.set('painWheelStockPrices2', exPrice); exRender();
     }, 4000);
