@@ -234,11 +234,13 @@
         @keyframes lpSteam { 0% { transform: translate(0, 0) scale(.4); opacity: 0; } 25% { opacity: .9; } 100% { transform: translate(var(--dx, -26px), -30px) scale(1.6); opacity: 0; } }
         .lp-steam.s2 { --dx: 26px; }
         .lp-go { position: relative; align-self: center; padding-bottom: 14px; text-align: center; }
-        .lp-btn { cursor: pointer; padding: 12px 22px; border-radius: 12px; border: 2px solid #fecaca; background: linear-gradient(180deg, #ef4444, #b91c1c); color: #fff; font-weight: 900; font-size: 18px; letter-spacing: .12em;
-            box-shadow: 0 0 0 0 rgba(239,68,68,.6); animation: lpPulse 2.2s ease-in-out infinite; }
+        .lp-btn { position: relative; cursor: pointer; padding: 12px 22px; border-radius: 12px; border: 2px solid #fecaca; background: linear-gradient(180deg, #ef4444, #b91c1c); color: #fff; font-weight: 900; font-size: 18px; letter-spacing: .12em; }
+        .lp-btn::after { content: ""; position: absolute; inset: -2px; border-radius: 12px; border: 3px solid rgba(239,68,68,.7); pointer-events: none; animation: lpPulse 2.2s ease-out infinite; will-change: transform, opacity; }
         .lp-btn:hover { filter: brightness(1.12); }
-        .lp-btn:disabled { animation: none; opacity: .5; cursor: default; filter: grayscale(.5); }
-        @keyframes lpPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,.55); } 50% { box-shadow: 0 0 0 10px rgba(239,68,68,0); } }
+        .lp-btn:disabled { opacity: .5; cursor: default; filter: grayscale(.5); }
+        .lp-btn:disabled::after { animation: none; opacity: 0; }
+        @keyframes lpPulse { 0% { transform: scale(1); opacity: .8; } 70%, 100% { transform: scale(1.18, 1.35); opacity: 0; } }
+        #launchPad.offscreen * , #launchPad.offscreen *::after { animation-play-state: paused !important; }
         .lp-hint { margin-top: 6px; font-size: 11px; color: #94a3b8; max-width: 170px; }
         body.is-spinning #launchPad * { animation-play-state: paused !important; }
         @media (max-width: 640px) { .lp-wrap { flex-wrap: wrap; justify-content: center; } .lp-info { flex-basis: 100%; text-align: center; } }   /* room for the Hearthstone in the top-right corner */
@@ -1630,6 +1632,27 @@
         "💳 GOBLIN EXPRESS PLATINUM: YOU'RE PRE-APPROVED! WATCH YOUR POP-UPS FOR YOUR PERSONAL OFFER. 400% APR. NO TAKE-BACKS.",
         "💳 WHY PAY WITH GOLD YOU HAVE WHEN YOU CAN PAY WITH GOLD YOU DON'T? GOBLIN EXPRESS. MEMBERSHIP HAS ITS PENALTIES.",
         "💳 GOBLIN EXPRESS: DON'T LEAVE THE GUILD HALL WITHOUT IT. (YOU CAN'T. WE HAVE YOUR HEARTHSTONE.)",
+        "🎳 REB'S BOWLING ALLEY: EVERY LANE IS A GUTTER. EVERY DRINK IS A DOUBLE.",
+        "🧯 CASIMIR'S SAFETY SEMINAR: HOW TO RIG A WHEEL WITHOUT GETTING CAUGHT (YOU WILL GET CAUGHT)",
+        "🛻 BIBLEHUMPING'S DRIVING SCHOOL: LEARN TO PARALLEL PARK BETWEEN TWO COMBINES",
+        "🍩 CHAOTIC'S DONUT OF THE MONTH CLUB: 12 DONUTS. 11 IF HE'S ON SHIFT.",
+        "📟 PAGERS 4 RAIDERS: GET NOTIFIED THE MOMENT KEVIN DIES. BATTERY LASTS 4 SECONDS.",
+        "🦴 HOGGER'S CHIROPRACTIC: WE'LL ADJUST YOUR SPINE. AND YOUR CORPSE RUN.",
+        "🧃 LIQUID DPS: 100% JUICE, 0% DAMAGE. KEVIN'S FAVORITE.",
+        "🎟️ SCRATCH-OFF ANONYMOUS: MEETINGS THURSDAYS. BRING YOUR OWN COIN.",
+        "🛁 THE KEVIN TUB: GET IN. STAND IN IT. DIE IN IT. JUST LIKE THE BOSS FIGHTS.",
+        "📦 DEGENERATE DELIVERY: YOUR LOOT, DELIVERED TO THE WRONG ALT IN 3-5 BUSINESS DAYS",
+        "🔮 MADAME UWUTEK'S FORTUNE TELLING: YOU WILL WIPE. THAT'LL BE 50G.",
+        "🦷 GOBLIN DENTAL: WE TAKE GOLD TEETH AS PAYMENT. WE ALSO TAKE REGULAR TEETH.",
+        "🧹 AFKGHOUL CLEANING SERVICE: WE CLEAN HALF YOUR HOUSE, THEN WE'RE 'BRB'",
+        "🪖 TSUKAAR'S PROT WARRIOR CAMP: LEARN TO PULL BEFORE THE READY CHECK FINISHES",
+        "🍺 ROAD BEER RECALL: SOME CANS MAY CONTAIN RAIDING UNDER THE INFLUENCE. CHAOTIC IS AWARE.",
+        "🏜️ THE CARTEL'S DESERT B&B: QUIET. PEACEFUL. NO ROCKETS. WE MEAN IT. WE WILL FIND YOU.",
+        "💾 WINRAR 2: STILL FREE. STILL NAGGING. NOW WITH A 40-DAY TRIAL THAT NEVER ENDS.",
+        "📻 KNOB CREEK FM: ALL REB, ALL NIGHT. MOSTLY ICE CUBES AND QUIET SOBBING.",
+        "🎨 HAPPY LITTLE WIPES: A RELAXING PAINTING SHOW WHERE EVERY LITTLE TREE IS STANDING IN FIRE",
+        "🛰️ SPACEZ SATELLITE INTERNET: 9,000 MS PING. FREE INSTALLATION DIRECTLY ONTO YOUR SHACK.",
+        "🧾 GOBLIN IRS EXPRESS LANE: PAY YOUR TAXES IN 5 MINUTES OR WE TAKE THE YACHT CHAIRS",
         "📢 PUBLIC SERVICE ANNOUNCEMENT: LISA IS NOT AXAZON'S SISTER. SHE IS HIS WIFE. DNA CONFIRMS 0% SIBLING. PLEASE STOP ASKING IN DISCORD."
     ];
 
@@ -1758,6 +1781,26 @@
         "FINANCE: GOBLIN EXPRESS APPROVES KEVIN FOR A CREDIT CARD; ANALYSTS 'HORRIFIED BUT NOT SURPRISED'",
         "CONSUMER ALERT: GOBLIN EXPRESS 'REWARDS POINTS' REVEALED TO BE ADDITIONAL DEBT",
         "LOCAL: MAN BUYS SCRATCH-OFF ON HIS GOBLIN EXPRESS, WINS, STILL OWES MORE THAN HE WON",
+        "BREAKING: ELAN POSTS ABOUT $KEVN; KEVIN REPLIES 'WHO IS ELAN'; STOCK DROPS ANOTHER 20%",
+        "LOCAL: SQUAWKR USERS REPORT 'TOO MANY CHAOTIC ALTS'; CHAOTIC_ALT31 DISAGREES",
+        "COURTS: RAIDER FIGHTS RUI TICKET, CLAIMS THE ROAD BEERS 'WERE FOR THE ROAD'",
+        "CARTEL: DESERT SHACK DECLARED 'PROTECTED TERRITORY'; ROCKETS NOW CONSIDERED 'RUDE'",
+        "IRS: RECORD NUMBER OF YACHT OWNERS DISCOVER THE WORD 'DEADLINE'",
+        "MARKETS: $SUSN UP 10,000% ON ELAN POST; SUSAN EXPRESS STILL UNSURE WHAT IT SELLS",
+        "SCIENCE: STUDY FINDS STONKS ONLY GO UP UNTIL THE EXACT MOMENT YOU BUY THEM",
+        "LOCAL: GRANDMA CAUGHT HIDING GOLDEN COOKIES IN THE GUILD HALL; GRANDMA 'REGRETS NOTHING'",
+        "WEATHER: SPLIT DAY FORECAST CALLS FOR 10 TIMES THE SHARES AND THE SAME AMOUNT OF SADNESS",
+        "TECH: VINCE'S BRICK PHONE RECEIVES ITS FIRST TEXT MESSAGE; IT WAS SENT IN 1991",
+        "PARANORMAL: BIBLEHUMPING'S FINGER PRESSES SPIN 14 TIMES OVERNIGHT; GUILD 'DEEPLY UNSETTLED'",
+        "HEALTH: VOODOO DOLL BLAMED AFTER KEVIN TRIPS OVER A MURLOC. KEVIN: 'NO, THAT WAS ALL ME'",
+        "LOCAL: PLATEMAGE TAKES OFF PLATE ARMOR; IS STILL CALLED PLATEMAGE; STILL A HOLY PRIEST",
+        "OPINION: WHY THE VAULT COMBINATION SHOULD STAY 1234 — BY REB",
+        "TRAVEL: HEARTHSTONE USERS STRANDED MID-CAST AFTER KEVIN PULLS THE BOSS",
+        "REAL ESTATE: MURLOC IN THE YACHT PORTHOLE REVEALED TO BE PAYING RENT",
+        "EDUCATION: SPACEZ OPENS ROCKET SCHOOL; FIRST AND ONLY LESSON IS 'NOT AT THE SHACK'",
+        "FINANCE: GOBLIN EXPRESS ANNOUNCES 0% INTRO APR FOR THE FIRST 0 DAYS",
+        "POLICE BLOTTER: CHAOTIC ARRESTS CHAOTIC_ALT12 FOR IMPERSONATING AN OFFICER. BOTH ARE CHAOTIC.",
+        "WILDLIFE: WESTFALL CHICKEN POPULATION BOOMS NOW THAT YOU ONLY HAVE TO SAY 'CHICKEN' ONCE",
         "WARCRAFT LOGS RECEIVES 'ULAKEK TAKE 123456789'; SERVER FANS NOW SPINNING AT FULL SPEED",
         "SCIENTISTS STILL UNABLE TO TYPE CHÅÓTÌC'S NAME; INVITES SENT TO 'CHAOTIC' ACCIDENTALLY RECRUIT 4 GNOMES",
         "RET PALADIN POPULATION REACHES 3; RAID LEADER DECLARES A STATE OF EMERGENCY",
@@ -5260,7 +5303,9 @@
         'not the shack again', 'yacht tour when', 'cookie when', 'the grandmas are watching', 'chaotic on an alt again', 'biblehumping kill any farmers today?',
         'o7 farmers', 'reb is on his 3rd', 'Casimir rigged this', 'buy $DEDFRMR', '$KEVN to the moon', 'split day soon', 'Tsukaar pulled', 'ready check? lol',
         'where is mankriks wife', 'gary the swordfish W', 'murloc in the porthole', 'whistlethy toot', 'did someone say thunderfury', 'Kana+ subscriber here',
-        'evelyn go to bed', 'the hatch is glowing', 'uncle touchy?', 'Platemage is a priest btw', '67', 'Krom carry when', 'the finger moved', 'chaotic rigging the rocket'];
+        'evelyn go to bed', 'the hatch is glowing', 'uncle touchy?', 'Platemage is a priest btw', '67', 'Krom carry when', 'the finger moved', 'chaotic rigging the rocket',
+        "🍺 road beer check", "ELAN POSTED AGAIN 🚀", "who let kevin near the doll 🪡", "squawkr is down bad", "bills box looking red 💸", "pay your taxes 🧾", "the cartel is watching 🌵", "chaotic pulled me over 🚓", "sirens again 🚨", "biblehumping speeding again 🚑", "gary is a marlin 🐟", "murloc spotted 🐸", "vince on line 2 📞", "stonks 📈", "not stonks 📉", "grandma please 👵", "cookie spotted?? 🍪", "yacht party 🛥️", "launch it 🚀", "the finger 🖐️", "KEKW 😂", "monkaW 😬", "POG 😮", "Sadge 😢", "GG 🎉", "spin it already ⏰", "not the shack again 🏜️", "who has the vault combo 🔐"];
+    const CHAT_EMOJI = ['😂', '💀', '🔥', '😭', '👀', '🤡', '💯', '😬', '🙏', '🎉', '🍺', '🥃', '📈', '📉', '🚀', '🫡', '😤', '🤣'];
     const CHAT_START = ['here we go', 'spin it', 'Kevin incoming', 'I bet Kevin', 'PogChamp', 'monkaS', 'gamba gamba', 'pray', 'no Kevin no Kevin', 'RIGGED', 'come on ret buff',
         'finger on the button', 'this is the one', 'all in', 'vince says buy', 'kevin kevin kevin', 'here comes the pain', 'clip it if kevin', 'spin2win', 'o7', 'ret ret ret'];
     const CHAT_LAND = {
@@ -5282,6 +5327,7 @@
         if (!chatLog) return;
         const n = who ? CHAT_NAMES.find(x => x[0] === who) || [who, '#e2e8f0'] : pick(CHAT_NAMES);
         if (Date.now() < (window.__murlocUntil || 0)) msg = pick(['Mrglglgl!', 'mrgl mrgl', 'MRGLGLGLGL', 'Aaaaaughibbrgubugbugrguburgle!', 'mrrrgl?', 'blub blub']);
+        if (!who && Math.random() < 0.22 && !/\p{Extended_Pictographic}/u.test(msg)) msg += ' ' + pick(CHAT_EMOJI);   // chat loves emojis
         const d = document.createElement('div'); d.className = 'chat-line text-slate-200';
         const a = document.createElement('span'); a.className = 'font-bold'; a.style.color = n[1]; a.textContent = n[0];
         d.append(a, document.createTextNode(': ' + msg));
@@ -6438,6 +6484,7 @@
         return { x: innerWidth / 2, y: innerHeight + 60 };
     }
     $('padRocket').addEventListener('click', padLaunch); $('lpLaunch').addEventListener('click', padLaunch);
+    if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => $('launchPad').classList.toggle('offscreen', !e.isIntersecting))).observe($('launchPad'));
 
     // ---------- AIPAC lobbying ----------
     const AIPAC_TIERS = [[1, 'Basic', 'aipac1', '#94a3b8'], [100, 'Bronze', 'aipac2', '#d97706'], [1000, 'Silver', 'aipac3', '#cbd5e1'],
@@ -7098,10 +7145,38 @@
         ['kevin', "bought the blue check. now people can verify it's really me standing in fire"], ['irs', 'we see you, vault people. we see all of you.'],
         ['chaotic', 'pulled over a guy for doing 90 in a 45. it was Biblehumping. the ambulance was empty. he was "just vibing"'],
         ['bible', 'ChAoTiC has been on the same alt for 11 minutes. new record. someone check on him'], ['vince', 'NEVER SELL. ALSO SELL. I AM VERY BUSY.'],
-        ['kevin', 'why does everyone keep poking a doll and then looking at me'], ['reb', 'the wheel landed on Knob Creek. i felt that in my soul (i am the soul)']];
+        ['kevin', 'why does everyone keep poking a doll and then looking at me'],
+        ["kevin", "elan said my stock is trash. elan has never even seen me play. (that is why)"],
+        ["elan", "might buy the guild hall. might rename it to X-Guild. might not. 🚀"],
+        ["vince", "I GOT A TEXT. IT SAYS \"STOP CALLING\". WHO IS THIS"],
+        ["reb", "he said \"one more\" at 9:14. it is now 11:52."],
+        ["gary", "I AM A MARLIN."],
+        ["grandma", "the cookies are not cursed. 👵 (some of the cookies are cursed)"],
+        ["shack", "quiet day in the desert. too quiet. i can hear the launch pad humming"],
+        ["goblinx", "your minimum payment is due 😊 your minimum payment is everything 😊"],
+        ["irs", "reminder: the red bills box in the bottom right is not decorative"],
+        ["casimir", "the wheel is perfectly fair. i checked. i also adjusted a few things while i was in there"],
+        ["bible", "lost my finger at work and somehow it has a better spin record than kevin"],
+        ["chaotic", "pulled myself over. let myself off with a warning"],
+        ["alt", "this is my main now"],
+        ["alt", "nevermind"],
+        ["uwutek", "raid team hit me 400 times today. i felt maybe 3 of them"],
+        ["yacht", "new rule on the yacht: no rockets, no Kevins, and absolutely no rockets driven by Kevins"],
+        ["kevin", "who keeps leaving a little doll with pins in it at my door"],
+        ["vince", "THE STOCK SPLIT TENNED MY SHARES. I DON'T DO MATH. I DO PHONE."],
+        ["reb", "i am a liver. i will never retire. i will simply be replaced"],
+        ["grandma", "posted 4 recipes. 3 of them just say \"click faster\""],
+        ["chaotic", "52 alts and not one of them can heal. working on it"],
+        ["bible", "the ambulance has 300,000 miles on it. 200,000 of them are combines"],
+        ["gary", "someone on the yacht called me Gary again. i will be pressing charges"],
+        ["kevin", "stood in the fire on purpose today to see if it was me or the fire. it was me"],
+        ["goblinx", "congratulations! your credit limit has been raised to \"please stop\""], ['reb', 'the wheel landed on Knob Creek. i felt that in my soul (i am the soul)']];
     const sqFeed = store.get('painWheelSquawkFeed', []);
     let sqState = Object.assign({ x: null, y: 200, min: innerWidth < 1500 }, store.get('painWheelSquawkPos', {})), sqUnread = 0;
-    function sqSaveState() { store.set('painWheelSquawkPos', sqState); }
+    function sqSaveState() { sqState.vw = innerWidth; sqState.vh = innerHeight; store.set('painWheelSquawkPos', sqState); }
+    if (sqState.vw && sqState.x != null && (sqState.vw !== innerWidth || sqState.vh !== innerHeight)) {   // window size changed since: keep the same relative spot
+        sqState.x = Math.round(sqState.x / sqState.vw * innerWidth); sqState.y = Math.round(sqState.y / sqState.vh * innerHeight);
+    }
     function sqPlace() {
         const w = $('squawkWin'), W = w.offsetWidth || 350, H = $('sqHead').offsetHeight || 36;
         if (sqState.x == null) sqState.x = innerWidth - W - 16;
