@@ -5361,7 +5361,6 @@
     const HOUSE_LEVELS = [
         { e: '🏚️', name: 'Timeshare (1/52nd)', desc: 'A sewer with a door. You own one week a year.', rent: -25, cost: 0 },
         { e: '🛖', name: 'Goblin Hut', desc: 'You own the whole week now. The door even locks.', rent: 20, cost: 500 },
-        { e: '🏜️', name: 'Shack in the Desert', desc: 'The one from the meme. No water, no neighbors, perfect for thinking about your parses.', rent: 40, cost: 1350 },
         { e: '🏠', name: 'Undermine Cottage', desc: 'Running water! (It is oil.)', rent: 60, cost: 2000 },
         { e: '🏡', name: 'House with a Garden', desc: 'The garden is mostly explosives. Neighbors are nervous.', rent: 150, cost: 6000 },
         { e: '🏘️', name: 'Goblin Estate', desc: 'You are now a landlord. Your tenants are all Kevin.', rent: 400, cost: 15000 },
@@ -5369,10 +5368,13 @@
         { e: '🛥️', name: "Gallywix's Yacht", desc: 'You won capitalism. Reb is drinking on the deck.', rent: 2500, cost: 100000 }
     ];
     let houseLevel = store.get('painWheelHouseLevel', 0);
-    if (!store.get('painWheelShackAdded', false)) {   // the Shack was slotted in at level 2: bump anyone already past the Hut
-        if (houseLevel >= 2) { houseLevel++; store.set('painWheelHouseLevel', houseLevel); }
-        store.set('painWheelShackAdded', true);
+    if (store.get('painWheelShackAdded', false) && !store.get('painWheelShackSeparate', false)) {
+        // the Shack briefly sat in the upgrade ladder at level 2; it is its own property now, so undo that
+        if (houseLevel === 2) { houseLevel = 1; const g = store.get('painWheelGarage', {}); g.shack = true; store.set('painWheelGarage', g); }
+        else if (houseLevel >= 3) houseLevel--;
+        store.set('painWheelHouseLevel', houseLevel);
     }
+    store.set('painWheelShackSeparate', true);
     function houseInfo() { return HOUSE_LEVELS[houseLevel]; }
     function renderHouseIcon() {
         const h = houseInfo(); $('houseEmoji').textContent = h.e;
@@ -5403,8 +5405,8 @@
         houseSay(`Welcome to your ${next.name}!`);
         chatBurst(['HOUSE UPGRADE POG', 'real estate mogul', 'goblin W', 'landlord arc', 'rent is due KEKW'], 3);
         launchConfetti(['💰', '🏠', '✨'], ['#4ade80', '#facc15', '#ffffff'], 0.5, 0.5);
-        if (houseLevel >= 6) unlock('castle');
-        if (houseLevel >= 7) unlock('yacht');
+        if (houseLevel >= 5) unlock('castle');
+        if (houseLevel >= 6) unlock('yacht');
     });
     function payDebt(amt) {
         amt = Math.min(amt, goblinDebt, gold);
@@ -5651,7 +5653,9 @@
     }
     function renderGarage() {
         const d = $('garageDock'); d.innerHTML = '';
-        [['ambulance', '🚑', "Nick's Ambulance (click for siren)", driveAmbulance], ['rocket', '🚀', 'Your rocket (click to launch)', launchRocket]].forEach(([k, e, tip, fn]) => {
+        [['shack', '🏜️', 'Your Shack in the Desert', () => moveToast('🏜️ ' + pick(['The shack is quiet. The desert is quiet. Kevin cannot find you here.', 'You sit on the shack porch and think about your parses.',
+            'A tumbleweed rolls by. It has better DPS than Kevin.', 'No WiFi out here. Somehow the wheel still loads.', 'Rent collected from a lizard: it paid in gold.']))],
+         ['ambulance', '🚑', "Nick's Ambulance (click for siren)", driveAmbulance], ['rocket', '🚀', 'Your rocket (click to launch)', launchRocket]].forEach(([k, e, tip, fn]) => {
             if (!garage[k]) return;
             const b = document.createElement('button'); b.textContent = e; b.title = tip;
             b.style.cssText = 'font-size:40px;line-height:1;cursor:pointer;background:none;border:none;filter:drop-shadow(0 3px 6px rgba(0,0,0,.7))';
@@ -5851,6 +5855,10 @@
             });
             if (!clippyUnlocked) { const n = document.createElement('div'); n.className = 'text-[11px] text-slate-500'; n.textContent = '??? — one pet is hiding somewhere. It looks like it\'s waiting for you to click something.'; add(n); }
         } else if (shopTab === 'garage') {
+            add(shopRow('🏜️', 'Shack in the Desert', 'The one from the meme. Its own property (not a house upgrade). Sits in the corner, pays +40g every 10 minutes.', garage.shack ? 'Owned ✓' : 'Buy: 1,350g', () => {
+                if (!spend(1350, 'the Shack in the Desert')) return; garage.shack = true; store.set('painWheelGarage', garage); renderGarage(); renderShop();
+                shopMsg('You bought a shack in the desert. Very peaceful. Nobody can find you.'); chatBurst(['SHACK IN THE DESERT', 'he moved to the desert', 'the meme lives', 'peaceful'], 3);
+            }, garage.shack ? 'owned' : 'buy'));
             add(shopRow('🚑', "Nick's Ambulance", 'Parks in the corner. Click it for lights and siren. Thank you to our first responders (except Nick).', garage.ambulance ? 'Owned ✓' : 'Buy: 2,500,000g', () => {
                 if (!spend(2500000, 'the ambulance')) return; garage.ambulance = true; store.set('painWheelGarage', garage); renderGarage(); unlock('weewoo'); driveAmbulance(); renderShop();
             }, garage.ambulance ? 'owned' : 'buy'));
@@ -6160,6 +6168,7 @@
         if (Math.random() < (cluckStage === 2 ? 0.5 : 1 / 12)) spawnChicken();
     }, 20000);
     renderQuestTracker();
+    setInterval(() => { if (!document.hidden && garage.shack) { setGold(gold + 40); } }, 10 * 60 * 1000);   // shack rent
 
     // ---------- Degenerate Exchange: more guild stocks (they trend up over time like $KNOB, with their own disasters) ----------
     const STOCKS = [
