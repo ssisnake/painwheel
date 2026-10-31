@@ -766,7 +766,7 @@
                 <div class="lp-wrap">
                     <div class="lp-stars"></div>
                     <div class="lp-info">
-                        <div class="lp-title">🚀 Goblin Space Program</div>
+                        <div class="lp-title">🚀 SpaceZ</div>
                         <div class="lp-sub">Launch Complex 1 · Safety record: no</div>
                         <div id="lpStatus" class="lp-status">STATUS: GO FOR LAUNCH</div>
                         <div id="lpStats" class="lp-stats"></div>
@@ -1590,7 +1590,7 @@
         "📞 VINCE'S BRICK PHONE EMPORIUM: 4 POUNDS, 20 MINUTES OF BATTERY, UNLIMITED SHOUTING. CALL NOW (FROM A PAYPHONE)",
         "🧼 KEVIN-B-GONE: SPRAY IT ON THE WHEEL. IT WILL NOT WORK. NOTHING WORKS. ONLY $19.99",
         "🎰 GOBLIN CASINO NIGHT: THE HOUSE ALWAYS WINS. THE HOUSE IS A YACHT NOW.",
-        "🚀 GOBLIN SPACE PROGRAM: NOW BOOKING TOURS OF LAUNCH COMPLEX 1. HARD HATS REQUIRED. SHACK NOT INCLUDED.",
+        "🚀 SPACEZ: NOW BOOKING TOURS OF LAUNCH COMPLEX 1. HARD HATS REQUIRED. SHACK NOT INCLUDED.",
         "🏦 OFFSHORE BANKING WITH GALLYWIX: FDIC* INSURED UP TO 250,000G. *FEDERAL DEPOSIT INSURANCE CARTEL",
         "🍪 GRANDMA'S GOLDEN COOKIES: BAKED WITH LOVE, SUGAR, AND AN UNSETTLING AMOUNT OF CLICKING",
         "🚑 BIBLEHUMPING'S AMBULANCE RIDE-SHARE: FIVE STARS FROM EVERY PATIENT WHO SURVIVED (ONE PATIENT)",
@@ -1715,7 +1715,7 @@
         "BREAKING: GUILD STILL ASKING 'WHY DO WE HAVE A PROT WARRIOR?' TSUKAAR DECLINES TO COMMENT, PULLS BOSS.",
         "DEGENERATE REJECTS CLEAR 8/8 HEROIC; KEVIN CREDITS 'TEAMWORK,' TEAM CREDITS 'KEVIN BEING DEAD'",
         "OFFICER MRCHAOTIC UPLOADS 'HEROIC TAKE 420'; FBI REQUESTS TAKES 1 THROUGH 419",
-        "BREAKING: GOBLIN SPACE PROGRAM LAUNCHES ROCKET; ROCKET LANDS ON YACHT; PROGRAM CALLS IT 'A SUCCESS'",
+        "BREAKING: SPACEZ LAUNCHES ROCKET; ROCKET LANDS ON YACHT; PROGRAM CALLS IT 'A SUCCESS'",
         "LOCAL: BIBLEHUMPING FIRST ON SCENE OF ROCKET CRASH; FARMERS NATIONWIDE PLACED ON HIGH ALERT",
         "CRIME: CHAOTIC WRITES HIMSELF A TICKET FOR PARKING THE CRUISER INSIDE A DONUT SHOP",
         "FINANCE: VINCE SAYS '$KNOB IS GOING TO THE MOON.' VINCE HAS SAID THIS SINCE 1987.",
@@ -6398,7 +6398,7 @@
             $('lpLaunch').disabled = false; $('lpLaunch').textContent = owned ? 'LAUNCH' : 'BUY A ROCKET';
             r.classList.remove('gone');
         }
-        $('lpHint').textContent = owned ? pick(PAD_HINTS) : 'Gallywix Rocket: 10B gold in the Shop (Garage tab).';
+        $('lpHint').textContent = owned ? pick(PAD_HINTS) : 'SpaceZ Rocket: 10B gold in the Shop (Garage tab).';
         const st = rocketStats;
         $('lpStats').innerHTML = owned ? `Launches: ${st.launches.toLocaleString()}<br>Hit the shack: ${st.shack} · the yacht: ${st.yacht} · the wheel: ${st.wheel}` : 'Launches: 0<br>The pad is very clean.';
     }
@@ -6663,7 +6663,7 @@
                 if (!spend(2500000, 'the cop car')) return; garage.police = true; store.set('painWheelGarage', garage); renderGarage(); drivePolice(); renderShop();
                 setTimeout(() => giveLoot('legendary', '🍩 ChAoTiC left this in the cruiser', 'Golden Chocolate Donut'), 1500);
             }, garage.police ? 'owned' : 'buy'));
-            add(shopRow('🚀', 'Gallywix Rocket', 'For when you\'ve made it (10 billion gold). Launches on purchase and every time you click it.', garage.rocket ? 'Owned ✓' : 'Buy: 10,000,000,000g', () => {
+            add(shopRow('🚀', 'SpaceZ Rocket', 'For when you\'ve made it (10 billion gold). Launches on purchase and every time you click it.', garage.rocket ? 'Owned ✓' : 'Buy: 10,000,000,000g', () => {
                 if (!spend(10000000000, 'the rocket')) return; garage.rocket = true; store.set('painWheelGarage', garage); renderGarage(); unlock('rocket'); closeShop(); launchRocket(); sendEvent({ k: 'rocket' }); renderShop();
             }, garage.rocket ? 'owned' : 'buy'));
         } else if (shopTab === 'society') {
