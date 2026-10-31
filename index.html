@@ -6281,6 +6281,7 @@
     const exHist = {};
     STOCKS.forEach(st => {
         if (!(exPrice[st.sym] > 0)) exPrice[st.sym] = st.start;
+        exHist[st.sym] = []; st.open = exPrice[st.sym]; exSplit(st, false);   // an already-huge saved price comes back split and affordable
         st.open = exPrice[st.sym];
         exHist[st.sym] = Array.from({ length: 32 }, () => st.open * (0.98 + Math.random() * 0.04));
     });
@@ -6332,6 +6333,23 @@
         exPrice[st.sym] = Math.max(0.01, exPrice[st.sym] * (1 + m));
         const h = exHist[st.sym]; h.push(exPrice[st.sym]); if (h.length > 32) h.shift();
         if (news) $('exNews').textContent = `${m >= 0 ? '📈' : '📉'} $${st.sym}: ${news} (${m >= 0 ? '+' : ''}${(m * 100).toFixed(1)}%)`;
+        exSplit(st, true);
+    }
+    // Safety net: once a share costs more than SPLIT_AT, it splits 10-for-1 (price ÷10, your shares ×10, same value)
+    function exSplit(st, announce) {
+        const SPLIT_AT = 1500; let n = 0;
+        while (exPrice[st.sym] > SPLIT_AT) {
+            exPrice[st.sym] /= 10; st.open /= 10; n++;
+            if (exHold[st.sym]) exHold[st.sym] *= 10;
+            exHist[st.sym] = exHist[st.sym].map(v => v / 10);
+        }
+        if (!n) return;
+        store.set('painWheelStocks', exHold); store.set('painWheelStockPrices2', exPrice);
+        if (announce) {
+            const ratio = Math.pow(10, n);
+            $('exNews').textContent = `✂️ $${st.sym} STOCK SPLIT ${ratio}-for-1! Now ${exMoney(exPrice[st.sym])} a share.` + (exHold[st.sym] ? ` You now own ${exHold[st.sym].toLocaleString()} shares (same value).` : ' Cheap enough to buy in again.');
+            chatBurst([`$${st.sym} SPLIT`, 'stonks split', 'buy the split', 'shares go brrr'], 2);
+        }
     }
     setInterval(() => {
         if (document.hidden) return;
