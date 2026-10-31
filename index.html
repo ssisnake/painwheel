@@ -5865,8 +5865,9 @@
                 sendEvent({ k: 'shout', text: txt.slice(0, 140) }); $('shoutText').value = ''; shopMsg('Shoutout sent to Discord. One million gold well spent. No refunds.');
             });
             if (cluckStage === 1) add(shopRow('🌾', 'Special Chicken Feed (quest item)', 'For the CLUCK! quest. A Westfall chicken will come looking for it.', 'Buy: 5,000g', () => {
-                if (!spend(5000, 'Special Chicken Feed')) return; setCluck(2); shopMsg('You got the feed. Keep an eye out for a chicken...'); renderShop();
-                setTimeout(() => spawnChicken(true), 8000);
+                if (!spend(5000, 'Special Chicken Feed')) return; setCluck(2); closeShop();
+                moveToast('🌾 You got the Special Chicken Feed. A Westfall chicken is on its way... click it when it shows up!');
+                setTimeout(() => spawnChicken(true), 2500);
             }));
             if (aotcCarryUnlocked) {
                 add(shopHead('🏆 Black market'));
@@ -6246,7 +6247,7 @@
     }
     setInterval(() => {   // a chicken wanders by every few minutes (much more often once you have the feed)
         if (document.hidden || pets.chicken || cluckStage === 3) return;
-        if (Math.random() < (cluckStage === 2 ? 0.5 : 1 / 12)) spawnChicken();
+        if (cluckStage === 2 || Math.random() < 1 / 12) spawnChicken();   // with the feed, a hungry chicken keeps coming back
     }, 20000);
     renderQuestTracker();
     setInterval(() => { if (!document.hidden && garage.shack) { setGold(gold + 40); } }, 10 * 60 * 1000);   // shack rent
@@ -6482,7 +6483,7 @@
     Object.values(NEEDLES).forEach(n => n.cost *= PX); Object.values(TICK_PACKS).forEach(n => n.cost *= PX);
     TITLES.forEach(t => t[1] *= PX); REPELS.forEach(r => r[1] *= PX); SCRATCHERS.forEach(t => t.cost *= PX);
     Object.values(PETS).forEach(pt => pt.cost *= PX);
-    renderTitle(); applyNeedle(); renderGarage(); renderAipacBadge(); renderClippyPet();
+    renderTitle(); applyNeedle(); renderGarage(); renderAipacBadge(); renderPets();   // redraw pets now that chicken/whelp/Clippy are known
     kevinShield = store.get('painWheelRepel', 0); updateShieldBadge();
     setInterval(() => {   // Kana+ ran out: Kana+ would like you to renew
         if (kanaUntil && Date.now() > kanaUntil) { kanaUntil = 0; store.set('painWheelKanaUntil', 0); setTimeout(() => window.showAdById && window.showAdById('kanarenew'), 4000); }
