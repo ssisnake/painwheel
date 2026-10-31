@@ -6231,7 +6231,8 @@
         function hide() { d.classList.add('hidden'); d.classList.remove('flex'); }
     }
     function feedChicken() {
-        if (!wildChicken) return;
+        if (!wildChicken || wildChicken.dataset.fed) return;   // one feeding per chicken (no double-click completions)
+        wildChicken.dataset.fed = '1';
         chickenSay('*nom nom nom* 🥚');
         const c = wildChicken; c.style.transitionDuration = '0s'; c.style.left = c.getBoundingClientRect().left + 'px';
         setTimeout(() => {
