@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gallywix's Yacht</title>
+<style>
+    :root { color-scheme: dark; --gold: #facc15; --gold2: #fde68a; --wood: #2a1810; --ink: #fef3c7; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: #0b0705; color: var(--ink); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+    body { display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    /* the black bars above/below the room show a dim, blurred copy of it (painted once, never animated) */
+    body::before { content: ""; position: fixed; inset: -40px; background: url("media/yacht_interior.webp") center / cover no-repeat; filter: blur(28px) brightness(.32); z-index: -1; }
+    #scroller { width: 100vw; height: 100vh; overflow: auto; display: flex; align-items: center; }
+    /* the room: always the image's exact shape, as big as the screen allows (no cropping, no upscaling past the window) */
+    #stage { position: relative; flex: none; margin: auto; width: max(900px, min(100vw, calc(100vh * 2576 / 1093))); aspect-ratio: 2576 / 1093;
+        background: #1a0f0a url("media/yacht_interior.webp") center / 100% 100% no-repeat; container-type: inline-size; user-select: none; }
+    button { font: inherit; color: inherit; }
+
+    /* clickable spots in the room */
+    .hs { position: absolute; cursor: pointer; border-radius: 1cqw; background: none; border: 0; padding: 0; outline: none; }
+    .hs::after { content: attr(data-label); position: absolute; left: 50%; top: -0.4cqw; transform: translate(-50%, -100%); white-space: nowrap;
+        font-size: max(11px, .78cqw); font-weight: 900; letter-spacing: .04em; padding: .2cqw .6cqw; border-radius: .4cqw; background: rgba(12,6,2,.88);
+        border: 1px solid var(--gold); color: var(--gold2); opacity: 0; transition: opacity .15s; pointer-events: none; }
+    .hs:hover::after, .hs:focus-visible::after { opacity: 1; }
+    .hs:hover, .hs:focus-visible { box-shadow: 0 0 0 2px rgba(250,204,21,.55), 0 0 2cqw rgba(250,204,21,.35) inset; }
+    .hs.round { border-radius: 50%; }
+    .hs.below::after { top: auto; bottom: -0.4cqw; transform: translate(-50%, 100%); }
+
+    /* ambient light: transform/opacity only so it stays cheap */
+    .glow { position: absolute; pointer-events: none; border-radius: 50%; will-change: opacity; }
+    #chandGlow { left: 46%; top: -10%; width: 22%; height: 45%; background: radial-gradient(closest-side, rgba(253,224,71,.28), transparent); animation: flicker 4s ease-in-out infinite alternate; }
+    #hatchGlow { left: 74%; top: 74%; width: 26%; height: 30%; background: radial-gradient(closest-side, rgba(45,212,191,.32), transparent); animation: breathe 3.2s ease-in-out infinite alternate; }
+    @keyframes flicker { 0% { opacity: .55 } 40% { opacity: .9 } 55% { opacity: .7 } 100% { opacity: 1 } }
+    @keyframes breathe { from { opacity: .35 } to { opacity: 1 } }
+
+    /* top bar */
+    #bar { position: absolute; left: 1cqw; right: 1cqw; top: .8cqw; display: flex; justify-content: space-between; align-items: flex-start; gap: 1cqw; pointer-events: none; z-index: 5; }
+    #bar > * { pointer-events: auto; }
+    .pill { background: rgba(12,6,2,.86); border: 1px solid rgba(250,204,21,.6); border-radius: .6cqw; padding: .45cqw .9cqw; font-weight: 900; font-size: max(12px, .9cqw); }
+    #title { color: var(--gold2); letter-spacing: .06em; text-transform: uppercase; }
+    #title small { display: block; font-size: .78em; color: #d6b98a; letter-spacing: .02em; text-transform: none; font-weight: 700; }
+    #rightBar { display: flex; gap: .6cqw; align-items: center; }
+    #backBtn { cursor: pointer; background: linear-gradient(#3b82f6, #1d4ed8); border-color: #93c5fd; color: #fff; }
+    #backBtn:hover { filter: brightness(1.15); }
+    .mono { font-variant-numeric: tabular-nums; }
+
+    /* ---------- trophy cabinet ---------- */
+    #cabinet { position: absolute; inset: 0; pointer-events: none; }
+    .plaque { position: absolute; pointer-events: auto; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+        background: none; border: 0; padding: 0; transform-origin: bottom center; transition: transform .12s; }
+    .plaque:hover { transform: translateY(-.2cqw) scale(1.12); z-index: 3; }
+    .plaque .t { font-size: 1.75cqw; line-height: 1; filter: drop-shadow(0 .15cqw .25cqw rgba(0,0,0,.7)); }
+    .plaque .base { width: 82%; height: .55cqw; margin-top: .1cqw; border-radius: .12cqw; background: linear-gradient(#7c4a1e, #3b2210); border-top: .12cqw solid #d4a24c; box-shadow: 0 .1cqw .2cqw rgba(0,0,0,.6); }
+    .plaque.got .t { filter: drop-shadow(0 0 .5cqw rgba(253,224,71,.55)) drop-shadow(0 .15cqw .25cqw rgba(0,0,0,.7)); }
+    .plaque.locked .t { filter: grayscale(1) brightness(.35); opacity: .55; }
+    .plaque.locked .base { opacity: .45; }
+    .plaque.new .t { animation: shine 1.6s ease-in-out 3; }
+    @keyframes shine { 50% { transform: scale(1.25); filter: drop-shadow(0 0 1cqw #fde047); } }
+    #cabNav { position: absolute; left: 31.6%; top: 72.6%; width: 9.2%; display: flex; align-items: center; justify-content: space-between; gap: .3cqw; z-index: 4; }
+    #cabNav button { cursor: pointer; width: 1.7cqw; height: 1.7cqw; min-width: 22px; min-height: 22px; border-radius: 50%; border: 1px solid #d4a24c; background: rgba(40,22,10,.92); color: var(--gold2); font-weight: 900; font-size: max(11px, .8cqw); }
+    #cabNav button:disabled { opacity: .3; cursor: default; }
+    #cabCount { text-align: center; font-size: max(10px, .72cqw); font-weight: 900; color: var(--gold2); text-shadow: 0 1px 2px #000; line-height: 1.15; }
+
+    /* ---------- dialogs ---------- */
+    .modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(5,3,2,.78); z-index: 50; padding: 16px; }
+    .modal.open { display: flex; }
+    .card { width: min(440px, 100%); max-height: 92vh; overflow: auto; border-radius: 14px; padding: 18px 20px; border: 2px solid #d4a24c;
+        background: linear-gradient(170deg, #2a1810, #120a06 60%, #1c1402); box-shadow: 0 20px 60px rgba(0,0,0,.7); position: relative; }
+    .card h2 { margin: 0 0 4px; font-size: 18px; color: var(--gold2); text-transform: uppercase; letter-spacing: .04em; }
+    .card p { margin: 6px 0; font-size: 13.5px; line-height: 1.45; color: #e7d3b0; }
+    .x { position: absolute; right: 10px; top: 8px; cursor: pointer; background: none; border: 0; color: #a8927a; font-size: 16px; font-weight: 900; }
+    .x:hover { color: #fff; }
+    .btn { cursor: pointer; border-radius: 8px; border: 1px solid #d4a24c; background: #3b2210; color: var(--gold2); font-weight: 900; padding: 8px 10px; font-size: 13px; }
+    .btn:hover { background: #573318; }
+    .btn.go { background: #15803d; border-color: #4ade80; color: #fff; }
+    .btn.go:hover { background: #16a34a; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .row .btn { flex: 1; }
+    .muted { color: #a8927a !important; font-size: 12px !important; }
+
+    /* trophy info */
+    #tBig { font-size: 54px; text-align: center; line-height: 1.1; }
+    #tDate { font-size: 12px; color: #a8927a; text-align: center; }
+
+    /* vault keypad */
+    #dial { display: flex; justify-content: center; gap: 8px; margin: 10px 0; }
+    #dial span { width: 46px; height: 56px; border-radius: 8px; background: #0b0705; border: 2px solid #6b4f2f; display: grid; place-items: center; font-size: 28px; font-weight: 900; color: var(--gold); font-family: ui-monospace, monospace; }
+    #pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-width: 260px; margin: 0 auto; }
+    #pad button { cursor: pointer; padding: 12px 0; border-radius: 8px; border: 1px solid #8a6a42; background: linear-gradient(#5b4632, #2f2216); color: var(--gold2); font-size: 18px; font-weight: 900; }
+    #pad button:active { transform: translateY(1px); }
+    #vaultMsg { min-height: 20px; text-align: center; font-weight: 800; font-size: 13px; color: #fca5a5; }
+    .bal { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; }
+    .bal div { border-radius: 10px; padding: 8px 10px; background: rgba(0,0,0,.35); border: 1px solid #6b4f2f; text-align: center; }
+    .bal b { display: block; font-size: 20px; color: var(--gold); }
+    .bal small { font-size: 11px; color: #a8927a; text-transform: uppercase; letter-spacing: .08em; font-weight: 800; }
+    #iou { margin-top: 8px; padding: 8px 10px; border-radius: 8px; background: #fef3c7; color: #3b2210; font-family: "Comic Sans MS", "Comic Neue", cursive; font-size: 13px; transform: rotate(-1.2deg); display: none; }
+
+    /* speech / toast */
+    #say { position: fixed; left: 50%; bottom: 22px; transform: translate(-50%, 20px); opacity: 0; transition: opacity .25s, transform .25s; z-index: 60;
+        max-width: min(640px, calc(100vw - 32px)); padding: 10px 16px; border-radius: 12px; background: rgba(12,6,2,.94); border: 2px solid #d4a24c;
+        color: var(--ink); font-weight: 800; font-size: 14.5px; text-align: center; pointer-events: none; box-shadow: 0 10px 30px rgba(0,0,0,.6); }
+    #say.show { opacity: 1; transform: translate(-50%, 0); }
+    #achPop { position: fixed; left: 50%; top: 18px; transform: translate(-50%, -30px); opacity: 0; transition: opacity .3s, transform .3s; z-index: 61; pointer-events: none;
+        padding: 10px 18px; border-radius: 12px; background: linear-gradient(90deg, #422006, #713f12); border: 2px solid var(--gold); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,.6); }
+    #achPop.show { opacity: 1; transform: translate(-50%, 0); }
+    #achPop small { display: block; font-size: 10px; letter-spacing: .18em; color: var(--gold2); font-weight: 900; }
+    #achPop b { font-size: 16px; color: #fff; }
+
+    .shake { animation: shake .5s; }
+    @keyframes shake { 20% { transform: translate(-.4cqw, .1cqw) rotate(-1deg) } 40% { transform: translate(.4cqw, -.1cqw) rotate(1deg) } 60% { transform: translate(-.3cqw, 0) } 80% { transform: translate(.2cqw, 0) } }
+    .spinGauge { animation: gauge .9s ease-in-out; }
+    @keyframes gauge { 50% { transform: rotate(25deg) } }
+
+    /* nobody gets aboard without the yacht */
+    #gate { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(5,3,2,.9); z-index: 70; padding: 16px; }
+    #gate.open { display: flex; }
+    @media (prefers-reduced-motion: reduce) { .glow, .plaque.new .t { animation: none; } }
+</style>
+</head>
+<body>
+<div id="scroller">
+<div id="stage">
+    <div class="glow" id="chandGlow"></div>
+    <div class="glow" id="hatchGlow"></div>
+
+    <div id="bar">
+        <div class="pill" id="title">🛥️ Gallywix's Yacht <small>Trophy Room &amp; Guild Bank Vault</small></div>
+        <div id="rightBar">
+            <div class="pill mono" id="goldPill">💰 0g</div>
+            <button class="pill" id="backBtn">🌀 Back to the Wheel</button>
+        </div>
+    </div>
+
+    <div id="cabinet"></div>
+    <div id="cabNav"><button id="pgPrev" aria-label="Previous shelf page">◀</button><div id="cabCount"></div><button id="pgNext" aria-label="Next shelf page">▶</button></div>
+
+    <!-- hotspots (percent of the room image) -->
+    <button class="hs round" id="hsVault" data-label="🏦 Guild Bank Vault" style="left:63.2%;top:24%;width:20.4%;height:51%"></button>
+    <button class="hs below" id="hsHatch" data-label="⛓️ ???" style="left:77%;top:81%;width:21%;height:17.5%"></button>
+    <button class="hs" id="hsBar" data-label="🥇 Solid Gold Bar" style="left:61.7%;top:86.2%;width:6.1%;height:9.6%"></button>
+    <button class="hs below" id="hsChand" data-label="🪙 Coin Chandelier" style="left:50.8%;top:0;width:13.6%;height:22%"></button>
+    <button class="hs below" id="hsFish1" data-label="🐟 Mounted Swordfish" style="left:0;top:5.5%;width:11.6%;height:13.5%"></button>
+    <button class="hs" id="hsFish2" data-label="🐟 The Other Swordfish" style="left:50.3%;top:25.4%;width:7%;height:9%"></button>
+    <button class="hs round" id="hsPort1" data-label="🌊 Porthole" style="left:0;top:29%;width:10.4%;height:32%"></button>
+    <button class="hs round" id="hsPort2" data-label="🌊 Porthole" style="left:50.4%;top:39%;width:5.6%;height:16.4%"></button>
+    <button class="hs" id="hsRope" data-label="🚧 VIP Section" style="left:51.9%;top:57.5%;width:8.2%;height:19.6%"></button>
+    <button class="hs" id="hsGauge" data-label="⏲️ Pressure Gauges" style="left:87.9%;top:33.2%;width:4.8%;height:6%"></button>
+</div>
+</div>
+
+<!-- trophy info -->
+<div class="modal" id="tModal"><div class="card">
+    <button class="x" data-close>✕</button>
+    <div id="tBig">🏆</div>
+    <h2 id="tName" style="text-align:center"></h2>
+    <p id="tDesc" style="text-align:center"></p>
+    <div id="tDate"></div>
+</div></div>
+
+<!-- vault -->
+<div class="modal" id="vModal"><div class="card">
+    <button class="x" data-close>✕</button>
+    <div id="vLocked">
+        <h2>🏦 Guild Bank Vault</h2>
+        <p class="muted">Enter the 4-digit combination. There is a sticky note on the door.</p>
+        <div id="dial"><span>_</span><span>_</span><span>_</span><span>_</span></div>
+        <div id="vaultMsg"></div>
+        <div id="pad"></div>
+    </div>
+    <div id="vOpen" style="display:none">
+        <h2>🏦 Guild Bank Vault</h2>
+        <p class="muted">Gold in here is offshore. The Goblin IRS can't tax it on reset day, and it still counts toward your leaderboard gold.</p>
+        <div class="bal"><div><small>Your wallet</small><b class="mono" id="vWallet">0</b></div><div><small>In the vault</small><b class="mono" id="vVault">0</b></div></div>
+        <div class="muted" style="margin:4px 0 4px;font-weight:900">STASH GOLD</div>
+        <div class="row"><button class="btn" data-dep=".1">10%</button><button class="btn" data-dep=".5">50%</button><button class="btn go" data-dep="1">Everything</button></div>
+        <div class="muted" style="margin:10px 0 4px;font-weight:900">TAKE GOLD OUT</div>
+        <div class="row"><button class="btn" data-wd=".1">10%</button><button class="btn" data-wd=".5">50%</button><button class="btn" data-wd="1">Everything</button></div>
+        <div id="iou"></div>
+        <p class="muted" id="vNote" style="text-align:center;margin-top:10px"></p>
+    </div>
+</div></div>
+
+<div id="gate"><div class="card" style="text-align:center">
+    <div style="font-size:54px">🚧</div>
+    <h2>Members Only</h2>
+    <p>Reb is standing at the gangplank with a clipboard. You are not on the list.</p>
+    <p class="muted">Upgrade your timeshare all the way to 🛥️ Gallywix's Yacht to come aboard.</p>
+    <button class="btn go" id="gateBack" style="margin-top:8px">🌀 Back to the Wheel</button>
+</div></div>
+
+<div id="say"></div>
+<div id="achPop"><small>ACHIEVEMENT UNLOCKED</small><b id="achName"></b></div>
+
+<script>
+(function () {
+    'use strict';
+    const $ = (id) => document.getElementById(id);
+    const S = {
+        get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+        set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+    };
+    const pick = (a) => a[Math.floor(Math.random() * a.length)];
+
+    // big numbers, same as the wheel (1.23T, 4.5Qa ... then 1.23e45)
+    const NAMES = ['T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc'];
+    function fmt(v) {
+        v = Math.round(Number(v) || 0); const a = Math.abs(v);
+        if (a < 1e12) return v.toLocaleString() + 'g';
+        const e = Math.floor(Math.log10(a));
+        if (e < 36) { const i = Math.floor((e - 12) / 3), n = v / Math.pow(10, 12 + i * 3); return (Math.abs(n) >= 100 ? n.toFixed(0) : n.toFixed(2).replace(/\.?0+$/, '')) + NAMES[i] + 'g'; }
+        return v.toExponential(2).replace('e+', 'e') + 'g';
+    }
+
+    // ---------- sound (quiet, short, no files) ----------
+    let ac = null;
+    const vol = (() => { const v = parseFloat(localStorage.getItem('painWheelVolume')); return isNaN(v) ? 0.6 : Math.min(1, Math.max(0, v)); })();
+    function ctx() { if (!ac) { try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} } if (ac && ac.state === 'suspended') ac.resume(); return ac; }
+    function tone(f, t0, dur, type = 'triangle', g = 0.12) {
+        const c = ctx(); if (!c || !vol) return;
+        const o = c.createOscillator(), a = c.createGain(); o.type = type; o.frequency.value = f;
+        a.gain.setValueAtTime(0.0001, c.currentTime + t0); a.gain.exponentialRampToValueAtTime(g * vol, c.currentTime + t0 + 0.02);
+        a.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + t0 + dur);
+        o.connect(a).connect(c.destination); o.start(c.currentTime + t0); o.stop(c.currentTime + t0 + dur + 0.05);
+    }
+    function noise(t0, dur, g = 0.12, hp = 1200) {
+        const c = ctx(); if (!c || !vol) return;
+        const b = c.createBuffer(1, Math.floor(c.sampleRate * dur), c.sampleRate), d = b.getChannelData(0);
+        for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
+        const s = c.createBufferSource(), f = c.createBiquadFilter(), a = c.createGain(); f.type = 'highpass'; f.frequency.value = hp;
+        a.gain.value = g * vol; s.buffer = b; s.connect(f).connect(a).connect(c.destination); s.start(c.currentTime + t0);
+    }
+    const sfx = {
+        click: () => tone(900, 0, .05, 'square', .05),
+        clunk: () => { tone(110, 0, .25, 'sawtooth', .12); noise(0, .12, .1, 300); },
+        coins: () => { for (let i = 0; i < 7; i++) tone(1800 + Math.random() * 1600, i * .055, .12, 'sine', .06); },
+        chains: () => { for (let i = 0; i < 6; i++) noise(i * .08, .07, .12, 2500); tone(70, 0, .5, 'sine', .15); },
+        wrong: () => { tone(220, 0, .18, 'square', .07); tone(160, .16, .25, 'square', .07); },
+        open: () => { tone(180, 0, .3, 'sawtooth', .08); [523, 659, 784, 1047].forEach((f, i) => tone(f, .25 + i * .09, .3, 'triangle', .09)); },
+        hiss: () => noise(0, .9, .09, 3000),
+        ach: () => [784, 988, 1175, 1568].forEach((f, i) => tone(f, i * .1, .35, 'triangle', .1)),
+        // an original little sea shanty for the singing swordfish
+        shanty: () => { const N = { D4: 294, E4: 330, F4: 349, G4: 392, A4: 440, B4: 494, C5: 523, D5: 587 };
+            [['D4', .25], ['G4', .25], ['G4', .25], ['A4', .25], ['B4', .5], ['G4', .5], ['A4', .25], ['A4', .25], ['F4', .25], ['E4', .25], ['D4', .5], ['D4', .25], ['D4', .25],
+             ['G4', .25], ['B4', .25], ['D5', .5], ['C5', .25], ['B4', .25], ['A4', .5], ['G4', .75]].reduce((t, [n, d]) => { tone(N[n], t, d * .9, 'square', .05); tone(N[n] / 2, t, d * .9, 'triangle', .05); return t + d * .55; }, 0); }
+    };
+
+    // ---------- speech bubble + achievement popup ----------
+    let sayT = 0;
+    function say(text, ms = 3800) { const el = $('say'); el.textContent = text; el.classList.add('show'); clearTimeout(sayT); sayT = setTimeout(() => el.classList.remove('show'), ms); }
+    const defs = S.get('painWheelAchDefs', []);
+    let achT = 0;
+    function award(id) {
+        const got = S.get('painWheelAchievements', {}); if (got[id]) return;
+        const d = defs.find(x => x.id === id); if (!d) return;   // the wheel defines every achievement; old wheel = nothing to award yet
+        got[id] = new Date().toISOString(); S.set('painWheelAchievements', got);
+        const pend = S.get('painWheelPendingAchPosts', []); pend.push({ n: d.name, d: d.desc }); S.set('painWheelPendingAchPosts', pend);   // the wheel posts it to Discord
+        $('achName').textContent = '🏆 ' + d.name; $('achPop').classList.add('show'); sfx.ach();
+        clearTimeout(achT); achT = setTimeout(() => $('achPop').classList.remove('show'), 4200);
+        renderCabinet(id);
+    }
+
+    // ---------- leaving ----------
+    function goBack() {
+        try { if (document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1) { history.back(); return; } } catch (e) {}
+        location.href = './';
+    }
+    $('backBtn').addEventListener('click', goBack); $('gateBack').addEventListener('click', goBack);
+
+    // ---------- the gangplank ----------
+    if (S.get('painWheelHouseLevel', 0) < 6) { $('gate').classList.add('open'); return; }
+
+    // ---------- gold ----------
+    let gold = Math.min(1e300, Number(S.get('painWheelGold', 0)) || 0), vault = Math.min(1e300, Number(S.get('painWheelVault', 0)) || 0);
+    function saveGold() { S.set('painWheelGold', Math.round(gold)); S.set('painWheelVault', Math.round(vault)); renderGold(); }
+    function renderGold() {
+        $('goldPill').textContent = '💰 ' + fmt(gold) + (vault ? '  ·  🏦 ' + fmt(vault) : '');
+        $('vWallet').textContent = fmt(gold); $('vVault').textContent = fmt(vault);
+    }
+    renderGold();
+
+    // ---------- trophy cabinet ----------
+    // Shelf spots, measured off the art (percent of the room). Each bay has 5 shelves; the right bay sits deeper so it is narrower.
+    const BAYS = [
+        { x0: 21.1, x1: 30.4, per: 4, shelves: [26.6, 38.0, 48.7, 58.9, 67.9] },
+        { x0: 31.9, x1: 40.3, per: 4, shelves: [30.4, 40.4, 49.6, 58.5, 67.4] },
+        { x0: 41.7, x1: 48.0, per: 3, shelves: [30.9, 40.6, 49.6, 57.9, 66.0] }
+    ];
+    const SLOTS = [];
+    for (let r = 0; r < 5; r++) BAYS.forEach(b => { for (let i = 0; i < b.per; i++) SLOTS.push({ x: b.x0 + (b.x1 - b.x0) * (i + .5) / b.per, y: b.shelves[r], w: (b.x1 - b.x0) / b.per }); });
+    const PER_PAGE = SLOTS.length;
+    // a few achievements get their own trophy
+    const ICONS = { kevind: '🤡', yacht: '🛥️', castle: '🏰', debtfree: '💸', taxman: '🧾', goldcookie: '🍪', cluck: '🐔', clippy: '📎', fenderbender: '🚑',
+        soc1: '🔺', soc2: '💀', soc3: '🦉', soc4: '👁️', soc5: '🦎', soc6: '📜', aboard: '⚓', vault: '🏦', chocobar: '🍫', hearth: '🪨', first: '🩸' };
+    const iconFor = (d) => ICONS[d.id] || (/^aipac/.test(d.id) ? '🏛️' : /^spins/.test(d.id) ? '🎡' : d.secret ? '💎' : '🏆');
+    let page = 0;
+    function renderCabinet(fresh) {
+        const got = S.get('painWheelAchievements', {}), cab = $('cabinet'); cab.textContent = '';
+        if (!defs.length) { $('cabCount').textContent = 'Spin the wheel once to load your trophies'; $('pgPrev').disabled = $('pgNext').disabled = true; return; }
+        const pages = Math.max(1, Math.ceil(defs.length / PER_PAGE)); page = Math.min(page, pages - 1);
+        defs.slice(page * PER_PAGE, (page + 1) * PER_PAGE).forEach((d, i) => {
+            const s = SLOTS[i], have = !!got[d.id], b = document.createElement('button');
+            b.className = 'plaque ' + (have ? 'got' : 'locked') + (fresh === d.id ? ' new' : '');
+            b.style.cssText = `left:${s.x - s.w / 2}%;width:${s.w}%;top:${s.y - 8.2}%;height:8.2%`;
+            b.innerHTML = '<span class="t"></span><span class="base"></span>';
+            b.firstChild.textContent = have ? iconFor(d) : (d.secret ? '❔' : '🏆');
+            b.title = have || !d.secretName ? d.name : 'Secret achievement';
+            b.addEventListener('click', () => showTrophy(d, got[d.id]));
+            cab.appendChild(b);
+        });
+        const n = defs.filter(d => got[d.id]).length;
+        $('cabCount').innerHTML = `${n}/${defs.length} trophies<br>shelf ${page + 1} of ${pages}`;
+        $('pgPrev').disabled = page === 0; $('pgNext').disabled = page >= pages - 1;
+    }
+    $('pgPrev').addEventListener('click', () => { page--; sfx.click(); renderCabinet(); });
+    $('pgNext').addEventListener('click', () => { page++; sfx.click(); renderCabinet(); });
+    function showTrophy(d, when) {
+        sfx.click();
+        $('tBig').textContent = when ? iconFor(d) : '🔒';
+        $('tName').textContent = when || !d.secretName ? d.name : '???';
+        $('tDesc').textContent = when || !d.secret ? d.desc : 'A secret achievement. The cabinet has saved it a spot.';
+        $('tDate').textContent = when ? 'Earned ' + new Date(when).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : 'Not earned yet. The shelf is dusty.';
+        open('tModal');
+    }
+    renderCabinet();
+
+    // ---------- dialogs ----------
+    function open(id) { $(id).classList.add('open'); }
+    function close(id) { $(id).classList.remove('open'); }
+    document.querySelectorAll('.modal').forEach(m => {
+        m.addEventListener('click', (e) => { if (e.target === m || e.target.closest('[data-close]')) close(m.id); });
+    });
+    addEventListener('keydown', (e) => { if (e.key === 'Escape') document.querySelectorAll('.modal.open').forEach(m => close(m.id)); });
+
+    // ---------- the guild bank vault ----------
+    const COMBO = '1234';
+    let entered = '', vaultOpen = false;
+    const WRONG = ['WRONG. The vault laughs at you in Goblin.', "Nope. Reb says it's the same as his luggage.", 'Incorrect. A gear fell off. Nobody noticed.',
+        'Access denied. Kevin tried that one too.', 'Wrong combination. The swordfish judges you.'];
+    '1 2 3 4 5 6 7 8 9 ⌫ 0 ↵'.split(' ').forEach(k => {
+        const b = document.createElement('button'); b.textContent = k;
+        b.addEventListener('click', () => {
+            sfx.click(); $('vaultMsg').textContent = '';
+            if (k === '⌫') entered = entered.slice(0, -1);
+            else if (k === '↵') tryCombo();
+            else if (entered.length < 4) { entered += k; if (entered.length === 4) setTimeout(tryCombo, 150); }
+            drawDial();
+        });
+        $('pad').appendChild(b);
+    });
+    function drawDial() { [...$('dial').children].forEach((s, i) => s.textContent = entered[i] || '_'); }
+    function tryCombo() {
+        if (entered.length < 4) return;
+        if (entered === COMBO) { vaultOpen = true; sfx.open(); showVault(); }
+        else { sfx.wrong(); $('vaultMsg').textContent = pick(WRONG); }
+        entered = ''; drawDial();
+    }
+    addEventListener('keydown', (e) => {
+        if (!$('vModal').classList.contains('open') || vaultOpen) return;
+        if (/^[0-9]$/.test(e.key) && entered.length < 4) { entered += e.key; sfx.click(); drawDial(); if (entered.length === 4) setTimeout(tryCombo, 150); }
+        else if (e.key === 'Backspace') { entered = entered.slice(0, -1); drawDial(); }
+        else if (e.key === 'Enter') tryCombo();
+    });
+    const NOTES = ['A sticky note on the door says: "combo is 1-2-3-4. do NOT tell kevin. —Reb"', 'The vault smells faintly of goblin cologne and old pennies.',
+        'Gallywix left a voicemail on the vault. It is just him counting.', 'There is a Kevin-shaped dent in the door. Nobody talks about it.'];
+    function showVault() {
+        $('vLocked').style.display = vaultOpen ? 'none' : ''; $('vOpen').style.display = vaultOpen ? '' : 'none';
+        $('vNote').textContent = pick(NOTES.slice(1));
+        renderIou(); renderGold();
+    }
+    $('hsVault').addEventListener('click', () => { sfx.clunk(); entered = ''; drawDial(); $('vaultMsg').textContent = ''; showVault(); if (!vaultOpen) say('📝 ' + NOTES[0], 5000); open('vModal'); });
+    document.querySelectorAll('[data-dep]').forEach(b => b.addEventListener('click', () => {
+        const amt = Math.floor(gold * +b.dataset.dep);
+        if (amt <= 0) { say("Your wallet is empty. The vault doesn't take IOUs. (Kevin does.)"); sfx.wrong(); return; }
+        gold -= amt; vault = Math.min(1e300, vault + amt); saveGold(); sfx.coins(); award('vault');
+        say('🏦 Stashed ' + fmt(amt) + ' offshore. The Goblin IRS will never find it.');
+    }));
+    document.querySelectorAll('[data-wd]').forEach(b => b.addEventListener('click', () => {
+        const amt = Math.floor(vault * +b.dataset.wd);
+        if (amt <= 0) { say('The vault is empty. Just echoes. And a single Kevin hair.'); sfx.wrong(); return; }
+        vault -= amt; gold = Math.min(1e300, gold + amt); saveGold(); sfx.coins();
+        say('💰 Took out ' + fmt(amt) + '. Spend it on something stupid.');
+    }));
+
+    // Kevin occasionally "borrows" from the vault (1-3%) and leaves an IOU. Half the time he pays it back later, with interest.
+    let iou = Number(S.get('painWheelVaultIou', 0)) || 0, kevinNews = '';
+    (function kevinVisits() {
+        const now = Date.now(), last = S.get('painWheelVaultKevinAt', 0);
+        if (iou > 0 && Math.random() < 0.5) {
+            const back = Math.round(iou * 1.1); vault = Math.min(1e300, vault + back);
+            kevinNews = `Kevin paid back his IOU: ${fmt(back)} (10% interest!). Nobody knows where he got it. Do not ask.`; iou = 0;
+        } else if (vault >= 1000 && now - last > 4 * 3600e3 && Math.random() < 0.25) {
+            const amt = Math.round(vault * (0.01 + Math.random() * 0.02)); vault -= amt; iou += amt;
+            kevinNews = `Kevin "borrowed" ${fmt(amt)} from the vault. He left an IOU.`;
+        } else return;
+        S.set('painWheelVaultKevinAt', now); S.set('painWheelVaultIou', iou); saveGold();
+        setTimeout(() => say('🏦 ' + kevinNews, 6000), 1400);
+    })();
+    function renderIou() {
+        const el = $('iou');
+        if (!iou) { el.style.display = 'none'; return; }
+        el.style.display = 'block';
+        el.textContent = `IOU ${fmt(iou)}. I will pay it bak I promis. Its for a mount. —Kevin  P.S. the combo was 1234 lol`;
+    }
+
+    // ---------- the hatch (Uncle Touchy's Puzzle Basement, someday) ----------
+    const HATCH = ['The chains rattle. Something down there giggles.', 'A voice from below: "Not yet, sweetie."', 'The padlock is warm. Why is the padlock warm?',
+        'You hear dice rolling. Then a whiteboard marker. Then a scream.', 'There is a note under the hatch: "PUZZLES COMING SOON. —U.T."', 'The teal glow pulses when you get close. It likes you.'];
+    let hatchClicks = 0;
+    $('hsHatch').addEventListener('click', () => {
+        sfx.chains(); hatchClicks++;
+        const h = $('hsHatch'); h.classList.remove('shake'); void h.offsetWidth; h.classList.add('shake');
+        say('⛓️ ' + (hatchClicks === 1 ? "Locked. Chained. Glowing. It says \"Uncle Touchy's Puzzle Basement\" in very small letters." : pick(HATCH)), 4500);
+    });
+
+    // ---------- little things to poke ----------
+    let barBites = 0;
+    $('hsBar').addEventListener('click', () => {
+        barBites++;
+        if (barBites < 7) { sfx.coins(); say('🥇 ' + pick(['Solid gold. 100% real. Do not bite it.', 'Gallywix insists this is real gold. It smells like cocoa.', 'The bar is slightly soft. That is normal for gold. Probably.',
+            'Engraved: "PROPERTY OF GALLYWIX. IF FOUND, NO YOU DIDN\'T."', 'There is a bite mark in one corner. It is Kevin-sized.', 'It weighs exactly as much as a chocolate bar. Coincidence.'])); }
+        else if (barBites === 7) { tone(300, 0, .12, 'square', .08); say('🍫 You bit it. It was chocolate the whole time. Gallywix is a fraud.', 5000); award('chocobar'); }
+        else say('🍫 Still chocolate. Still delicious. Still fraud.');
+    });
+    let chandAt = 0;
+    $('hsChand').addEventListener('click', () => {
+        sfx.coins();
+        const day = new Date().toDateString();
+        if (S.get('painWheelChandDay', '') !== day) {
+            S.set('painWheelChandDay', day); gold = Math.min(1e300, gold + 1); saveGold();
+            say('🪙 A single coin falls off the chandelier. You pocket it. +1g. Gallywix will notice.');
+        } else if (Date.now() - chandAt > 400) say('🪙 ' + pick(['The chandelier jingles. It is made of 4,000 gold coins and one Kevin tooth.', 'You already took a coin today. Greedy.',
+            'Gallywix had it made from the guild repair fund.', 'It sways. The yacht is not moving. Why is it swaying?']));
+        chandAt = Date.now();
+    });
+    $('hsFish1').addEventListener('click', () => { sfx.shanty(); say('🐟🎵 The swordfish turns its head and sings you a sea shanty. You did not ask for this.', 4500); });
+    $('hsFish2').addEventListener('click', () => say('🐟 ' + pick(['Reb caught this one. It was already dead. It was in a freezer aisle.', 'The plaque says "THE ONE THAT GOT AWAY." It did not get away.',
+        'This swordfish has seen things. It will not sing for you.', 'Kevin named it Gary. Do not call it Gary. It hates that.'])));
+    const VIEWS = ['A murloc presses its face to the glass. MRGLGLGL.', 'Kevin is swimming next to the yacht. He fell off the dock. Again.', 'Is that... Mankrik\'s wife?',
+        'Just ocean. Endless, beautiful ocean. And a floating Kevin.', 'A naga waves. You wave back. It was a threat.', 'The Undermine Coast Guard is following you. Gallywix owes them money.',
+        'A sea turtle drifts past. It toots. Somewhere, Whistlethy toots back.'];
+    ['hsPort1', 'hsPort2'].forEach(id => $(id).addEventListener('click', () => { tone(520, 0, .25, 'sine', .05); say('🌊 ' + pick(VIEWS)); }));
+    $('hsRope').addEventListener('click', () => say('🚧 ' + pick(['Reb: "You\'re not on the list." It\'s your yacht. "Still not on the list."', 'VIP section. Inside: one folding chair and a Kevin.',
+        'The velvet rope is held up by two brass poles and pure ego.', 'Reb lets you in. Then out. Then in again. He is bored.'])));
+    $('hsGauge').addEventListener('click', () => {
+        sfx.hiss(); const g = $('hsGauge'); g.classList.remove('spinGauge'); void g.offsetWidth; g.classList.add('spinGauge');
+        say('⏲️ ' + pick(['Pressure: KEVIN. Do not tap the gauge.', 'You tapped the gauge. The pipes hiss angrily.', 'Left gauge: "FINE". Right gauge: "THIS IS FINE".', 'The needle points at "Ret Paladin DPS". It is off the chart.']));
+    });
+
+    // ---------- welcome aboard ----------
+    award('aboard');
+    if (!S.get('painWheelYachtVisited', false)) { S.set('painWheelYachtVisited', true); setTimeout(() => say('🛥️ Welcome aboard! Click around. Your trophies are in the cabinet, your gold goes in the vault, and the hatch... leave the hatch alone.', 6500), 600); }
+})();
+</script>
+</body>
+</html>
