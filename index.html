@@ -4482,7 +4482,7 @@
             if (window.showAdById) window.showAdById('knobcreek');
             return;
         }
-        if (typedBuffer.endsWith("chicken") || typedBuffer.endsWith("cluck")) {   // /chicken at a wandering chicken
+        if (typedBuffer.endsWith("chicken") || typedBuffer.endsWith("cluck")) {   // typing chicken (or cluck) at a wandering chicken
             typedBuffer = ""; setRigMode("FAIR");
             chickenEmote();
             return;
@@ -6624,7 +6624,7 @@
         } else if (shopTab === 'pets') {
             Object.entries(PETS).forEach(([k, p]) => {
                 if (p.secret && !clippyUnlocked && !pets[k]) return;
-                if (k === 'chicken' && !pets[k]) { add(shopRow(p.e, p.name, 'Can\'t be bought. Find a Westfall chicken wandering around and type /chicken at it...', cluckStage ? 'Quest: CLUCK!' : 'Quest only', null, 'owned')); return; }
+                if (k === 'chicken' && !pets[k]) { add(shopRow(p.e, p.name, 'Can\'t be bought. Find a Westfall chicken wandering around and type chicken while it\'s on screen...', cluckStage ? 'Quest: CLUCK!' : 'Quest only', null, 'owned')); return; }
                 add(shopRow(p.e, p.name, p.desc, pets[k] ? 'Owned ✓' : 'Adopt: ' + fmt(p.cost), () => {
                     if (!spend(p.cost, p.name)) return; pets[k] = true; store.set('painWheelPets', pets); renderPets();
                     if (k === 'clippy') unlock('clippy');
@@ -7085,7 +7085,7 @@
     }
 
     // ---------- CLUCK! (the Westfall chicken quest, like in the real game) ----------
-    // A chicken wanders by now and then. Type /chicken at it enough times and it offers the quest.
+    // A chicken wanders by now and then. Type chicken (no slash) while it's on screen and it offers the quest.
     // Buy Special Chicken Feed in the shop, feed the next chicken, it lays an egg, the egg hatches into your pet.
     let cluckStage = store.get('painWheelCluck', 0);   // 0 none · 1 need feed · 2 have feed · 3 done
     let wildChicken = null;
@@ -7108,19 +7108,19 @@
         if (!force && !idleScreen()) return;
         const c = document.createElement('div'); c.id = 'wildChicken'; c.title = 'Westfall Chicken';
         c.innerHTML = '<div class="bub hidden"></div><span class="em">🐔</span>';
-        c.dataset.need = String(3 + Math.floor(Math.random() * 4)); c.dataset.got = '0';
+        c.dataset.need = '1'; c.dataset.got = '0';   // just type chicken once (no slash needed)
         const ltr = Math.random() < 0.5, secs = 28;
         if (ltr) c.classList.add('flip');   // the emoji faces left, so flip it when walking right
         c.style.left = ltr ? '-80px' : 'calc(100vw + 20px)';
         document.body.appendChild(c); wildChicken = c;
         c.addEventListener('click', () => {
             if (cluckStage === 2) return feedChicken();
-            chickenSay(pick(['Bawk?', '*stares at you*', '*pecks the ground*', 'bok bok', '(maybe try /chicken)']));
+            chickenSay(pick(['Bawk?', '*stares at you*', '*pecks the ground*', 'bok bok', '(psst: just type chicken)']));
         });
         requestAnimationFrame(() => requestAnimationFrame(() => { c.style.transitionDuration = secs + 's'; c.style.left = ltr ? 'calc(100vw + 20px)' : '-80px'; }));
         setTimeout(() => { if (wildChicken === c) { c.remove(); wildChicken = null; } }, secs * 1000 + 200);
         if (cluckStage === 2) setTimeout(() => chickenSay('*looks hungry*'), 1500);
-        chat(pick(['is that a chicken', 'CHICKEN', 'bawk', 'why is there a chicken on the wheel', 'someone /chicken it']));
+        chat(pick(['is that a chicken', 'CHICKEN', 'bawk', 'why is there a chicken on the wheel', 'someone type chicken']));
     }
     function chickenEmote() {
         if (!wildChicken) { moveToast('🐔 You cluck at nothing. Everyone in /say is concerned.'); return; }
