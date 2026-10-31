@@ -514,6 +514,8 @@
     <div id="retVisionFx" aria-hidden="true" style="display:none;position:fixed;inset:0;z-index:56;pointer-events:none;backdrop-filter:grayscale(.9) blur(.6px) contrast(.9);-webkit-backdrop-filter:grayscale(.9) blur(.6px) contrast(.9)"></div>
     <div id="partyLights" aria-hidden="true"><div class="beam b1"></div><div class="beam b2"></div><div class="beam b3"></div><div class="beam b4"></div><div class="ball">🪩</div></div>
     <div id="garageDock" style="z-index: 61; left: 16px; bottom: 12px;" class="fixed flex items-end gap-2"></div>
+    <div id="billsBox" style="z-index: 66; right: 16px; bottom: 150px; width: min(300px, calc(100vw - 32px)); display: none;" class="fixed"></div>
+    <div id="squawk" style="z-index: 77; right: 16px; top: 200px; width: min(360px, calc(100vw - 32px)); display: none;" class="fixed"></div>
     <div id="societyBadge" style="z-index: 55; right: 16px; bottom: 84px; background: rgba(2,6,23,.88);" class="fixed hidden px-2.5 py-1 rounded-md border-2 text-[11px] font-black text-right leading-tight select-none"></div>
     <div id="aipacBadge" style="z-index: 55; right: 16px; bottom: 12px; background: rgba(2,6,23,.88);" class="fixed hidden px-2.5 py-1 rounded-md border-2 text-[11px] font-black text-right leading-tight select-none"></div>
     <div id="announceBar" style="z-index: 66; top: 8px; max-width: min(760px, calc(100vw - 32px));" class="fixed left-1/2 -translate-x-1/2 hidden items-start gap-3 px-4 py-2.5 rounded-xl border-2 border-sky-400 bg-sky-950/95 text-sky-50 shadow-2xl">
@@ -3666,7 +3668,7 @@
         { id: 'weewoo',     name: 'Wee-Woo',                  desc: "Buy Biblehumping's ambulance." },
         { id: 'golddonut',  name: 'To Protect and Serve',     desc: "Find ChAoTiC's Golden Chocolate Donut." },
         { id: 'rugpull',    name: 'Rug Pulled',               desc: 'Ape into $KEVCOIN.' },
-        { id: 'taxman',     name: 'Death and Taxes',          desc: 'Pay the monthly Tuesday reset income tax.' },
+        { id: 'taxman',     name: 'Death and Taxes',          desc: 'Pay your monthly Tuesday reset tax bill.' },
         { id: 'drip',       name: 'Drip',                     desc: 'Buy something cosmetic from the shop.' },
         { id: 'boughtaotc', name: 'Pulled a Krom',            desc: "Buy Krom's AOTC carry. Shameful." },
         { id: 'aotclegit',  name: 'Ahead of the Curve (Legit)', desc: 'Land on AOTC naturally. No rigs, no Krom carries, no excuses.' },
@@ -3686,6 +3688,9 @@
         { id: 'finger',     name: 'Pour One Out',             desc: "Lay Biblehumping's Finger to rest on the SPIN button." },
         { id: 'voodoo',     name: 'Dark Arts Degree',         desc: 'Get the Kevin Voodoo Doll from a cursed golden cookie.', secret: true, secretName: true },
         { id: 'goblincard', name: 'Pre-Approved',             desc: 'Sign up for the Goblin Express card from a 2 AM pop-up ad.' },
+        { id: 'seized',     name: 'Asset Forfeiture',         desc: "Ignore the Goblin IRS bill until the real IRS seizes 80% of everything.", secret: true, secretName: true },
+        { id: 'cartel',     name: 'Wrong Desert',             desc: 'Blow up your own shack enough times that the Cartel comes for you.', secret: true, secretName: true },
+        { id: 'rui',        name: 'Raiding Under the Influence', desc: 'Get pulled over by ChAoTiC after one too many road beers.', secret: true },
         { id: 'cluck',      name: 'CLUCK!',                   desc: 'Complete the Westfall chicken\'s quest.' },
         { id: 'clippy',     name: "It Looks Like You're Adopting a Paperclip", desc: 'Find and adopt the secret pet.', secret: true, secretName: true }
     ];
@@ -5470,6 +5475,7 @@
         const name = forced || pick(LOOT[q]);
         if (name === 'Golden Chocolate Donut') unlock('golddonut');
         bag[name] = { q, n: ((bag[name] && bag[name].n) || 0) + 1 }; store.set('painWheelBag', bag);
+        if (name === "Reb's Empty Bottle" || name === 'Road Beer (Still Cold)' || name === 'Six-Pack of Garage Beers') addDrink();
         const isNew = !foundItems[name];
         if (isNew) { foundItems[name] = true; store.set('painWheelFound', foundItems); setTimeout(() => checkSets(name), 900); }
         if (q === 'legendary') unlock('orangetext');
@@ -6409,7 +6415,13 @@
         setTimeout(() => { $('lpStatus').textContent = 'STATUS: REFUELING...'; }, busyFor - 2200);
         setTimeout(() => { padBusy = false; renderPad(); }, busyFor);
     }
-    function padHit(where) { rocketStats[where] = (rocketStats[where] || 0) + 1; store.set('painWheelRocketStats', rocketStats); renderPad(); }
+    function padHit(where) {
+        rocketStats[where] = (rocketStats[where] || 0) + 1; store.set('painWheelRocketStats', rocketStats); renderPad();
+        if (where === 'shack') {   // the shack sits in Cartel territory: every 5th hit, they come for you
+            const n = store.get('painWheelShackHitsSince', 0) + 1;
+            if (n >= 5) { store.set('painWheelShackHitsSince', 0); setTimeout(cartelAbduction, 5500); } else store.set('painWheelShackHitsSince', n);
+        }
+    }
     function padOrigin() {   // where the rocket lifts off from: the pad if it's on screen, otherwise the bottom of the screen
         const b = $('padRocket').getBoundingClientRect();
         if (b.width && b.bottom > 0 && b.top < innerHeight) return { x: b.left + b.width / 2, y: b.top + b.height / 2 };
@@ -6958,15 +6970,134 @@
     addEventListener('keydown', (e) => { if (e.key === 'Escape' && hearthCast) hearthCancel('🪨 Cast cancelled.'); });
     renderHearth();
 
+    // ---------- 💸 bills & debts: the IRS, the Cartel, and the court ----------
+    const TAX_GRACE = 48 * 3600 * 1000;
+    const debts = Object.assign({ tax: null, cartel: 0, court: 0 }, store.get('painWheelBills', {}));
+    function saveDebts() { store.set('painWheelBills', debts); renderBills(); }
+    const totalAssets = () => gold + vaultGold();
+    function takeAssets(frac, vaultFloor) {   // takes a fraction of the wallet and the vault (the vault keeps its FDIC-insured part)
+        const w = Math.round(gold * frac), v0 = vaultGold(), vTake = Math.round(Math.max(0, v0 - (vaultFloor || 0)) * frac);
+        setGold(gold - w); if (vTake) store.set('painWheelVault', v0 - vTake);
+        return w + vTake;
+    }
+    function renderBills() {
+        const box = $('billsBox'), rows = [];
+        if (debts.tax) { const ms = Math.max(0, debts.tax.due - Date.now()), h = Math.floor(ms / 3600e3), m = Math.floor(ms % 3600e3 / 60e3);
+            rows.push(['tax', '🧾 Goblin IRS tax bill', debts.tax.amt, `Due in ${h}h ${m}m, or they seize 80% of everything`]); }
+        if (debts.cartel) rows.push(['cartel', '🌵 You owe the Cartel', debts.cartel, '+10% every hour until paid off']);
+        if (debts.court) rows.push(['court', '🚔 RUI court fine', debts.court, '400% interest (+1% every 10 min)']);
+        if (!rows.length) { box.style.display = 'none'; return; }
+        box.style.display = 'block';
+        box.innerHTML = '<div style="background:rgba(69,10,10,.95);border:2px solid #f87171;border-radius:12px;padding:8px 10px;box-shadow:0 10px 30px rgba(0,0,0,.6);font-size:12px;color:#fee2e2"><div style="font-weight:900;font-size:10px;letter-spacing:.14em;color:#fca5a5">💸 BILLS YOU OWE</div></div>';
+        const card = box.firstChild, hasVault = vaultGold() > 0;
+        rows.forEach(([k, title, amt, note]) => {
+            const r = document.createElement('div'); r.style.cssText = 'margin-top:6px;padding-top:6px;border-top:1px solid rgba(248,113,113,.3)';
+            r.innerHTML = `<div style="display:flex;justify-content:space-between;gap:8px;font-weight:800"><span></span><span class="mono" style="color:#fde047"></span></div><div style="font-size:10.5px;color:#fca5a5"></div>
+                <div style="display:flex;gap:4px;margin-top:4px"><button data-p="wallet" style="flex:1;padding:3px 6px;border-radius:6px;background:#15803d;color:#fff;font-weight:800;border:0;cursor:pointer">💰 Pay</button>${hasVault ? '<button data-p="vault" style="flex:1;padding:3px 6px;border-radius:6px;background:#b45309;color:#fff;font-weight:800;border:0;cursor:pointer">🏦 From vault</button>' : ''}</div>`;
+            r.querySelector('span').textContent = title; r.querySelectorAll('span')[1].textContent = fmt(amt); r.children[1].textContent = note;
+            r.querySelectorAll('[data-p]').forEach(b => b.addEventListener('click', () => payBill(k, b.dataset.p)));
+            card.appendChild(r);
+        });
+    }
+    function payBill(k, src) {
+        const owed = k === 'tax' ? debts.tax.amt : debts[k], have = src === 'vault' ? vaultGold() : gold, amt = Math.min(owed, have);
+        if (amt <= 0) { moveToast(src === 'vault' ? '🏦 The vault is empty.' : '💰 Your wallet is empty. Try the vault, or crying.'); return; }
+        if (src === 'vault') store.set('painWheelVault', Math.round(have - amt)); else setGold(gold - amt);
+        if (k === 'tax') {
+            debts.tax.amt -= amt;
+            if (debts.tax.amt <= 0) { debts.tax = null; unlock('taxman'); funEvent('🧾 TAXES PAID. The Goblin IRS grudgingly leaves.', 3500); chatBurst(['TAXES PAID', 'law abiding citizen', 'boring but W'], 2); }
+        } else {
+            debts[k] -= amt;
+            if (debts[k] <= 0) { debts[k] = 0; moveToast(k === 'cartel' ? '🌵 The Cartel says you are free to go. For now.' : '🚔 Fine paid. Your record is clean. (It is not clean.)'); }
+        }
+        saveDebts(); renderGold();
+    }
+    function checkSeizure() {
+        if (!debts.tax || Date.now() < debts.tax.due) return;
+        debts.tax = null;
+        const took = takeAssets(0.8, 250000); saveDebts(); unlock('seized');
+        funEvent('🏛️ THE IRS SEIZED YOUR ASSETS (-80%)', 6000);
+        moveToast(`🏛️ You didn't pay your taxes. The Internal Revenue Service seized ${fmt(took)}: 80% of your wallet and vault. (The vault's first 250,000g was FDIC insured.)`);
+        chatBurst(['ASSETS SEIZED', 'IRS DIFF', 'should have paid', 'F', 'they took the yacht chairs', 'tax evasion speedrun failed'], 6, 3000);
+    }
+    setInterval(() => {   // interest only grows while the page is open, like goblin debt
+        if (document.hidden) { checkSeizure(); return; }
+        let ch = false;
+        if (debts.cartel) { debts.cartel = Math.ceil(debts.cartel * Math.pow(1.1, 1 / 60)); ch = true; }      // 10% an hour
+        if (debts.court) { debts.court = Math.ceil(debts.court * Math.pow(1.01, 1 / 10)); ch = true; }         // 1% every 10 minutes
+        checkSeizure();
+        if (ch || debts.tax) saveDebts();
+    }, 60000);
+    setTimeout(() => { checkSeizure(); renderBills(); }, 3000);
+
+    // ---------- 🌵 the Cartel: hit your own shack with the rocket too many times ----------
+    function cartelAbduction() {
+        const owe = Math.round(totalAssets() * 0.5); if (owe <= 0) return;
+        debts.cartel += owe; saveDebts(); unlock('cartel');
+        funEvent('🌵 THE CARTEL ABDUCTED YOU', 6000);
+        moveToast(`🌵 You've blown up the shack in their desert one too many times. The Cartel abducted you. You now owe them ${fmt(owe)} (50% of your total assets), +10% every hour until it's paid.`);
+        chatBurst(['THE CARTEL', 'he blew up the wrong shack', 'not the desert people', 'F', 'pay them bro', 'breaking bad arc'], 6, 3000);
+    }
+
+    // ---------- 🚔 Raiding Under the Influence: road beers + Knob Creek add up ----------
+    let bac = store.get('painWheelBac', 0);
+    function addDrink(why) {
+        bac++; store.set('painWheelBac', bac);
+        if (bac === 3) moveToast("🍺 That's 3 drinks. ChAoTiC's cruiser was spotted circling the guild hall...");
+    }
+    setInterval(() => { if (bac > 0 && !document.hidden) { bac--; store.set('painWheelBac', bac); } }, 20 * 60000);   // sober up one drink every 20 minutes
+    function ruiCheck() {
+        if (bac < 4 || Math.random() > 0.5) return;
+        bac = 0; store.set('painWheelBac', 0);
+        const fine = Math.round(totalAssets() * 0.2);
+        debts.court += fine; saveDebts(); unlock('rui');
+        if (garage.police && !vehicles.cop) drivePolice();
+        funEvent('🚔 BUSTED: RAIDING UNDER THE INFLUENCE', 6000);
+        const bottles = (bag["Reb's Empty Bottle"] && bag["Reb's Empty Bottle"].n) || 0;
+        moveToast(`🚔 ChAoTiC pulled you over for Raiding Under the Influence${bottles ? ` (evidence: ${bottles} empty Knob Creek bottle${bottles > 1 ? 's' : ''} in your bag)` : ''}. Fine: ${fmt(fine)} (20% of your total assets) at 400% interest until paid.`);
+        chatBurst(['BUSTED', 'RUI KEKW', 'chaotic got him', 'license and registration', 'he blew a .40 on the dps meter', 'free him'], 6, 3000);
+    }
+
+    // ---------- 🐦 Squawkr: Elan posts, the market panics ----------
+    const ELAN_POSTS = [
+        { text: '$KEVN is trash.', sym: 'KEVN', m: -0.8, w: 3 },
+        { text: '$SUSN moon 🚀🚀🚀', sym: 'SUSN', m: 100, w: 1 },
+        { text: 'DedFrmr is dead.', sym: 'DEDFRMR', m: -0.5, w: 3 },
+        { text: "$RET is the future of warfare. Also the past. Mostly the past.", sym: 'RET', m: 0.35, w: 2 },
+        { text: 'Just bought one share of $ALT. ChAoTiC has to make another alt now. Those are the rules.', sym: 'ALT', m: 0.25, w: 2 },
+        { text: '$KEVN is actually genius. I was kidding earlier. Or am I.', sym: 'KEVN', m: 0.6, w: 2 }];
+    function squawk(post) {
+        const st = STOCKS.find(t => t.sym === post.sym); if (!st) return;
+        exMove(st, post.m, 'Elan posted about it'); store.set('painWheelStockPrices2', exPrice); exRender();
+        const pct = post.m * 100, el = $('squawk');
+        el.innerHTML = `<div style="background:#0b0f19;border:1px solid #334155;border-radius:16px;padding:12px 14px;box-shadow:0 14px 40px rgba(0,0,0,.6);color:#e2e8f0;font-size:14px">
+            <div style="display:flex;align-items:center;gap:10px"><div style="width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#334155,#0f172a);display:grid;place-items:center;font-size:22px">🚀</div>
+            <div style="min-width:0;line-height:1.2"><div style="font-weight:900">Elan <span style="color:#38bdf8">✔</span></div><div style="color:#64748b;font-size:12px">@ElanOfficial · just now</div></div>
+            <div style="margin-left:auto;font-size:10px;font-weight:900;letter-spacing:.12em;color:#64748b">SQUAWKR</div></div>
+            <div data-t style="margin-top:8px;font-size:15px;line-height:1.35"></div>
+            <div style="margin-top:8px;padding:6px 8px;border-radius:8px;font-weight:900;font-size:12px;${pct >= 0 ? 'background:rgba(22,163,74,.18);color:#4ade80' : 'background:rgba(220,38,38,.18);color:#f87171'}">${pct >= 0 ? '📈' : '📉'} $${post.sym} ${pct >= 0 ? '+' : ''}${pct.toLocaleString()}%</div>
+            <div style="margin-top:8px;display:flex;gap:16px;color:#64748b;font-size:12px"><span>💬 ${(2 + Math.random() * 40).toFixed(1)}K</span><span>🔁 ${(10 + Math.random() * 90).toFixed(1)}K</span><span>♥ ${(100 + Math.random() * 800).toFixed(1)}K</span></div></div>`;
+        el.querySelector('[data-t]').textContent = post.text;
+        el.style.display = 'block'; el.animate([{ transform: 'translateX(40px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 300, easing: 'ease-out' });
+        clearTimeout(squawk.t); squawk.t = setTimeout(() => { el.style.display = 'none'; }, 9000);
+        chatBurst(pct >= 0 ? ['ELAN POSTED', `$${post.sym} TO THE MOON`, 'buy buy buy', 'market manipulation', 'SEC where'] : ['ELAN POSTED', `$${post.sym} IS DEAD`, 'sell sell sell', 'bag holders in shambles', 'thanks Elan'], 4, 2500);
+    }
+    setInterval(() => {   // about once every 40 minutes while the page is open
+        if (document.hidden || isSpinning || Math.random() > 1 / 40) return;
+        const bagW = ELAN_POSTS.flatMap(p => Array(p.w).fill(p)); squawk(pick(bagW));
+    }, 60000);
+
     // ---------- Tuesday reset: Goblin IRS income tax ----------
     function checkTax() {
         const d = new Date(); if (d.getDay() !== 2) return;   // Tuesdays only (WoW reset day), once a month
         const key = d.getFullYear() + '-' + (d.getMonth() + 1); if (store.get('painWheelTaxMonth', '') === key) return;
         store.set('painWheelTaxMonth', key);
         if (gold < 100) { moveToast('🧾 Tuesday reset: the Goblin IRS checked your wallet and left disappointed.'); return; }
-        const tax = Math.round(gold * 0.15); setGold(gold - tax); unlock('taxman');
-        funEvent(`🧾 MONTHLY TUESDAY RESET: Goblin IRS collected ${fmt(tax)} in income tax (15%)`, 5500);
-        chatBurst(['TAXED KEKW', 'the goblin IRS got him', 'death and taxes', 'reset day tax LUL', 'should have bought $KNOB'], 3, 2500);
+        const tax = Math.round(gold * 0.15);
+        debts.tax = { amt: tax, due: Date.now() + TAX_GRACE }; saveDebts();
+        funEvent(`🧾 MONTHLY TUESDAY RESET: the Goblin IRS sent you a bill for ${fmt(tax)} (15%)`, 5500);
+        moveToast(`🧾 Pay your ${fmt(tax)} tax bill within 48 hours (bottom right). If you don't, the IRS seizes 80% of everything you own.`);
+        chatBurst(['TAX SZN', 'the goblin IRS found him', 'death and taxes', 'pay it bro', 'should have bought $KNOB'], 3, 2500);
     }
     setTimeout(checkTax, 5000); setInterval(checkTax, 60000);
 
@@ -7478,8 +7609,9 @@
         const g0 = gold;
         resolveBet(s.type);
         const betDelta = gold - g0;
-        if (s.type === 'KNOB_CREEK') hurtLiver(25, 'Another bottle');
-        else if (s.type === 'ROAD_BEERS' || s.type === 'GARAGE_BEERS') hurtLiver(15, 'Beers');
+        if (s.type === 'KNOB_CREEK') { hurtLiver(25, 'Another bottle'); addDrink(); }
+        else if (s.type === 'ROAD_BEERS' || s.type === 'GARAGE_BEERS') { hurtLiver(15, 'Beers'); addDrink(); }
+        setTimeout(ruiCheck, 2600);
         const t = TYPE[s.type];
         chatBurst(CHAT_LAND[s.type] || [`${t.pill} LUL`, 'Pog', 'KEKW', 'ez', 'rigged', 'this wheel is scuffed', 'W', 'L', `${t.pill}?? ok`], 3, 2400);
         if (ash) chatBurst(['ASHBRINGER???', 'SERVER FIRST', 'HOLY', 'CLIP IT'], 4);
