@@ -203,6 +203,7 @@
         body.party-on #garageDock button { animation: petDance .6s ease-in-out infinite alternate; }
         body.is-spinning #petDock *, body.is-spinning #garageDock *, body.is-spinning #houseEmoji, body.is-spinning .siren-glow, body.is-spinning #goldenCookie { animation-play-state: paused !important; }
         #petDock > div > div:last-child { will-change: transform; }
+        body.has-hearth header { padding-right: 76px; }   /* room for the Hearthstone in the top-right corner */
         @keyframes fireFlicker { from { translate: 0 0; filter: brightness(1); } to { translate: 0 -6px; filter: brightness(1.25); } }
         @keyframes petDance { from { transform: translateY(0) rotate(-12deg); } to { transform: translateY(-8px) rotate(12deg); } }
         @media (prefers-reduced-motion: reduce) { body.party-on #petDock > div > div:last-child, body.party-on #garageDock button { animation: none !important; } }
@@ -420,7 +421,7 @@
         <div id="houseEmoji" class="text-5xl leading-none">🏚️</div>
         <div id="houseLabel" style="font-size:9px;font-weight:900;letter-spacing:.06em;color:#fde047;background:rgba(0,0,0,.7);padding:0 6px;border-radius:4px;text-transform:uppercase">Your Timeshare (1/52nd)</div>
     </div>
-    <button id="hearthBtn" title="Hearthstone: Gallywix's Yacht (10 sec cast)" style="z-index: 61; left: calc(50% - 118px); bottom: 12px; display: none; background: none; border: 0; padding: 0; cursor: pointer;" class="fixed flex-col items-center select-none">
+    <button id="hearthBtn" title="Hearthstone: Gallywix's Yacht (10 sec cast)" style="z-index: 61; right: 14px; top: 66px; display: none; background: none; border: 0; padding: 0; cursor: pointer;" class="fixed flex-col items-center select-none">
         <svg viewBox="0 0 64 64" width="44" height="44" aria-hidden="true">
             <defs><radialGradient id="hsStone" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#9aa6b8"/><stop offset=".6" stop-color="#5b6577"/><stop offset="1" stop-color="#2b3140"/></radialGradient>
             <radialGradient id="hsRune" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#e0f2fe"/><stop offset=".5" stop-color="#38bdf8"/><stop offset="1" stop-color="#0369a1" stop-opacity="0"/></radialGradient></defs>
@@ -5937,7 +5938,7 @@
     function launchRocket() {
         const shack = document.querySelector('#garageDock [data-k="shack"]');
         // with the yacht parked out front, half the time the rocket goes there instead (and sometimes it drifts into the wheel)
-        if (store.get('painWheelHouseLevel', 0) >= 6 && !$('timeshareHouse').classList.contains('hidden') && !rocketMishap && Math.random() < 0.5) return rocketYachtCrash();
+        if (store.get('painWheelHouseLevel', 0) >= 6 && !rocketMishap && rocketGoesAstray()) return rocketYachtCrash();
         if (garage.shack && shack) return rocketShackCrash(shack);
         const r = document.createElement('div');
         r.style.cssText = 'position:fixed;z-index:78;left:50%;bottom:-120px;font-size:110px;line-height:1;pointer-events:none;transform:translateX(-50%) rotate(-45deg);transition:bottom 4s cubic-bezier(.5,0,.9,.4)';
@@ -5964,7 +5965,11 @@
         ['Justin', "Don't worry, the odds are still rigged. Fire can't fix that."], ['Nick', "Clear! ...no wait, that's for people."],
         ['Justin', 'I am writing the wheel a ticket for spinning under the influence.'], ['Nick', 'Kevin is fine. Kevin was the one who aimed it.'],
         ['Justin', 'Casimir says this is a feature.'], ['Nick', 'Stop, drop and roll. The wheel only knows how to roll.']];
-    let rocketMishap = false;
+    let rocketMishap = false, rocketBag = [];
+    function rocketGoesAstray() {   // 1 in 2, dealt in shuffled pairs so it never goes long without missing
+        if (!rocketBag.length) rocketBag = Math.random() < 0.5 ? [true, false] : [false, true];
+        return rocketBag.pop();
+    }
     function rocketScene(x, lines) {   // Nick and Justin pull up from opposite sides and trade a few lines, then leave
         const mk = (emoji, flip, from) => {
             const el = document.createElement('div');
@@ -5997,7 +6002,7 @@
         const pad = document.querySelector('#garageDock [data-k="shack"]') || document.querySelector('#garageDock [data-k="rocket"]') || $('garageDock');
         const p0 = pad.getBoundingClientRect(), sx = p0.left + p0.width / 2, sy = p0.top;
         const house = $('houseEmoji'), h = house.getBoundingClientRect();
-        const toWheel = Math.random() < 0.35, wc = $('wheelCanvas').getBoundingClientRect();
+        const toWheel = Math.random() < 0.35 || $('timeshareHouse').classList.contains('hidden'), wc = $('wheelCanvas').getBoundingClientRect();
         const tx = toWheel ? wc.left + wc.width / 2 : h.left + h.width / 2, ty = toWheel ? Math.max(90, Math.min(innerHeight - 140, wc.top + wc.height / 2)) : h.top + h.height / 2;
         const r = document.createElement('div'); r.textContent = '🚀';
         r.style.cssText = `position:fixed;z-index:80;left:${sx}px;top:${sy - 70}px;font-size:80px;line-height:1;pointer-events:none;transform:translate(-50%,-50%) rotate(-45deg);transition:top 1.5s cubic-bezier(.5,0,.9,.4)`;
@@ -6541,7 +6546,7 @@
 
     // ---------- Hearthstone: 10 second cast to the yacht (interruptible, like the real thing) ----------
     let hearthCast = null;
-    function renderHearth() { $('hearthBtn').style.display = store.get('painWheelHouseLevel', 0) >= 6 ? 'flex' : 'none'; }
+    function renderHearth() { const on = store.get('painWheelHouseLevel', 0) >= 6; $('hearthBtn').style.display = on ? 'flex' : 'none'; document.body.classList.toggle('has-hearth', on); }
     function hearthCancel(why) {
         if (!hearthCast) return;
         clearInterval(hearthCast.iv); hearthCast.stop(); hearthCast = null;
