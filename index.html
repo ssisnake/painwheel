@@ -5667,7 +5667,7 @@
         const n = NEEDLES[needleChoice] || NEEDLES.classic, svg = $('pointerAssembly').querySelector('svg');
         if (!svg) return;
         svg.innerHTML = n.emoji
-            ? `<text x="23" y="44" font-size="40" text-anchor="middle">${n.emoji}</text>`
+            ? `<text x="23" y="46" font-size="42" text-anchor="middle" fill="#ffffff" style="filter:drop-shadow(0 3px 4px rgba(0,0,0,.8))">${n.emoji}</text>`
             : `<defs><linearGradient id="ndlRainbow" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ef4444"/><stop offset=".25" stop-color="#facc15"/><stop offset=".5" stop-color="#22c55e"/><stop offset=".75" stop-color="#3b82f6"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs>
                <circle cx="23" cy="14" r="10" fill="#1E293B" stroke="#F8FAFC" stroke-width="3"/>
                <path d="M13 18L23 50L33 18H13Z" fill="${n.fill}" stroke="${n.stroke}" stroke-width="2" stroke-linejoin="round" ${n.glow ? 'style="filter:drop-shadow(0 0 6px #fde68a)"' : ''}/>
