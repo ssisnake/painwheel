@@ -7468,6 +7468,16 @@
             add(shopRow('🥃', 'Bottle for Reb', "Fully restores Reb's liver. Somehow.", 'Buy: 50,000g', () => {
                 if (liverDown) { shopMsg("Reb is in the hospital. They won't let you bring that in."); return; }
                 if (!spend(50000, 'a bottle for Reb')) return; liver = 100; store.set('painWheelLiver', liver); renderLiver(); shopMsg('Reb thanks you. His liver does not.'); chatBurst(['REB IS BACK', 'liver restored KEKW', 'enabler'], 2); }));
+            {   // ???? (unlocks the golden cookies)
+                const owned = store.get('painWheelWrongGame', false);
+                add(shopRow('🍪', 'Wrong Game?', '????', owned ? 'Owned ✓' : 'Buy: 777,777g', () => {
+                    if (store.get('painWheelWrongGame', false)) return;
+                    if (!spend(777777, '????')) return;
+                    store.set('painWheelWrongGame', true); shopMsg('🍪 ...somewhere, a grandma starts baking.'); renderShop();
+                    chatBurst(['wrong game?', 'is that a cookie', 'cookie clicker DLC', 'what did you just buy', '????'], 3, 2000);
+                    setTimeout(goldenCookie, 60000);   // the first one shows up about a minute later
+                }, owned ? 'owned' : 'buy'));
+            }
             const kanaLeft = Math.max(0, Math.ceil((kanaUntil - Date.now()) / 60000));
             add(shopRow('📺', 'Kana+ Premium (30 min)', kanaLeft ? `Ad-free for ${kanaLeft} more minutes.` : 'No popup ads for 30 minutes. Then Kana+ will ask you to renew.', 'Buy: 1,000,000g', () => {
                 if (!spend(1000000, 'Kana+ Premium')) return; kanaUntil = Math.max(Date.now(), kanaUntil) + 30 * 60000; store.set('painWheelKanaUntil', kanaUntil); shopMsg('Welcome to Kana+ Premium. Enjoy the brooding demon hunters, ad-free.'); renderShop(); }));
@@ -7859,8 +7869,8 @@
             chatBurst(['GOLDEN COOKIE', 'grandma W', 'cookie clicker flashbacks', 'click the cookie', 'the grandmas approve'], 4);
         });
     }
-    setInterval(() => {   // only for players past 200 spins, roughly once every 5 minutes
-        if (document.hidden || Math.max(stats.spins, allTimeSpins) < 200 || isSpinning) return;
+    setInterval(() => {   // only once you've bought "Wrong Game?" in the shop, roughly once every 5 minutes
+        if (document.hidden || !store.get('painWheelWrongGame', false) || isSpinning) return;
         if (Math.random() < 1 / 10) goldenCookie();
     }, 30000);
 
