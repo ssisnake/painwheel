@@ -212,6 +212,47 @@
         body.party-on #garageDock button, body.party-on #shackSpot button { animation: petDance .6s ease-in-out infinite alternate; }
         body.is-spinning #petDock *, body.is-spinning .pet-walker *, body.is-spinning #garageDock *, body.is-spinning #shackSpot *, body.is-spinning #houseEmoji, body.is-spinning .siren-glow, body.is-spinning .cop-sprite, body.is-spinning #goldenCookie { animation-play-state: paused !important; }
         .pet-walker .pet-em { will-change: transform; }
+        /* ===================== PHONES ===================== */
+        #sqFab { display: none; }
+        @media (max-width: 767px), (max-height: 500px) {
+            /* the corner stuff (shack, house, toy box, bills) lives at the bottom of the page on phones instead of sitting on top of the spin button */
+            body { position: relative; padding-bottom: 150px; }
+            #shackSpot, #rightStack, #timeshareHouse { position: absolute !important; }
+            #tagline { display: none; }
+            header { padding-top: 6px !important; gap: 8px !important; }
+            #wheelBox { min-height: 0 !important; }
+            /* Squawkr becomes a bird button that opens a sheet from the bottom */
+            #sqFab { display: grid; place-items: center; position: fixed; z-index: 64; right: 12px; top: 40%; width: 50px; height: 50px; border-radius: 50%;
+                background: #0b0f19; border: 2px solid #38bdf8; font-size: 24px; box-shadow: 0 4px 14px rgba(0,0,0,.6); cursor: pointer; }
+            #sqFab b { position: absolute; top: -4px; right: -4px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; background: #ef4444; color: #fff; font: 900 12px/20px Arial, sans-serif; display: none; }
+            #sqFab.has b { display: block; }
+            #squawkWin { left: 0 !important; right: 0; top: auto !important; bottom: 0; width: 100% !important; transform: none !important; }
+            #squawkWin.sq-min { display: none; }
+            #squawkWin #sqHead { border-radius: 16px 16px 0 0 !important; padding: 12px 14px !important; cursor: default !important; }
+            #squawkWin #sqHead > span:nth-of-type(3) { display: none; }   /* "drag to move" */
+            #squawkWin #sqMin { width: 40px !important; height: 34px !important; font-size: 18px; }
+            #squawkWin #sqBody { max-height: 62vh !important; }
+            /* bigger thumbs: fewer, larger stock buttons (1, 100, Max / Sell 1, 100, All) */
+            [data-kb="10"], [data-kb="1000"], [data-kb="10000"], [data-ks="10"], [data-ks="1000"], [data-ks="10000"],
+            [data-b="10"], [data-b="1000"], [data-b="10000"], [data-s="10"], [data-s="1000"], [data-s="10000"] { display: none !important; }
+            [data-kb], [data-ks], [data-b], [data-s] { min-height: 36px; min-width: 44px; font-size: 13px !important; }
+            .bet-chip { min-height: 36px; padding: 6px 10px; }
+            main button { min-height: 34px; }
+            /* corner stuff: smaller so it doesn't cover the page */
+            .shack-spr img { width: 76px; }
+            .shack-sign { font-size: 8px; right: -6px; } .shack-sign b { font-size: 10px; }
+            #shackSpot { left: 6px !important; bottom: 6px !important; }
+            #rightStack { right: 8px !important; bottom: 8px !important; transform: scale(.85); transform-origin: bottom right; }
+            #houseEmoji { transform: scale(.8); transform-origin: bottom center; }
+            .murloc-spr { width: 62px; height: 56px; }
+            #nickFinger { width: 80px !important; } #nickFingerImg { width: 80px !important; }
+        }
+        /* phone held sideways: the wheel fits the screen height instead of collapsing */
+        @media (max-height: 500px) and (orientation: landscape) {
+            #wheelBox { min-height: 0 !important; max-width: calc(100vh - 24px) !important; }
+            #spinCard { max-width: min(560px, 92vw) !important; }
+            #wheelColumn { position: relative !important; top: 0 !important; }
+        }
         /* WheelTurbo.exe armed: the spin buttons glow hot until the overclocked spin */
         #spinBtn.oc-armed { box-shadow: 0 0 0 2px #fde047, 0 0 22px rgba(251,146,60,.85); animation: ocHeat 1.6s ease-in-out infinite alternate; }
         #spinBtn.oc-armed::after { content: "⚡ OVERCLOCKED ⚡"; position: absolute; right: 8px; top: 3px; font-size: 10px; letter-spacing: .08em; color: #fef08a; text-shadow: 0 1px 2px #000; pointer-events: none; }
@@ -566,6 +607,7 @@
         </div>
     </div>
     <div id="billsBox" style="z-index: 66; right: 16px; bottom: 150px; width: min(300px, calc(100vw - 32px)); display: none;" class="fixed"></div>
+    <button id="sqFab" aria-label="Open Squawkr" title="Squawkr">🐦<b></b></button>
     <div id="squawkWin" style="z-index: 63; position: fixed; left: 0; top: 0; width: min(350px, calc(100vw - 24px)); visibility: hidden;">
         <div id="sqHead" title="Drag to move" style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:#0b0f19;border:1px solid #334155;border-radius:14px 14px 0 0;cursor:grab;touch-action:none;user-select:none">
             <span style="font-size:16px">🐦</span><b style="font-size:13px;letter-spacing:.04em;color:#e2e8f0">Squawkr</b>
@@ -775,7 +817,7 @@
                 </div>
             </div>
 
-            <div class="relative w-full aspect-square min-h-[340px] flex items-center justify-center p-1 sm:p-2" style="max-width: min(1150px, calc(100vh - 380px));">
+            <div id="wheelBox" class="relative w-full aspect-square min-h-[340px] flex items-center justify-center p-1 sm:p-2" style="max-width: min(1150px, max(300px, calc(100vh - 380px)));">
                 <div id="pointerAssembly" class="absolute top-0 left-1/2 -translate-x-1/2 z-20 pointer-events-none transition-transform duration-75 origin-top" style="transform: translateX(-50%) rotate(0deg);">
                     <svg width="46" height="54" viewBox="0 0 46 54" fill="none" xmlns="http://www.w3.org/2000/svg" class="drop-shadow-[0_6px_12px_rgba(0,0,0,0.85)]">
                         <circle cx="23" cy="14" r="10" fill="#1E293B" stroke="#F8FAFC" stroke-width="3"/>
@@ -792,7 +834,7 @@
                 </button>
             </div>
 
-            <div style="max-width: min(1150px, calc(100vh - 380px));" class="w-full mt-4 bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div id="spinCard" style="max-width: min(1150px, max(300px, calc(100vh - 380px)));" class="w-full mt-4 bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
                 <button id="spinBtn" class="relative overflow-hidden w-full sm:flex-1 py-3.5 px-6 rounded-xl font-black text-base uppercase tracking-wider text-white bg-gradient-to-r from-red-600 via-rose-600 to-amber-600 hover:from-red-500 hover:to-amber-500 transition-all shadow-lg shadow-red-900/30 border border-red-400/30 cursor-pointer touch-none">
                     <span id="powerFill" class="absolute inset-y-0 left-0 w-0 bg-gradient-to-r from-yellow-300/70 via-orange-300/70 to-white/80 pointer-events-none"></span>
                     <span id="spinBtnLabel" class="relative">Hold To Charge • Release To Spin</span>
@@ -2290,6 +2332,7 @@
     function retChance() { return Math.min(1, (TYPE.RET_PALADIN.n / TOTAL_SLICES) * Math.pow(2, retBoostStacks)); }
 
     const $ = (id) => document.getElementById(id);
+    var IS_TOUCH = matchMedia('(pointer: coarse)').matches, IS_PHONE = () => innerWidth < 768 || innerHeight < 500;
     const wheelCanvas = $('wheelCanvas'), ctx = wheelCanvas.getContext('2d');
     const wheelStatic = document.createElement('canvas'), sctx = wheelStatic.getContext('2d');   // off-screen: the pre-drawn wheel
     const fxctx = ctx;
@@ -3972,7 +4015,7 @@
         input.addEventListener('keydown', (e) => { e.stopPropagation(); if (e.key === 'Enter') input.blur(); });
         if (!playerName && !store.get('painWheelSkippedName', false)) {
             welcome.classList.remove('hidden'); welcome.classList.add('flex');
-            setTimeout(() => $('welcomeName').focus(), 50);
+            if (!IS_TOUCH) setTimeout(() => $('welcomeName').focus({ preventScroll: true }), 50);   // on phones this popped the keyboard and scrolled the page
         }
         $('welcomeName').addEventListener('keydown', (e) => e.stopPropagation());
         $('welcomeForm').addEventListener('submit', (e) => { e.preventDefault(); save($('welcomeName').value); welcome.classList.add('hidden'); welcome.classList.remove('flex'); });
@@ -6109,7 +6152,7 @@
     const PET_HOME = { murloc: 'house', accountant: 'gold', chicken: 'roam' };
     function renderPets() {
         document.querySelectorAll('.pet-walker').forEach(e => e.remove());
-        Object.keys(PETS).filter(k => pets[k] && k !== 'clippy').forEach(k => {
+        Object.keys(PETS).filter(k => pets[k] && k !== 'clippy').slice(0, IS_PHONE() ? 2 : 99).forEach(k => {
             const w = document.createElement('div'); w.className = 'pet-walker'; w.id = 'pet-' + k; w._home = PET_HOME[k] || 'strip';
             w.innerHTML = '<div class="pet-bubble hidden mb-1 px-2 py-1 rounded-lg bg-slate-900/95 border border-slate-600 text-slate-100 text-[11px] font-bold whitespace-nowrap shadow-lg" style="position:absolute;bottom:100%;left:50%;transform:translateX(-50%)"></div><div class="pet-flip" style="transition:transform .25s"><div class="pet-em" style="font-size:38px;line-height:1;animation:houseBob 1.1s ease-in-out infinite alternate">' + (k === 'murloc' ? `<span class="murloc-spr" style="background-image:url(${PHOTO_MURLOC_SHEET})"></span>` : PETS[k].e) + '</div></div>';
             w.style.cssText = `position:${w._home === 'gold' || w._home === 'roam' ? 'absolute' : 'fixed'};left:0;top:0;z-index:62;pointer-events:none;will-change:transform`;
@@ -7792,6 +7835,8 @@
     if (sqState.vw && sqState.x != null && (sqState.vw !== innerWidth || sqState.vh !== innerHeight)) {   // window size changed since: keep the same relative spot
         sqState.x = Math.round(sqState.x / sqState.vw * innerWidth); sqState.y = Math.round(sqState.y / sqState.vh * innerHeight);
     }
+    $('sqFab').addEventListener('click', () => { sqState.min = false; sqUnread = 0; sqRenderMin(); });
+    if (IS_PHONE()) sqState.min = true;   // phones: start as the little bird button, never as a sheet over the page
     function sqPlace() {
         const w = $('squawkWin'), W = w.offsetWidth || 350, H = $('sqHead').offsetHeight || 36;
         if (sqState.x == null) sqState.x = innerWidth - W - 16;
@@ -7799,6 +7844,8 @@
         w.style.transform = `translate(${sqState.x}px, ${sqState.y}px)`;
     }
     function sqRenderMin() {
+        $('squawkWin').classList.toggle('sq-min', !!sqState.min);
+        const fab = $('sqFab'); fab.querySelector('b').textContent = sqUnread ? (sqUnread > 9 ? '9+' : sqUnread) : ''; fab.classList.toggle('has', !!sqUnread);
         $('sqBody').style.display = sqState.min ? 'none' : 'block';
         $('sqHead').style.borderRadius = sqState.min ? '14px' : '14px 14px 0 0';
         $('sqMin').textContent = sqState.min ? '▢' : '—'; $('sqMin').title = sqState.min ? 'Open' : 'Minimize';
@@ -8017,6 +8064,7 @@
         document.body.appendChild(c); wildChicken = c;
         c.addEventListener('click', () => {
             if (cluckStage === 2) return feedChicken();
+            if (IS_TOUCH) return chickenEmote();   // no keyboard on a phone: a tap is a cluck
             chickenSay(pick(['Bawk?', '*stares at you*', '*pecks the ground*', 'bok bok', '(psst: just type chicken)']));
         });
         requestAnimationFrame(() => requestAnimationFrame(() => { c.style.transitionDuration = secs + 's'; c.style.left = ltr ? 'calc(100vw + 20px)' : '-80px'; }));

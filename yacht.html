@@ -13,7 +13,7 @@
     body::before { content: ""; position: fixed; inset: -40px; background: url("media/yacht_interior.webp") center / cover no-repeat; filter: blur(28px) brightness(.32); z-index: -1; }
     #scroller { width: 100vw; height: 100vh; overflow: auto; display: flex; align-items: center; }
     /* the room: always the image's exact shape, as big as the screen allows (no cropping, no upscaling past the window) */
-    #stage { position: relative; flex: none; margin: auto; width: max(900px, min(100vw, calc(100vh * 2576 / 1093))); aspect-ratio: 2576 / 1093;
+    #stage { position: relative; flex: none; margin: auto; width: max(640px, min(100vw, calc(100vh * 2576 / 1093))); aspect-ratio: 2576 / 1093;
         background: #1a0f0a url("media/yacht_interior.webp") center / 100% 100% no-repeat; container-type: inline-size; user-select: none; }
     button { font: inherit; color: inherit; }
 
@@ -131,7 +131,7 @@
     #vipScene { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transition: transform 1.3s cubic-bezier(.6,0,.3,1), opacity .5s 1s; transform-origin: 50% 52%; }
     #vipScene.zoom { transform: scale(5.2); opacity: 0; }
     #vip::before { content: ""; position: absolute; inset: -40px; background: url("media/vip_room.webp") center / cover no-repeat; filter: blur(28px) brightness(.3); }
-    #vipStage { position: relative; flex: none; width: max(900px, min(100vw, calc(100vh * 2576 / 1093))); aspect-ratio: 2576 / 1093;
+    #vipStage { position: relative; flex: none; width: max(640px, min(100vw, calc(100vh * 2576 / 1093))); aspect-ratio: 2576 / 1093;
         background: #120a08 url("media/vip_room.webp") center / 100% 100% no-repeat; container-type: inline-size; }
     #vipSign { position: absolute; left: 35%; top: 30%; width: 30%; text-align: center; font-family: "Arial Black", Arial, sans-serif; font-weight: 900; font-size: 3.9cqw; letter-spacing: .05em; white-space: nowrap;
         color: #fdf4ff; -webkit-text-stroke: .12cqw #e879f9; text-shadow: 0 0 .5cqw #f0abfc, 0 0 1.4cqw #e879f9, 0 0 3cqw #c026d3; pointer-events: none; }
@@ -176,6 +176,20 @@
     #miniBtns { display: flex; gap: 10px; }
     #miniBtns .btn { font-size: 16px; padding: 10px 18px; }
     @media (prefers-reduced-motion: reduce) { .vipMiniW, .vipNeon, #vipPoster .pWheel div { animation: none; } #vipScene { transition: opacity .3s; } }
+    /* phones: no hover, so clickable spots get a soft sparkle; and a nudge to turn the phone sideways */
+    @media (pointer: coarse) {
+        .hs::before { content: "✨"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: max(14px, 1.4cqw); opacity: .55;
+            animation: tapHint 2.4s ease-in-out infinite; pointer-events: none; filter: drop-shadow(0 0 4px #fde047); }
+        @keyframes tapHint { 0%, 100% { opacity: .2; transform: translate(-50%, -50%) scale(.8); } 50% { opacity: .75; transform: translate(-50%, -50%) scale(1.1); } }
+        .hs:active::after { opacity: 1; }
+    }
+    #rotateTip { display: none; }
+    @media (orientation: portrait) and (max-width: 767px) {
+        #rotateTip { display: flex; position: fixed; inset: 0; z-index: 80; background: rgba(5,3,2,.93); align-items: center; justify-content: center; flex-direction: column; gap: 14px; text-align: center; padding: 24px; }
+        #rotateTip.gone { display: none; }
+        #rotateTip .ph { font-size: 64px; animation: rotPhone 2.2s ease-in-out infinite; }
+        @keyframes rotPhone { 0%, 30% { transform: rotate(0); } 60%, 100% { transform: rotate(-90deg); } }
+    }
     @media (prefers-reduced-motion: reduce) { .glow, .plaque.new .t { animation: none; } }
 </style>
 </head>
@@ -284,6 +298,9 @@
         <div id="miniNest"></div>
     </div>
 </div>
+<div id="rotateTip"><div class="ph">📱</div><h2 style="margin:0;color:var(--gold2);font-size:22px">Turn your phone sideways</h2>
+    <p style="margin:0;color:#e7d3b0;font-size:16px;max-width:320px">The yacht is a wide boat. It looks a lot better in landscape.</p>
+    <button class="btn" id="rotateOk" style="font-size:16px;padding:10px 18px">Stay like this anyway</button></div>
 <div id="say"></div>
 <div id="achPop"><small>ACHIEVEMENT UNLOCKED</small><b id="achName"></b></div>
 
@@ -360,6 +377,7 @@
         try { if (document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1) { history.back(); return; } } catch (e) {}
         location.href = './';
     }
+    $('rotateOk').addEventListener('click', () => $('rotateTip').classList.add('gone'));
     $('backBtn').addEventListener('click', goBack); $('gateBack').addEventListener('click', goBack);
 
     // ---------- the gangplank ----------
