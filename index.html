@@ -5148,6 +5148,27 @@
             if (typeof sqPost === 'function') sqPost(inv.sq[0], inv.sq[1]);
         } else moveToast(`${inv.e} ${inv.lose}`);
     }, 30000);
+    // ---------- 🛡️ TsukBlock: Tsukaar is a tank, so he taunts the ads and takes the hit for you ----------
+    const CONTENT_ADS = new Set(GEMINI_ADS.filter(a => a.effect).map(a => a.id).concat(['timeshare', 'knobcreek']));
+    const AD_NAMES = { kanaplus: 'Kana+', notsister: "Lisa's PSA (not his sister)", lawsuit: 'The lawsuit ad', retacademy: 'Ret Paladin Academy', timeshare: "Gallywix's Timeshare", knobcreek: 'Knob Creek' };
+    const adName = (id) => AD_NAMES[id] || ((GEMINI_ADS.find(a => a.id === id) || {}).header || id).replace(/[^\p{L}\p{N}'&:!?,.$ -]/gu, '').replace(/\s+/g, ' ').trim();
+    const TSUK = {
+        free: { name: 'TsukBlock Free', cost: 0, desc: 'Blocks about half of the boring ads. Ads that add game content still get through. Sometimes advertises TsukBlock Premium at you. Ironic.' },
+        premium: { name: 'TsukBlock Premium', cost: 2500000, desc: 'Blocks every boring ad. Ads that add game content (free spins, stupid investments, Goblin Express, AOTC carry, $KEVCOIN, the timeshare...) still get through.' },
+        rikers: { name: 'TsukBlock Maximum Security: Rikers Island Edition', cost: 250000000, desc: 'Blocks EVERY ad. No visitors. No parole. ⚠️ You will miss game content unless you let specific ads out on parole with the whitelist below.' } };
+    function tsukAllows(id) {
+        const mode = store.get('painWheelTsukMode', 'off'), wl = store.get('painWheelTsukWhitelist', {});
+        if (mode === 'off' || wl[id]) return true;
+        if (mode === 'rikers') return false;
+        if (CONTENT_ADS.has(id)) return true;
+        return mode === 'free' ? Math.random() < 0.5 : false;
+    }
+    function tsukBlocked(id) {
+        const n = store.get('painWheelTsukCount', 0) + 1; store.set('painWheelTsukCount', n);
+        const mode = store.get('painWheelTsukMode', 'off');
+        moveToast(mode === 'free' && Math.random() < 0.35 ? `🛡️ TsukBlock Free blocked an ad! Upgrade to TsukBlock Premium to block even more ads (like this one).`
+            : `🛡️ Tsukaar taunted an ad and is tanking it for you. (${n.toLocaleString()} ads blocked${mode === 'rikers' ? ', 0 escaped' : ''})`);
+    }
     function runAdEffect(fx) {
         const root = document.documentElement;
         if (fx === 'freespin') { if (!isSpinning) triggerSpin(); }
@@ -5224,6 +5245,9 @@
             const done = (id) => (id === 'timeshare' && store.get('painWheelTimeshare', false)) || (id === 'goblincard' && store.get('painWheelGoblinCard', false));
             const pool = POPUP_ADS.filter(a => a.id !== lastId && !done(a.id));
             const pickAd = POPUP_ADS.find(a => a.id === forceId) || pool[Math.floor(Math.random() * pool.length)];
+            if (!forceId && !tsukAllows(pickAd.id)) {   // TsukBlock ate it; the ad timer starts over
+                lastShown = memLast = Date.now(); set('painWheelAdLastShown', lastShown); tsukBlocked(pickAd.id); return;
+            }
             currentAdId = pickAd.id;
             slot.innerHTML = pickAd.html;
             lastShown = memLast = Date.now();
@@ -6792,7 +6816,7 @@
 
     // ---------- the shop panel ----------
     const SHOP_TABS = [['themes', '🎨 Themes'], ['cosmetics', '📍 Cosmetics'], ['consumables', '🧪 Consumables'], ['pets', '🐾 Pets'],
-        ['garage', '🚗 Garage'], ['curses', '🧿 Curses'], ['society', '🔺 Secret Society'], ['scratch', '🎟️ Scratch-offs'], ['lobby', '🇺🇸 Lobbying']];
+        ['garage', '🚗 Garage'], ['curses', '🧿 Curses'], ['society', '🔺 Secret Society'], ['scratch', '🎟️ Scratch-offs'], ['lobby', '🇺🇸 Lobbying'], ['adblock', '🛡️ TsukBlock'], ['irs', '🧾 IRS']];
     let shopTab = 'themes';
     var guildPlayers = [];
     function shopRow(icon, name, desc, btnLabel, onClick, state) {   // state: 'buy' | 'owned' | 'equip' | 'equipped'
@@ -6948,6 +6972,46 @@
                     sendEvent({ k: 'society', rank: r.name }); renderShop();
                 }, have ? 'owned' : 'buy'));
             });
+        } else if (shopTab === 'adblock') {
+            const owned = store.get('painWheelTsukOwned', {}), mode = store.get('painWheelTsukMode', 'off');
+            const intro = document.createElement('div'); intro.className = 'text-xs text-slate-300';
+            intro.textContent = `TsukBlock™: Tsukaar is a tank, so he taunts the pop-up ads and takes the hit for you. Ads blocked so far: ${store.get('painWheelTsukCount', 0).toLocaleString()}. Currently running: ${mode === 'off' ? 'nothing (ads go brrr)' : TSUK[mode].name}.`;
+            add(intro);
+            Object.entries(TSUK).forEach(([k, t]) => {
+                const have = !!owned[k] || !t.cost, on = mode === k;
+                add(shopRow(k === 'rikers' ? '🔒' : '🛡️', t.name, t.desc, on ? 'Running' : have ? 'Turn on' : 'Buy: ' + fmt(t.cost), () => {
+                    if (!have) { if (!spend(t.cost, t.name)) return; owned[k] = true; store.set('painWheelTsukOwned', owned); }
+                    store.set('painWheelTsukMode', k); renderShop();
+                    shopMsg(k === 'rikers' ? '🔒 Maximum security engaged. The ads are in solitary. (Check the whitelist so you don\'t miss the fun ones.)' : `🛡️ ${t.name} is on. Tsukaar is taunting the ads.`);
+                    chatBurst(k === 'rikers' ? ['RIKERS EDITION LMAO', 'no ads ever again', 'tsuk is tanking', 'maximum security'] : ['TSUKBLOCK', 'tsuk tanking the ads', 'adblock W'], 2);
+                }, on ? 'equipped' : have ? 'equip' : 'buy'));
+            });
+            if (mode !== 'off') add(shopRow('🚫', 'Turn TsukBlock off', 'Let all the ads back in. Tsukaar goes back to pulling bosses early.', 'Turn off', () => { store.set('painWheelTsukMode', 'off'); renderShop(); shopMsg('Ads are back. Kevin is thrilled.'); }, 'equip'));
+            if (mode === 'rikers') {
+                const w = document.createElement('div'); w.className = 'text-xs font-bold rounded-lg px-3 py-2';
+                w.style.cssText = 'background:rgba(127,29,29,.5);border:1px solid #f87171;color:#fecaca';
+                w.textContent = '⚠️ Rikers Island Edition blocks ads that ADD GAME CONTENT too (marked ⭐ below): free spins, stupid investments, the Goblin Express card, Krom\'s AOTC carry, the timeshare, Ret Vision and more. Whitelist the ones you want.';
+                add(w);
+            }
+            if (owned.premium || owned.rikers) {
+                add(shopHead('Whitelist (ads allowed out on parole)'));
+                const wl = store.get('painWheelTsukWhitelist', {});
+                POPUP_ADS.forEach(a => {
+                    const row = document.createElement('label'); row.className = 'flex items-center gap-2 bg-slate-950/60 border border-slate-700 rounded-lg px-3 py-1.5 text-xs cursor-pointer';
+                    row.innerHTML = '<input type="checkbox" style="accent-color:#22c55e"><span style="flex:1;min-width:0"></span><span style="font-size:10px;font-weight:900;color:#facc15"></span>';
+                    const cb = row.querySelector('input'); cb.checked = !!wl[a.id];
+                    row.children[1].textContent = adName(a.id); row.children[2].textContent = CONTENT_ADS.has(a.id) ? '⭐ adds game content' : '';
+                    cb.addEventListener('change', () => { const w2 = store.get('painWheelTsukWhitelist', {}); if (cb.checked) w2[a.id] = true; else delete w2[a.id]; store.set('painWheelTsukWhitelist', w2); });
+                    add(row);
+                });
+            }
+        } else if (shopTab === 'irs') {
+            const d = document.createElement('div'); d.className = 'rounded-xl p-5 text-center';
+            d.style.cssText = 'background:repeating-linear-gradient(135deg,rgba(250,204,21,.12) 0 14px,rgba(15,23,42,.6) 14px 28px);border:2px dashed #facc15';
+            d.innerHTML = '<div style="font-size:46px">🧾🚧</div><div style="font-weight:900;font-size:20px;color:#fde047;margin-top:4px">THE GOBLIN IRS OFFICE</div><div style="font-weight:900;letter-spacing:.2em;color:#fca5a5;font-size:12px;margin-top:2px">COMING SOON</div>' +
+                '<div style="margin-top:10px;font-size:13px;color:#cbd5e1;line-height:1.5">File your taxes. Request an audit on a guildmate. Claim Kevin as a dependent.<br>Dispute a seizure (you will lose). Bribe an agent (you will also lose).</div>' +
+                '<div style="margin-top:10px;font-size:11px;color:#64748b">Office hours: never. Please take a number. Your number is 3,284.</div>';
+            add(d);
         } else if (shopTab === 'curses') {
             const note = document.createElement('div'); note.className = 'text-xs text-slate-300';
             note.textContent = 'Curse a guildmate. It posts in Discord, pops up on everyone\'s wheel, and hits them the next time their wheel checks in (within a minute if they have it open). All curses are cosmetic: nobody loses gold or stats.';
@@ -7080,6 +7144,12 @@
         SHOP_TABS.forEach(([id, label]) => {
             const b = document.createElement('button'); b.dataset.tab = id; b.textContent = label;
             b.className = 'shop-tab px-2.5 py-1 rounded-md text-xs font-bold cursor-pointer';
+            if (id === 'irs') {   // not open yet
+                b.style.position = 'relative'; b.style.overflow = 'hidden';
+                const r = document.createElement('span'); r.textContent = 'COMING SOON';
+                r.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:repeating-linear-gradient(135deg,rgba(250,204,21,.92) 0 8px,rgba(17,24,39,.92) 8px 16px);color:#fff;font-size:9px;font-weight:900;letter-spacing:.08em;text-shadow:0 1px 2px #000,0 0 3px #000';
+                b.appendChild(r);
+            }
             b.addEventListener('click', () => { shopTab = id; renderShop(); }); tabs.appendChild(b);
         });
         $('shopBtn').addEventListener('click', () => { openShop(); $('shopBtn').blur(); });
