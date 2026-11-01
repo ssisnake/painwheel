@@ -3752,6 +3752,7 @@
         { id: 'seized',     name: 'Asset Forfeiture',         desc: "Ignore the Goblin IRS bill until the real IRS seizes 80% of everything.", secret: true, secretName: true },
         { id: 'cartel',     name: 'Wrong Desert',             desc: 'Blow up your own shack enough times that the Cartel comes for you.', secret: true, secretName: true },
         { id: 'rui',        name: 'Raiding Under the Influence', desc: 'Get pulled over by ChAoTiC after one too many road beers.', secret: true },
+        { id: 'queue',      name: 'Position 1',               desc: 'Sit through the entire fake login queue after a disconnect.', secret: true },
         { id: 'cluck',      name: 'CLUCK!',                   desc: 'Complete the Westfall chicken\'s quest.' },
         { id: 'clippy',     name: "It Looks Like You're Adopting a Paperclip", desc: 'Find and adopt the secret pet.', secret: true, secretName: true }
     ];
@@ -5440,7 +5441,40 @@
             chatBurst(['DC KEKW', 'blizzard servers LUL', 'F', 'not again', 'WOW51900319 my beloved'], 4, 2000);
         }, 1000);
     }, 90000);
+    // every so often, reconnecting drops you into a fake login queue
+    const QUEUE_LINES = ['Kevin cut in line.', 'Biblehumping drove the ambulance through the queue. 40 people ahead of you are now farmers.', 'ChAoTiC is in the queue 52 times (one per alt).',
+        'You are now behind a level 1 orc named TotallyNotABotxX.', 'Reb left the queue to get ice. He kept his spot. Somehow.', 'Tsukaar pulled the queue.',
+        'A murloc is in the queue. Nobody knows how.', 'Queue paused: Casimir is "adjusting the servers".', 'Gallywix bought 300 spots in the queue. You are behind all of them.',
+        'Estimated time recalculated: 4 hours. (It is always 4 hours.)'];
+    function showQueue() {
+        const dc = $('disconnectScreen'); let pos = 2000 + Math.floor(Math.random() * 3000), stepN = 0, done = false;
+        const render = (note) => {
+            $('dcText').innerHTML = `<div style="font-size:15px">Degenerate Rejects (US) is full.</div><div style="margin-top:8px;font-size:13px;color:#fde68a">Position in queue: <b class="mono">${pos.toLocaleString()}</b></div>
+                <div style="font-size:12px;color:#d6b98a">Estimated time: ${Math.max(1, Math.ceil(pos / 70))} min</div><div data-n style="margin-top:8px;font-size:12px;color:#fca5a5;min-height:32px"></div>`;
+            if (note) $('dcText').querySelector('[data-n]').textContent = note;
+        };
+        render(); $('dcBtn').classList.remove('hidden'); $('dcBtn').textContent = 'Leave Queue';
+        const tick = setInterval(() => {
+            if (done) return clearInterval(tick);
+            stepN++;
+            let note = '';
+            if (stepN % 3 === 0) { note = pick(QUEUE_LINES); if (/cut|behind|bought/.test(note)) pos += 150 + Math.floor(Math.random() * 600); }
+            pos = Math.max(1, pos - Math.floor(pos * (0.18 + Math.random() * 0.2)));
+            if (stepN >= 14 || pos <= 1) { pos = 1; done = true; clearInterval(tick); $('dcBtn').onclick = null; $('dcBtn').classList.add('hidden'); render('Position 1! Logging in...');
+                setTimeout(() => { $('dcText').textContent = 'Just kidding. Blizzard says hi. 👋 (You waited the whole queue. Respect.)'; $('dcBtn').classList.add('hidden'); unlock('queue'); }, 1800);
+                setTimeout(() => { dc.classList.add('hidden'); dc.classList.remove('flex'); $('dcBtn').textContent = 'Reconnect'; }, 4200); return; }
+            render(note);
+        }, 1400);
+        $('dcBtn').onclick = () => {   // leaving the queue early
+            done = true; clearInterval(tick); $('dcBtn').onclick = null; $('dcBtn').classList.add('hidden');
+            $('dcText').textContent = `You left the queue. You were position ${pos.toLocaleString()}. The person behind you says thanks.`;
+            setTimeout(() => { dc.classList.add('hidden'); dc.classList.remove('flex'); $('dcBtn').textContent = 'Reconnect'; }, 2600);
+        };
+        chatBurst(['QUEUE KEKW', 'position 3000 LUL', 'realm full', 'classic launch flashbacks', 'just alt tab', 'see you in 4 hours'], 4, 2500);
+    }
     $('dcBtn').addEventListener('click', () => {
+        if ($('dcBtn').onclick) return;   // the queue's Leave button handles itself
+        if (Math.random() < 0.25) { showQueue(); return; }
         $('dcBtn').classList.add('hidden'); $('dcText').textContent = 'Reconnecting...';
         setTimeout(() => { $('dcText').textContent = 'Just kidding. Blizzard says hi. 👋'; }, 1800);
         setTimeout(() => { const dc = $('disconnectScreen'); dc.classList.add('hidden'); dc.classList.remove('flex'); }, 3300);
