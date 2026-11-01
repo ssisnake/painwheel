@@ -1,4 +1,14 @@
 <!DOCTYPE html>
+<!--
+        |
+      --+--
+        |
+        |
+
+  The LORD is my light and my salvation; whom shall I fear?
+  The LORD is the stronghold of my life; of whom shall I be afraid?
+                                                    Psalm 27:1
+-->
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
@@ -7468,7 +7478,7 @@
             add(shopRow('🥃', 'Bottle for Reb', "Fully restores Reb's liver. Somehow.", 'Buy: 50,000g', () => {
                 if (liverDown) { shopMsg("Reb is in the hospital. They won't let you bring that in."); return; }
                 if (!spend(50000, 'a bottle for Reb')) return; liver = 100; store.set('painWheelLiver', liver); renderLiver(); shopMsg('Reb thanks you. His liver does not.'); chatBurst(['REB IS BACK', 'liver restored KEKW', 'enabler'], 2); }));
-            {   // ???? (unlocks the golden cookies)
+            if (store.get('painWheelWrongGame', false) || Math.max(stats.spins, allTimeSpins) >= 77) {   // ???? (unlocks the golden cookies; appears at 77 spins)
                 const owned = store.get('painWheelWrongGame', false);
                 add(shopRow('🍪', 'Wrong Game?', '????', owned ? 'Owned ✓' : 'Buy: 777,777g', () => {
                     if (store.get('painWheelWrongGame', false)) return;
