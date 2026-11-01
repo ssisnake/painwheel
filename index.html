@@ -1037,6 +1037,7 @@
     const VIDEO_ASMON = "media/video_asmon.mp4?v=78682d89";
     const GIF_LOST = "media/gif_lost.gif?v=0694f342";      // Enron Ethics Handbook
     const PHOTO_DOUBLE_ENDER = "media/photo_double_ender.jpg?v=436a5e85";
+    const PHOTO_NICKS_MOM = "media/photo_nicks_mom.jpg?v=bd3c018a";
     const PHOTO_ROAD_BEERS = "media/photo_road_beers.jpg?v=d112894f";
     const PHOTO_GNOME = "media/photo_gnome.jpg?v=616157df";  // no croissants today, boss
 
@@ -1087,7 +1088,8 @@
           win: { title: "🤡🤡🤡 CLUSSY 🤡🤡🤡", size: SIZE.big, extra: "drop-shadow-[0_0_18px_rgba(250,204,21,0.8)]", sound: "honk", confetti: true, shake: true,
                  sub: (s, o) => `HONK HONK! 🎈🎪 Landed on Clussy (Slice #${s} • ${o} odds)! Nobody leaves this circus unchanged.` } },
         { id: "NICKS_MOM", n: 2, label: "📸 Nick's Mom 💖", pill: "NICK'S MOM", bg: "#ff1493", text: "#ffffff", border: "#ffffff", portrait: true, color: "text-[#ff1493]", glow: "bg-[#ff1493]", key: "9", rig: "MOM",
-          win: { size: SIZE.big, extra: "drop-shadow-[0_0_18px_rgba(255,20,147,0.8)]", sub: (s, o) => `NEON PINK JACKPOT! Landed on one of the 2 "Nick's Mom" photo slices (#${s} • ${o} odds)!` } },
+          win: { size: SIZE.big, extra: "drop-shadow-[0_0_18px_rgba(255,20,147,0.8)]", sub: (s, o) => `NEON PINK JACKPOT! Landed on one of the 2 "Nick's Mom" photo slices (#${s} • ${o} odds)!`,
+                 media: { src: PHOTO_NICKS_MOM, fallback: null, caption: "💖 HOW YOU DOIN', NICK'S MOM 💖" } } },
         { id: "HIYO_RAGED", n: 2, label: "Hiyo raged at me during a key, womp womp", pill: "HIYO RAGED", bg: "#ea580c", text: "#ffffff", border: "#fed7aa", color: "text-orange-400", glow: "bg-orange-600", key: "h", rig: "HYO",
           win: { size: SIZE.small, sub: (s, o) => `WOMP WOMP! (Slice #${s} • ${o} odds) — Hiyo raged at you during a key!` } },
         { id: "PVP_ARMOR", n: 2, label: "NO I AM IN MY PVP ARMOR AND WRONG SPEC!!!!", pill: "PVP ARMOR", bg: "#4f46e5", text: "#ffffff", border: "#c7d2fe", color: "text-indigo-400", glow: "bg-indigo-600", key: "p", rig: "PVP",
