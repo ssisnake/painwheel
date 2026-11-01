@@ -7063,6 +7063,8 @@
     function chickenFingerHeist() {
         const f = $('nickFinger'); if (!f || f.style.display === 'none') return;
         store.set('painWheelChickenFingerDay', new Date().toDateString());
+        const pet = $('pet-chicken'); if (pet) pet.style.visibility = 'hidden';   // your own chicken is the one going for it
+        const petBack = (ms) => setTimeout(() => { const p2 = $('pet-chicken'); if (p2) p2.style.visibility = ''; }, ms);
         const fr = f.getBoundingClientRect(), tx = fr.left + fr.width / 2, ty = fr.top + fr.height / 2, fromLeft = tx > innerWidth / 2 ? false : Math.random() < 0.5;
         const c = document.createElement('div');
         c.style.cssText = `position:fixed;z-index:58;left:0;top:0;pointer-events:none;transition:transform 1.6s linear;transform:translate(${fromLeft ? -90 : innerWidth + 20}px, ${ty - 40}px)`;
@@ -7104,6 +7106,8 @@
                 chatBurst(['the chicken failed', 'finger stays', 'nice try chicken', 'the finger is glued on', 'bawk L'], 3, 2000);
             }
             setTimeout(() => c.remove(), 3500);
+            petBack(cursed ? 9000 : stole ? 12500 : 4000);   // it wanders back in later, acting like nothing happened
+            if (pet && (cursed || stole)) setTimeout(() => petSay('chicken', cursed ? 'bawk... (i saw space)' : 'bawk. (what finger)'), cursed ? 9600 : 13200);
         }, 3600);
     }
     setInterval(() => {   // about once a day, while you're looking at the wheel
