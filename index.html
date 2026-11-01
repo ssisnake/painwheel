@@ -199,10 +199,10 @@
         /* party mode: big soft lights that drift and change color slowly (no flashing) */
         #partyLights { position: fixed; inset: 0; z-index: 58; pointer-events: none; display: none; overflow: hidden; }
         body.party-on #partyLights { display: block; }
-        body.party-on #petDock .pet-em { animation: petDance .45s ease-in-out infinite alternate !important; }
+        body.party-on .pet-walker .pet-em { animation: petDance .45s ease-in-out infinite alternate !important; }
         body.party-on #garageDock button { animation: petDance .6s ease-in-out infinite alternate; }
-        body.is-spinning #petDock *, body.is-spinning #garageDock *, body.is-spinning #houseEmoji, body.is-spinning .siren-glow, body.is-spinning #goldenCookie { animation-play-state: paused !important; }
-        #petDock .pet-em { will-change: transform; }
+        body.is-spinning #petDock *, body.is-spinning .pet-walker *, body.is-spinning #garageDock *, body.is-spinning #houseEmoji, body.is-spinning .siren-glow, body.is-spinning #goldenCookie { animation-play-state: paused !important; }
+        .pet-walker .pet-em { will-change: transform; }
         body.has-hearth header { padding-right: 76px; }
         /* launch pad */
         .lp-wrap { position: relative; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; min-height: 176px; padding: 14px 18px 0; border-radius: 16px; overflow: hidden;
@@ -246,7 +246,7 @@
         @media (max-width: 640px) { .lp-wrap { flex-wrap: wrap; justify-content: center; } .lp-info { flex-basis: 100%; text-align: center; } }   /* room for the Hearthstone in the top-right corner */
         @keyframes fireFlicker { from { translate: 0 0; filter: brightness(1); } to { translate: 0 -6px; filter: brightness(1.25); } }
         @keyframes petDance { from { transform: translateY(0) rotate(-12deg); } to { transform: translateY(-8px) rotate(12deg); } }
-        @media (prefers-reduced-motion: reduce) { body.party-on #petDock .pet-em, body.party-on #garageDock button { animation: none !important; } }
+        @media (prefers-reduced-motion: reduce) { body.party-on .pet-walker .pet-em, body.party-on #garageDock button { animation: none !important; } }
         #partyLights .beam { position: absolute; width: 70vmax; height: 70vmax; border-radius: 50%; opacity: .42; will-change: transform; }
         #partyLights .b1 { background: radial-gradient(circle, #ec4899 0%, rgba(236,72,153,.5) 30%, transparent 68%); left: -20vmax; top: -20vmax; animation: beamA 9s ease-in-out infinite alternate; }
         #partyLights .b2 { background: radial-gradient(circle, #22d3ee 0%, rgba(34,211,238,.5) 30%, transparent 68%); right: -25vmax; top: 10vh; animation: beamB 11s ease-in-out infinite alternate; }
@@ -5912,16 +5912,48 @@
                     knobShares ? `You own ${knobShares} $KNOB. Bold.` : 'Buy $KNOB. Trust me.', `That spin was worth exactly 0g.`]) }
     };
     let pets = store.get('painWheelPets', {});
+    // Each pet has a home turf: the murloc paddles around your house/boat, the accountant hangs by your gold,
+    // the chicken roams the whole page (never on top of a button), everyone else strolls the bottom of the screen.
+    const PET_HOME = { murloc: 'house', accountant: 'gold', chicken: 'roam' };
     function renderPets() {
-        const dock = $('petDock'); dock.innerHTML = '';
+        document.querySelectorAll('.pet-walker').forEach(e => e.remove());
         Object.keys(PETS).filter(k => pets[k] && k !== 'clippy').forEach(k => {
-            const w = document.createElement('div'); w.className = 'flex flex-col items-center'; w.id = 'pet-' + k;
-            w.innerHTML = '<div class="pet-bubble hidden mb-1 px-2 py-1 rounded-lg bg-slate-900/95 border border-slate-600 text-slate-100 text-[11px] font-bold whitespace-nowrap shadow-lg"></div><div class="pet-flip" style="transition:transform .25s"><div class="pet-em" style="font-size:38px;line-height:1;animation:houseBob 1.1s ease-in-out infinite alternate">' + PETS[k].e + '</div></div>';
-            const x0 = innerWidth * (0.25 + Math.random() * 0.5);
-            w.style.cssText = `position:absolute;left:0;bottom:0;transform:translateX(${x0}px);will-change:transform`; w._x = x0;
-            dock.appendChild(w);
+            const w = document.createElement('div'); w.className = 'pet-walker'; w.id = 'pet-' + k; w._home = PET_HOME[k] || 'strip';
+            w.innerHTML = '<div class="pet-bubble hidden mb-1 px-2 py-1 rounded-lg bg-slate-900/95 border border-slate-600 text-slate-100 text-[11px] font-bold whitespace-nowrap shadow-lg" style="position:absolute;bottom:100%;left:50%;transform:translateX(-50%)"></div><div class="pet-flip" style="transition:transform .25s"><div class="pet-em" style="font-size:38px;line-height:1;animation:houseBob 1.1s ease-in-out infinite alternate">' + PETS[k].e + '</div></div>';
+            w.style.cssText = `position:${w._home === 'gold' || w._home === 'roam' ? 'absolute' : 'fixed'};left:0;top:0;z-index:62;pointer-events:none;will-change:transform`;
+            document.body.appendChild(w);
+            const t = petTarget(w, true); petMove(w, t.x, t.y, true);
         });
         renderClippyPet();
+    }
+    const INTERACTIVE = 'button, input, select, textarea, a, label, summary, canvas, [role="button"]';
+    function petTarget(w, first) {   // where this pet wants to go next (fixed pets: screen coords; absolute pets: page coords)
+        const H = innerHeight, W = innerWidth;
+        if (w._home === 'house') {
+            const h = $('timeshareHouse'), r = h && !h.classList.contains('hidden') ? h.getBoundingClientRect() : { left: W / 2 - 30, width: 60 };
+            const cx = r.left + r.width / 2, side = Math.random() < 0.5 ? -1 : 1;
+            return { x: cx + side * (75 + Math.random() * 110) - 19, y: H - 58 };
+        }
+        if (w._home === 'gold') {
+            const r = $('goldText').getBoundingClientRect();
+            return { x: r.left + scrollX - 46 + Math.random() * (r.width + 30), y: r.top + scrollY - 44 };
+        }
+        if (w._home === 'roam') {   // pick a spot on screen with nothing clickable under it
+            for (let i = 0; i < 14; i++) {
+                const x = 40 + Math.random() * (W - 120), y = 90 + Math.random() * (H - 200);
+                const hits = [[x, y], [x + 40, y], [x, y + 40], [x + 40, y + 40], [x + 20, y + 20]].some(([px, py]) => { const el = document.elementFromPoint(px, py); return el && el.closest(INTERACTIVE); });
+                if (!hits) return { x: x + scrollX, y: y + scrollY };
+            }
+            return { x: w._x || 40, y: w._y || 90 };   // nowhere safe right now: stay put
+        }
+        const x = first ? W * (0.15 + Math.random() * 0.25) : Math.min(W - 150, Math.max(90, (w._x || W / 3) + (Math.random() - 0.5) * W * 0.6));
+        return { x, y: H - 56 };
+    }
+    function petMove(w, x, y, instant) {
+        const dx = x - (w._x || x), dist = Math.hypot(dx, y - (w._y || y));
+        w.style.transition = instant ? 'none' : `transform ${(dist / (w._home === 'roam' ? 55 : 70)).toFixed(1)}s linear`;
+        w.style.transform = `translate(${Math.round(x)}px, ${Math.round(y)}px)`; w._x = x; w._y = y;
+        const f = w.querySelector('.pet-flip'); if (f && Math.abs(dx) > 4) f.style.transform = dx > 0 ? 'scaleX(-1)' : '';   // most animal emojis face left
     }
     function petSay(k, text) {
         const w = $('pet-' + k); if (!w) return;
@@ -5933,18 +5965,16 @@
             if (Math.random() < 0.6) setTimeout(() => petSay(k, PETS[k].say(type, ctx)), 900 + i * 1100);
         });
     }
-    (function petsWander() {   // the dock becomes the whole bottom strip; pets stroll around it
-        const dock = $('petDock'); dock.style.left = '0'; dock.style.right = '0'; dock.style.bottom = '10px'; dock.style.height = '90px'; dock.classList.remove('flex');
+    (function petsWander() {
         setInterval(() => {
             if (document.hidden || isSpinning) return;
-            dock.querySelectorAll(':scope > div').forEach(w => {
-                if (Math.random() > 0.35 || w._talking) return;
-                const lo = 90, hi = innerWidth - 150, x = Math.min(hi, Math.max(lo, w._x + (Math.random() - 0.5) * innerWidth * 0.6)), dx = x - w._x;
-                if (Math.abs(dx) < 30) return;
-                w.style.transition = `transform ${(Math.abs(dx) / 70).toFixed(1)}s linear`; w.style.transform = `translateX(${x}px)`; w._x = x;
-                const f = w.querySelector('.pet-flip'); if (f) f.style.transform = dx > 0 ? 'scaleX(-1)' : '';   // most animal emojis face left
+            document.querySelectorAll('.pet-walker').forEach(w => {
+                if (w._talking || Math.random() > (w._home === 'gold' ? 0.25 : 0.35)) return;
+                const t = petTarget(w); if (Math.hypot(t.x - w._x, t.y - w._y) < 25) return;
+                petMove(w, t.x, t.y);
             });
         }, 2500);
+        addEventListener('resize', () => document.querySelectorAll('.pet-walker').forEach(w => { const t = petTarget(w, true); petMove(w, t.x, t.y, true); }));
         const SAY_PREFIX = { murloc: (t) => `Mrgl! (${t})`, chicken: (t) => `BAWK. (${t})`, whelp: (t) => `*hiccup* ${t}` };
         const OBSERVE = [
             () => debts.tax && 'Psst. The Goblin IRS bill is due. Just saying.', () => debts.cartel && 'The Cartel called. I said you were out.',
@@ -5958,12 +5988,33 @@
             () => gold > 1e9 && 'You have so much gold. Can I have a little gold?', () => gold < 100 && 'We are broke. I am eating the confetti.'];
         setInterval(() => {
             if (document.hidden || isSpinning || Math.random() > 0.6) return;
-            const ws = [...dock.querySelectorAll(':scope > div')]; if (!ws.length) return;
+            const ws = [...document.querySelectorAll('.pet-walker')]; if (!ws.length) return;
             const w = pick(ws), k = w.id.slice(4), lines = OBSERVE.map(f => { try { return f(); } catch (e) { return null; } }).filter(Boolean); if (!lines.length) return;
             const line = pick(lines); w._talking = true; petSay(k, (SAY_PREFIX[k] || (t => t))(line)); setTimeout(() => { w._talking = false; }, 4000);
         }, 40000);
     })();
     renderPets();
+
+    // ---------- 🚑🚓 Biblehumping and ChAoTiC patrol the screen now and then ----------
+    const PATROL_LINES = {
+        bible: ['Any farmers around? Asking for a friend.', 'Just out for a drive. Totally not looking for combines.', 'Wellness check on Reb.', "If you hear sirens, it's probably fine.",
+            'Lost a finger, gained a passion for driving fast.', 'Does anyone here need CPR? No? Are you sure? I could practice.'],
+        cop: ['Just patrolling. Ignore the donut.', 'License and registration. Of your wheel.', 'Anyone seen my alt? He looks exactly like me.', 'Slow down, you\'re spinning too fast.',
+            'Routine check. Has anyone here been raiding under the influence?', 'I am the law. Also I am on my alt.'] };
+    let patrolOn = false;
+    function patrol() {
+        if (patrolOn || vehicles.amb || vehicles.cop || document.hidden || isSpinning) return;
+        patrolOn = true;
+        const cop = Math.random() < 0.5, ltr = Math.random() < 0.5, lanes = [66, Math.round(innerHeight * 0.45), innerHeight - 150];
+        const el = document.createElement('div');
+        el.style.cssText = `position:fixed;z-index:63;top:${pick(lanes)}px;left:0;font-size:44px;line-height:1;pointer-events:none;transform:translateX(${ltr ? -120 : innerWidth + 40}px);transition:transform 14s linear`;
+        el.innerHTML = `<div style="display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:4px;width:max-content;max-width:260px;background:#fffbe6;color:#111;font-size:12.5px;font-weight:800;line-height:1.3;padding:4px 9px;border-radius:9px;border:2px solid #111;white-space:normal"></div><div class="siren-glow" style="font-size:18px;text-align:center">🚨</div><span style="display:inline-block;${ltr === cop ? 'transform:scaleX(-1)' : ''}">${cop ? '🚓' : '🚑'}</span>`;
+        document.body.appendChild(el);
+        requestAnimationFrame(() => requestAnimationFrame(() => { el.style.transform = `translateX(${ltr ? innerWidth + 40 : -120}px)`; }));
+        setTimeout(() => { const b = el.firstChild; b.style.display = 'block'; b.textContent = (cop ? '🚓 ChAoTiC: ' : '🚑 Biblehumping: ') + pick(PATROL_LINES[cop ? 'cop' : 'bible']); setTimeout(() => { b.style.display = 'none'; }, 4200); }, 4500);
+        setTimeout(() => { el.remove(); patrolOn = false; }, 14500);
+    }
+    setInterval(() => { if (Math.random() < 1 / 4) patrol(); }, 60000);   // roughly every 4 minutes
 
     // ---------- Reb's liver: beer and bourbon slices hurt it; it slowly heals ----------
     let liver = store.get('painWheelLiver', 100), liverDown = false;
