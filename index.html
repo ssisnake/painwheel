@@ -5939,13 +5939,16 @@
     }
     store.set('painWheelShackSeparate', true);
     function houseInfo() { return HOUSE_LEVELS[houseLevel]; }
+    const GIF_YACHT = "media/gif_yacht.gif?v=24983ac3";
+    // the yacht gets its animated pixel sprite; the other houses are still emoji for now
+    function houseHTML(h, px) { return h.e === '🛥️' ? `<img src="${GIF_YACHT}" alt="🛥️" width="${px}" height="${px}" style="image-rendering:pixelated;display:inline-block;margin:-${Math.round(px * .3)}px 0 -${Math.round(px * .17)}px">` : h.e; }
     function renderHouseIcon() {
-        const h = houseInfo(); $('houseEmoji').textContent = h.e;
+        const h = houseInfo(); $('houseEmoji').innerHTML = houseHTML(h, 96);
         $('houseLabel').textContent = houseLevel ? `Your ${h.name}` : 'Your Timeshare (1/52nd)';
     }
     function renderHousePanel() {
         const h = houseInfo(), next = HOUSE_LEVELS[houseLevel + 1];
-        $('hpEmoji').textContent = h.e; $('hpName').textContent = h.name; $('hpDesc').textContent = h.desc;
+        $('hpEmoji').innerHTML = houseHTML(h, 150); $('hpName').textContent = h.name; $('hpDesc').textContent = h.desc;
         $('hpIncome').textContent = h.rent < 0 ? (hasPerk('goblin') ? 'HOA fee: waived (Goblin Portfolio)' : `HOA fee: ${h.rent}g every 10 minutes`) : `Rent income: +${h.rent.toLocaleString()}g every 10 minutes`;
         const up = $('hpUpgrade');
         if (!store.get('painWheelTimeshare', false)) { up.textContent = 'Buy the timeshare (100g)'; up.disabled = false; }
@@ -6606,9 +6609,9 @@
                 chatBurst(['THE WHEEL IS ON FIRE', 'this is fine', 'RIGGED', 'insurance claim #3', 'Casimir did this', 'F'], 6, 2500);
                 dur = rocketScene(innerWidth / 2, WHEEL_CRASH_LINES);
             } else {
-                const was = house.textContent; house.textContent = '🔥';
+                const was = house.innerHTML; house.textContent = '🔥';
                 setTimeout(() => { house.textContent = '⚓'; }, 3200);
-                setTimeout(() => { house.textContent = was; moveToast("🛥️ The yacht has been repaired. Gallywix's insurance covered it. Somehow."); }, 11000);
+                setTimeout(() => { house.innerHTML = was; moveToast("🛥️ The yacht has been repaired. Gallywix's insurance covered it. Somehow."); }, 11000);
                 funEvent("💥 THE ROCKET HIT GALLYWIX'S YACHT 💥", 4000);
                 setTimeout(() => sqPost('bible', 'on scene at the yacht. rocket vs. yacht. no farmers involved for once. ChAoTiC is writing the yacht a ticket'), 4000);
                 chatBurst(['HE HIT THE YACHT', 'MAN OVERBOARD', 'the trophies 😭', 'insurance claim #2', 'yacht.exe has stopped working', 'not the swordfish'], 6, 2500);
@@ -7296,7 +7299,7 @@
     function horrorMode(ms) {
         if (horrorOn) return; horrorOn = true;
         const undo = [];
-        const swap = (el, txt) => { if (!el) return; const old = el.textContent; el.textContent = txt; undo.push(() => { el.textContent = old; }); };
+        const swap = (el, txt) => { if (!el) return; const old = el.innerHTML; el.textContent = txt; undo.push(() => { el.innerHTML = old; }); };
         Object.keys(HORROR).forEach(k => {
             const dock = $('pet-' + k);
             if (dock && k !== 'clippy') swap(dock.lastElementChild, HORROR[k]);
