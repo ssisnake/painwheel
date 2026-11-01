@@ -271,6 +271,8 @@
             <div class="pFine">Church of the Eternal Spin · Chapter 180</div>
         </button>
         <button class="hs" id="vipChair" data-label="🪑 Sit down" style="left:45%;top:50.5%;width:9.2%;height:47%"></button>
+        <button class="hs" data-vsay="lotion" data-label="🧴 Lotion" style="left:37%;top:58.6%;width:2.6%;height:8.6%"></button>
+        <button class="hs" data-vsay="trash" data-label="🗑️ Trash Can" style="left:31.9%;top:74.5%;width:4.8%;height:15%"></button>
         <button class="hs" data-vsay="pc" data-label="🖥️ The PC" style="left:59.4%;top:71%;width:4.6%;height:20%"></button>
         <button class="hs" data-vsay="head" data-label="🎧 Headset" style="left:54.9%;top:62.6%;width:3.5%;height:4.4%"></button>
         <button class="hs below" data-vsay="web" data-label="🕸️ Cobweb" style="left:66.5%;top:8%;width:9%;height:19%"></button>
@@ -565,6 +567,13 @@
         head: ['The headset is still warm. Somebody was just here.', 'You put it on. Faintly, you hear the wheel ticking.', 'The mic is unmuted. It has been unmuted for three years.'],
         web: ['There is a tiny wheel in the middle of the cobweb. The spider is a fan.', "Nobody has cleaned in here since the last Kevin. So, never."],
         door: ['The door back to the yacht. You could leave. You could also sit down.', 'Reb is guarding the door. He is asleep.'],
+        lotion: ['A pump bottle of lotion. Next to a gaming PC. In a locked room. We are not going to ask questions.',
+            'It is three-quarters empty. The wheel has only been spun four times in here. Do the math. Actually, don\'t.',
+            'The label says "For dry hands." Somebody has had very, very dry hands.',
+            'You reach for it. Reb, from the doorway: "I wouldn\'t."',
+            'It\'s "for carpal tunnel." That\'s the official story and the yacht is sticking to it.'],
+        trash: ['A trash can full of tissues. Someone in here has terrible allergies. Yes. Allergies.',
+            'Nobody has emptied this since the last Kevin. Nobody is volunteering.', 'You peek inside. You un-peek. Some things are better left in the can.'],
         rope: ['A velvet rope. Inside the VIP room. There is a VIP room inside the VIP room?', "Reb: \"You're not on the list.\" You are already inside. \"Still not on the list.\""]
     };
     document.querySelectorAll('[data-vsay]').forEach(b => b.addEventListener('click', () => { sfx.click(); $('vipMsg').textContent = pick(VIP_SAY[b.dataset.vsay]); }));
