@@ -1296,7 +1296,7 @@
           win: { title: "💄 TSUSSIE 🛡️", size: SIZE.big,
                  sub: () => pick(["Contour on point. Threat on point. Tsussie has entered the raid.", "Shield up, lashes on. The boss never stood a chance.",
                      "Tsussie took 40 minutes to get ready. The pull timer waited.", "Tanking in full glam. Not one smudge after a wipe.",
-                     "Sword, shield, setting spray. Tsussie is fully geared.", "The T is silent. The taunt is not."]) } },
+                     "Sword, shield, setting spray. Tsussie is fully geared.", "The T is silent. The taunt is not."]) + " 🛡️ This popup was brought to you by TsukBlock™: Tsussie tanks the ads so you don't have to." } },
         { id: "QUESTION_ALUMINUM", n: 1, label: "🥫 Question of Aluminum 🥫", pill: "QUESTION OF ALUMINUM", bg: "#94a3b8", text: "#0f172a", border: "#e2e8f0", color: "text-slate-300", glow: "bg-slate-400", key: ":", rig: "ALU",
           win: { title: "🥫 QUESTION OF ALUMINUM 🥫", size: SIZE.smaller,
                  sub: () => pick(["Not strong enough to be steel. At least it's recyclable.", "Folds under pressure. Just like their raid team.",
@@ -4157,6 +4157,8 @@
         modalCard.classList.remove('chuck-kick-animate', 'clussy-shake', 'leave-room', 'divine-shield');
         holyRays.classList.add('hidden');
         winnerModal.classList.add('hidden'); winnerModal.classList.remove('flex');
+        if (lastWinType === 'TSUSSIE') setTimeout(() => window.showAdById && window.showAdById('tsukblock'), 700);   // Tsussie brings his own sponsor
+        lastWinType = null;
     }
     function setGlow(bg, opacity) {
         modalGlow.className = `absolute -top-24 left-1/2 -translate-x-1/2 w-64 h-64 rounded-full blur-3xl ${opacity || 'opacity-50'} pointer-events-none ${bg}`;
@@ -4166,7 +4168,9 @@
         modalWinnerText.className = `${size} font-black uppercase tracking-tight ${my || 'my-4'} ${anim || 'winner-animate'} ${color} ${extra || ''}`;
     }
 
+    let lastWinType = null;
     function showWinnerModal(s) {
+        lastWinType = s.type;
         if (voodooArmed && s.type === 'KEVIN') voodooHit();
         clearModalTimers();
         clearCardEffects();
@@ -5124,6 +5128,9 @@
     );
     // a few of the original ads take your gold now... and might pay it back later
     GEMINI_ADS.forEach(a => { const fx = { 'goblin-scam': 'invest:gazlowe', 'rng-insurance': 'invest:devbribe', 'trade-chat-boost': 'invest:orc' }[a.id]; if (fx) a.effect = fx; });
+    GEMINI_ADS.push({ id: 'tsukblock', theme: 'vip', effect: 'tsukshop', header: '🛡️ TSUKBLOCK™: TIRED OF ADS? LET A TANK TAKE THE HIT',
+        body: "Tsussie just tanked a whole raid in full glam. Now let him tank your pop-ups! TsukBlock Free, Premium, or Maximum Security: Rikers Island Edition. The only ad blocker that advertises itself.",
+        primary: 'GET TSUKBLOCK 🛡️', close: 'I enjoy ads, actually', reply: 'Opening the TsukBlock store... (this ad was not blocked. Ironic.)' });
     GEMINI_ADS.forEach(a => {
         const st = AD_STYLES[a.theme];
         POPUP_ADS.push({ id: a.id, html: `
@@ -5220,6 +5227,7 @@
             chatBurst(['WHY', 'he actually did it', 'financial advisor in shambles', 'that money is gone', 'L', 'believe'], 4, 2500);
         }
         else if (fx === 'goblincard') getGoblinCard();
+        else if (fx === 'tsukshop') openShop('adblock');
         else if (fx === 'turbo') { turboNext = true; moveToast('⚡ Next spin is OVERCLOCKED. Brace yourself.'); }
         else if (fx === 'flip') {
             root.style.transition = 'transform 0.9s ease-in-out'; root.style.transform = 'rotate(180deg)';
@@ -5284,7 +5292,7 @@
             let lastId = null; try { lastId = localStorage.getItem('painWheelAdLastId'); } catch (e) {}
             const adCd = store.get('painWheelAdCooldown', {});
             const done = (id) => (id === 'timeshare' && store.get('painWheelTimeshare', false)) || (id === 'goblincard' && store.get('painWheelGoblinCard', false))
-                || (id === 'aotc-carry' && store.get('painWheelAotcCarry', false)) || (adCd[id] && Date.now() < adCd[id]);   // one-time rewards stay gone; money ads rest for 4 hours
+                || (id === 'aotc-carry' && store.get('painWheelAotcCarry', false)) || id === 'tsukblock' || (adCd[id] && Date.now() < adCd[id]);   // one-time rewards stay gone; money ads rest for 4 hours
             const pool = POPUP_ADS.filter(a => a.id !== lastId && !done(a.id));
             const pickAd = POPUP_ADS.find(a => a.id === forceId) || pool[Math.floor(Math.random() * pool.length)];
             if (!forceId && !tsukAllows(pickAd.id)) {   // TsukBlock ate it; the ad timer starts over
