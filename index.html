@@ -143,6 +143,12 @@
         @keyframes houseBob { from { transform: translateY(0); } to { transform: translateY(-3px); } }
         #timeshareHouse > div:nth-child(2) { animation: houseBob 1.4s ease-in-out infinite alternate; }
         /* ad effects */
+        .googly { position: absolute; left: 30%; top: 4%; display: flex; gap: 1px; pointer-events: none; }
+        .googly i { position: relative; width: .34em; height: .34em; border-radius: 50%; background: #fff; border: 1.5px solid #111; box-shadow: 0 1px 2px rgba(0,0,0,.5); }
+        .googly i::after { content: ""; position: absolute; width: 48%; height: 48%; border-radius: 50%; background: #111; left: 26%; top: 26%; animation: googly 1.7s ease-in-out infinite; }
+        .googly i:last-child::after { animation-duration: 1.3s; animation-delay: -.4s; }
+        @keyframes googly { 0% { transform: translate(-30%, 30%); } 25% { transform: translate(35%, 40%); } 50% { transform: translate(30%, -30%); } 75% { transform: translate(-35%, -20%); } 100% { transform: translate(-30%, 30%); } }
+        .clippy-body { position: relative; display: inline-block; line-height: 1; }
         #clippyBuddy { position: fixed; z-index: 76; pointer-events: none; font-size: 40px; left: 0; top: 0; transition: transform 0.12s linear; }
         #clippyBuddy .bubble { position: absolute; left: 44px; top: -8px; width: 230px; background: #fffbe6; color: #111; font-size: 12px; font-weight: 600; line-height: 1.3; border: 1.5px solid #111; border-radius: 10px; padding: 7px 9px; box-shadow: 2px 2px 0 #111; }
         /* Mephisto: everything vibrates from the volume */
@@ -652,14 +658,12 @@
                 <button id="volTest" class="text-[11px] px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold shrink-0 cursor-pointer">Test</button>
             </div>
 
-            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col h-52">
-                <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 flex items-center justify-between">
-                    <span>Recent Outcomes</span>
-                    <button id="clearHistoryBtn" class="text-[11px] text-slate-500 hover:text-slate-300 transition">Clear</button>
+            <!-- Fake Twitch chat -->
+            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl shadow-xl flex flex-col overflow-hidden" style="height: 300px;">
+                <div class="flex items-center justify-between px-4 py-2 border-b border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400">
+                    <span>💬 Stream chat</span><span id="chatViewers" class="text-[10px] text-red-400 normal-case">🔴 1,337 viewers</span>
                 </div>
-                <div id="historyList" class="flex-1 overflow-y-auto space-y-1.5 text-xs mono pr-1">
-                    <div class="text-slate-600 italic py-10 text-center">No spins recorded yet. Pull the trigger!</div>
-                </div>
+                <div id="chatLog" class="flex-1 px-3 py-2 text-[12px] leading-snug" style="overflow-y:auto; scrollbar-width:none;"></div>
             </div>
 
             <!-- $KNOB stock ticker -->
@@ -712,12 +716,14 @@
                 <div id="feedList" class="space-y-1 text-xs mono"></div>
             </div>
 
-            <!-- Fake Twitch chat -->
-            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl shadow-xl flex flex-col overflow-hidden" style="height: 300px;">
-                <div class="flex items-center justify-between px-4 py-2 border-b border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400">
-                    <span>💬 Stream chat</span><span id="chatViewers" class="text-[10px] text-red-400 normal-case">🔴 1,337 viewers</span>
+            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col h-52">
+                <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 flex items-center justify-between">
+                    <span>Recent Outcomes</span>
+                    <button id="clearHistoryBtn" class="text-[11px] text-slate-500 hover:text-slate-300 transition">Clear</button>
                 </div>
-                <div id="chatLog" class="flex-1 px-3 py-2 text-[12px] leading-snug" style="overflow-y:auto; scrollbar-width:none;"></div>
+                <div id="historyList" class="flex-1 overflow-y-auto space-y-1.5 text-xs mono pr-1">
+                    <div class="text-slate-600 italic py-10 text-center">No spins recorded yet. Pull the trigger!</div>
+                </div>
             </div>
         </div>
 
@@ -5149,7 +5155,7 @@
         } else moveToast(`${inv.e} ${inv.lose}`);
     }, 30000);
     // ---------- 🛡️ TsukBlock: Tsukaar is a tank, so he taunts the ads and takes the hit for you ----------
-    const CONTENT_ADS = new Set(GEMINI_ADS.filter(a => a.effect).map(a => a.id).concat(['timeshare', 'knobcreek']));
+    const CONTENT_ADS = new Set(GEMINI_ADS.filter(a => a.effect).map(a => a.id).concat(['timeshare', 'knobcreek', 'retacademy']));
     const AD_NAMES = { kanaplus: 'Kana+', notsister: "Lisa's PSA (not his sister)", lawsuit: 'The lawsuit ad', retacademy: 'Ret Paladin Academy', timeshare: "Gallywix's Timeshare", knobcreek: 'Knob Creek' };
     const adName = (id) => AD_NAMES[id] || ((GEMINI_ADS.find(a => a.id === id) || {}).header || id).replace(/[^\p{L}\p{N}'&:!?,.$ -]/gu, '').replace(/\s+/g, ' ').trim();
     const TSUK = {
@@ -5211,7 +5217,7 @@
                 'It looks like you have a timeshare in Undermine. My condolences.', 'Tip: AOTC is 1 in 1,000. You are still not the one.',
                 'Clippy has been watching you spin for a while now. Are you okay?', 'Tip: you can close me by waiting. I am very patient.'];
             const c = document.createElement('div'); c.id = 'clippyBuddy';
-            c.innerHTML = '📎<div class="bubble"></div>'; document.body.appendChild(c);
+            c.innerHTML = '<span class="clippy-body">📎<span class="googly"><i></i><i></i></span></span><div class="bubble"></div>'; document.body.appendChild(c);
             let i = 0; const say = () => { c.querySelector('.bubble').textContent = tips[i++ % tips.length]; };
             say(); const sayT = setInterval(say, 6500);
             let x = innerWidth - 300, y = innerHeight - 140; c.style.transform = `translate(${x}px,${y}px)`;
@@ -5278,6 +5284,7 @@
                 unlock('adclick'); if (replyEl) replyEl.textContent = act.dataset.adaction; setTimeout(closeAd, 1800);
                 if (act.dataset.adeffect) setTimeout(() => runAdEffect(act.dataset.adeffect), 1900);
                 if (currentAdId === 'timeshare') setTimeout(() => buyTimeshare(), 1900);
+                if (currentAdId === 'retacademy') setTimeout(() => { kevinShield += 3; updateShieldBadge(); moveToast('🛡️ Ret Paladin Academy enrollment bonus: a free Kevin Shield! Your next 3 spins cannot land on Kevin. Lesson 2: you will still press Divine Shield by accident.'); chatBurst(['RET ACADEMY W', 'free bubble', 'the Light provides', 'divine shield EZ'], 3); }, 1900);
                 if (currentAdId === 'knobcreek' && window.knobCrash) { setTimeout(window.knobCrash, 1900); setTimeout(() => unlock('boughttop'), 3400); }   // you bought the top
             }
             else closeAd();
@@ -6774,12 +6781,12 @@
         if (!pets.clippy) { if (c) c.remove(); return; }
         if (c) return;
         c = document.createElement('div'); c.id = 'pet-clippy'; c.className = 'clippy-pet';
-        c.innerHTML = '<div class="pet-bubble hidden"></div>📎'; document.body.appendChild(c);
+        c.innerHTML = '<div class="pet-bubble hidden"></div><span class="clippy-body">📎<span class="googly"><i></i><i></i></span></span>'; document.body.appendChild(c);
         let x = innerWidth - 120, y = innerHeight - 120, tx = x, ty = y;
         c.style.transform = `translate(${x}px,${y}px)`;
         window.addEventListener('mousemove', (e) => { tx = Math.min(innerWidth - 60, e.clientX + 24); ty = Math.min(innerHeight - 60, e.clientY + 20); }, { passive: true });
         (function follow() {   // lazy follow, a bit behind the cursor
-            if (!document.hidden) { x += (tx - x) * 0.12; y += (ty - y) * 0.12; c.style.transform = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`; }
+            if (!document.hidden && (Math.abs(tx - x) > 0.4 || Math.abs(ty - y) > 0.4)) { x += (tx - x) * 0.12; y += (ty - y) * 0.12; c.style.transform = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`; }
             if (c.isConnected) requestAnimationFrame(follow);
         })();
         setInterval(() => { if (!document.hidden && Math.random() < 0.5) petSay('clippy', PETS.clippy.say()); }, 30000);
