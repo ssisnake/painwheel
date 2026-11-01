@@ -128,19 +128,38 @@
     /* ---------- VIP room: the lonely gaming PC ---------- */
     #vip { position: fixed; inset: 0; z-index: 55; display: none; background: #030204; overflow: hidden; }
     #vip.open { display: block; }
-    #vipScene { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transition: transform 1.3s cubic-bezier(.6,0,.3,1), opacity .5s 1s; transform-origin: 50% 40%; }
+    #vipScene { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transition: transform 1.3s cubic-bezier(.6,0,.3,1), opacity .5s 1s; transform-origin: 50% 52%; }
     #vipScene.zoom { transform: scale(5.2); opacity: 0; }
-    #vipScene svg { width: min(100vw, calc(100vh * 1000 / 560)); height: auto; display: block; }
-    #vipChair { cursor: pointer; }
-    #vipChair:hover .chairGlow { opacity: 1; }
-    .chairGlow { opacity: 0; transition: opacity .2s; }
-    .vipFan { transform-box: fill-box; transform-origin: center; animation: vipSpin 2.4s linear infinite; }
-    .vipMini { transform-box: fill-box; transform-origin: center; animation: vipSpin 7s linear infinite; }
-    .vipRgb { animation: vipHue 8s linear infinite; }
+    #vip::before { content: ""; position: absolute; inset: -40px; background: url("media/vip_room.webp") center / cover no-repeat; filter: blur(28px) brightness(.3); }
+    #vipStage { position: relative; flex: none; width: max(900px, min(100vw, calc(100vh * 2576 / 1093))); aspect-ratio: 2576 / 1093;
+        background: #120a08 url("media/vip_room.webp") center / 100% 100% no-repeat; container-type: inline-size; }
+    #vipSign { position: absolute; left: 35%; top: 30%; width: 30%; text-align: center; font-family: "Arial Black", Arial, sans-serif; font-weight: 900; font-size: 3.9cqw; letter-spacing: .05em; white-space: nowrap;
+        color: #fdf4ff; -webkit-text-stroke: .12cqw #e879f9; text-shadow: 0 0 .5cqw #f0abfc, 0 0 1.4cqw #e879f9, 0 0 3cqw #c026d3; pointer-events: none; }
     .vipNeon { animation: vipNeon 2.6s ease-in-out infinite alternate; }
+    .vipScr { position: absolute; display: grid; place-items: center; pointer-events: none; overflow: hidden; }
+    .vipMiniW { height: 80%; aspect-ratio: 1; border-radius: 50%; border: .15cqw solid #0f172a; box-shadow: 0 0 1cqw rgba(56,189,248,.6);
+        background: radial-gradient(circle, #f8fafc 0 9%, transparent 10%), conic-gradient(#ef4444 0 60deg, #facc15 0 120deg, #22c55e 0 180deg, #f48cba 0 240deg, #a855f7 0 300deg, #0ea5e9 0);
+        animation: vipSpin 7s linear infinite; opacity: .92; }
+    .vipScrTxt { position: absolute; text-align: center; font: 900 .9cqw Arial, sans-serif; letter-spacing: .15em; color: #0c4a6e; pointer-events: none; }
+    #vipSticky { position: absolute; left: 37%; top: 44.6%; width: 3.6%; padding: .2cqw; border: 0; cursor: pointer; background: linear-gradient(170deg, #fef08a, #facc15); color: #3b2210;
+        font: 700 .5cqw/1.15 "Comic Sans MS", "Comic Neue", cursive; transform: rotate(-6deg); box-shadow: .1cqw .2cqw .4cqw rgba(0,0,0,.5); transition: transform .15s; }
+    #vipSticky b { font-size: 1.6em; }
+    #vipSticky:hover { transform: rotate(-2deg) scale(1.3); }
+    /* the superfan poster, stuck to the angled wall on the right */
+    #vipPoster { position: absolute; left: 77.8%; top: 22%; width: 8.4%; height: 37%; border: .25cqw solid #d4a24c; border-radius: .3cqw; padding: .5cqw .4cqw; cursor: pointer;
+        background: radial-gradient(circle at 50% 42%, #4c1d95, #1e0b3a 70%); color: #fde68a; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+        transform: perspective(40cqw) rotateY(-26deg); transform-origin: left center; box-shadow: .3cqw .5cqw 1.2cqw rgba(0,0,0,.6); transition: filter .2s; }
+    #vipPoster:hover { filter: brightness(1.25); }
+    #vipPoster .pTop { font: 900 1.05cqw/1.05 Georgia, serif; letter-spacing: .06em; text-shadow: 0 0 .6cqw #facc15; }
+    #vipPoster .pWheel { width: 72%; aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center;
+        background: repeating-conic-gradient(rgba(253,224,71,.5) 0 6deg, transparent 6deg 18deg); }
+    #vipPoster .pWheel div { width: 68%; aspect-ratio: 1; border-radius: 50%; border: .2cqw solid #fde68a;
+        background: radial-gradient(circle, #111 0 12%, #fde68a 13% 16%, transparent 17%), conic-gradient(#ef4444 0 45deg, #facc15 0 90deg, #22c55e 0 135deg, #f48cba 0 180deg, #a855f7 0 225deg, #0ea5e9 0 270deg, #f97316 0 315deg, #64748b 0);
+        animation: vipSpin 30s linear infinite; }
+    #vipPoster .pBot { font: 900 .62cqw Arial, sans-serif; letter-spacing: .08em; }
+    #vipPoster .pFine { font: 700 .42cqw Arial, sans-serif; color: #c4b5fd; }
     @keyframes vipSpin { to { transform: rotate(360deg); } }
-    @keyframes vipHue { to { filter: hue-rotate(360deg); } }
-    @keyframes vipNeon { from { opacity: .78; } to { opacity: 1; } }
+        @keyframes vipNeon { from { opacity: .78; } to { opacity: 1; } }
     #vipBar { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); display: flex; gap: 10px; z-index: 2; }
     #vipBar .btn { font-size: 16px; padding: 10px 18px; }
     #vipMsg { position: absolute; left: 50%; top: 16px; transform: translateX(-50%); width: min(720px, calc(100vw - 32px)); text-align: center; font-weight: 800; font-size: 17px; color: #e9d5ff; text-shadow: 0 2px 6px #000; z-index: 2; }
@@ -156,7 +175,7 @@
     #miniRes { min-height: 50px; max-width: 460px; font-weight: 800; font-size: 17px; color: #f1f5f9; line-height: 1.35; }
     #miniBtns { display: flex; gap: 10px; }
     #miniBtns .btn { font-size: 16px; padding: 10px 18px; }
-    @media (prefers-reduced-motion: reduce) { .vipFan, .vipMini, .vipRgb, .vipNeon { animation: none; } #vipScene { transition: opacity .3s; } }
+    @media (prefers-reduced-motion: reduce) { .vipMiniW, .vipNeon, #vipPoster .pWheel div { animation: none; } #vipScene { transition: opacity .3s; } }
     @media (prefers-reduced-motion: reduce) { .glow, .plaque.new .t { animation: none; } }
 </style>
 </head>
@@ -239,82 +258,25 @@
 <!-- VIP room: past the velvet rope there is a door, and past the door... -->
 <div id="vip">
     <div id="vipMsg"></div>
-    <div id="vipScene">
-    <svg viewBox="0 0 1000 560" aria-label="A lonely gaming desk in an empty room">
-        <defs>
-            <radialGradient id="vSpot" cx="50%" cy="0%" r="75%"><stop offset="0" stop-color="#3b2a52" stop-opacity=".9"/><stop offset="1" stop-color="#030204" stop-opacity="0"/></radialGradient>
-            <linearGradient id="vScreen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c4a6e"/><stop offset="1" stop-color="#082f49"/></linearGradient>
-            <linearGradient id="vRgb" x1="0" x2="1"><stop offset="0" stop-color="#f43f5e"/><stop offset=".33" stop-color="#a855f7"/><stop offset=".66" stop-color="#22d3ee"/><stop offset="1" stop-color="#4ade80"/></linearGradient>
-            <filter id="vGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
-            <g id="vWheel">
-                <circle r="34" fill="#111"/>
-                <path d="M0 0 L0 -32 A32 32 0 0 1 27.7 -16 Z" fill="#ef4444"/><path d="M0 0 L27.7 -16 A32 32 0 0 1 27.7 16 Z" fill="#facc15"/>
-                <path d="M0 0 L27.7 16 A32 32 0 0 1 0 32 Z" fill="#22c55e"/><path d="M0 0 L0 32 A32 32 0 0 1 -27.7 16 Z" fill="#f48cba"/>
-                <path d="M0 0 L-27.7 16 A32 32 0 0 1 -27.7 -16 Z" fill="#a855f7"/><path d="M0 0 L-27.7 -16 A32 32 0 0 1 0 -32 Z" fill="#0ea5e9"/>
-                <circle r="5" fill="#f8fafc"/>
-            </g>
-        </defs>
-        <rect width="1000" height="560" fill="#060409"/>
-        <rect width="1000" height="560" fill="url(#vSpot)"/>
-        <rect y="420" width="1000" height="140" fill="#0b0810"/>
-        <path d="M0 420 H1000" stroke="#1f1730" stroke-width="3"/>
-        <!-- a cobweb, because nobody has been back here in a while -->
-        <path d="M1000 0 L930 0 M1000 0 L1000 70 M1000 0 L945 55 M960 0 Q975 18 1000 30 M940 0 Q965 35 1000 50" stroke="#2e2440" stroke-width="2" fill="none"/>
-        <!-- neon sign -->
-        <g class="vipNeon">
-            <text x="500" y="78" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="58" font-weight="900" fill="#f0abfc" filter="url(#vGlow)">SIT DOWN????</text>
-            <text x="500" y="78" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="58" font-weight="900" fill="#fdf4ff" stroke="#e879f9" stroke-width="2">SIT DOWN????</text>
-        </g>
-        <!-- glow on the wall from the screens -->
-        <ellipse cx="500" cy="220" rx="380" ry="120" fill="#0ea5e9" opacity=".12" filter="url(#vGlow)"/>
-        <!-- monitors -->
-        <g>
-            <path d="M190 150 L330 140 L330 262 L190 268 Z" fill="#111827" stroke="#374151" stroke-width="3"/>
-            <path d="M200 158 L321 149 L321 254 L200 259 Z" fill="url(#vScreen)"/>
-            <g transform="translate(262 205) scale(.9,1)"><g class="vipMini"><use href="#vWheel"/></g></g>
-            <rect x="380" y="128" width="240" height="148" rx="6" fill="#111827" stroke="#374151" stroke-width="3"/>
-            <rect x="391" y="138" width="218" height="128" rx="3" fill="url(#vScreen)"/>
-            <g transform="translate(500 202) scale(1.45)"><g class="vipMini"><use href="#vWheel"/></g></g>
-            <text x="500" y="258" text-anchor="middle" font-family="Arial" font-size="13" font-weight="900" fill="#fde68a" letter-spacing="2">THE WHEEL</text>
-            <path d="M670 140 L810 150 L810 268 L670 262 Z" fill="#111827" stroke="#374151" stroke-width="3"/>
-            <path d="M679 149 L800 158 L800 259 L679 254 Z" fill="url(#vScreen)"/>
-            <g transform="translate(739 205) scale(.9,1)"><g class="vipMini"><use href="#vWheel"/></g></g>
-            <rect x="490" y="276" width="20" height="40" fill="#1f2937"/><rect x="455" y="312" width="90" height="10" rx="4" fill="#1f2937"/>
-            <rect x="255" y="266" width="14" height="48" fill="#1f2937"/><rect x="733" y="266" width="14" height="48" fill="#1f2937"/>
-        </g>
-        <!-- desk with the obligatory RGB strip -->
-        <rect x="120" y="318" width="760" height="18" rx="4" fill="#1c1917"/>
-        <rect class="vipRgb" x="130" y="336" width="740" height="5" rx="2" fill="url(#vRgb)"/>
-        <rect class="vipRgb" x="130" y="336" width="740" height="5" rx="2" fill="url(#vRgb)" filter="url(#vGlow)" opacity=".8"/>
-        <rect x="140" y="336" width="14" height="96" fill="#171310"/><rect x="846" y="336" width="14" height="96" fill="#171310"/>
-        <!-- keyboard, mouse, energy drink, headset -->
-        <rect class="vipRgb" x="400" y="304" width="170" height="14" rx="3" fill="url(#vRgb)" opacity=".85"/>
-        <rect x="402" y="303" width="166" height="11" rx="2" fill="#0f172a" opacity=".55"/>
-        <ellipse cx="610" cy="312" rx="12" ry="7" fill="#0f172a" stroke="#22d3ee" stroke-width="1.5"/>
-        <rect x="320" y="282" width="20" height="36" rx="4" fill="#16a34a"/><rect x="320" y="290" width="20" height="8" fill="#052e16"/><text x="330" y="297" text-anchor="middle" font-size="6" font-weight="900" fill="#bbf7d0" font-family="Arial">MANA</text>
-        <path d="M205 296 Q205 270 230 270 Q255 270 255 296" stroke="#e5e7eb" stroke-width="5" fill="none"/><rect x="198" y="292" width="14" height="22" rx="4" fill="#ef4444"/><rect x="248" y="292" width="14" height="22" rx="4" fill="#ef4444"/>
-        <!-- PC tower -->
-        <rect x="830" y="220" width="96" height="200" rx="6" fill="#0f0f14" stroke="#3f3f46" stroke-width="3"/>
-        <rect x="840" y="232" width="76" height="176" rx="3" fill="#13111c" opacity=".9"/>
-        <g class="vipRgb">
-            <g transform="translate(878 268)"><circle r="22" fill="none" stroke="url(#vRgb)" stroke-width="4"/><g class="vipFan"><path d="M0 0 C6 -14 14 -16 18 -8 Z M0 0 C14 6 16 14 8 18 Z M0 0 C-6 14 -14 16 -18 8 Z M0 0 C-14 -6 -16 -14 -8 -18 Z" fill="#a5b4fc" opacity=".8"/></g></g>
-            <g transform="translate(878 322)"><circle r="22" fill="none" stroke="url(#vRgb)" stroke-width="4"/><g class="vipFan"><path d="M0 0 C6 -14 14 -16 18 -8 Z M0 0 C14 6 16 14 8 18 Z M0 0 C-6 14 -14 16 -18 8 Z M0 0 C-14 -6 -16 -14 -8 -18 Z" fill="#a5b4fc" opacity=".8"/></g></g>
-            <g transform="translate(878 376)"><circle r="22" fill="none" stroke="url(#vRgb)" stroke-width="4"/><g class="vipFan"><path d="M0 0 C6 -14 14 -16 18 -8 Z M0 0 C14 6 16 14 8 18 Z M0 0 C-6 14 -14 16 -18 8 Z M0 0 C-14 -6 -16 -14 -8 -18 Z" fill="#a5b4fc" opacity=".8"/></g></g>
-        </g>
-        <!-- the chair (click it) -->
-        <g id="vipChair" role="button" tabindex="0" aria-label="Sit down">
-            <ellipse class="chairGlow" cx="500" cy="380" rx="120" ry="150" fill="#e879f9" opacity="0" filter="url(#vGlow)"/>
-            <path d="M430 230 Q500 200 570 230 L580 390 Q500 410 420 390 Z" fill="#18181b" stroke="#27272a" stroke-width="4"/>
-            <path d="M462 235 L470 385 M538 235 L530 385" stroke="#dc2626" stroke-width="10"/>
-            <rect x="470" y="240" width="60" height="26" rx="8" fill="#27272a"/>
-            <text x="500" y="258" text-anchor="middle" font-family="Arial" font-size="12" font-weight="900" fill="#dc2626">GMR</text>
-            <rect x="404" y="370" width="192" height="34" rx="12" fill="#27272a"/>
-            <rect x="494" y="404" width="12" height="44" fill="#3f3f46"/>
-            <path d="M440 462 L494 446 L560 462 M500 448 L470 476 M500 448 L532 476" stroke="#3f3f46" stroke-width="8" stroke-linecap="round"/>
-            <circle cx="440" cy="466" r="7" fill="#09090b"/><circle cx="560" cy="466" r="7" fill="#09090b"/><circle cx="470" cy="480" r="7" fill="#09090b"/><circle cx="532" cy="480" r="7" fill="#09090b"/>
-        </g>
-    </svg>
-    </div>
+    <div id="vipScene"><div id="vipStage">
+        <div id="vipSign" class="vipNeon">SIT DOWN????</div>
+        <div class="vipScr" style="left:36.6%;top:47.5%;width:8.25%;height:10.5%"><div class="vipMiniW"></div></div>
+        <div class="vipScr" style="left:55.05%;top:47.5%;width:8.25%;height:10.5%"><div class="vipMiniW" style="animation-duration:5.5s"></div></div>
+        <div class="vipScrTxt" style="left:45.45%;top:48.4%;width:8.95%">THE WHEEL</div>
+        <button id="vipSticky" title="A sticky note">DAYS SINCE<br>LAST KEVIN:<br><b>0</b></button>
+        <button id="vipPoster" title="A poster">
+            <div class="pTop">THE WHEEL<br>PROVIDES</div>
+            <div class="pWheel"><div></div></div>
+            <div class="pBot">SPIN · PRAY · SPIN AGAIN</div>
+            <div class="pFine">Church of the Eternal Spin · Chapter 180</div>
+        </button>
+        <button class="hs" id="vipChair" data-label="🪑 Sit down" style="left:45%;top:50.5%;width:9.2%;height:47%"></button>
+        <button class="hs" data-vsay="pc" data-label="🖥️ The PC" style="left:59.4%;top:71%;width:4.6%;height:20%"></button>
+        <button class="hs" data-vsay="head" data-label="🎧 Headset" style="left:54.9%;top:62.6%;width:3.5%;height:4.4%"></button>
+        <button class="hs below" data-vsay="web" data-label="🕸️ Cobweb" style="left:66.5%;top:8%;width:9%;height:19%"></button>
+        <button class="hs" data-vsay="door" data-label="🚪 Door" style="left:12%;top:22%;width:6.6%;height:60%"></button>
+        <button class="hs" data-vsay="rope" data-label="🚧 Velvet Rope" style="left:14.5%;top:60%;width:10%;height:30%"></button>
+    </div></div>
     <div id="vipBar"><button class="btn go" id="vipSit">🪑 Sit down</button><button class="btn" id="vipLeave">🚪 Leave quietly</button></div>
     <div id="mini">
         <div id="miniNest"></div>
@@ -598,6 +560,21 @@
         setTimeout(() => { depth = 1; renderMini(); $('mini').classList.add('open'); $('vipMsg').textContent = ''; }, 1250);
     }
     $('vipSit').addEventListener('click', sitDown);
+    const VIP_SAY = {
+        pc: ['The PC has 4,000 hours on one game. The game is The Wheel.', 'The fans are RGB. The RGB is set to "Kevin".', 'Hard drive: 2TB. All of it is wheel replays.', "It's running on Ultra. The wheel has never looked better."],
+        head: ['The headset is still warm. Somebody was just here.', 'You put it on. Faintly, you hear the wheel ticking.', 'The mic is unmuted. It has been unmuted for three years.'],
+        web: ['There is a tiny wheel in the middle of the cobweb. The spider is a fan.', "Nobody has cleaned in here since the last Kevin. So, never."],
+        door: ['The door back to the yacht. You could leave. You could also sit down.', 'Reb is guarding the door. He is asleep.'],
+        rope: ['A velvet rope. Inside the VIP room. There is a VIP room inside the VIP room?', "Reb: \"You're not on the list.\" You are already inside. \"Still not on the list.\""]
+    };
+    document.querySelectorAll('[data-vsay]').forEach(b => b.addEventListener('click', () => { sfx.click(); $('vipMsg').textContent = pick(VIP_SAY[b.dataset.vsay]); }));
+    $('vipSticky').addEventListener('click', () => { sfx.click(); $('vipMsg').textContent = pick(['DAYS SINCE LAST KEVIN: 0. The 0 is written in pen. It has never been changed.', 'Someone tried to write a 1 once. It was crossed out the same day.']); });
+    // the superfan poster: keep clicking and the shrine reveals itself
+    let posterClicks = 0;
+    const POSTER = ['"THE WHEEL PROVIDES." Somebody really means it.', 'Under the poster: a tiny shelf with three candles and a Kevin slice in a frame.',
+        'The fine print: "Meetings every night after raid. Bring your own wheel."', 'There are tally marks on the wall behind it. Every one says "Kevin". They go all the way to the floor.',
+        'A note taped to the back: "If you are reading this, you are already a member. Sit down."'];
+    $('vipPoster').addEventListener('click', () => { tone(330, 0, .4, 'sine', .05); tone(495, .1, .5, 'sine', .04); $('vipMsg').textContent = '🕯️ ' + POSTER[Math.min(posterClicks++, POSTER.length - 1)]; });
     $('vipChair').addEventListener('click', sitDown);
     $('vipChair').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); sitDown(); } });
 

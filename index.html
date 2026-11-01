@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pain Wheel</title>
+    <title>The Wheel</title>
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
     <style>
@@ -212,6 +212,8 @@
         body.party-on #garageDock button, body.party-on #shackSpot button { animation: petDance .6s ease-in-out infinite alternate; }
         body.is-spinning #petDock *, body.is-spinning .pet-walker *, body.is-spinning #garageDock *, body.is-spinning #shackSpot *, body.is-spinning #houseEmoji, body.is-spinning .siren-glow, body.is-spinning .cop-sprite, body.is-spinning #goldenCookie { animation-play-state: paused !important; }
         .pet-walker .pet-em { will-change: transform; }
+        /* invisible overlays shouldn't keep animating in the background */
+        #evelynDimOverlay.opacity-0 *, #sponsorBanner.opacity-0 * { animation-play-state: paused !important; }
         body.has-hearth header { padding-right: 76px; }
         /* launch pad */
         .lp-wrap { position: relative; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; min-height: 176px; padding: 14px 18px 0; border-radius: 16px; overflow: hidden;
@@ -301,7 +303,7 @@
             <div class="w-3 h-8 rounded-full bg-gradient-to-b from-red-500 via-[#F48CBA] to-cyan-400"></div>
             <div>
                 <h1 class="text-lg sm:text-xl md:text-2xl font-black tracking-tight uppercase leading-tight">
-                    <span id="themeBadgeL"></span>The <span class="slice-total">117</span>-Slice <span id="painWord" class="text-red-500">PAIN</span> Wheel<span id="themeBadgeR"></span>
+                    <span id="themeBadgeL"></span>The <span id="painWord" class="text-red-500">Wheel</span><span id="themeBadgeR"></span> <span class="text-slate-500 text-xs sm:text-sm align-middle normal-case font-bold tracking-normal">· <span class="slice-total">117</span> slices of pain</span>
                 </h1>
                 <p id="tagline" class="text-xs text-slate-400 mono">High-Precision Decision Engine • 4x Live Optic Zoom</p>
             </div>
@@ -336,7 +338,7 @@
         </div>
     </div>
     <div id="moveBanner" style="background: linear-gradient(90deg,#065f46,#059669,#065f46)" class="hidden w-full text-white text-xs sm:text-sm font-bold px-4 py-2 flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center">
-        <span>🚚 The Pain Wheel has moved! The new link has the guild leaderboard and Discord stats.</span>
+        <span>🚚 The Wheel has moved! The new link has the guild leaderboard and Discord stats.</span>
         <button id="moveBannerBtn" style="color:#065f46" class="bg-white font-black px-3 py-1 rounded cursor-pointer hover:bg-emerald-50">Move me + my stats →</button>
     </div>
 
@@ -1606,7 +1608,7 @@
         "🚀 SPACE RANGER JETPACKS: TO INFINITY AND STRAIGHT INTO THE GROUND! WINGS SOLD SEPARATELY!",
         "⛽ EXXON-HAWKEYES PREMIUM: GUARANTEED TO GET YOUR KEY TO THE FIRST BOSS. AFTER THAT YOU'RE ON YOUR OWN.",
         "🧀 STALE CHEETOS NOW SOLD BY THE CRUMB! FOUND FRESH UNDER THE WHEEL! 1-IN-100 CHANCE OF A FREE SAMPLE!",
-        "📺 THIS PROGRAM IS A PAID ADVERTISEMENT FOR THE PAIN WHEEL. THE OPINIONS EXPRESSED ARE KEVIN'S, UNFORTUNATELY.",
+        "📺 THIS PROGRAM IS A PAID ADVERTISEMENT FOR THE WHEEL. THE OPINIONS EXPRESSED ARE KEVIN'S, UNFORTUNATELY.",
         "🪦 HOGGER'S CEMETERY: HE KILLED YOU AT LEVEL 11, NOW LET HIM BURY YOU TOO! PLOTS STILL AVAILABLE!",
         "🧽 THE OXI-KLEEN PROMISE: GETS OUT GRASS STAINS, BLOOD STAINS, AND THE STAIN OF LAST NIGHT'S PARSES!",
         "🐶 THIS IS FINE INSURANCE: WHEN YOUR HOUSE, YOUR KEY, AND YOUR LIFE ARE ON FIRE, WE'LL SEND A NICE CARD",
@@ -1766,7 +1768,6 @@
         "ECONOMY: WOW TOKEN NOW WORTH MORE THAN THE GUILD'S COMBINED CREDIT SCORE",
         "BREAKING: SOURCE OF SMOKE ALARM CHIRP FINALLY LOCATED. IT WAS INSIDE US THE WHOLE TIME.",
         "LOCAL: SHITTY VAULT AWARDS PLAYER 'CLOAK OF ABSOLUTELY NOTHING'; PLAYER 'GRATEFUL FOR THE OPPORTUNITY'",
-        "FINANCE: PARDNER'S HORSE REPOSSESSED. 'WOMP WOMP,' SAYS PARDNER, TIPPING HIS HAT SADLY.",
         "SPORTS: WHEEL SPINS 4,000 TIMES WITHOUT A RET LANDING; RET MAINS FILE CLASS-ACTION LAWSUIT",
         "ENVIRONMENT: STALE CHEETO CRUMBS UNDER THE WHEEL DECLARED A PROTECTED HABITAT",
         "BREAKING: GAMMON DID NOT SAVE US. GAMMON NEVER SAID HE WOULD. GAMMON IS EATING.",
@@ -1887,7 +1888,7 @@
         '🚗 <span class="text-white">A BRAND NEW 1997 FORD TAURUS!</span> 🚗',
         '🚂 <span class="text-white">TRAIN KEPT A ROLLIN\'! ALL ABOARD!</span> 🚂',
         '👵 <span class="text-white">HELP! I\'VE FALLEN AND MY KEY IS BRICKED!</span> 👵',
-        '🎺 <span class="text-white">COME ON DOWN! YOU\'RE THE NEXT CONTESTANT ON THE PAIN WHEEL!</span> 🎺',
+        '🎺 <span class="text-white">COME ON DOWN! YOU\'RE THE NEXT CONTESTANT ON THE WHEEL!</span> 🎺',
         '💊 <span class="text-white">ASK YOUR DOCTOR IF WIPING ON TRASH IS RIGHT FOR YOU!</span> 💊',
         '📞 <span class="text-white">CALL 1-800-CASH-NOW! IT\'S MY LOOT AND I NEED IT NOW!</span> 📞',
         '📺 <span class="text-white">THIS SPIN SPONSORED BY KANA+ — NOW WITH MORE KEVIN</span> 📺',
@@ -4281,7 +4282,7 @@
         if (w.aotc) {
             modalCard.classList.add('aotc-card');
             const b = document.createElement('div'); b.className = 'aotc-banner chopper-part';
-            b.innerHTML = '<div style="font-size:30px">🏆</div><div><div style="font-size:10px;letter-spacing:.15em;font-weight:900;color:#facc15">ACHIEVEMENT EARNED</div><div style="font-weight:900;font-size:15px;color:#fff">Ahead of the Curve: The Pain Wheel</div><div style="font-size:11px;opacity:.8">Feat of Strength · 0.01%</div></div>';
+            b.innerHTML = '<div style="font-size:30px">🏆</div><div><div style="font-size:10px;letter-spacing:.15em;font-weight:900;color:#facc15">ACHIEVEMENT EARNED</div><div style="font-weight:900;font-size:15px;color:#fff">Ahead of the Curve: The Wheel</div><div style="font-size:11px;opacity:.8">Feat of Strength · 0.01%</div></div>';
             modalCard.appendChild(b);
         }
         if (w.earBlast) {
@@ -4638,11 +4639,13 @@
         if (e.code === 'Space') { e.preventDefault(); releaseCharge(); }
     });
 
+    var wheelOnScreen = true;   // no idle redraws while the wheel is scrolled out of view
+    if ('IntersectionObserver' in window) new IntersectionObserver(es => { wheelOnScreen = es[es.length - 1].isIntersecting; }).observe(wheelCanvas);
     let lastIdleDraw = 0, lastZoomDraw = 0, lastZoomRot = null;
     function loop(now) {
         now = now || performance.now();
         if (wheelCanvas.clientWidth > 0 && Math.abs(wheelCanvas.width - wheelCanvas.clientWidth * wheelScale()) > 2) resizeCanvases();
-        else if (!isSpinning && !document.hidden) {
+        else if (!isSpinning && !document.hidden && wheelOnScreen) {
             const busy = now < fireUntil || flames.length || retGrowAnim;
             const popupOpen = !winnerModal.classList.contains('hidden');
             const interval = busy ? 16 : (popupOpen ? 125 : 33);          // 60 fps for effects, 30 idle, 8 behind a popup
@@ -4654,7 +4657,7 @@
         requestAnimationFrame(loop);
     }
     window.addEventListener('resize', () => { wheelCacheDirty = true; resizeCanvases(); });
-    document.title = `${TOTAL_SLICES}-Slice Pain Wheel`;
+    document.title = 'The Wheel';
     document.querySelectorAll('.slice-total').forEach(el => { el.textContent = TOTAL_SLICES; });
     rigToggleBtn.textContent = (360 / TOTAL_SLICES).toFixed(3) + '°';
     // Volume slider (remembered in this browser)
@@ -4783,7 +4786,7 @@
           pain: '#22c55e', badge: ['☘️ ', ' 🍀'], tagline: 'Lucky Decision Engine • 4x Leprechaun Zoom',
           kevin: [['#14532d', '☘️', '🍀', '#dcfce7'], ['#166534', '🍺', '🌈', '#bbf7d0']], kevinLabel: '🍀 Kevin',
           drift: ['☘️', '🍀', '☘️'],
-          ads: ['🍀 FEELING LUCKY? YOU\'RE NOT. THIS IS THE PAIN WHEEL.',
+          ads: ['🍀 FEELING LUCKY? YOU\'RE NOT. THIS IS THE WHEEL.',
                 '🍺 GREEN BEER BY REB\'S ARMS & BOURBON. IT\'S KNOB CREEK WITH FOOD COLORING.',
                 '🌈 POT OF GOLD FOUND AT THE END OF THE RAINBOW. GOBLIN CARTEL ALREADY TAXED IT.'],
           news: ['LEPRECHAUN CAUGHT RIGGING THE WHEEL; BLAMES KEVIN',
@@ -5138,7 +5141,7 @@
     ];
     // Ads whose big button actually does something to the wheel or the screen (after the ad closes)
     GEMINI_ADS.push(
-        { id: 'free-spin', theme: 'vip', effect: 'freespin', header: '🎰 CONGRATULATIONS! YOU ARE THE 1,000,000th VISITOR!', body: 'Claim your FREE spin of the Pain Wheel! No purchase necessary. Results may include Kevin. Results will include Kevin.', primary: 'CLAIM FREE SPIN', close: "I don't want free things", reply: "Spinning... you're welcome." },
+        { id: 'free-spin', theme: 'vip', effect: 'freespin', header: '🎰 CONGRATULATIONS! YOU ARE THE 1,000,000th VISITOR!', body: 'Claim your FREE spin of The Wheel! No purchase necessary. Results may include Kevin. Results will include Kevin.', primary: 'CLAIM FREE SPIN', close: "I don't want free things", reply: "Spinning... you're welcome." },
         { id: 'oceanic', theme: 'warning', effect: 'flip', header: '🦘 TRANSFER TO AN OCEANIC REALM TODAY!', body: "Lower ping*! Fresh economy! Everything is upside down, but you'll get used to it. *Ping not lower.", primary: 'TRANSFER NOW', close: 'Stay right side up', reply: "G'day mate. Hold on to something." },
         { id: 'ret-vision', theme: 'gold', effect: 'retvision', header: '👓 TRY RET PALADIN VISION™ FREE FOR 10 SECONDS', body: 'Experience raids the way Axazon does: blurry, gray, and confused about what just happened.', primary: 'PUT ON THE GOGGLES', close: 'I like seeing mechanics', reply: 'Loading Ret Vision... where did the boss go?' },
         { id: 'clippy', theme: 'error', effect: 'clippy', header: "📎 IT LOOKS LIKE YOU'RE TRYING TO SPIN A WHEEL!", body: 'Would you like help? Clippy has been reading your logs and has some notes. A lot of notes.', primary: 'YES, HELP ME CLIPPY', close: 'Never again, Clippy', reply: "Clippy is on his way. You can't get rid of him now." },
@@ -5309,7 +5312,7 @@
             waiting = true;
             (function attempt() {
                 if (!due() || !ad.classList.contains('hidden')) { waiting = false; return; }
-                const overlayOpen = ['welcome', 'statsPanel', 'cheatSheet', 'ashbringer', 'moveModal', 'bagPanel', 'housePanel', 'shopPanel'].some(id => !$(id).classList.contains('hidden'));
+                const overlayOpen = ['welcome', 'statsPanel', 'cheatSheet', 'ashbringer', 'moveModal', 'bagPanel', 'housePanel', 'shopPanel'].some(id => $(id) && !$(id).classList.contains('hidden'));
                 if (isSpinning || !winnerModal.classList.contains('hidden') || overlayOpen) return setTimeout(attempt, 1500);
                 waiting = false;
                 show();
@@ -6497,7 +6500,12 @@
     function launchRocket() {
         const shack = document.querySelector('#shackSpot [data-k="shack"]');
         // with the yacht parked out front, half the time the rocket goes there instead (and sometimes it drifts into the wheel)
-        if (store.get('painWheelHouseLevel', 0) >= 6 && !rocketMishap && rocketGoesAstray()) return rocketYachtCrash();
+        if (!rocketMishap && Math.random() < 1 / 8) return rocketStolen();   // somebody in the guild "borrows" it
+        if (!rocketMishap && rocketGoesAstray()) {   // half the time it goes somewhere it shouldn't
+            const t = nextMissTarget();
+            if (t === 'wheel' || t === 'yacht') return rocketYachtCrash(t === 'wheel');
+            return rocketMiss(t);
+        }
         if (garage.shack && shack) return rocketShackCrash(shack);   // (the shack button exists even with the toy box folded)
         padState(5000, '🛰️ IN ORBIT (probably)'); padHit('space');
         const o = padOrigin(), r = document.createElement('div');
@@ -6512,6 +6520,148 @@
         setTimeout(() => { clearInterval(smoke); r.remove(); }, 4300);
         funEvent('🚀 LIFTOFF! Next stop: anywhere Kevin isn\'t.', 4000);
         chatBurst(['LIFTOFF', 'TO THE MOON', 'billionaire arc', 'he left the planet', 'o7 o7 o7', 'take Kevin with you'], 5, 3000);
+    }
+
+    // ---------- 🚀 more places the rocket can end up: the chicken, Kevin, the $KNOB chart ----------
+    const onScreen = (el) => { if (!el) return false; const b = el.getBoundingClientRect(); return b.width > 0 && b.bottom > 40 && b.top < innerHeight - 40; };
+    function missTargets() {
+        const t = ['wheel', 'kevin'];
+        if (store.get('painWheelHouseLevel', 0) >= 6 && !$('timeshareHouse').classList.contains('hidden')) t.push('yacht');
+        if (onScreen($('pet-chicken'))) t.push('chicken');
+        if (onScreen($('knobChart'))) t.push('knob');
+        return t;
+    }
+    let missBag = [];
+    function nextMissTarget() {   // a shuffled bag of whatever is on screen, so you see every kind of crash before repeats
+        const avail = missTargets(); missBag = missBag.filter(x => avail.includes(x));
+        if (!missBag.length) missBag = shuffled(avail);
+        return missBag.pop();
+    }
+    const MISS_LINES = {
+        chicken: [['ChAoTiC', 'Chicken down. I repeat, chicken down.'], ['Biblehumping', "It's extra crispy now. Sorry, bud."],
+            ['ChAoTiC', 'That chicken survived Westfall. It did not survive you.'], ['Biblehumping', 'I can save the chicken. I cannot save the feathers.'],
+            ['ChAoTiC', "Somebody call KFC. ...Actually, don't."], ['Biblehumping', 'Applying burn cream. To a chicken. Again.'],
+            ['ChAoTiC', 'Writing the rocket a ticket for poultry abuse.'], ['Biblehumping', 'Good news, it was not a farmer. Bad news, it was the farmer\'s chicken.']],
+        kevin: [['ChAoTiC', 'Kevin has left the atmosphere. Nobody file a missing persons report.'], ['Biblehumping', "He's fine. He's stood in worse."],
+            ['ChAoTiC', 'Kevin, you are not cleared for orbit. ...He cannot hear me. He is in orbit.'], ['Biblehumping', 'I brought the defib. He is too far up for the defib.'],
+            ['ChAoTiC', 'Who aimed the rocket at Kevin? ...Everyone raised their hand.'], ['Biblehumping', 'Kevin stood in the launch path on purpose. To "see if it was him or the rocket."'],
+            ['ChAoTiC', "Sorry Kevin, you can't park there. Hooah."], ['Biblehumping', "Sorry about Kevin, eh. Actually, not that sorry."]],
+        knob: [['ChAoTiC', 'The rocket hit the $KNOB chart. The chart is pressing charges.'], ['Biblehumping', 'The stock is in critical condition. Reb is in worse condition.'],
+            ['ChAoTiC', "That's insider trading. The rocket was inside the chart."], ['Biblehumping', 'Clear! ...the chart is flatlining. That is just the chart.'],
+            ['ChAoTiC', 'I am confiscating the stock market. Evidence.'], ['Biblehumping', "Reb's liver felt that one."],
+            ['ChAoTiC', 'Buy the dip. The dip is a crater.'], ['Biblehumping', 'Good news, no farmers in the stock market. Mostly.']]
+    };
+    const MISS_SQ = {
+        chicken: [['chaotic', 'BOLO: one Westfall chicken, now medium rare. suspect fled in a rocket'], ['bible', 'responded to a chicken call. it was the rocket. it is always the rocket']],
+        kevin: [['kevin', 'i was standing there first'], ['elan', 'Kevin is now the first guildie in space. You are welcome. 🚀'], ['bible', 'kevin is in low orbit. stable. annoying']],
+        knob: [['reb', 'WHO SHOT THE STOCK MARKET'], ['vince', 'MY PORTFOLIO JUST GOT HIT BY A ROCKET. LITERALLY. I AM ON THE BRICK PHONE TO MY LAWYER']]
+    };
+    // whoever had the controls today (the guild blames each other on Squawkr)
+    const ROCKET_BLAME = [['bible', "for the record i was NOT flying the rocket. i was in the ambulance. the ambulance was also not flying the rocket"],
+        ['chaotic', "investigating the rocket crash. prime suspect: my alt. second suspect: my other alt"], ['alt', 'i was not flying the rocket (i was flying the rocket)'],
+        ['kevin', 'all i did was press the big red button. why is it always the big red button'], ['reb', 'he flew it after "one more drink". FAA has been notified'],
+        ['casimir', "rocket is working exactly as designed. i designed it to do that. on purpose. yes"], ['vince', 'I WAS ON THE PHONE WITH MISSION CONTROL. THE PHONE IS 4 POUNDS. I DROPPED IT ON THE THROTTLE'],
+        ['elan', 'Our rockets always land. Just not where we said. 🚀'], ['uwutek', 'that rocket did more damage than the raid did to me last night'],
+        ['grandma', 'whoever crashed the rocket owes me a cookie sheet 👵'], ['shack', 'not me this time. weird. i almost miss it']];
+    function rocketMiss(kind) {
+        rocketMishap = true;
+        const o = padOrigin(), sx = o.x, sy = o.y + 70;
+        let kev = null;
+        if (kind === 'kevin') {   // Kevin wanders into the launch zone first
+            kev = document.createElement('div');
+            kev.style.cssText = `position:fixed;z-index:76;left:${Math.round(innerWidth * (0.25 + Math.random() * 0.5))}px;bottom:${VEH_Y + 6}px;font-size:60px;line-height:1;pointer-events:none;transition:transform 1.8s cubic-bezier(.2,.7,.3,1), opacity .8s 1.2s`;
+            kev.innerHTML = '<div style="position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:4px;white-space:nowrap;background:#fffbe6;color:#000;font-size:20px;font-weight:800;padding:4px 10px;border-radius:9px;border:2px solid #111"></div>🤡';
+            kev.firstChild.textContent = '🤡 Kevin: ' + pick(['what does this button do', 'is this where the raid is', 'hey guys what are we looking at', 'why is everyone pointing up']);
+            document.body.appendChild(kev);
+        }
+        const target = () => kind === 'chicken' ? $('pet-chicken') : kind === 'knob' ? $('knobChart') : kev;
+        padState(15000, { chicken: '🐔 PLUCKING DEBRIS', kevin: '🤡 KEVIN IN ORBIT', knob: '📉 THE CHART IS ON FIRE' }[kind]); padHit(kind);
+        const r = document.createElement('div'); r.textContent = '🚀';
+        r.style.cssText = `position:fixed;z-index:80;left:${sx}px;top:${sy - 70}px;font-size:80px;line-height:1;pointer-events:none;transform:translate(-50%,-50%) rotate(-45deg);transition:top 1.5s cubic-bezier(.5,0,.9,.4)`;
+        document.body.appendChild(r);
+        const smoke = setInterval(() => {
+            const s2 = document.createElement('div'), b = r.getBoundingClientRect(); s2.textContent = '💨';
+            s2.style.cssText = `position:fixed;z-index:77;left:${b.left + b.width / 2 - 20}px;top:${b.top + b.height / 2}px;font-size:40px;pointer-events:none;transition:opacity 1.4s,transform 1.4s`;
+            document.body.appendChild(s2); requestAnimationFrame(() => { s2.style.opacity = '0'; s2.style.transform = 'scale(2)'; }); setTimeout(() => s2.remove(), 1500);
+        }, 130);
+        requestAnimationFrame(() => requestAnimationFrame(() => r.style.top = '-160px'));
+        funEvent('🚀 LIFTOFF!', 1800);
+        let tx = innerWidth / 2, ty = innerHeight / 2;
+        setTimeout(() => {   // aim at wherever the target is right now (the chicken moves)
+            const el = target(), b = el && el.getBoundingClientRect();
+            if (b && b.width) { tx = b.left + b.width / 2; ty = Math.max(90, Math.min(innerHeight - 60, b.top + b.height / 2)); }
+            const ang = Math.atan2(ty + 160, tx - sx) * 180 / Math.PI + 45;
+            r.style.transition = 'left 1.5s cubic-bezier(.4,0,.9,.6), top 1.5s cubic-bezier(.6,0,1,1), transform .6s';
+            r.style.transform = `translate(-50%,-50%) rotate(${ang}deg)`;
+            requestAnimationFrame(() => { r.style.left = tx + 'px'; r.style.top = ty + 'px'; });
+            chatBurst({ chicken: ['NOT THE CHICKEN', 'the chicken 😭', 'BAWK', 'run chicken run'], kevin: ['KEVIN MOVE', 'kevin is in the way', 'KEVIN LOOK UP', 'oh no. anyway'],
+                knob: ['IT IS HEADING FOR THE STOCKS', 'NOT MY PORTFOLIO', 'sell sell sell', 'reb hide the bottles'] }[kind], 3, 1200);
+        }, 1800);
+        setTimeout(() => {
+            clearInterval(smoke); r.remove(); playCrash();
+            const boom = document.createElement('div'); boom.textContent = '💥';
+            boom.style.cssText = `position:fixed;z-index:80;left:${tx}px;top:${ty}px;font-size:34px;pointer-events:none;transform:translate(-50%,-50%) scale(.4);transition:transform .35s ease-out,opacity .8s .8s`;
+            document.body.appendChild(boom); requestAnimationFrame(() => { boom.style.transform = 'translate(-50%,-50%) scale(3.2)'; });
+            setTimeout(() => { boom.style.opacity = '0'; }, 300); setTimeout(() => boom.remove(), 1700);
+            document.body.animate([{ transform: 'translate(0,0)' }, { transform: 'translate(-8px,4px)' }, { transform: 'translate(7px,-5px)' }, { transform: 'translate(0,0)' }], { duration: 450 });
+            if (kind === 'chicken') {
+                const em = $('pet-chicken') && $('pet-chicken').querySelector('.pet-em');
+                if (em) { const was = em.innerHTML; em.textContent = '🍗'; setTimeout(() => { if (em.isConnected) em.innerHTML = was; moveToast('🐔 The chicken is fine. It walked it off. It is a Westfall chicken.'); }, 9000); }
+                for (let i = 0; i < 10; i++) {   // feathers
+                    const f = document.createElement('div'); f.textContent = '🪶';
+                    f.style.cssText = `position:fixed;z-index:79;left:${tx}px;top:${ty}px;font-size:${20 + Math.random() * 14}px;pointer-events:none;transition:transform 2.4s ease-out, opacity 2.4s`;
+                    document.body.appendChild(f);
+                    requestAnimationFrame(() => { f.style.transform = `translate(${(Math.random() - .5) * 320}px, ${60 + Math.random() * 160}px) rotate(${(Math.random() - .5) * 400}deg)`; f.style.opacity = '0'; });
+                    setTimeout(() => f.remove(), 2500);
+                }
+                funEvent('🐔💥 THE ROCKET HIT THE CHICKEN 💥🐔', 4000);
+            } else if (kind === 'kevin') {
+                if (kev) { kev.firstChild.textContent = '🤡 Kevin: AAAAAAAAAAA'; kev.style.transform = `translate(${(Math.random() - .5) * 300}px, -${innerHeight + 200}px) rotate(1080deg)`; kev.style.opacity = '0'; setTimeout(() => kev.remove(), 2600); }
+                funEvent('🤡🚀 KEVIN HAS BEEN LAUNCHED INTO ORBIT 🚀🤡', 4000);
+                if (typeof exHold !== 'undefined') { const st = STOCKS.find(t => t.sym === 'KEVN'); if (st) { exMove(st, -0.25, 'Kevin is in orbit. Investors unsure if this is good'); store.set('painWheelStockPrices2', exPrice); exRender(); } }
+            } else {
+                if (window.knobCrash) window.knobCrash();
+                const ch = $('knobChart'); if (ch) ch.animate([{ transform: 'translate(0,0)' }, { transform: 'translate(-6px,3px) rotate(-2deg)' }, { transform: 'translate(5px,-3px) rotate(2deg)' }, { transform: 'translate(0,0)' }], { duration: 500, iterations: 3 });
+                funEvent('📉💥 THE ROCKET HIT THE $KNOB CHART 💥📉', 4000);
+            }
+            chatBurst({ chicken: ['THE CHICKEN', 'KFC?', 'extra crispy', 'F for the chicken', 'westfall mourns', '🍗🍗🍗'], kevin: ['KEVIN IS IN SPACE', 'o7 kevin', 'first kevin in orbit', 'he stood in the fire again', 'do not bring him back', '🤡🚀'],
+                knob: ['MY PORTFOLIO', 'the market crashed. literally', 'buy the crater', 'reb is crying', '$KNOB TO ZERO', 'insider trading'] }[kind], 6, 2500);
+            setTimeout(() => { const a = pick(MISS_SQ[kind]); sqPost(a[0], a[1]); }, 3500);
+            if (Math.random() < 0.6) setTimeout(() => { const a = pick(ROCKET_BLAME); sqPost(a[0], a[1]); }, 9000);
+            rocketScene(tx, MISS_LINES[kind]);
+        }, 3300);
+    }
+    // ---------- 🚨 sometimes a guildie steals the rocket right off the pad ----------
+    const THIEVES = [
+        { who: 'kevin', name: 'Kevin', line: 'i just wanted to see what the big red button did. now i am over the ocean', chat: ['KEVIN STOLE THE ROCKET', 'who gave kevin the keys', 'he cannot even drive a mount'] },
+        { who: 'reb', name: "Reb", line: "he took the rocket to the liquor store. the liquor store is a 4 minute walk", chat: ['REB IS DRIVING??', 'BAC: rocket', 'designated pilot where'] },
+        { who: 'alt', name: "ChAoTiC's alt", line: 'stole the rocket. ChAoTiC is now in pursuit of himself', chat: ['the alt did it', 'chaotic is chasing chaotic', 'which one is the cop'] },
+        { who: 'vince', name: 'Vince', line: 'NEEDED BETTER SIGNAL FOR THE BRICK PHONE. GOING TO ORBIT. BRB', chat: ['vince took it', 'can you hear me now', 'ROAMING CHARGES'] },
+        { who: 'casimir', name: 'Casimir', line: 'borrowed the rocket to "recalibrate the odds". the odds are now in space', chat: ['casimir rigged the rocket too', 'of course it was casimir', 'RIGGED'] },
+        { who: 'bible', name: 'Biblehumping', line: 'took the rocket on a call. sorry. there was no call. sorry 🍁', chat: ['biblehumping stole it', 'the ambulance was not fast enough', 'farmers are not safe in the sky either'] },
+        { who: 'grandma', name: 'Grandma', line: 'needed it to deliver cookies faster 👵 do not tell your mother', chat: ['GRANDMA NO', 'grandma has a pilot license??', 'cookie delivery speedrun'] },
+        { who: 'uwutek', name: 'Uwutek', line: 'took your rocket. consider it loot. see you next reset', chat: ['THE BOSS STOLE IT', 'uwutek looting us now', 'reverse raid'] }];
+    function rocketStolen() {
+        rocketMishap = true;
+        const th = pick(THIEVES), o = padOrigin(), ltr = o.x < innerWidth / 2;
+        padState(9000, '🚨 ROCKET STOLEN (AGAIN)'); padHit('stolen');
+        const r = document.createElement('div');
+        r.style.cssText = `position:fixed;z-index:80;left:${o.x}px;top:${o.y}px;font-size:80px;line-height:1;pointer-events:none;transform:translate(-50%,-50%);transition:left 4.5s cubic-bezier(.5,0,.8,.6), top 4.5s ease-in`;
+        r.innerHTML = `<div style="position:absolute;bottom:100%;left:50%;transform:translateX(-50%);white-space:nowrap;background:#fffbe6;color:#000;font-size:22px;font-weight:900;padding:4px 12px;border-radius:9px;border:2px solid #111"></div><span style="display:inline-block;transform:rotate(${ltr ? 45 : -135}deg)">🚀</span>`;
+        r.firstChild.textContent = '🚨 ' + th.name + ' is driving';
+        document.body.appendChild(r);
+        requestAnimationFrame(() => requestAnimationFrame(() => { r.style.left = (ltr ? innerWidth + 200 : -200) + 'px'; r.style.top = Math.max(80, o.y - 260) + 'px'; }));
+        funEvent('🚨 SOMEONE STOLE THE ROCKET 🚨', 3500);
+        chatBurst(th.chat.concat(['STOP THIEF', 'grand theft rocket', 'the pad is empty']), 5, 2500);
+        setTimeout(() => sqPost(th.who, th.line), 2500);
+        setTimeout(() => sqPost('chaotic', pick(['BOLO: one stolen SpaceZ rocket. suspect is ' + th.name + '. do not approach. they cannot steer', 'pursuing stolen rocket. in a car. this was a bad plan. hooah',
+            'stolen rocket report filed. suspect: ' + th.name + '. motive: "it was right there"'])), 6000);
+        if (th.who !== 'chaotic' && Math.random() < 0.5) setTimeout(patrolChase, 3200);
+        setTimeout(() => { r.remove(); rocketMishap = false; moveToast('🚀 The rocket was returned to the pad. It smells like ' + pick(['Knob Creek', 'cookies', 'a murloc', 'burnt toast', 'Kevin']) + '.'); }, 8800);
+    }
+    function patrolChase() {   // ChAoTiC gives chase if nobody else is on the road
+        if (vehicles.amb || vehicles.cop || patrolOn) return;
+        patrol.last = 'bible'; patrol();
     }
     // ---------- 🚀 → 🛥️ (or 🎡): the rocket misses, Biblehumping and ChAoTiC respond to the scene ----------
     const YACHT_CRASH_LINES = [
@@ -6570,11 +6720,11 @@
         }, t + 400);
         return t + 2000;
     }
-    function rocketYachtCrash() {
+    function rocketYachtCrash(force) {
         rocketMishap = true;
         const o = padOrigin(), sx = o.x, sy = o.y + 70;
         const house = $('houseEmoji'), h = house.getBoundingClientRect();
-        const toWheel = rocketTargetWheel() || $('timeshareHouse').classList.contains('hidden');
+        const toWheel = typeof force === 'boolean' ? force : (rocketTargetWheel() || $('timeshareHouse').classList.contains('hidden'));
         padState(16000, toWheel ? '🔥 THE WHEEL IS ON FIRE' : '⚓ RECOVERING DEBRIS (THE YACHT)'); padHit(toWheel ? 'wheel' : 'yacht');
         const wc = $('wheelCanvas').getBoundingClientRect();
         const tx = toWheel ? wc.left + wc.width / 2 : h.left + h.width / 2, ty = toWheel ? Math.max(90, Math.min(innerHeight - 140, wc.top + wc.height / 2)) : h.top + h.height / 2;
@@ -6769,9 +6919,10 @@
     }
     // ---------- launch pad ----------
     var padBusy = false;
-    var rocketStats = Object.assign({ launches: 0, space: 0, shack: 0, yacht: 0, wheel: 0 }, store.get('painWheelRocketStats', {}));
+    var rocketStats = Object.assign({ launches: 0, space: 0, shack: 0, yacht: 0, wheel: 0, chicken: 0, kevin: 0, knob: 0, stolen: 0 }, store.get('painWheelRocketStats', {}));
     var PAD_HINTS = ['Where will it land? Nobody knows.', 'Engineering signed off. Engineering is Kevin.', 'Fuel: 90% goblin gas, 10% Mountain Dew.',
-        'Our GPS is a murloc in the nose cone.', 'Please stand behind the yellow line. There is no yellow line.', 'Insurance: no.'];
+        'Our GPS is a murloc in the nose cone.', 'Please stand behind the yellow line. There is no yellow line.', 'Insurance: no.',
+        'Keys are in the ignition. Please do not steal the rocket. (Kevin.)', 'Chickens and Kevins: please clear the launch area.', 'Pilot today: unknown. Pilot tomorrow: also unknown.'];
     function renderPad() {
         const owned = !!garage.rocket, r = $('padRocket');
         r.classList.toggle('empty', !owned); r.title = owned ? 'Click to launch' : 'No rocket on the pad';
@@ -6783,7 +6934,7 @@
         }
         $('lpHint').textContent = owned ? pick(PAD_HINTS) : 'SpaceZ Rocket: 10B gold in the Shop (Garage tab).';
         const st = rocketStats;
-        $('lpStats').innerHTML = owned ? `Launches: ${st.launches.toLocaleString()}<br>Hit the shack: ${st.shack} · the yacht: ${st.yacht} · the wheel: ${st.wheel}` : 'Launches: 0<br>The pad is very clean.';
+        $('lpStats').innerHTML = owned ? `Launches: ${st.launches.toLocaleString()} · Stolen: ${st.stolen}<br>Shack ${st.shack} · Yacht ${st.yacht} · Wheel ${st.wheel}<br>Chicken ${st.chicken} · Kevin ${st.kevin} · $KNOB ${st.knob}` : 'Launches: 0<br>The pad is very clean.';
     }
     function padLaunch() {
         if (!garage.rocket) { openShop('garage'); return; }
@@ -7182,7 +7333,7 @@
         } else if (shopTab === 'lobby') {
             const t = aipacTier(), next = AIPAC_TIERS.find(x => aipacTotal < x[0]);
             const box = document.createElement('div'); box.className = 'rounded-lg border border-slate-700 bg-slate-950/70 p-3 text-sm';
-            box.innerHTML = '<div class="font-black text-lg text-sky-200">🇺🇸 Pain Wheel Lobbying Office</div><div class="text-slate-300 text-xs mt-1">Donate to AIPAC and climb the lobbyist tiers. Donations are repeatable and count on the guild Top Donors board. You will receive nothing in return except influence (none) and a badge (small).</div><div class="mono mt-2"></div><div class="text-xs text-slate-400 mt-1"></div>';
+            box.innerHTML = '<div class="font-black text-lg text-sky-200">🇺🇸 The Wheel Lobbying Office</div><div class="text-slate-300 text-xs mt-1">Donate to AIPAC and climb the lobbyist tiers. Donations are repeatable and count on the guild Top Donors board. You will receive nothing in return except influence (none) and a badge (small).</div><div class="mono mt-2"></div><div class="text-xs text-slate-400 mt-1"></div>';
             box.children[2].textContent = `Lifetime donated: ${fmt(aipacTotal)}  ·  Tier: ${t ? t[1] : 'none (you are a regular citizen)'}`;
             box.children[3].textContent = next ? `Next tier: ${next[1]} at ${fmt(next[0])} (${fmt(next[0] - aipacTotal)} to go)` : 'Max tier. You are a walking Super PAC. Campaign finance reform has been cancelled. Please stop.';
             add(box);
@@ -7262,7 +7413,7 @@
         const on = !document.body.classList.contains('party-on');
         document.body.classList.toggle('party-on', on);
         $('partyBtn').textContent = on ? '🪩 Stop' : '🪩 Party';
-        if (on) chatBurst(['PARTY', 'club pain wheel', 'untz untz untz', 'DJ Kevin in the house', '🕺💃'], 4, 2500);
+        if (on) chatBurst(['PARTY', 'club the wheel', 'untz untz untz', 'DJ Kevin in the house', '🕺💃'], 4, 2500);
         if (on) partyPets();
         $('partyBtn').blur();
     });
@@ -7498,7 +7649,12 @@
         { text: 'DedFrmr is dead.', sym: 'DEDFRMR', m: -0.5, w: 3 },
         { text: "$RET is the future of warfare. Also the past. Mostly the past.", sym: 'RET', m: 0.35, w: 2 },
         { text: 'Just bought one share of $ALT. ChAoTiC has to make another alt now. Those are the rules.', sym: 'ALT', m: 0.25, w: 2 },
-        { text: '$KEVN is actually genius. I was kidding earlier. Or am I.', sym: 'KEVN', m: 0.6, w: 2 }];
+        { text: '$KEVN is actually genius. I was kidding earlier. Or am I.', sym: 'KEVN', m: 0.6, w: 2 },
+        { text: 'Kevin stood in the fire again. Bearish on $KEVN.', sym: 'KEVN', m: -0.4, w: 2 },
+        { text: 'Ret Paladins are underrated. Buying $RET with my rocket money.', sym: 'RET', m: 0.5, w: 2 },
+        { text: 'Just learned what a "farmer" is in this guild. $DEDFRMR has no future.', sym: 'DEDFRMR', m: -0.35, w: 2 },
+        { text: '$ALT is the most alts any one man has ever had. Respect. Buying.', sym: 'ALT', m: 0.4, w: 2 },
+        { text: '$SUSN to Mars. Taking Kevin. Leaving Kevin.', sym: 'SUSN', m: 3, w: 1 }];
     // the feed window: draggable, minimizable, remembers where you put it
     const SQ_WHO = {
         elan: ['Elan', '@ElanOfficial', '🚀', true], kevin: ['Kevin', '@Kevin_Official', '🤡', false], vince: ['Vince', '@VinceOnTheBrick', '📞', false],
@@ -7545,7 +7701,32 @@
         ["bible", "the ambulance has 300,000 miles on it. 200,000 of them are combines"],
         ["gary", "someone on the yacht called me Gary again. i will be pressing charges"],
         ["kevin", "stood in the fire on purpose today to see if it was me or the fire. it was me"],
-        ["goblinx", "congratulations! your credit limit has been raised to \"please stop\""], ['reb', 'the wheel landed on Knob Creek. i felt that in my soul (i am the soul)']];
+        ["goblinx", "congratulations! your credit limit has been raised to \"please stop\""], ['reb', 'the wheel landed on Knob Creek. i felt that in my soul (i am the soul)'],
+        ['kevin', 'got a new keybind. it is just the "stand in fire" button but faster'], ['kevin', 'the wheel landed on me 3 times in a row. i think it likes me'],
+        ['kevin', 'pulled the boss early to save time. it did not save time'], ['kevin', 'my mom says i am the main character. the wheel agrees'],
+        ['chaotic', 'running a speed trap outside the guild hall. clocked a murloc at 45'], ['chaotic', 'everybody calm down. i rigged nothing today. (it is 9 am)'],
+        ['chaotic', 'drill sergeant voice: SPIN THE WHEEL. SPIN IT AGAIN. I DID NOT SAY STOP'], ['alt', 'new alt just dropped. level 1. already rigging things'],
+        ['alt', 'whoever has my main, please return him. he has the donut'], ['bible', 'sorry for the siren at 3am. there was a combine. there is always a combine 🍁'],
+        ['bible', "medical tip: if you can read this, you're not in a rocket crash. yet"], ['bible', 'counted my fingers today. still 9. the wheel still has the 10th'],
+        ['bible', 'poutine break. back in 10. the farmers get a 10 minute head start 🍁'], ['reb', "doctor asked how many drinks a week. i said \"what's a week\""],
+        ['reb', 'the bottle said "enjoy responsibly". he read it as a challenge'], ['reb', 'raid starts in 20 min. he is 4 deep. this is the warmup'],
+        ['vince', 'MY BRICK PHONE HAS 1 BAR. THE BAR IS THE STRIP CLUB. DO NOT CALL'], ['vince', 'SOLD EVERYTHING. BOUGHT IT BACK. SOLD IT AGAIN. TAX SEASON IS GOING TO BE FUN'],
+        ['vince', 'they call me I AM VINNY now. i did that. i changed my own name. power move'], ['casimir', 'patch notes: Kevin slices now 0% more likely. (they were already 100%)'],
+        ['casimir', 'found a bug in the wheel. it was Kevin. closing as "working as intended"'], ['casimir', 'the odds are fair. i made them fair. then i made them a little more fair for me'],
+        ['elan', 'thinking about buying Squawkr. oh wait. 🚀'], ['elan', 'The Wheel is the most important technology of our time. Second is the rocket. Third is me.'],
+        ['elan', 'will put a Kevin on Mars by 2030. many have asked'], ['grandma', "made cookies for raid night. they're shaped like Kevin. you'll feel bad eating them 👵 (you won't)"],
+        ['grandma', 'in my day we walked uphill both ways to the raid. in the snow. with no addons 👵'], ['gary', 'they put a hat on me at the yacht party. i am not a hat fish'],
+        ['gary', 'today i learned there is ANOTHER swordfish. he gets to sing. i do not sing. why'], ['shack', 'a lizard is renting the back room now. he pays better than you'],
+        ['shack', 'saw the rocket on the pad today. we made eye contact. it knows'], ['uwutek', 'heard you nerds are farming me again tonight. i have been doing pushups'],
+        ['uwutek', 'you have wiped on me 47 times. i have started naming you'], ['goblinx', 'new perk: 0% APR*! *APR stands for Absolutely Pay Regardless 😊'],
+        ['goblinx', "we noticed you have a vault 😊 we'd love to be friends with your vault 😊"], ['irs', 'audit lottery is now open. everyone wins (we win)'],
+        ['irs', 'the vault is offshore. we have a boat now too.'], ['yacht', 'VIP room is open. we cannot explain the gaming PC. it was here when we bought the yacht'],
+        ['yacht', 'lost and found: one Kevin (overboard), one sticky note (combo redacted), one swordfish named Gary (do not call him Gary)'],
+        ['kevin', 'somebody launched me into space yesterday. honestly the view was great. 7/10 would orbit again'],
+        ['chaotic', 'reminder: the rocket is not a getaway vehicle. (it is the best getaway vehicle)'], ['bible', 'if you see a chicken limping around, it was the rocket. it is fine. it is a Westfall chicken 🍁'],
+        ['reb', 'the $KNOB chart got hit by a rocket and it still made more sense than his raid plan'], ['casimir', 'the gaming PC on the yacht is mine. do not touch the save file. it has 4,000 hours of wheel on it'],
+        ['elan', 'Every rocket that crashes is just a rocket that has not landed yet. 🚀'], ['alt', 'stole the rocket once. would steal the rocket again'],
+        ['vince', 'WHO KEEPS STEALING THE ROCKET. ALSO CAN I BORROW THE ROCKET']];
     const sqFeed = store.get('painWheelSquawkFeed', []);
     let sqState = Object.assign({ x: null, y: 200, min: innerWidth < 1500 }, store.get('painWheelSquawkPos', {})), sqUnread = 0;
     function sqSaveState() { sqState.vw = innerWidth; sqState.vh = innerHeight; store.set('painWheelSquawkPos', sqState); }
@@ -8077,7 +8258,7 @@
     async function readTransferCode(text) {
         let t = String(text || '').trim(); const h = t.indexOf('#transfer='); if (h >= 0) t = t.slice(h + 10);
         t = decodeURIComponent(t).replace(/\s+/g, '');
-        if (!t.startsWith(XFER_PREFIX)) throw new Error('That is not a Pain Wheel transfer code.');
+        if (!t.startsWith(XFER_PREFIX)) throw new Error('That is not a The Wheel transfer code.');
         const kind = t[XFER_PREFIX.length], raw = b64u.dec(t.slice(XFER_PREFIX.length + 1));
         const bytes = kind === 'z' ? await pipeThrough(raw, new DecompressionStream('deflate-raw')) : raw;
         const o = JSON.parse(new TextDecoder().decode(bytes));
