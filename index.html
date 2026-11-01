@@ -206,8 +206,8 @@
         #partyLights { position: fixed; inset: 0; z-index: 58; pointer-events: none; display: none; overflow: hidden; }
         body.party-on #partyLights { display: block; }
         body.party-on .pet-walker .pet-em { animation: petDance .45s ease-in-out infinite alternate !important; }
-        body.party-on #garageDock button { animation: petDance .6s ease-in-out infinite alternate; }
-        body.is-spinning #petDock *, body.is-spinning .pet-walker *, body.is-spinning #garageDock *, body.is-spinning #houseEmoji, body.is-spinning .siren-glow, body.is-spinning #goldenCookie { animation-play-state: paused !important; }
+        body.party-on #garageDock button, body.party-on #shackSpot button { animation: petDance .6s ease-in-out infinite alternate; }
+        body.is-spinning #petDock *, body.is-spinning .pet-walker *, body.is-spinning #garageDock *, body.is-spinning #shackSpot *, body.is-spinning #houseEmoji, body.is-spinning .siren-glow, body.is-spinning #goldenCookie { animation-play-state: paused !important; }
         .pet-walker .pet-em { will-change: transform; }
         body.has-hearth header { padding-right: 76px; }
         /* launch pad */
@@ -252,7 +252,7 @@
         @media (max-width: 640px) { .lp-wrap { flex-wrap: wrap; justify-content: center; } .lp-info { flex-basis: 100%; text-align: center; } }   /* room for the Hearthstone in the top-right corner */
         @keyframes fireFlicker { from { translate: 0 0; filter: brightness(1); } to { translate: 0 -6px; filter: brightness(1.25); } }
         @keyframes petDance { from { transform: translateY(0) rotate(-12deg); } to { transform: translateY(-8px) rotate(12deg); } }
-        @media (prefers-reduced-motion: reduce) { body.party-on .pet-walker .pet-em, body.party-on #garageDock button { animation: none !important; } }
+        @media (prefers-reduced-motion: reduce) { body.party-on .pet-walker .pet-em, body.party-on #garageDock button, body.party-on #shackSpot button { animation: none !important; } }
         #partyLights .beam { position: absolute; width: 70vmax; height: 70vmax; border-radius: 50%; opacity: .42; will-change: transform; }
         #partyLights .b1 { background: radial-gradient(circle, #ec4899 0%, rgba(236,72,153,.5) 30%, transparent 68%); left: -20vmax; top: -20vmax; animation: beamA 9s ease-in-out infinite alternate; }
         #partyLights .b2 { background: radial-gradient(circle, #22d3ee 0%, rgba(34,211,238,.5) 30%, transparent 68%); right: -25vmax; top: 10vh; animation: beamB 11s ease-in-out infinite alternate; }
@@ -521,6 +521,7 @@
     </div>
     <div id="retVisionFx" aria-hidden="true" style="display:none;position:fixed;inset:0;z-index:56;pointer-events:none;backdrop-filter:grayscale(.9) blur(.6px) contrast(.9);-webkit-backdrop-filter:grayscale(.9) blur(.6px) contrast(.9)"></div>
     <div id="partyLights" aria-hidden="true"><div class="beam b1"></div><div class="beam b2"></div><div class="beam b3"></div><div class="beam b4"></div><div class="ball">🪩</div></div>
+    <div id="shackSpot" style="position:fixed;z-index:61;left:16px;bottom:12px"></div>
     <div id="rightStack" style="position:fixed;z-index:61;right:16px;bottom:12px;display:flex;flex-direction:column;align-items:flex-end;gap:8px;max-width:calc(100vw - 32px);pointer-events:none">
         <div id="toyBox" style="pointer-events:auto;display:none;align-items:flex-end;gap:6px;background:rgba(2,6,23,.82);border:1px solid #334155;border-radius:14px;padding:6px 8px;box-shadow:0 8px 24px rgba(0,0,0,.45)">
             <div id="garageDock" class="flex items-end gap-2 flex-wrap justify-end" style="max-width:min(330px, calc(100vw - 110px))"></div>
@@ -6409,7 +6410,7 @@
         }, 900);
     }
     function launchRocket() {
-        const shack = document.querySelector('#garageDock [data-k="shack"]');
+        const shack = document.querySelector('#shackSpot [data-k="shack"]');
         // with the yacht parked out front, half the time the rocket goes there instead (and sometimes it drifts into the wheel)
         if (store.get('painWheelHouseLevel', 0) >= 6 && !rocketMishap && rocketGoesAstray()) return rocketYachtCrash();
         if (garage.shack && shack) return rocketShackCrash(shack);   // (the shack button exists even with the toy box folded)
@@ -6534,7 +6535,7 @@
     }
     function rocketShackCrash(shack) {
         padState(9500, '💥 RECOVERING DEBRIS (THE SHACK)'); padHit('shack');
-        const r0 = (shack.offsetParent ? shack : $('toyBtn')).getBoundingClientRect(), sx = r0.left + r0.width / 2, sy = r0.top, o = padOrigin();
+        const r0 = shack.getBoundingClientRect(), sx = r0.left + r0.width / 2, sy = r0.top, o = padOrigin();
         const r = document.createElement('div'); r.textContent = '🚀';
         r.style.cssText = `position:fixed;z-index:78;left:${o.x}px;top:${o.y}px;font-size:80px;line-height:1;pointer-events:none;transform:translate(-50%,-50%) rotate(-45deg);transition:top 1.6s cubic-bezier(.5,0,.9,.4)`;
         document.body.appendChild(r);
@@ -6564,7 +6565,7 @@
         }, 3050);
     }
     function renderGarage() {
-        const d = $('garageDock'); d.innerHTML = '';
+        const d = $('garageDock'); d.innerHTML = ''; $('shackSpot').innerHTML = '';
         [['shack', '🏜️', 'Your Shack in the Desert', () => moveToast('🏜️ ' + pick(['The shack is quiet. The desert is quiet. Kevin cannot find you here.', 'You sit on the shack porch and think about your parses.',
             'A tumbleweed rolls by. It has better DPS than Kevin.', 'No WiFi out here. Somehow the wheel still loads.', 'Rent collected from a lizard: it paid in gold.']))],
          ['ambulance', '🚑', "Biblehumping's Ambulance (click for siren)", driveAmbulance], ['police', '🚓', "ChAoTiC's Cop Car (click for whoop whoop)", drivePolice],
@@ -6572,7 +6573,7 @@
             if (!garage[k]) return;
             const b = document.createElement('button'); if (e[0] === '<') b.innerHTML = e; else b.textContent = e; b.title = tip; b.dataset.k = k;
             b.style.cssText = 'font-size:40px;line-height:1;cursor:pointer;background:none;border:none;filter:drop-shadow(0 3px 6px rgba(0,0,0,.7))';
-            b.addEventListener('click', () => { fn(); b.blur(); }); d.appendChild(b);
+            b.addEventListener('click', () => { fn(); b.blur(); }); (k === 'shack' ? $('shackSpot') : d).appendChild(b);   // the shack keeps its own spot in the bottom-left corner
         });
         renderPad(); renderFinger(); renderToyBox();
     }
@@ -7198,7 +7199,7 @@
             const dock = $('pet-' + k);
             if (dock && k !== 'clippy' && dock.lastElementChild) dock.lastElementChild.textContent = HORROR[k];
             if (k === 'clippy' && dock) { const tn = [...dock.childNodes].find(n => n.nodeType === 3); if (tn) tn.textContent = HORROR.clippy; }
-            const g = document.querySelector(`#garageDock [data-k="${k}"]`); if (g) g.textContent = HORROR[k];
+            const g = document.querySelector(`#garageDock [data-k="${k}"], #shackSpot [data-k="${k}"]`); if (g) g.textContent = HORROR[k];
         });
     }
     let retVisionWasOn = false;
@@ -7217,7 +7218,7 @@
             const dock = $('pet-' + k);
             if (dock && k !== 'clippy') swap(dock.lastElementChild, HORROR[k]);
             if (k === 'clippy' && dock) { const tn = [...dock.childNodes].find(n => n.nodeType === 3); if (tn) { const old = tn.textContent; tn.textContent = HORROR.clippy; undo.push(() => { tn.textContent = old; }); } }
-            swap(document.querySelector(`#garageDock [data-k="${k}"]`), HORROR[k]);
+            swap(document.querySelector(`#garageDock [data-k="${k}"], #shackSpot [data-k="${k}"]`), HORROR[k]);
         });
         if (!$('timeshareHouse').classList.contains('hidden')) swap($('houseEmoji'), '👻');
         Object.keys(HORROR_LINES).filter(k => pets[k]).forEach((k, i) => setTimeout(() => petSay(k, pick(HORROR_LINES[k])), 1200 + i * 1100));
