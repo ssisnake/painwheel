@@ -5615,6 +5615,7 @@
                 if (currentAdId === 'timeshare') setTimeout(() => buyTimeshare(), 1900);
                 if (currentAdId === 'retacademy') setTimeout(() => { kevinShield += 3; updateShieldBadge(); moveToast('🛡️ Ret Paladin Academy enrollment bonus: a free Kevin Shield! Your next 3 spins cannot land on Kevin. Lesson 2: you will still press Divine Shield by accident.'); chatBurst(['RET ACADEMY W', 'free bubble', 'the Light provides', 'divine shield EZ'], 3); }, 1900);
                 if (currentAdId === 'knobcreek' && window.knobCrash) { setTimeout(window.knobCrash, 1900); setTimeout(() => unlock('boughttop'), 3400); }   // you bought the top
+                if (currentAdId === 'lawsuit') setTimeout(trustedTheHealers, 1900);   // calling 1-800-NO-HEALS heals... the boss
             }
             else closeAd();
         });
@@ -6122,6 +6123,20 @@
         $('bossHpFill').style.width = pct + '%';
         $('bossHpText').textContent = `${Math.max(0, b.hp).toLocaleString()} / ${b.max.toLocaleString()} HP`;
         $('bossLast').textContent = b.last ? `Last hit: ${b.last.n} (${b.last.d.toLocaleString()}${b.last.c ? ' CRIT' : ''})` : 'Nobody has hit it yet';
+    }
+    // someone trusted Biblehumping and Platemage to heal: they healed Uwutek instead (+10 HP, everyone sees it)
+    function trustedTheHealers() {
+        const last = store.get('painWheelHealsAt', 0);
+        funEvent('💚 YOU TRUSTED BIBLEHUMPING AND PLATEMAGE TO HEAL. THEY HEALED UWUTEK. +10 HP 💚', 4500);
+        chatBurst(['they healed the BOSS', 'wrong target', 'healers diff', 'uwutek thanks you', 'class action incoming', '+10 hp to the boss lmao'], 4, 2500);
+        if (Date.now() - last < 10 * 60000) return;   // the boss only takes one "heal" per person every 10 minutes
+        store.set('painWheelHealsAt', Date.now());
+        if (bossState) {
+            renderBoss(Object.assign({}, bossState, { hp: Math.min(bossState.max, bossState.hp + 10) }));
+            const f = $('bossDmgFloat'); f.textContent = '+10'; f.style.color = '#4ade80'; f.classList.remove('dmg-float'); void f.offsetWidth; f.classList.add('dmg-float'); setTimeout(() => { f.style.color = ''; }, 1500);
+        }
+        sendEvent({ k: 'heals' });
+        setTimeout(() => sqPost('uwutek', 'someone trusted Biblehumping and Platemage to heal. they healed me. +10 hp. thank you for your service'), 3000);
     }
     function bossHitFloat(dmg) {
         const f = $('bossDmgFloat'); f.textContent = `-${dmg.toLocaleString()}`;
