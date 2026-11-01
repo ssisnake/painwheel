@@ -124,6 +124,39 @@
     /* nobody gets aboard without the yacht */
     #gate { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(5,3,2,.9); z-index: 70; padding: 16px; }
     #gate.open { display: flex; }
+
+    /* ---------- VIP room: the lonely gaming PC ---------- */
+    #vip { position: fixed; inset: 0; z-index: 55; display: none; background: #030204; overflow: hidden; }
+    #vip.open { display: block; }
+    #vipScene { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transition: transform 1.3s cubic-bezier(.6,0,.3,1), opacity .5s 1s; transform-origin: 50% 40%; }
+    #vipScene.zoom { transform: scale(5.2); opacity: 0; }
+    #vipScene svg { width: min(100vw, calc(100vh * 1000 / 560)); height: auto; display: block; }
+    #vipChair { cursor: pointer; }
+    #vipChair:hover .chairGlow { opacity: 1; }
+    .chairGlow { opacity: 0; transition: opacity .2s; }
+    .vipFan { transform-box: fill-box; transform-origin: center; animation: vipSpin 2.4s linear infinite; }
+    .vipMini { transform-box: fill-box; transform-origin: center; animation: vipSpin 7s linear infinite; }
+    .vipRgb { animation: vipHue 8s linear infinite; }
+    .vipNeon { animation: vipNeon 2.6s ease-in-out infinite alternate; }
+    @keyframes vipSpin { to { transform: rotate(360deg); } }
+    @keyframes vipHue { to { filter: hue-rotate(360deg); } }
+    @keyframes vipNeon { from { opacity: .78; } to { opacity: 1; } }
+    #vipBar { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); display: flex; gap: 10px; z-index: 2; }
+    #vipBar .btn { font-size: 16px; padding: 10px 18px; }
+    #vipMsg { position: absolute; left: 50%; top: 16px; transform: translateX(-50%); width: min(720px, calc(100vw - 32px)); text-align: center; font-weight: 800; font-size: 17px; color: #e9d5ff; text-shadow: 0 2px 6px #000; z-index: 2; }
+    /* the wheel inside the wheel */
+    #mini { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; background: radial-gradient(circle at 50% 45%, #10203a, #02040a 75%); }
+    #mini.open { display: flex; }
+    .bezel { border: 14px solid #111827; border-radius: 14px; box-shadow: 0 0 0 2px #374151, 0 0 40px rgba(56,189,248,.25); background: #050b18; padding: 14px; display: flex; align-items: center; justify-content: center; }
+    #miniCore { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+    #miniTitle { font-weight: 900; letter-spacing: .1em; color: #fde68a; font-size: 22px; text-transform: uppercase; }
+    #miniTitle small { display: block; font-size: 12px; letter-spacing: .04em; color: #94a3b8; text-transform: none; font-weight: 700; }
+    #miniWrap { position: relative; }
+    #miniWrap::after { content: ""; position: absolute; left: 50%; top: -6px; transform: translateX(-50%); border: 13px solid transparent; border-top: 24px solid #f8fafc; filter: drop-shadow(0 2px 2px #000); }
+    #miniRes { min-height: 50px; max-width: 460px; font-weight: 800; font-size: 17px; color: #f1f5f9; line-height: 1.35; }
+    #miniBtns { display: flex; gap: 10px; }
+    #miniBtns .btn { font-size: 16px; padding: 10px 18px; }
+    @media (prefers-reduced-motion: reduce) { .vipFan, .vipMini, .vipRgb, .vipNeon { animation: none; } #vipScene { transition: opacity .3s; } }
     @media (prefers-reduced-motion: reduce) { .glow, .plaque.new .t { animation: none; } }
 </style>
 </head>
@@ -202,6 +235,91 @@
     <button class="btn go" id="gateBack" style="margin-top:8px">🌀 Back to the Wheel</button>
 </div></div>
 
+
+<!-- VIP room: past the velvet rope there is a door, and past the door... -->
+<div id="vip">
+    <div id="vipMsg"></div>
+    <div id="vipScene">
+    <svg viewBox="0 0 1000 560" aria-label="A lonely gaming desk in an empty room">
+        <defs>
+            <radialGradient id="vSpot" cx="50%" cy="0%" r="75%"><stop offset="0" stop-color="#3b2a52" stop-opacity=".9"/><stop offset="1" stop-color="#030204" stop-opacity="0"/></radialGradient>
+            <linearGradient id="vScreen" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c4a6e"/><stop offset="1" stop-color="#082f49"/></linearGradient>
+            <linearGradient id="vRgb" x1="0" x2="1"><stop offset="0" stop-color="#f43f5e"/><stop offset=".33" stop-color="#a855f7"/><stop offset=".66" stop-color="#22d3ee"/><stop offset="1" stop-color="#4ade80"/></linearGradient>
+            <filter id="vGlow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
+            <g id="vWheel">
+                <circle r="34" fill="#111"/>
+                <path d="M0 0 L0 -32 A32 32 0 0 1 27.7 -16 Z" fill="#ef4444"/><path d="M0 0 L27.7 -16 A32 32 0 0 1 27.7 16 Z" fill="#facc15"/>
+                <path d="M0 0 L27.7 16 A32 32 0 0 1 0 32 Z" fill="#22c55e"/><path d="M0 0 L0 32 A32 32 0 0 1 -27.7 16 Z" fill="#f48cba"/>
+                <path d="M0 0 L-27.7 16 A32 32 0 0 1 -27.7 -16 Z" fill="#a855f7"/><path d="M0 0 L-27.7 -16 A32 32 0 0 1 0 -32 Z" fill="#0ea5e9"/>
+                <circle r="5" fill="#f8fafc"/>
+            </g>
+        </defs>
+        <rect width="1000" height="560" fill="#060409"/>
+        <rect width="1000" height="560" fill="url(#vSpot)"/>
+        <rect y="420" width="1000" height="140" fill="#0b0810"/>
+        <path d="M0 420 H1000" stroke="#1f1730" stroke-width="3"/>
+        <!-- a cobweb, because nobody has been back here in a while -->
+        <path d="M1000 0 L930 0 M1000 0 L1000 70 M1000 0 L945 55 M960 0 Q975 18 1000 30 M940 0 Q965 35 1000 50" stroke="#2e2440" stroke-width="2" fill="none"/>
+        <!-- neon sign -->
+        <g class="vipNeon">
+            <text x="500" y="78" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="58" font-weight="900" fill="#f0abfc" filter="url(#vGlow)">SIT DOWN????</text>
+            <text x="500" y="78" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="58" font-weight="900" fill="#fdf4ff" stroke="#e879f9" stroke-width="2">SIT DOWN????</text>
+        </g>
+        <!-- glow on the wall from the screens -->
+        <ellipse cx="500" cy="220" rx="380" ry="120" fill="#0ea5e9" opacity=".12" filter="url(#vGlow)"/>
+        <!-- monitors -->
+        <g>
+            <path d="M190 150 L330 140 L330 262 L190 268 Z" fill="#111827" stroke="#374151" stroke-width="3"/>
+            <path d="M200 158 L321 149 L321 254 L200 259 Z" fill="url(#vScreen)"/>
+            <g transform="translate(262 205) scale(.9,1)"><g class="vipMini"><use href="#vWheel"/></g></g>
+            <rect x="380" y="128" width="240" height="148" rx="6" fill="#111827" stroke="#374151" stroke-width="3"/>
+            <rect x="391" y="138" width="218" height="128" rx="3" fill="url(#vScreen)"/>
+            <g transform="translate(500 202) scale(1.45)"><g class="vipMini"><use href="#vWheel"/></g></g>
+            <text x="500" y="258" text-anchor="middle" font-family="Arial" font-size="13" font-weight="900" fill="#fde68a" letter-spacing="2">THE WHEEL</text>
+            <path d="M670 140 L810 150 L810 268 L670 262 Z" fill="#111827" stroke="#374151" stroke-width="3"/>
+            <path d="M679 149 L800 158 L800 259 L679 254 Z" fill="url(#vScreen)"/>
+            <g transform="translate(739 205) scale(.9,1)"><g class="vipMini"><use href="#vWheel"/></g></g>
+            <rect x="490" y="276" width="20" height="40" fill="#1f2937"/><rect x="455" y="312" width="90" height="10" rx="4" fill="#1f2937"/>
+            <rect x="255" y="266" width="14" height="48" fill="#1f2937"/><rect x="733" y="266" width="14" height="48" fill="#1f2937"/>
+        </g>
+        <!-- desk with the obligatory RGB strip -->
+        <rect x="120" y="318" width="760" height="18" rx="4" fill="#1c1917"/>
+        <rect class="vipRgb" x="130" y="336" width="740" height="5" rx="2" fill="url(#vRgb)"/>
+        <rect class="vipRgb" x="130" y="336" width="740" height="5" rx="2" fill="url(#vRgb)" filter="url(#vGlow)" opacity=".8"/>
+        <rect x="140" y="336" width="14" height="96" fill="#171310"/><rect x="846" y="336" width="14" height="96" fill="#171310"/>
+        <!-- keyboard, mouse, energy drink, headset -->
+        <rect class="vipRgb" x="400" y="304" width="170" height="14" rx="3" fill="url(#vRgb)" opacity=".85"/>
+        <rect x="402" y="303" width="166" height="11" rx="2" fill="#0f172a" opacity=".55"/>
+        <ellipse cx="610" cy="312" rx="12" ry="7" fill="#0f172a" stroke="#22d3ee" stroke-width="1.5"/>
+        <rect x="320" y="282" width="20" height="36" rx="4" fill="#16a34a"/><rect x="320" y="290" width="20" height="8" fill="#052e16"/><text x="330" y="297" text-anchor="middle" font-size="6" font-weight="900" fill="#bbf7d0" font-family="Arial">MANA</text>
+        <path d="M205 296 Q205 270 230 270 Q255 270 255 296" stroke="#e5e7eb" stroke-width="5" fill="none"/><rect x="198" y="292" width="14" height="22" rx="4" fill="#ef4444"/><rect x="248" y="292" width="14" height="22" rx="4" fill="#ef4444"/>
+        <!-- PC tower -->
+        <rect x="830" y="220" width="96" height="200" rx="6" fill="#0f0f14" stroke="#3f3f46" stroke-width="3"/>
+        <rect x="840" y="232" width="76" height="176" rx="3" fill="#13111c" opacity=".9"/>
+        <g class="vipRgb">
+            <g transform="translate(878 268)"><circle r="22" fill="none" stroke="url(#vRgb)" stroke-width="4"/><g class="vipFan"><path d="M0 0 C6 -14 14 -16 18 -8 Z M0 0 C14 6 16 14 8 18 Z M0 0 C-6 14 -14 16 -18 8 Z M0 0 C-14 -6 -16 -14 -8 -18 Z" fill="#a5b4fc" opacity=".8"/></g></g>
+            <g transform="translate(878 322)"><circle r="22" fill="none" stroke="url(#vRgb)" stroke-width="4"/><g class="vipFan"><path d="M0 0 C6 -14 14 -16 18 -8 Z M0 0 C14 6 16 14 8 18 Z M0 0 C-6 14 -14 16 -18 8 Z M0 0 C-14 -6 -16 -14 -8 -18 Z" fill="#a5b4fc" opacity=".8"/></g></g>
+            <g transform="translate(878 376)"><circle r="22" fill="none" stroke="url(#vRgb)" stroke-width="4"/><g class="vipFan"><path d="M0 0 C6 -14 14 -16 18 -8 Z M0 0 C14 6 16 14 8 18 Z M0 0 C-6 14 -14 16 -18 8 Z M0 0 C-14 -6 -16 -14 -8 -18 Z" fill="#a5b4fc" opacity=".8"/></g></g>
+        </g>
+        <!-- the chair (click it) -->
+        <g id="vipChair" role="button" tabindex="0" aria-label="Sit down">
+            <ellipse class="chairGlow" cx="500" cy="380" rx="120" ry="150" fill="#e879f9" opacity="0" filter="url(#vGlow)"/>
+            <path d="M430 230 Q500 200 570 230 L580 390 Q500 410 420 390 Z" fill="#18181b" stroke="#27272a" stroke-width="4"/>
+            <path d="M462 235 L470 385 M538 235 L530 385" stroke="#dc2626" stroke-width="10"/>
+            <rect x="470" y="240" width="60" height="26" rx="8" fill="#27272a"/>
+            <text x="500" y="258" text-anchor="middle" font-family="Arial" font-size="12" font-weight="900" fill="#dc2626">GMR</text>
+            <rect x="404" y="370" width="192" height="34" rx="12" fill="#27272a"/>
+            <rect x="494" y="404" width="12" height="44" fill="#3f3f46"/>
+            <path d="M440 462 L494 446 L560 462 M500 448 L470 476 M500 448 L532 476" stroke="#3f3f46" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="440" cy="466" r="7" fill="#09090b"/><circle cx="560" cy="466" r="7" fill="#09090b"/><circle cx="470" cy="480" r="7" fill="#09090b"/><circle cx="532" cy="480" r="7" fill="#09090b"/>
+        </g>
+    </svg>
+    </div>
+    <div id="vipBar"><button class="btn go" id="vipSit">🪑 Sit down</button><button class="btn" id="vipLeave">🚪 Leave quietly</button></div>
+    <div id="mini">
+        <div id="miniNest"></div>
+    </div>
+</div>
 <div id="say"></div>
 <div id="achPop"><small>ACHIEVEMENT UNLOCKED</small><b id="achName"></b></div>
 
@@ -304,7 +422,7 @@
     const PER_PAGE = SLOTS.length;
     // a few achievements get their own trophy
     const ICONS = { kevind: '🤡', yacht: '🛥️', castle: '🏰', debtfree: '💸', taxman: '🧾', goldcookie: '🍪', cluck: '🐔', clippy: '📎', fenderbender: '🚑',
-        soc1: '🔺', soc2: '💀', soc3: '🦉', soc4: '👁️', soc5: '🦎', soc6: '📜', aboard: '⚓', purpleheart: '💜', vault: '🏦', chocobar: '🍫', hearth: '🪨', first: '🩸' };
+        soc1: '🔺', soc2: '💀', soc3: '🦉', soc4: '👁️', soc5: '🦎', soc6: '📜', aboard: '⚓', wheelception: '🖥️', purpleheart: '💜', vault: '🏦', chocobar: '🍫', hearth: '🪨', first: '🩸' };
     const iconFor = (d) => ICONS[d.id] || (/^aipac/.test(d.id) ? '🏛️' : /^spins/.test(d.id) ? '🎡' : d.secret ? '💎' : '🏆');
     let page = 0;
     function renderCabinet(fresh) {
@@ -456,8 +574,116 @@
         'Just ocean. Endless, beautiful ocean. And a floating Kevin.', 'A naga waves. You wave back. It was a threat.', 'The Undermine Coast Guard is following you. Gallywix owes them money.',
         'A sea turtle drifts past. It toots. Somewhere, Whistlethy toots back.'];
     ['hsPort1', 'hsPort2'].forEach(id => $(id).addEventListener('click', () => { tone(520, 0, .25, 'sine', .05); say('🌊 ' + pick(VIEWS)); }));
-    $('hsRope').addEventListener('click', () => say('🚧 ' + pick(['Reb: "You\'re not on the list." It\'s your yacht. "Still not on the list."', 'VIP section. Inside: one folding chair and a Kevin.',
-        'The velvet rope is held up by two brass poles and pure ego.', 'Reb lets you in. Then out. Then in again. He is bored.'])));
+    // ---------- 🚧 VIP section: a door, a lonely gaming PC, and the wheel inside the wheel ----------
+    const VIP_MSGS = ['Past the velvet rope there is a door. Past the door there is... this.', 'The room is empty except for one desk. The monitors are on. Nobody has logged off in years.',
+        'It hums. The fans spin. The chair is still warm. Who was sitting here?', 'A neon sign. A gaming chair. A can of Mana Energy. It is calling to you.'];
+    let vipRopeClicks = 0;
+    $('hsRope').addEventListener('click', () => {
+        if (++vipRopeClicks === 1) { say('🚧 ' + pick(['Reb: "You\'re not on the list." It\'s your yacht. "Still not on the list."', 'The velvet rope is held up by two brass poles and pure ego.'])); return; }
+        say('🚧 Reb sighs and unhooks the rope. "Fine. Don\'t touch anything."', 2600);
+        setTimeout(openVip, 900);
+    });
+    function openVip() {
+        $('vipMsg').textContent = pick(VIP_MSGS);
+        $('vipScene').classList.remove('zoom'); $('mini').classList.remove('open'); $('vipBar').style.display = '';
+        $('vip').classList.add('open'); sfx.clunk();
+    }
+    function closeVip() { $('vip').classList.remove('open'); miniSpinning = false; }
+    $('vipLeave').addEventListener('click', () => { closeVip(); say('🚪 You back out slowly. The monitors keep spinning without you.'); });
+    function sitDown() {
+        if ($('vipScene').classList.contains('zoom')) return;
+        tone(140, 0, .35, 'sawtooth', .05); tone(95, .2, .3, 'sawtooth', .05);   // chair creak
+        $('vipMsg').textContent = 'You sit down. The chair molds to you. The monitors lean in closer.'; $('vipBar').style.display = 'none';
+        $('vipScene').classList.add('zoom');
+        setTimeout(() => { depth = 1; renderMini(); $('mini').classList.add('open'); $('vipMsg').textContent = ''; }, 1250);
+    }
+    $('vipSit').addEventListener('click', sitDown);
+    $('vipChair').addEventListener('click', sitDown);
+    $('vipChair').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); sitDown(); } });
+
+    const MINI = [
+        ['KEVIN', '#ef4444', () => pick(['Kevin. Even in here. Even in the tiny wheel.', 'You landed on Kevin. He waves from inside the monitor.', 'Kevin got you. On a wheel. Inside a wheel. On a yacht.'])],
+        ['THE WHEEL', '#facc15', null],
+        ['NO ONE', '#64748b', () => 'No One. The tiny wheel picked nobody. Somehow that is worse.'],
+        ['RET BUFF', '#f48cba', () => 'Ret Paladins got buffed. In the tiny wheel only. It does not carry over. Nothing ever does.'],
+        ['+1 GOLD', '#eab308', null],
+        ['REB', '#a855f7', () => pick(['Reb is drinking on the deck. In the tiny wheel, also on the deck. It\'s decks all the way down.', 'Reb: "You\'re not on the list." Not even in here.'])],
+        ['MURLOC', '#22c55e', () => 'MRGLGLGLGL. A tiny murloc runs across the screen.'],
+        ['THE WHEEL', '#fde047', null],
+        ['TOUCH GRASS', '#16a34a', () => 'The wheel suggests you go outside. You are on a yacht. In the ocean. There is no grass.'],
+        ['CHAOTIC', '#1d4ed8', () => 'ChAoTiC pulls up next to the monitor. "Sir, you\'ve been sitting here for 6 hours." Hooah.'],
+        ['THE FINGER', '#fca5a5', () => 'Biblehumping\'s finger spins the tiny wheel for you. It works better than yours. Sorry, eh.'],
+        ['REPAIR BILL', '#f97316', () => '100% durability loss. On a wheel. You don\'t even have armor in here.']
+    ];
+    let depth = 1, miniRot = 0, miniSpinning = false;
+    const MAX_DEPTH = 5;
+    function renderMini() {
+        // each level deeper is another monitor inside the monitor, and a smaller wheel
+        let html = '<div id="miniCore"><div id="miniTitle">The Wheel<small>' + (depth === 1 ? 'The wheel inside The Wheel' : 'Wheel depth: ' + depth + (depth >= 4 ? ' (turn back)' : '')) + '</small></div>' +
+            '<div id="miniWrap"><canvas id="miniCv"></canvas></div><div id="miniRes">Click spin. What could go wrong.</div>' +
+            '<div id="miniBtns"><button class="btn go" id="miniSpin">🎡 SPIN</button><button class="btn" id="miniUp">' + (depth > 1 ? '⬆️ Go up a level' : '🧍 Stand up') + '</button></div></div>';
+        for (let i = 1; i < depth; i++) html = '<div class="bezel">' + html + '</div>';
+        $('miniNest').innerHTML = '<div class="bezel">' + html + '</div>';
+        const size = Math.max(150, Math.round(Math.min(innerHeight * .52, innerWidth * .6, 440) * Math.pow(.8, depth - 1)));
+        const cv = $('miniCv'), dpr = Math.min(2, devicePixelRatio || 1); cv.width = cv.height = size * dpr; cv.style.width = cv.style.height = size + 'px';
+        drawMini();
+        $('miniSpin').addEventListener('click', spinMini);
+        $('miniUp').addEventListener('click', () => {
+            if (miniSpinning) return;
+            if (depth > 1) { depth--; renderMini(); $('miniRes').textContent = 'You climb back up one wheel. It feels like progress. It is not.'; }
+            else { closeVip(); say('🧍 You stand up. Your back cracks. It is 4 AM. How is it 4 AM?', 4500); }
+        });
+    }
+    function drawMini() {
+        const cv = $('miniCv'); if (!cv) return;
+        const c = cv.getContext('2d'), w = cv.width, r = w / 2 - 4, n = MINI.length, a = Math.PI * 2 / n;
+        c.clearRect(0, 0, w, w); c.save(); c.translate(w / 2, w / 2); c.rotate(miniRot);
+        MINI.forEach(([label, col], i) => {
+            c.beginPath(); c.moveTo(0, 0); c.arc(0, 0, r, i * a, (i + 1) * a); c.closePath(); c.fillStyle = col; c.fill();
+            c.strokeStyle = 'rgba(0,0,0,.45)'; c.lineWidth = Math.max(1, w / 300); c.stroke();
+            c.save(); c.rotate(i * a + a / 2); c.textAlign = 'right'; c.textBaseline = 'middle';
+            c.font = '900 ' + Math.round(w / 26) + 'px Arial, sans-serif'; c.fillStyle = (col === '#1d4ed8' || col === '#64748b' || col === '#a855f7') ? '#fff' : '#111';
+            c.fillText(label, r - w / 40, 0); c.restore();
+        });
+        c.beginPath(); c.arc(0, 0, w / 14, 0, Math.PI * 2); c.fillStyle = '#f8fafc'; c.fill(); c.restore();
+    }
+    function spinMini() {
+        if (miniSpinning) return;
+        miniSpinning = true; $('miniRes').textContent = 'Spinning...';
+        const n = MINI.length, a = Math.PI * 2 / n, idx = Math.floor(Math.random() * n);
+        // the pointer is at the top (-90deg); land the middle of slice idx there, with a little wobble
+        const want = -Math.PI / 2 - (idx * a + a / 2) + (Math.random() - .5) * a * .7;
+        const start = miniRot, end = start + (Math.PI * 2) * (5 + Math.floor(Math.random() * 3)) + (((want - start) % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2);
+        const t0 = performance.now(), dur = 3600; let lastSlice = -1;
+        (function step(now) {
+            if (!miniSpinning) return;
+            const t = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - t, 4);
+            miniRot = start + (end - start) * e; drawMini();
+            const under = Math.floor((((-Math.PI / 2 - miniRot) % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2) / a);
+            if (under !== lastSlice) { lastSlice = under; tone(1500, 0, .025, 'square', .03); }
+            if (t < 1) requestAnimationFrame(step); else miniDone(idx);
+        })(t0);
+    }
+    function miniDone(idx) {
+        miniSpinning = false; award('wheelception');
+        const [label, , line] = MINI[idx];
+        if (label === 'THE WHEEL') {
+            if (depth >= MAX_DEPTH) {
+                sfx.wrong(); depth = 1; renderMini();
+                $('miniRes').textContent = 'You went too deep. It\'s Kevins all the way down. You wake up back at the first wheel.';
+                return;
+            }
+            sfx.open(); depth++; renderMini();
+            $('miniRes').textContent = pick(['You landed on THE WHEEL. Here is a smaller wheel. Spin it.', 'Another wheel?? Inside the wheel?? Inside THE Wheel??', 'We have to go deeper.', 'It\'s wheels. It\'s always been wheels.']);
+            return;
+        }
+        if (label === '+1 GOLD') { gold = Math.min(1e300, gold + 1); saveGold(); sfx.coins(); $('miniRes').textContent = '+1 gold! It\'s a tiny wheel. What did you expect.'; return; }
+        tone(660, 0, .15, 'triangle', .07); tone(880, .12, .2, 'triangle', .07);
+        $('miniRes').textContent = line();
+    }
+    addEventListener('resize', () => { if ($('mini').classList.contains('open') && !miniSpinning) renderMini(); });
+    addEventListener('keydown', (e) => { if (e.key === 'Escape' && $('vip').classList.contains('open')) closeVip(); });
+
     $('hsGauge').addEventListener('click', () => {
         sfx.hiss(); const g = $('hsGauge'); g.classList.remove('spinGauge'); void g.offsetWidth; g.classList.add('spinGauge');
         say('⏲️ ' + pick(['Pressure: KEVIN. Do not tap the gauge.', 'You tapped the gauge. The pipes hiss angrily.', 'Left gauge: "FINE". Right gauge: "THIS IS FINE".', 'The needle points at "Ret Paladin DPS". It is off the chart.']));

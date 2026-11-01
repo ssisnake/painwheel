@@ -3791,6 +3791,7 @@
         { id: 'cartel',     name: 'Wrong Desert',             desc: 'Blow up your own shack enough times that the Cartel comes for you.', secret: true, secretName: true },
         { id: 'rui',        name: 'Raiding Under the Influence', desc: 'Get pulled over by ChAoTiC after one too many road beers.', secret: true },
         { id: 'queue',      name: 'Position 1',               desc: 'Sit through the entire fake login queue after a disconnect.', secret: true },
+        { id: 'wheelception', name: 'The Wheel Inside The Wheel', desc: "Sit down at the lonely gaming PC in the yacht's VIP room and spin the wheel inside The Wheel.", secret: true },
         { id: 'purpleheart', name: 'Purple Heart',            desc: 'Wounded in the line of duty: you survived the Fish Incident. (Land on God_Help_Us.)' },
         { id: 'cluck',      name: 'CLUCK!',                   desc: 'Complete the Westfall chicken\'s quest.' },
         { id: 'clippy',     name: "It Looks Like You're Adopting a Paperclip", desc: 'Find and adopt the secret pet.', secret: true, secretName: true }
@@ -5319,7 +5320,7 @@
             let lastId = null; try { lastId = localStorage.getItem('painWheelAdLastId'); } catch (e) {}
             const adCd = store.get('painWheelAdCooldown', {});
             const done = (id) => (id === 'timeshare' && store.get('painWheelTimeshare', false)) || (id === 'goblincard' && store.get('painWheelGoblinCard', false))
-                || (id === 'aotc-carry' && store.get('painWheelAotcCarry', false)) || id === 'tsukblock' || (adCd[id] && Date.now() < adCd[id]);   // one-time rewards stay gone; money ads rest for 4 hours
+                || (id === 'aotc-carry' && store.get('painWheelAotcCarry', false)) || (id === 'clippy' && store.get('painWheelPets', {}).clippy) || id === 'tsukblock' || (adCd[id] && Date.now() < adCd[id]);   // one-time rewards stay gone; money ads rest for 4 hours
             const pool = POPUP_ADS.filter(a => a.id !== lastId && !done(a.id));
             const pickAd = POPUP_ADS.find(a => a.id === forceId) || pool[Math.floor(Math.random() * pool.length)];
             if (!forceId && !tsukAllows(pickAd.id)) {   // TsukBlock ate it; the ad timer starts over
