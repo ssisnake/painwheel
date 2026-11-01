@@ -1036,6 +1036,7 @@
 
     const VIDEO_ASMON = "media/video_asmon.mp4?v=78682d89";
     const GIF_LOST = "media/gif_lost.gif?v=0694f342";      // Enron Ethics Handbook
+    const PHOTO_DOUBLE_ENDER = "media/photo_double_ender.jpg?v=436a5e85";
     const PHOTO_ROAD_BEERS = "media/photo_road_beers.jpg?v=d112894f";
     const PHOTO_GNOME = "media/photo_gnome.jpg?v=616157df";  // no croissants today, boss
 
@@ -1171,7 +1172,8 @@
         { id: "STALE_CHEETOS", n: 1, label: "🧀 A Stale Half Eaten Bag of Cheetos 🧀", pill: "STALE CHEETOS", bg: "#f97316", text: "#020617", border: "#fed7aa", fill: "cheeto", color: "text-orange-400", glow: "bg-orange-500", key: "H", rig: "CHT",
           win: { title: "🧀 A STALE HALF EATEN BAG OF CHEETOS 🧀", size: SIZE.small, sub: (s) => `Left open on the desk since Tuesday. Chewy AND dusty! (Slice #${s}).` } },
         { id: "DOUBLE_ENDER", n: 1, label: "🍆 Lovingly Used Double Ender 🍆", pill: "DOUBLE ENDER", bg: "#9333ea", text: "#fae8ff", border: "#e879f9", color: "text-fuchsia-400", glow: "bg-purple-600", key: "x", rig: "DBL",
-          win: { title: "🍆 LOVINGLY USED DOUBLE ENDER 🍆", size: SIZE.mid, sub: (s) => `Pre-owned, battle-tested, and ready for raid night (Slice #${s})!` } },
+          win: { title: "🍆 LOVINGLY USED DOUBLE ENDER 🍆", size: SIZE.mid, sub: (s) => `Pre-owned, battle-tested, and ready for raid night (Slice #${s})!`,
+                 media: { src: PHOTO_DOUBLE_ENDER, fallback: null, caption: "📸 PRE-OWNED. BATTLE-TESTED. TWICE." } } },
         { id: "RIDDLE_1", n: 1, label: "⚔️ Riddle of Steel Team 1 ⚔️", pill: "RIDDLE OF STEEL 1", bg: "#475569", text: "#f1f5f9", border: "#cbd5e1", fill: "steel", color: "text-slate-300", glow: "bg-slate-500", key: "R", rig: "RS1",
           win: { title: "⚔️ RIDDLE OF STEEL — TEAM 1 ⚔️", size: SIZE.small, sub: () => "AOTC wasn't in sight before, and it wasn't in sight after." } },
         { id: "RIDDLE_2", n: 1, label: "⚔️ Riddle of Steel Team 2 ⚔️", pill: "RIDDLE OF STEEL 2", bg: "#334155", text: "#e2e8f0", border: "#94a3b8", fill: "steel", color: "text-slate-200", glow: "bg-slate-400", key: "@", rig: "RS2",
