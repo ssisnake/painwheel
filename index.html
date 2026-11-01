@@ -7027,7 +7027,7 @@
         const d = $('garageDock'); d.innerHTML = ''; $('shackSpot').innerHTML = '';
         [['shack', shackHTML(), 'Your Shack in the Desert', () => moveToast('🏜️ ' + pick(['The shack is quiet. The desert is quiet. Kevin cannot find you here.', 'You sit on the shack porch and think about your parses.',
             'A tumbleweed rolls by. It has better DPS than Kevin.', 'No WiFi out here. Somehow the wheel still loads.', 'Rent collected from a lizard: it paid in gold.']))],
-         ['ambulance', '🚑', "Biblehumping's Ambulance (click for siren)", driveAmbulance], ['police', '🚓', "ChAoTiC's Cop Car (click for whoop whoop)", drivePolice],
+         ['ambulance', ambSprite(false, 0.75), "Biblehumping's Ambulance (click for siren)", driveAmbulance], ['police', copSprite(false, 0.75), "ChAoTiC's Cop Car (click for whoop whoop)", drivePolice],
          ['phone', SVG_PHONE, "Vince's 1980s Brick Phone (click to take the call)", vinceCall], ['voodoo', SVG_DOLL, 'Kevin Voodoo Doll (click to poke)', pokeVoodoo]].forEach(([k, e, tip, fn]) => {
             if (!garage[k]) return;
             const b = document.createElement('button'); if (e[0] === '<') b.innerHTML = e; else b.textContent = e; b.title = tip; b.dataset.k = k;
