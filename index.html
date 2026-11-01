@@ -212,6 +212,10 @@
         body.party-on #garageDock button, body.party-on #shackSpot button { animation: petDance .6s ease-in-out infinite alternate; }
         body.is-spinning #petDock *, body.is-spinning .pet-walker *, body.is-spinning #garageDock *, body.is-spinning #shackSpot *, body.is-spinning #houseEmoji, body.is-spinning .siren-glow, body.is-spinning .cop-sprite, body.is-spinning #goldenCookie { animation-play-state: paused !important; }
         .pet-walker .pet-em { will-change: transform; }
+        /* the possessed finger glows a slow purple (no flashing) */
+        .finger-cursed { animation: fingerCurse 2.8s ease-in-out infinite alternate; }
+        @keyframes fingerCurse { from { filter: drop-shadow(0 3px 4px rgba(0,0,0,.6)) drop-shadow(0 0 4px rgba(168,85,247,.5)); } to { filter: drop-shadow(0 3px 4px rgba(0,0,0,.6)) drop-shadow(0 0 14px rgba(168,85,247,.95)); } }
+        body.is-spinning .finger-cursed { animation-play-state: paused; }
         /* invisible overlays shouldn't keep animating in the background */
         #evelynDimOverlay.opacity-0 *, #sponsorBanner.opacity-0 * { animation-play-state: paused !important; }
         body.has-hearth header { padding-right: 76px; }
@@ -758,16 +762,7 @@
                     </svg>
                 </div>
                 <div class="absolute inset-0 rounded-full shadow-[0_0_70px_rgba(220,38,38,0.18)] pointer-events-none"></div>
-                <div id="fingerSpin" aria-hidden="true" style="position:absolute;left:50%;top:50%;width:0;height:0;z-index:12;pointer-events:none;will-change:transform"><div id="nickFinger" style="display:none;position:absolute;left:0;top:0;width:74px;pointer-events:none;transform:translate(-50%,-102%) rotate(-24deg);transition:transform .25s">
-                    <svg viewBox="0 0 120 52" width="74" height="32">
-                        <ellipse cx="62" cy="7" rx="26" ry="5" fill="none" stroke="#facc15" stroke-width="3" opacity=".9"/>
-                        <rect x="6" y="18" width="108" height="26" rx="13" fill="#f2c6a0" stroke="#b07a52" stroke-width="2"/>
-                        <rect x="88" y="21" width="22" height="20" rx="8" fill="#fde7d6" stroke="#c99470" stroke-width="1.5"/>
-                        <path d="M44 22 q-4 9 0 18 M60 22 q-4 9 0 18" fill="none" stroke="#c99470" stroke-width="2" stroke-linecap="round"/>
-                        <rect x="6" y="15" width="22" height="32" rx="4" fill="#f5deb3" stroke="#c4a574" stroke-width="1.5"/>
-                        <circle cx="13" cy="25" r="1.4" fill="#c4a574"/><circle cx="21" cy="25" r="1.4" fill="#c4a574"/><circle cx="13" cy="37" r="1.4" fill="#c4a574"/><circle cx="21" cy="37" r="1.4" fill="#c4a574"/>
-                    </svg>
-                </div></div>
+                <div id="fingerSpin" aria-hidden="true" style="position:absolute;left:50%;top:50%;width:0;height:0;z-index:12;pointer-events:none;will-change:transform"><div id="nickFinger" style="display:none;position:absolute;left:0;top:0;width:112px;pointer-events:none;transform:translate(-50%,-102%) rotate(-24deg);transition:transform .25s"><img id="nickFingerImg" alt="" width="112" style="display:block;width:112px;height:auto;filter:drop-shadow(0 3px 4px rgba(0,0,0,.6))"></div></div>
                 <canvas id="wheelCanvas" class="block pointer-events-none" style="position:absolute; width:130%; height:130%; left:-15%; top:-15%;"></canvas>
                 <button id="centerSpinBtn" title="Click to Spin" class="absolute w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-slate-950 border-4 border-amber-400/90 shadow-[0_0_25px_rgba(0,0,0,0.9)] flex flex-col items-center justify-center hover:scale-105 active:scale-95 transition cursor-pointer z-10 group">
                     <span class="text-[10px] mono uppercase tracking-widest text-slate-400 group-hover:text-amber-300"><span class="slice-total">117</span><span id="rigTell" class="text-slate-400"></span></span>
@@ -1056,6 +1051,8 @@
     const PHOTO_KFC_Q = "media/photo_kfc_q.jpg?v=95e2027e";
     const PHOTO_GYM = "media/photo_gym.jpg?v=36fc90f4";
     const FISH_ART = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 240'><rect width='360' height='240' rx='18' fill='%230c4a6e'/><circle cx='60' cy='60' r='6' fill='%237dd3fc' opacity='.6'/><circle cx='80' cy='38' r='4' fill='%237dd3fc' opacity='.5'/><circle cx='300' cy='50' r='5' fill='%237dd3fc' opacity='.5'/><path d='M262 120 L338 70 L326 120 L338 170 Z' fill='%23f59e0b' stroke='%2378350f' stroke-width='4' stroke-linejoin='round'/><ellipse cx='170' cy='120' rx='105' ry='66' fill='%23fbbf24' stroke='%2378350f' stroke-width='5'/><path d='M150 58 Q178 22 214 60' fill='%23f59e0b' stroke='%2378350f' stroke-width='4'/><path d='M188 110 Q205 128 186 146' fill='none' stroke='%23b45309' stroke-width='4'/><path d='M210 104 Q230 126 208 152' fill='none' stroke='%23b45309' stroke-width='4'/><circle cx='112' cy='104' r='26' fill='%23fff' stroke='%2378350f' stroke-width='4'/><circle cx='114' cy='106' r='4.5' fill='%23111'/><path d='M90 132 Q112 142 134 132' fill='none' stroke='%2392400e' stroke-width='3' opacity='.8'/><path d='M92 138 Q112 148 132 138' fill='none' stroke='%2392400e' stroke-width='2.5' opacity='.6'/><path d='M78 152 Q90 146 100 154' fill='none' stroke='%2378350f' stroke-width='4' stroke-linecap='round'/><text x='22' y='222' font-family='Arial' font-size='15' font-weight='700' fill='%23bae6fd'>he has seen things.</text></svg>";
+    const PHOTO_FINGER = "media/photo_finger.png?v=3ac75bb8";
+    const PHOTO_FINGER_CURSED = "media/photo_finger_cursed.png?v=696b65c0";
     const PHOTO_ROAD_BEERS = "media/photo_road_beers.jpg?v=d112894f";
     const PHOTO_GNOME = "media/photo_gnome.jpg?v=616157df";  // no croissants today, boss
 
@@ -6875,7 +6872,13 @@
     }
 
     // ---------- 🖐️ Biblehumping's Finger: rests on the SPIN button ----------
-    function renderFinger() { window.__fingerOn = !!garage.finger; $('nickFinger').style.display = garage.finger ? 'block' : 'none'; }
+    function renderFinger() {   // the plain finger, until the voodoo doll gets hold of it
+        window.__fingerOn = !!garage.finger; $('nickFinger').style.display = garage.finger ? 'block' : 'none';
+        if (!garage.finger) return;
+        const img = $('nickFingerImg'), want = garage.voodoo ? PHOTO_FINGER_CURSED : PHOTO_FINGER;
+        if (img.getAttribute('src') !== want) img.src = want;
+        img.classList.toggle('finger-cursed', !!garage.voodoo);
+    }
     function fingerPress(then) {
         const f = $('nickFinger'); f.style.transform = 'translate(-50%,-62%) rotate(-24deg) scale(.95)';
         setTimeout(() => { f.style.transform = ''; then && then(); }, 260);
