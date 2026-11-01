@@ -437,6 +437,12 @@
                 <button id="xferImportBtn" class="shrink-0 px-3 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold cursor-pointer">Import</button></div>
                 <div id="xferMsg" class="text-xs mt-1.5 text-amber-300 font-bold min-h-[1rem]"></div>
             </div>
+            <div id="renameSection" class="mt-5 pt-4 border-t border-slate-800 text-sm">
+                <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">🪪 Changed your name?</div>
+                <div class="text-[11px] text-slate-400 mb-2">Type your old name and its guild stats get merged into your current name (spins, Kevins, achievements and the rest add together). The old name disappears from the board.</div>
+                <div class="flex gap-2"><input id="renameOld" maxlength="20" placeholder="Old name (e.g. meh)" class="flex-1 min-w-0 bg-slate-950 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-200">
+                <button id="renameBtn" class="shrink-0 px-3 rounded bg-sky-700 hover:bg-sky-600 text-white text-xs font-bold cursor-pointer">Merge into my name</button></div>
+            </div>
             <div id="moveSection" class="mt-5 pt-4 border-t border-slate-800 text-sm"></div>
             <p id="statsNote" class="text-[11px] text-slate-500 mt-4">Stats are saved in this browser only.</p>
         </div>
@@ -3883,7 +3889,12 @@
     (function setupPlayer() {
         const input = $('playerName'), welcome = $('welcome');
         input.value = playerName;
-        const save = (v) => { playerName = (v || '').trim().slice(0, 20); store.set('painWheelPlayer', playerName); input.value = playerName; flushSheetImport(); };
+        const save = (v) => {
+            const old = playerName, nu = (v || '').trim().slice(0, 20);
+            playerName = nu; store.set('painWheelPlayer', playerName); input.value = playerName; flushSheetImport();
+            // changed your name? bring your guild stats along (instead of starting a second row on the board)
+            if (old && nu && old.toLowerCase() !== nu.toLowerCase() && LEADERBOARD_URL && confirm(`Move your guild leaderboard stats from "${old}" to "${nu}"?\n\nOK = keep your stats under the new name.\nCancel = start fresh as "${nu}".`)) sendRename(old);
+        };
         input.addEventListener('change', () => save(input.value));
         input.addEventListener('keydown', (e) => { e.stopPropagation(); if (e.key === 'Enter') input.blur(); });
         if (!playerName && !store.get('painWheelSkippedName', false)) {
@@ -3894,9 +3905,24 @@
         $('welcomeForm').addEventListener('submit', (e) => { e.preventDefault(); save($('welcomeName').value); welcome.classList.add('hidden'); welcome.classList.remove('flex'); });
         $('welcomeSkip').addEventListener('click', () => { store.set('painWheelSkippedName', true); welcome.classList.add('hidden'); welcome.classList.remove('flex'); });
         $('statsBtn').addEventListener('click', () => { renderStats(); loadGuildBoard(); const p = $('statsPanel'); p.classList.remove('hidden'); p.classList.add('flex'); $('statsBtn').blur(); });
+        $('renameOld').addEventListener('keydown', (e) => e.stopPropagation());
+        $('renameBtn').addEventListener('click', () => {
+            const old = $('renameOld').value.trim();
+            if (!old) return;
+            if (!playerName) { moveToast('Set your name first (top of the page), then merge.'); return; }
+            if (old.toLowerCase() === playerName.toLowerCase()) { moveToast("That's already your name."); return; }
+            if (!confirm(`Merge all guild stats from "${old}" into "${playerName}"? The old name disappears from the board.`)) return;
+            sendRename(old); $('renameOld').value = '';
+            setTimeout(() => { if (typeof loadGuildBoard === 'function') loadGuildBoard(); }, 4000);
+        });
         $('statsClose').addEventListener('click', () => { const p = $('statsPanel'); p.classList.add('hidden'); p.classList.remove('flex'); });
     })();
 
+    function sendRename(oldName) {
+        if (!LEADERBOARD_URL || !oldName || !playerName) return;
+        try { fetch(LEADERBOARD_URL, { method: 'POST', mode: 'no-cors', keepalive: true, body: JSON.stringify({ name: playerName, rename: oldName }) }).catch(() => {}); } catch (e) {}
+        moveToast(`🪪 Moving your stats from "${oldName}" to "${playerName}". The board catches up within a minute.`);
+    }
     /* ===================== GUILD LEADERBOARD (Google Sheet) =====================
        Only active when config.js sets leaderboardUrl (the GitHub Pages version).
        Every fair or rigged spin from a named player is sent to the Sheet; rigged
