@@ -6092,7 +6092,7 @@
         const ltr = Math.random() < 0.5, lanes = [66, Math.round(innerHeight * 0.45), innerHeight - 150];
         const el = document.createElement('div');
         el.style.cssText = `position:fixed;z-index:63;top:${pick(lanes)}px;left:0;font-size:44px;line-height:1;pointer-events:none;transform:translateX(${ltr ? -120 : innerWidth + 40}px);transition:transform 14s linear`;
-        el.innerHTML = `<div style="display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:4px;width:max-content;max-width:260px;background:#fffbe6;color:#111;font-size:12.5px;font-weight:800;line-height:1.3;padding:4px 9px;border-radius:9px;border:2px solid #111;white-space:normal"></div><div class="siren-glow" style="font-size:18px;text-align:center">${cop ? '🚨🎖️' : '🚨🍁'}</div><span style="display:inline-block;${ltr === cop ? 'transform:scaleX(-1)' : ''}">${cop ? '🚓' : '🚑'}</span>`;
+        el.innerHTML = `<div style="display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:4px;width:max-content;max-width:360px;background:#fffbe6;color:#111;font-size:17px;font-weight:800;line-height:1.3;padding:6px 12px;border-radius:9px;border:2px solid #111;white-space:normal"></div><div class="siren-glow" style="font-size:18px;text-align:center">${cop ? '🚨🎖️' : '🚨🍁'}</div><span style="display:inline-block;${ltr === cop ? 'transform:scaleX(-1)' : ''}">${cop ? '🚓' : '🚑'}</span>`;
         document.body.appendChild(el);
         requestAnimationFrame(() => requestAnimationFrame(() => { el.style.transform = `translateX(${ltr ? innerWidth + 40 : -120}px)`; }));
         setTimeout(() => { const b = el.firstChild; b.style.display = 'block'; b.textContent = (cop ? '🚓 ChAoTiC: ' : '🚑 Biblehumping: ') + (!cop && garage.finger && Math.random() < 0.5 ? pick(PATROL_LINES.bible.filter(l => /finger/i.test(l) && !/^Lost/.test(l))) : pick(PATROL_LINES[cop ? 'cop' : 'bible'].filter(l => cop || garage.finger || !/my finger|SPIN button/i.test(l)))); setTimeout(() => { b.style.display = 'none'; }, 4200); }, 4500);
@@ -6305,7 +6305,7 @@
         const hasDonut = !!(bag['Golden Chocolate Donut'] && bag['Golden Chocolate Donut'].n > 0);
         const donut = hasDonut && ++copClicks >= donutEvery;
         if (donut) { copClicks = 0; donutEvery = 2 + Math.floor(Math.random() * 2); }
-        const v = vehicles.cop = { el: vehicleEl('<div class="veh-bub" style="display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);white-space:nowrap;background:#fffbe6;color:#111;font-size:13px;font-weight:800;padding:3px 9px;border-radius:9px;border:1.5px solid #111"></div><div class="siren-glow" style="font-size:30px">🚨</div><span style="display:inline-block;transform:scaleX(-1)">🚓</span>'),
+        const v = vehicles.cop = { el: vehicleEl('<div class="veh-bub" style="display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);white-space:nowrap;background:#fffbe6;color:#111;font-size:16px;font-weight:800;padding:4px 11px;border-radius:9px;border:1.5px solid #111"></div><div class="siren-glow" style="font-size:30px">🚨</div><span style="display:inline-block;transform:scaleX(-1)">🚓</span>'),
             x: -160, vx: (innerWidth / 2 + 80) / 1.6, stopAt: innerWidth / 2 - 45, paused: 0, stop: () => {}, donut };
         if (donut) chatBurst(['he stopped for a donut', 'JUSTIN NO', 'priorities', 'the golden donut', 'code 7: donut break'], 3, 3000);
         else chatBurst(['WOOP WOOP', "chaotic's on patrol", 'pull over', 'license and registration', '🚓🚓🚓', 'that is the sound of da police'], 3, 2500);
@@ -6368,7 +6368,7 @@
         // ChAoTiC rolls up above the fire with commentary
         const cop = document.createElement('div');
         cop.style.cssText = `position:fixed;z-index:78;bottom:${VEH_Y + 95}px;left:${Math.min(innerWidth - 300, Math.max(20, x - 40))}px;font-size:62px;line-height:1;pointer-events:none;opacity:0;transform:translateY(20px);transition:opacity .5s, transform .5s`;
-        cop.innerHTML = '<div style="position:absolute;bottom:100%;left:0;margin-bottom:6px;width:max-content;max-width:280px;background:#fffbe6;color:#111;font-size:14px;font-weight:800;padding:5px 10px;border-radius:10px;border:2px solid #111;box-shadow:2px 2px 0 #111"></div><span style="display:inline-block;transform:scaleX(-1)">🚓</span>';
+        cop.innerHTML = '<div style="position:absolute;bottom:100%;left:0;margin-bottom:6px;width:max-content;max-width:360px;background:#fffbe6;color:#111;font-size:17px;font-weight:800;padding:5px 10px;border-radius:10px;border:2px solid #111;box-shadow:2px 2px 0 #111"></div><span style="display:inline-block;transform:scaleX(-1)">🚓</span>';
         cop.firstChild.textContent = '🚓 ChAoTiC: ' + pickFresh(COMBINE_LINES);   // no repeats until all 8 have shown
         document.body.appendChild(cop);
         setTimeout(() => { cop.style.opacity = '1'; cop.style.transform = 'translateY(0)'; }, 1200);
@@ -6411,7 +6411,7 @@
             o.innerHTML = `<div style="width:min(440px,100%);background:#0f172a;border:2px solid #f97316;border-radius:18px;padding:20px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6)">
                 <div style="font-size:46px;line-height:1">🚑💥🚓</div>
                 <div style="font-weight:900;font-size:22px;color:#fdba74;margin-top:8px">Biblehumping and ChAoTiC are now arguing whose fault it is.</div>
-                <div data-arg style="margin-top:12px;text-align:left;font-size:13px;line-height:1.5;min-height:120px"></div>
+                <div data-arg style="margin-top:12px;text-align:left;font-size:15.5px;line-height:1.5;min-height:120px"></div>
                 <button data-x style="margin-top:12px;padding:6px 18px;border-radius:8px;background:#334155;color:#fff;font-weight:800;cursor:pointer;border:none">File the insurance claim</button></div>`;
             document.body.appendChild(o);
             const box = o.querySelector('[data-arg]');
@@ -6476,7 +6476,7 @@
         const mk = (emoji, flip, from) => {
             const el = document.createElement('div');
             el.style.cssText = `position:fixed;z-index:79;bottom:${VEH_Y}px;left:${from}px;font-size:66px;line-height:1;pointer-events:none;transition:left 1.4s cubic-bezier(.2,.8,.3,1), opacity .8s`;
-            el.innerHTML = `<div style="display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:6px;width:max-content;max-width:min(300px,40vw);background:#fffbe6;color:#111;font-size:14px;font-weight:800;line-height:1.3;padding:5px 10px;border-radius:10px;border:2px solid #111;box-shadow:2px 2px 0 #111;white-space:normal;text-align:left"></div><div class="siren-glow" style="font-size:24px;text-align:center">🚨</div><span style="display:inline-block;${flip ? 'transform:scaleX(-1)' : ''}">${emoji}</span>`;
+            el.innerHTML = `<div style="display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:6px;width:max-content;max-width:min(380px,45vw);background:#fffbe6;color:#111;font-size:17px;font-weight:800;line-height:1.3;padding:5px 10px;border-radius:10px;border:2px solid #111;box-shadow:2px 2px 0 #111;white-space:normal;text-align:left"></div><div class="siren-glow" style="font-size:24px;text-align:center">🚨</div><span style="display:inline-block;${flip ? 'transform:scaleX(-1)' : ''}">${emoji}</span>`;
             document.body.appendChild(el); return el;
         };
         const ambV = mk('🚑', false, innerWidth + 40), copV = mk('🚓', true, -140);
