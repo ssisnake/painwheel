@@ -609,7 +609,7 @@
 
     <!-- Achievement toast -->
     <div id="achToast" class="fixed z-[73] right-4 bottom-4 hidden items-center gap-3 px-4 py-3 rounded-xl border-2 border-amber-400 shadow-2xl" style="background: linear-gradient(135deg,#1c1917,#422006); max-width: calc(100vw - 32px);">
-        <div class="text-3xl">🏆</div>
+        <div id="achToastIcon" class="text-3xl">🏆</div>
         <div>
             <div class="text-[10px] uppercase tracking-widest text-amber-300 font-bold">Achievement Unlocked</div>
             <div id="achToastTitle" class="font-black text-amber-50"></div>
@@ -3788,9 +3788,11 @@
         { id: 'cartel',     name: 'Wrong Desert',             desc: 'Blow up your own shack enough times that the Cartel comes for you.', secret: true, secretName: true },
         { id: 'rui',        name: 'Raiding Under the Influence', desc: 'Get pulled over by ChAoTiC after one too many road beers.', secret: true },
         { id: 'queue',      name: 'Position 1',               desc: 'Sit through the entire fake login queue after a disconnect.', secret: true },
+        { id: 'purpleheart', name: 'Purple Heart',            desc: 'Wounded in the line of duty: you survived the Fish Incident. (Land on God_Help_Us.)' },
         { id: 'cluck',      name: 'CLUCK!',                   desc: 'Complete the Westfall chicken\'s quest.' },
         { id: 'clippy',     name: "It Looks Like You're Adopting a Paperclip", desc: 'Find and adopt the secret pet.', secret: true, secretName: true }
     ];
+    const PURPLE_HEART_SVG = '<svg viewBox="0 0 64 80" width="44" height="55" aria-hidden="true"><path d="M20 0h24v22H20z" fill="#7e22ce"/><path d="M20 0h4v22h-4zM40 0h4v22h-4z" fill="#f5f5f4"/><path d="M28 0h8v22h-8z" fill="#a855f7"/><path d="M32 74 C10 58 4 46 4 36 C4 26 12 20 20 20 C26 20 30 24 32 28 C34 24 38 20 44 20 C52 20 60 26 60 36 C60 46 54 58 32 74Z" fill="#facc15" stroke="#a16207" stroke-width="2"/><path d="M32 68 C14 55 10 45 10 37 C10 30 15 26 21 26 C26 26 29 29 32 33 C35 29 38 26 43 26 C49 26 54 30 54 37 C54 45 50 55 32 68Z" fill="#7e22ce"/><ellipse cx="32" cy="45" rx="7" ry="9" fill="#fde68a" opacity=".9"/></svg>';
     let achQueue = [], achShowing = false;
     const achPosts = [].concat(store.get('painWheelPendingAchPosts', [])); store.set('painWheelPendingAchPosts', []);
     addEventListener('pagehide', () => { if (achPosts.length) store.set('painWheelPendingAchPosts', store.get('painWheelPendingAchPosts', []).concat(achPosts.splice(0))); });
@@ -3809,6 +3811,11 @@
         achShowing = true;
         const t = $('achToast');
         $('achToastTitle').textContent = a.name; $('achToastDesc').textContent = a.desc;
+        // the Purple Heart gets its own medal and colors
+        const ph = a.id === 'purpleheart';
+        $('achToastIcon').innerHTML = ph ? PURPLE_HEART_SVG : '🏆';
+        t.style.background = ph ? 'linear-gradient(135deg,#1e0b2e,#4c1d95)' : 'linear-gradient(135deg,#1c1917,#422006)';
+        t.style.borderColor = ph ? '#c084fc' : '';
         t.classList.remove('show', 'hidden'); void t.offsetWidth; t.classList.add('show');
         playAchievementSound();
         setTimeout(() => { t.classList.remove('show'); t.classList.add('hidden'); nextAchToast(); }, 4600);
@@ -3836,6 +3843,7 @@
         unlock('first');
         const T = s.type;
         if (T === 'KEVIN') unlock('kevind');
+        if (T === 'GOD_HELP_US') unlock('purpleheart');
         if (stats.kevinStreak >= 3) unlock('kevin3');
         if (stats.kevinStreak >= 5) unlock('kevin5');
         if (stats.kevinStreak >= 10) unlock('kevin10');

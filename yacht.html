@@ -304,7 +304,7 @@
     const PER_PAGE = SLOTS.length;
     // a few achievements get their own trophy
     const ICONS = { kevind: '🤡', yacht: '🛥️', castle: '🏰', debtfree: '💸', taxman: '🧾', goldcookie: '🍪', cluck: '🐔', clippy: '📎', fenderbender: '🚑',
-        soc1: '🔺', soc2: '💀', soc3: '🦉', soc4: '👁️', soc5: '🦎', soc6: '📜', aboard: '⚓', vault: '🏦', chocobar: '🍫', hearth: '🪨', first: '🩸' };
+        soc1: '🔺', soc2: '💀', soc3: '🦉', soc4: '👁️', soc5: '🦎', soc6: '📜', aboard: '⚓', purpleheart: '💜', vault: '🏦', chocobar: '🍫', hearth: '🪨', first: '🩸' };
     const iconFor = (d) => ICONS[d.id] || (/^aipac/.test(d.id) ? '🏛️' : /^spins/.test(d.id) ? '🎡' : d.secret ? '💎' : '🏆');
     let page = 0;
     function renderCabinet(fresh) {
