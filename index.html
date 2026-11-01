@@ -6700,7 +6700,7 @@
             const o = document.createElement('div');
             o.style.cssText = 'position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(2,6,23,.75)';
             o.innerHTML = `<div style="width:min(540px,100%);background:#0f172a;border:2px solid #f97316;border-radius:18px;padding:20px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6)">
-                <div style="font-size:46px;line-height:1">🚑💥🚓</div>
+                <div style="display:flex;align-items:center;justify-content:center;gap:4px">${ambSprite(false, 1.2)}<span style="font-size:40px;line-height:1">💥</span>${copSprite(true, 1.2)}</div>
                 <div style="font-weight:900;font-size:22px;color:#fdba74;margin-top:8px">Biblehumping and ChAoTiC are now arguing whose fault it is.</div>
                 <div data-arg style="margin-top:12px;text-align:left;font-size:19px;line-height:1.5;min-height:120px"></div>
                 <button data-x style="margin-top:12px;padding:6px 18px;border-radius:8px;background:#334155;color:#fff;font-weight:800;cursor:pointer;border:none">File the insurance claim</button></div>`;
@@ -7417,7 +7417,8 @@
         row.className = 'flex items-center justify-between gap-2 bg-slate-950/60 border border-slate-700 rounded-lg px-3 py-1.5 text-sm';
         const left = document.createElement('div'); left.className = 'min-w-0';
         left.innerHTML = '<span style="font-size:20px"></span> <b></b><div class="text-[11px] text-slate-400"></div>';
-        left.querySelector('span').textContent = icon; left.querySelector('b').textContent = name; left.querySelector('div').textContent = desc;
+        if (String(icon)[0] === '<') left.querySelector('span').innerHTML = icon; else left.querySelector('span').textContent = icon;
+        left.querySelector('b').textContent = name; left.querySelector('div').textContent = desc;
         const b = document.createElement('button');
         const cls = { buy: 'bg-emerald-700 hover:bg-emerald-600 text-white', equip: 'bg-sky-700 hover:bg-sky-600 text-white', equipped: 'bg-amber-500 text-black', owned: 'bg-slate-700 text-slate-300' }[state || 'buy'];
         b.className = 'shrink-0 px-2.5 py-1 rounded text-xs font-bold cursor-pointer ' + cls;
@@ -7522,7 +7523,10 @@
                 }));
             }
         } else if (shopTab === 'pets') {
-            Object.entries(PETS).forEach(([k, p]) => {
+            const PET_ICON = { murloc: `<span style="display:inline-block;width:30px;height:27px;vertical-align:middle;background:url(${PHOTO_MURLOC_SHEET}) 0 0 / 600% 100% no-repeat"></span>`,
+                chicken: `<img src="${PHOTO_CHICKEN}" alt="" style="display:inline-block;height:28px;vertical-align:middle">`, whelp: `<img src="${PHOTO_WHELP}" alt="" style="display:inline-block;height:28px;vertical-align:middle">` };
+            Object.entries(PETS).forEach(([k, p0]) => {
+                const p = PET_ICON[k] ? Object.assign({}, p0, { e: PET_ICON[k] }) : p0;
                 if (p.secret && !clippyUnlocked && !pets[k]) return;
                 if (k === 'chicken' && !pets[k]) { add(shopRow(p.e, p.name, 'Can\'t be bought. Find a Westfall chicken wandering around and type chicken while it\'s on screen...', cluckStage ? 'Quest: CLUCK!' : 'Quest only', null, 'owned')); return; }
                 add(shopRow(p.e, p.name, p.desc, pets[k] ? 'Owned ✓' : 'Adopt: ' + fmt(p.cost), () => {
@@ -7540,18 +7544,18 @@
                 chatBurst(['o7', 'F', 'press F for the finger', 'rest easy little guy', 'he would have wanted this', '🎺🎺🎺'], 6, 4000);
             }, garage.finger ? 'owned' : 'buy'));
         } else if (shopTab === 'garage') {
-            add(shopRow('🏜️', 'Shack in the Desert', 'The one from the meme. Its own property (not a house upgrade). Sits in the corner, pays +40g every 10 minutes.', garage.shack ? 'Owned ✓' : 'Buy: 1,350g', () => {
+            add(shopRow(`<img src="${PHOTO_SHACK}" alt="" style="display:inline-block;height:30px;vertical-align:middle">`, 'Shack in the Desert', 'The one from the meme. Its own property (not a house upgrade). Sits in the corner, pays +40g every 10 minutes.', garage.shack ? 'Owned ✓' : 'Buy: 1,350g', () => {
                 if (!spend(1350, 'the Shack in the Desert')) return; garage.shack = true; store.set('painWheelGarage', garage); renderGarage(); renderShop();
                 shopMsg('You bought a shack in the desert. Very peaceful. Nobody can find you.'); chatBurst(['SHACK IN THE DESERT', 'he moved to the desert', 'the meme lives', 'peaceful'], 3);
             }, garage.shack ? 'owned' : 'buy'));
-            add(shopRow('🚑', "Biblehumping's Ambulance", 'Parks in the corner. Click it for lights and siren. Thank you to our first responders (except Biblehumping).', garage.ambulance ? 'Owned ✓' : 'Buy: 2,500,000g', () => {
+            add(shopRow(ambSprite(false, 0.55), "Biblehumping's Ambulance", 'Parks in the corner. Click it for lights and siren. Thank you to our first responders (except Biblehumping).', garage.ambulance ? 'Owned ✓' : 'Buy: 2,500,000g', () => {
                 if (!spend(2500000, 'the ambulance')) return; garage.ambulance = true; store.set('painWheelGarage', garage); renderGarage(); unlock('weewoo'); driveAmbulance(); renderShop();
             }, garage.ambulance ? 'owned' : 'buy'));
-            add(shopRow('🚓', "ChAoTiC's Cop Car", "Comes with ChAoTiC's Golden Chocolate Donut. Parks in the corner; click it: it rolls in, does the WHOOP WHOOP, and peels off. (Try it while the ambulance is out...)", garage.police ? 'Owned ✓' : 'Buy: 2,500,000g', () => {
+            add(shopRow(copSprite(false, 0.55), "ChAoTiC's Cop Car", "Comes with ChAoTiC's Golden Chocolate Donut. Parks in the corner; click it: it rolls in, does the WHOOP WHOOP, and peels off. (Try it while the ambulance is out...)", garage.police ? 'Owned ✓' : 'Buy: 2,500,000g', () => {
                 if (!spend(2500000, 'the cop car')) return; garage.police = true; store.set('painWheelGarage', garage); renderGarage(); drivePolice(); renderShop();
                 setTimeout(() => giveLoot('legendary', '🍩 ChAoTiC left this in the cruiser', 'Golden Chocolate Donut'), 1500);
             }, garage.police ? 'owned' : 'buy'));
-            add(shopRow('🚀', 'SpaceZ Rocket', 'For when you\'ve made it (10 billion gold). Launches on purchase and every time you click it.', garage.rocket ? 'Owned ✓' : 'Buy: 10,000,000,000g', () => {
+            add(shopRow(`<img src="${PHOTO_ROCKET}" alt="" style="display:inline-block;height:30px;vertical-align:middle">`, 'SpaceZ Rocket', 'For when you\'ve made it (10 billion gold). Launches on purchase and every time you click it.', garage.rocket ? 'Owned ✓' : 'Buy: 10,000,000,000g', () => {
                 if (!spend(10000000000, 'the rocket')) return; garage.rocket = true; store.set('painWheelGarage', garage); renderGarage(); unlock('rocket'); closeShop(); launchRocket(); sendEvent({ k: 'rocket' }); renderShop();
             }, garage.rocket ? 'owned' : 'buy'));
         } else if (shopTab === 'society') {
@@ -8047,6 +8051,10 @@
         bible: ['Biblehumping', '@Biblehumping_EMT', '🚑', true], grandma: ['Grandma', '@Grandma_Cookies', '👵', false], shack: ['The Shack', '@TheShackInTheDesert', '🏜️', false],
         gary: ['Gary', '@SwordfishGary', '🐟', false], uwutek: ['Uwutek', '@Uwutek_Boss', '👹', true], goblinx: ['Goblin Express', '@GoblinExpressCard', '💳', true],
         irs: ['Goblin IRS', '@GoblinIRS', '🧾', true], casimir: ['Casimir', '@Casimir_Rigs', '🔧', false], yacht: ["Gallywix's Yacht Club", '@GallywixYachtClub', '🛥️', true] };
+    // vehicle sprites double as Squawkr profile pictures (cropped into the round avatar)
+    const SQ_IMG = (src) => () => `<span style="display:grid;place-items:center;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b"><img src="${src}" alt="" style="width:30px;height:30px;object-fit:contain"></span>`;
+    const SQ_PIC = { shack: SQ_IMG(PHOTO_SHACK), yacht: SQ_IMG(GIF_YACHT), chaotic: () => `<span style="display:block;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b;display:grid;place-items:center">${copSprite(false, 0.5)}</span>`,
+        bible: () => `<span style="display:block;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b;display:grid;place-items:center">${ambSprite(false, 0.5)}</span>` };
     const SQ_AMBIENT = [
         ['kevin', 'just landed on myself again. this wheel is RIGGED. who do i report this to'], ['casimir', 'me'],
         ['chaotic', 'logging off for the night'], ['alt', 'logging on for the night'],
@@ -8139,7 +8147,7 @@
         const [name, handle, av, check] = SQ_WHO[p.who] || SQ_WHO.kevin;
         const d = document.createElement('div'); d.style.cssText = 'padding:10px 12px;border-bottom:1px solid #1e293b;font-size:13.5px;color:#e2e8f0';
         const mins = Math.max(0, Math.round((Date.now() - p.at) / 60000));
-        d.innerHTML = `<div style="display:flex;gap:9px"><div style="flex:none;width:34px;height:34px;border-radius:50%;background:#1e293b;display:grid;place-items:center;font-size:18px">${av}</div>
+        d.innerHTML = `<div style="display:flex;gap:9px"><div style="flex:none;width:34px;height:34px;border-radius:50%;background:#1e293b;display:grid;place-items:center;font-size:18px">${SQ_PIC[p.who] ? SQ_PIC[p.who]() : av}</div>
             <div style="min-width:0;flex:1"><div style="line-height:1.2"><b></b>${check ? ' <span style="color:#38bdf8">✔</span>' : ''} <span style="color:#64748b;font-size:12px">${handle} · ${mins ? mins + 'm' : 'now'}</span></div>
             <div data-t style="margin-top:3px;line-height:1.35;word-break:break-word"></div>
             ${p.impact ? `<div style="margin-top:6px;padding:4px 8px;border-radius:7px;font-weight:900;font-size:12px;${p.up ? 'background:rgba(22,163,74,.18);color:#4ade80' : 'background:rgba(220,38,38,.18);color:#f87171'}"></div>` : ''}
