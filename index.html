@@ -1752,6 +1752,7 @@
         "🦴 HOGGER'S CHIROPRACTIC: WE'LL ADJUST YOUR SPINE. AND YOUR CORPSE RUN.",
         "🧃 LIQUID DPS: 100% JUICE, 0% DAMAGE. KEVIN'S FAVORITE.",
         "🎟️ SCRATCH-OFF ANONYMOUS: MEETINGS THURSDAYS. BRING YOUR OWN COIN.",
+        "🃏 NEW AT THE GOBLIN SHOP: THE SCRITCHY SCRATCHY SPECIAL. AXA'S FAVORITE. HE'S ONE TICKET AWAY. HE HAS BEEN ONE TICKET AWAY SINCE TUESDAY.",
         "🛁 THE KEVIN TUB: GET IN. STAND IN IT. DIE IN IT. JUST LIKE THE BOSS FIGHTS.",
         "📦 DEGENERATE DELIVERY: YOUR LOOT, DELIVERED TO THE WRONG ALT IN 3-5 BUSINESS DAYS",
         "🔮 MADAME UWUTEK'S FORTUNE TELLING: YOU WILL WIPE. THAT'LL BE 50G.",
@@ -1895,6 +1896,7 @@
         "FINANCE: GOBLIN EXPRESS APPROVES KEVIN FOR A CREDIT CARD; ANALYSTS 'HORRIFIED BUT NOT SURPRISED'",
         "CONSUMER ALERT: GOBLIN EXPRESS 'REWARDS POINTS' REVEALED TO BE ADDITIONAL DEBT",
         "LOCAL: MAN BUYS SCRATCH-OFF ON HIS GOBLIN EXPRESS, WINS, STILL OWES MORE THAN HE WON",
+        "HEALTH: LOCAL RET PALADIN LOGS 40 HOURS OF SCRITCHY SCRATCHY. DOCTORS FIND COIN SHAVINGS UNDER EVERY FINGERNAIL. HE CALLS IT 'RESEARCH.'",
         "BREAKING: ELAN POSTS ABOUT $KEVN; KEVIN REPLIES 'WHO IS ELAN'; STOCK DROPS ANOTHER 20%",
         "LOCAL: SQUAWKR USERS REPORT 'TOO MANY CHAOTIC ALTS'; CHAOTIC_ALT31 DISAGREES",
         "COURTS: RAIDER FIGHTS RUI TICKET, CLAIMS THE ROAD BEERS 'WERE FOR THE ROAD'",
@@ -7142,12 +7144,18 @@
         { id: 'quick', name: 'Goblin Quickie', cost: 50, panels: 3, table: [[1, 22], [2, 9], [3, 4], [10, 2.6], [50, 0.4]] },
         { id: 'gold', name: 'Goblin Gold', cost: 500, panels: 3, table: [[1, 22], [2, 9], [3, 4], [10, 2.6], [50, 0.4]] },
         { id: 'six', name: 'Undermine Six-Pack', cost: 2000, panels: 6, table: [[1, 23], [2, 9], [4, 4], [12, 1.75], [100, 0.25]] },
+        { id: 'scritchy', name: '🃏 Scritchy Scratchy Special', cost: 5000, panels: 6, note: "Axa's favorite. He's \"one ticket away.\" He has been one ticket away for 40 hours.", table: [[1, 23], [2, 9], [4, 4], [12, 1.75], [100, 0.25]] },
         { id: 'plat', name: 'Gallywix Platinum', cost: 25000, panels: 6, table: [[1, 23], [2, 9], [4, 4], [12, 1.75], [100, 0.25]] },
         { id: 'golden', name: '👑 The Gallywix Golden Ticket', cost: 1e20, panels: 6, table: [[1, 23], [2, 9], [4, 4], [12, 1.75], [100, 0.25]] }   // ×100 at start-up = 10 sextillion
     ];
     const SYM_FOR = { 1: '🍺', 2: '💰', 3: '🔨', 4: '🔨', 10: '👑', 12: '👑', 50: '💎', 100: '💎' };
     const SCRATCH_SYMS = ['💀', '🍺', '💰', '🔨', '👑', '💎', '🤡'];
     let scratchTicket = null;
+    // lifetime scratch-off record (bought / failed / net), shown in the Scratch-offs tab
+    const scratchStats = Object.assign({ bought: 0, failed: 0, won: 0, back: 0, spent: 0, winnings: 0 }, store.get('painWheelScratchStats', {}));
+    const SCRITCHY_MILESTONES = { 10: "10 tickets. This is how it starts. Ask Axa.", 25: "25 tickets. Axa says this is a normal amount. Axa is not a reliable source.",
+        50: "50 tickets. You are now officially in your Scritchy Scratchy era.", 100: "100 tickets. Scratch-Off Anonymous has saved you a seat next to Axa.",
+        250: "250 tickets. Your thumbnail is a coin now.", 500: "500 tickets. The goblins named a wing of the casino after you.", 1000: "1,000 tickets. Axa is proud of you. That should worry you." };
     function makeTicket(tk) {
         let r = Math.random() * 100, mult = 0;
         for (const [m, w] of tk.table) { r -= w; if (r <= 0) { mult = m; break; } }
@@ -7396,17 +7404,31 @@
             }
         } else if (shopTab === 'scratch') {
             add(shopHead('Click a ticket to buy it, then Scratch All'));
+            {   // the lifetime record
+                const st = scratchStats, net = st.winnings - st.spent, rate = st.bought ? Math.round((st.bought - st.failed) / st.bought * 100) : 0;
+                const rec = document.createElement('div'); rec.className = 'mb-2 rounded-lg border border-amber-700/60 bg-black/40 px-3 py-2 grid grid-cols-2 sm:grid-cols-4 gap-2 text-center';
+                [['🎟️ Bought', st.bought.toLocaleString(), '#fde68a'], ['❌ Failed', st.failed.toLocaleString(), '#f87171'], ['🍀 Hit rate', rate + '%', '#4ade80'],
+                 ['💸 Net', (net >= 0 ? '+' : '-') + fmt(Math.abs(net)), net >= 0 ? '#4ade80' : '#f87171']].forEach(([k, v, col]) => {
+                    const d = document.createElement('div'); d.innerHTML = '<div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider"></div><div class="mono font-black text-lg"></div>';
+                    d.children[0].textContent = k; d.children[1].textContent = v; d.children[1].style.color = col; rec.appendChild(d);
+                });
+                add(rec);
+                if (st.bought >= 50) { const n = document.createElement('div'); n.className = 'text-[11px] text-fuchsia-300 text-center -mt-1 mb-2'; n.textContent = st.failed >= st.bought * 0.6 ? '🃏 Scritchy Scratchy syndrome: confirmed. Axa sends his regards.' : '🃏 Suspiciously lucky. Axa wants to know your secret.'; add(n); }
+            }
             const g = document.createElement('div'); g.className = 'grid grid-cols-2 gap-2';
             SCRATCHERS.forEach(tk => {
                 const b = document.createElement('button');
                 b.className = 'rounded-lg border-2 border-amber-600 p-2 text-left cursor-pointer hover:brightness-110';
                 b.style.background = 'linear-gradient(135deg,#78350f,#a16207)';
                 b.innerHTML = `<div class="font-black text-amber-100 text-sm"></div><div class="text-[11px] text-amber-200"></div><div class="mono font-bold text-white text-sm mt-1"></div>`;
-                b.children[0].textContent = tk.name; b.children[1].textContent = `${tk.panels} panels · top prize ${fmt(tk.cost * tk.table[tk.table.length - 1][0])}`; b.children[2].textContent = fmt(tk.cost);
+                b.children[0].textContent = tk.name; b.children[1].textContent = tk.note || `${tk.panels} panels · top prize ${fmt(tk.cost * tk.table[tk.table.length - 1][0])}`; b.children[2].textContent = fmt(tk.cost);
+                if (tk.id === 'scritchy') { b.style.background = 'linear-gradient(135deg,#581c87,#be185d)'; b.style.borderColor = '#f0abfc'; }
                 b.disabled = !!(scratchTicket && !scratchTicket.open);
                 b.addEventListener('click', () => {
                     if (scratchTicket && !scratchTicket.open) return;
                     if (!spend(tk.cost, 'a ticket')) return;
+                    scratchStats.bought++; scratchStats.spent += tk.cost; store.set('painWheelScratchStats', scratchStats);
+                    const ms = SCRITCHY_MILESTONES[scratchStats.bought]; if (ms) setTimeout(() => moveToast('🎟️ ' + ms), 400);
                     scratchTicket = makeTicket(tk); $('scratchOut').textContent = 'Scratch it!'; renderShop();
                 });
                 g.appendChild(b);
@@ -7479,6 +7501,8 @@
         t.open = true;
         const win = t.tk.cost * t.mult;
         if (win) setGold(gold + win);
+        if (!t.mult) scratchStats.failed++; else if (t.mult === 1) scratchStats.back++; else scratchStats.won++;
+        scratchStats.winnings += win; store.set('painWheelScratchStats', scratchStats);
         settleScratch.last = !win ? pick(['No luck. The goblins thank you.', 'So close. (Not really.)', 'Loser! Try again!', 'The house wins. As always.'])
             : t.mult === 1 ? `Money back! +${fmt(win)} (break even)` : `WINNER! ${t.sym.find((s, i) => t.sym.filter(x => x === s).length >= 3)} ×${t.mult} → +${fmt(win)}`;
         if (t.mult >= 10) { chatBurst(['SCRATCH JACKPOT', 'HOLY', 'goblin W', 'he hit it'], 4); launchConfetti(['💰', '🪙', '✨'], ['#facc15', '#4ade80', '#ffffff'], 0.6, 0.5); }
