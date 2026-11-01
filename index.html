@@ -212,6 +212,8 @@
         body.party-on #garageDock button, body.party-on #shackSpot button { animation: petDance .6s ease-in-out infinite alternate; }
         body.is-spinning #petDock *, body.is-spinning .pet-walker *, body.is-spinning #garageDock *, body.is-spinning #shackSpot *, body.is-spinning #houseEmoji, body.is-spinning .siren-glow, body.is-spinning .cop-sprite, body.is-spinning #goldenCookie { animation-play-state: paused !important; }
         .pet-walker .pet-em { will-change: transform; }
+        .phone-ringing { animation: phoneRing .5s ease-in-out infinite; filter: drop-shadow(0 0 10px #a855f7) !important; }
+        @keyframes phoneRing { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-14deg); } 75% { transform: rotate(14deg); } }
         /* the Scritchy Scratcher: desk fan bottom-left, red phone bottom-right; the trash can for losers */
         .ss-corner { position: absolute; bottom: 4px; line-height: 0; pointer-events: none; filter: drop-shadow(0 2px 2px rgba(0,0,0,.5)); }
         .ss-left { left: 6px; } .ss-right { right: 6px; }
@@ -275,7 +277,17 @@
         @keyframes murSpear { from { background-position-x: 0%; } to { background-position-x: 120%; } }
         .pet-moving .murloc-spr { animation: murSpear .7s steps(6) infinite, murWaddle .3s ease-in-out infinite alternate; }
         @keyframes murWaddle { from { transform: rotate(-6deg) translateY(0); } to { transform: rotate(6deg) translateY(-4px); } }
-        .pet-walker .pet-em:has(.murloc-spr) { animation: none !important; }
+        .pet-walker .pet-em:has(.murloc-spr), .pet-walker .pet-em:has(.pet-spr) { animation: none !important; }
+        .pet-spr { display: block; transform-origin: 50% 100%; }
+        .chicken-spr { width: 62px; height: auto; animation: chickIdle 3.2s ease-in-out infinite; }
+        @keyframes chickIdle { 0%, 70%, 100% { transform: rotate(0); } 76% { transform: rotate(-16deg) translateY(3px); } 82% { transform: rotate(-4deg); } 88% { transform: rotate(-16deg) translateY(3px); } 94% { transform: rotate(0); } }
+        .pet-moving .chicken-spr, #wildChicken .chicken-spr { animation: chickWalk .28s ease-in-out infinite alternate; }
+        @keyframes chickWalk { from { transform: rotate(-5deg) translateY(0); } to { transform: rotate(5deg) translateY(-3px); } }
+        .whelp-spr { width: 70px; height: auto; transform-origin: 50% 60%; animation: whelpHover 1.6s ease-in-out infinite alternate; }
+        @keyframes whelpHover { from { transform: translateY(0) rotate(-3deg); } to { transform: translateY(-8px) rotate(3deg); } }
+        .pet-moving .whelp-spr { animation-duration: .7s; }
+        body.is-spinning .pet-spr { animation-play-state: paused; }
+        @media (max-width: 767px), (max-height: 500px) { .chicken-spr { width: 46px; } .whelp-spr { width: 52px; } }
         body.is-spinning .murloc-spr { animation-play-state: paused; }
         /* the shack and its sign */
         .shack-spr { position: relative; display: inline-block; }
@@ -308,10 +320,10 @@
             background: repeating-linear-gradient(45deg, transparent 0 9px, #f97316 9px 11px), repeating-linear-gradient(-45deg, transparent 0 9px, #f97316 9px 11px); }
         .lp-beacon { position: absolute; left: 50%; top: -9px; width: 9px; height: 9px; margin-left: -4.5px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 10px #ef4444; animation: lpBeacon 2.4s ease-in-out infinite; }
         @keyframes lpBeacon { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
-        .lp-rocket { position: absolute; left: 62px; bottom: 16px; font-size: 92px; line-height: 1; background: none; border: 0; padding: 0; cursor: pointer; transform: rotate(-45deg); transform-origin: 50% 60%;
+        .lp-rocket { position: absolute; left: 66px; bottom: 18px; font-size: 92px; line-height: 1; background: none; border: 0; padding: 0; cursor: pointer; transform: none; transform-origin: 50% 100%;
             filter: drop-shadow(0 0 14px rgba(250,204,21,.35)); animation: lpIdle 2.8s ease-in-out infinite; transition: opacity .3s; }
         .lp-rocket:hover { filter: drop-shadow(0 0 22px rgba(250,204,21,.8)); }
-        @keyframes lpIdle { 0%, 100% { transform: rotate(-45deg) translate(0, 0); } 50% { transform: rotate(-44deg) translate(1px, -2px); } }
+        @keyframes lpIdle { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(0, -3px) rotate(.6deg); } }
         .lp-rocket.gone { opacity: 0; pointer-events: none; }
         .lp-rocket.empty { filter: grayscale(1) brightness(.5); opacity: .45; animation: none; }
         .lp-base { position: absolute; left: 10px; right: 10px; bottom: 0; height: 18px; border-radius: 4px 4px 0 0; border-top: 2px solid #475569;
@@ -877,7 +889,7 @@
                     </div>
                     <div class="lp-site">
                         <div class="lp-gantry"><div class="lp-beacon"></div></div>
-                        <button id="padRocket" class="lp-rocket" title="Click to launch">🚀</button>
+                        <button id="padRocket" class="lp-rocket" title="Click to launch"><img id="padRocketImg" alt="🚀" style="display:block;height:120px;width:auto"></button>
                         <div class="lp-steam s1"></div><div class="lp-steam s2"></div>
                         <div class="lp-base"></div>
                     </div>
@@ -1128,6 +1140,10 @@
     const PHOTO_FINGER_CURSED = "media/photo_finger_cursed.png?v=696b65c0";
     const PHOTO_SHACK = "media/photo_shack.png?v=2a61dee7";
     const PHOTO_MURLOC_SHEET = "media/photo_murloc_sheet.png?v=d192bf7f";
+    const PHOTO_ROCKET = "media/photo_rocket.png?v=9509701f";
+    const PHOTO_ROCKET_FLY = "media/photo_rocket_fly.png?v=4aae4aa4";
+    const PHOTO_CHICKEN = "media/photo_chicken.png?v=d6697602";
+    const PHOTO_WHELP = "media/photo_whelp.png?v=e83a9376";
     const PHOTO_ROAD_BEERS = "media/photo_road_beers.jpg?v=d112894f";
     const PHOTO_GNOME = "media/photo_gnome.jpg?v=616157df";  // no croissants today, boss
 
@@ -6169,7 +6185,7 @@
         document.querySelectorAll('.pet-walker').forEach(e => e.remove());
         Object.keys(PETS).filter(k => pets[k] && k !== 'clippy').slice(0, IS_PHONE() ? 2 : 99).forEach(k => {
             const w = document.createElement('div'); w.className = 'pet-walker'; w.id = 'pet-' + k; w._home = PET_HOME[k] || 'strip';
-            w.innerHTML = '<div class="pet-bubble hidden mb-1 px-2 py-1 rounded-lg bg-slate-900/95 border border-slate-600 text-slate-100 text-[11px] font-bold whitespace-nowrap shadow-lg" style="position:absolute;bottom:100%;left:50%;transform:translateX(-50%)"></div><div class="pet-flip" style="transition:transform .25s"><div class="pet-em" style="font-size:38px;line-height:1;animation:houseBob 1.1s ease-in-out infinite alternate">' + (k === 'murloc' ? `<span class="murloc-spr" style="background-image:url(${PHOTO_MURLOC_SHEET})"></span>` : PETS[k].e) + '</div></div>';
+            w.innerHTML = '<div class="pet-bubble hidden mb-1 px-2 py-1 rounded-lg bg-slate-900/95 border border-slate-600 text-slate-100 text-[11px] font-bold whitespace-nowrap shadow-lg" style="position:absolute;bottom:100%;left:50%;transform:translateX(-50%)"></div><div class="pet-flip" style="transition:transform .25s"><div class="pet-em" style="font-size:38px;line-height:1;animation:houseBob 1.1s ease-in-out infinite alternate">' + (k === 'murloc' ? `<span class="murloc-spr" style="background-image:url(${PHOTO_MURLOC_SHEET})"></span>` : k === 'chicken' ? `<img class="pet-spr chicken-spr" src="${PHOTO_CHICKEN}" alt="🐔">` : k === 'whelp' ? `<img class="pet-spr whelp-spr" src="${PHOTO_WHELP}" alt="🐉">` : PETS[k].e) + '</div></div>';
             w.style.cssText = `position:${w._home === 'gold' || w._home === 'roam' ? 'absolute' : 'fixed'};left:0;top:0;z-index:62;pointer-events:none;will-change:transform`;
             document.body.appendChild(w);
             const t = petTarget(w, true); petMove(w, t.x, t.y, true);
@@ -6617,7 +6633,7 @@
         padState(5000, '🛰️ IN ORBIT (probably)'); padHit('space');
         const o = padOrigin(), r = document.createElement('div');
         r.style.cssText = `position:fixed;z-index:78;left:${o.x}px;top:${o.y}px;font-size:92px;line-height:1;pointer-events:none;transform:translate(-50%,-50%) rotate(-45deg);transition:top 4s cubic-bezier(.5,0,.9,.4)`;
-        r.textContent = '🚀'; document.body.appendChild(r);
+        r.innerHTML = rocketImg(110); document.body.appendChild(r);
         const smoke = setInterval(() => {
             const s = document.createElement('div'), rect = r.getBoundingClientRect();
             s.textContent = '💨'; s.style.cssText = `position:fixed;z-index:77;left:${rect.left + rect.width / 2 - 20 + (Math.random() - .5) * 40}px;top:${rect.bottom - 20}px;font-size:44px;pointer-events:none;transition:opacity 1.6s,transform 1.6s`;
@@ -6683,7 +6699,7 @@
         }
         const target = () => kind === 'chicken' ? $('pet-chicken') : kind === 'knob' ? $('knobChart') : kev;
         padState(15000, { chicken: '🐔 PLUCKING DEBRIS', kevin: '🤡 KEVIN IN ORBIT', knob: '📉 THE CHART IS ON FIRE' }[kind]); padHit(kind);
-        const r = document.createElement('div'); r.textContent = '🚀';
+        const r = document.createElement('div'); r.innerHTML = rocketImg(100);
         r.style.cssText = `position:fixed;z-index:80;left:${sx}px;top:${sy - 70}px;font-size:80px;line-height:1;pointer-events:none;transform:translate(-50%,-50%) rotate(-45deg);transition:top 1.5s cubic-bezier(.5,0,.9,.4)`;
         document.body.appendChild(r);
         const smoke = setInterval(() => {
@@ -6754,7 +6770,7 @@
         padState(9000, '🚨 ROCKET STOLEN (AGAIN)'); padHit('stolen');
         const r = document.createElement('div');
         r.style.cssText = `position:fixed;z-index:80;left:${o.x}px;top:${o.y}px;font-size:80px;line-height:1;pointer-events:none;transform:translate(-50%,-50%);transition:left 4.5s cubic-bezier(.5,0,.8,.6), top 4.5s ease-in`;
-        r.innerHTML = `<div style="position:absolute;bottom:100%;left:50%;transform:translateX(-50%);white-space:nowrap;background:#fffbe6;color:#000;font-size:22px;font-weight:900;padding:4px 12px;border-radius:9px;border:2px solid #111"></div><span style="display:inline-block;transform:rotate(${ltr ? 45 : -135}deg)">🚀</span>`;
+        r.innerHTML = `<div style="position:absolute;bottom:100%;left:50%;transform:translateX(-50%);white-space:nowrap;background:#fffbe6;color:#000;font-size:22px;font-weight:900;padding:4px 12px;border-radius:9px;border:2px solid #111"></div><span style="display:inline-block;transform:rotate(${ltr ? 45 : -135}deg)">${rocketImg(100)}</span>`;
         r.firstChild.textContent = '🚨 ' + th.name + ' is driving';
         document.body.appendChild(r);
         requestAnimationFrame(() => requestAnimationFrame(() => { r.style.left = (ltr ? innerWidth + 200 : -200) + 'px'; r.style.top = Math.max(80, o.y - 260) + 'px'; }));
@@ -6790,6 +6806,7 @@
         ['ChAoTiC', 'I rigged it to land on No One. The rocket un-rigged it.'], ['Biblehumping', 'Good news: no farmers on the wheel. I checked twice.'],
         ['ChAoTiC', 'Somebody call the fire department. Not my alt. The real one.'], ['Biblehumping', 'The wheel is now medium rare.'],
         ['Biblehumping', "Sorry, sorry, sorry. I'll put it out. Sorry. Anyone want a Timbit?"], ['ChAoTiC', 'Fire on the wheel! Get down! ...Sorry. Army habit.']];
+    function rocketImg(px) { return `<img src="${PHOTO_ROCKET_FLY}" alt="🚀" width="${px}" height="${px}" style="display:block;width:${px}px;height:${px}px">`; }
     let rocketMishap = false, rocketBag = [];
     let rocketTargets = [];
     function rocketTargetWheel() {   // misses alternate yacht / wheel (shuffled in pairs), so you see both
@@ -6835,7 +6852,7 @@
         padState(16000, toWheel ? '🔥 THE WHEEL IS ON FIRE' : '⚓ RECOVERING DEBRIS (THE YACHT)'); padHit(toWheel ? 'wheel' : 'yacht');
         const wc = $('wheelCanvas').getBoundingClientRect();
         const tx = toWheel ? wc.left + wc.width / 2 : h.left + h.width / 2, ty = toWheel ? Math.max(90, Math.min(innerHeight - 140, wc.top + wc.height / 2)) : h.top + h.height / 2;
-        const r = document.createElement('div'); r.textContent = '🚀';
+        const r = document.createElement('div'); r.innerHTML = rocketImg(100);
         r.style.cssText = `position:fixed;z-index:80;left:${sx}px;top:${sy - 70}px;font-size:80px;line-height:1;pointer-events:none;transform:translate(-50%,-50%) rotate(-45deg);transition:top 1.5s cubic-bezier(.5,0,.9,.4)`;
         document.body.appendChild(r);
         const smoke = setInterval(() => {
@@ -6880,7 +6897,7 @@
     function rocketShackCrash(shack) {
         padState(9500, '💥 RECOVERING DEBRIS (THE SHACK)'); padHit('shack');
         const r0 = shack.getBoundingClientRect(), sx = r0.left + r0.width / 2, sy = r0.top, o = padOrigin();
-        const r = document.createElement('div'); r.textContent = '🚀';
+        const r = document.createElement('div'); r.innerHTML = rocketImg(100);
         r.style.cssText = `position:fixed;z-index:78;left:${o.x}px;top:${o.y}px;font-size:80px;line-height:1;pointer-events:none;transform:translate(-50%,-50%) rotate(-45deg);transition:top 1.6s cubic-bezier(.5,0,.9,.4)`;
         document.body.appendChild(r);
         const smoke = setInterval(() => {
@@ -6973,10 +6990,10 @@
         "Somewhere in that stack is the one. You'll know it when you scratch it. Do NOT sell it.",
         "The goblins buy back winning tickets for a reason. Think about that. ...Keep scratching."];
     function vinceCall() {
+        if (strangerRinging) return answerStranger();   // it's not Vince
         if (performance.now() < vinceBusyUntil) { moveToast("📞 Vince is on the other line. (He has two bricks.)"); return; }
         vinceBusyUntil = performance.now() + 90000;
         playBrickRing();
-        if (Math.random() < 0.25 || (scratchStats.bought >= 10 && Math.random() < 0.15)) return strangerCall();
         const box = document.createElement('div');
         box.style.cssText = 'position:fixed;z-index:79;left:16px;bottom:84px;width:min(340px,calc(100vw - 32px));padding:12px 14px;border-radius:12px;border:2px solid #84cc16;background:linear-gradient(170deg,#18181b,#27272a);color:#e4e4e7;box-shadow:0 12px 30px rgba(0,0,0,.6);font-size:13px;line-height:1.4';
         box.innerHTML = '<div style="font-family:\'JetBrains Mono\',monospace;font-weight:800;color:#84cc16;font-size:11px;letter-spacing:.12em">📞 INCOMING CALL · VINCE (CAR PHONE)</div><div data-l style="margin-top:6px;font-weight:700"></div><div data-t style="margin-top:6px;font-size:12px;color:#a1a1aa"></div>';
@@ -6992,6 +7009,29 @@
         chatBurst(['VINCE ON THE LINE', 'is that a car phone', 'brick phone W', 'sell sell sell', 'vince said buy', '1987 called'], 3, 2500);
     }
 
+    let strangerRinging = false, strangerRingIv = 0, strangerTimeout = 0;
+    function strangerRing() {   // the brick phone rings by itself; pick it up (click the phone) or it goes to a missed call
+        const btn = document.querySelector('#garageDock [data-k="phone"]');
+        if (!garage.phone || !btn || !toyOpen) { playBrickRing(); return setTimeout(strangerCall, 1500); }   // no phone handy: it's ringing in your pocket, you answer
+        strangerRinging = true; btn.classList.add('phone-ringing'); playBrickRing();
+        moveToast('📞 The brick phone is ringing. It is not Vince\'s number.');
+        strangerRingIv = setInterval(playBrickRing, 3000);
+        strangerTimeout = setTimeout(() => { stopStrangerRing(); moveToast('📞 Missed call: UNKNOWN NUMBER. No voicemail. Of course there is no voicemail.'); }, 24000);
+    }
+    function stopStrangerRing() {
+        strangerRinging = false; clearInterval(strangerRingIv); clearTimeout(strangerTimeout);
+        document.querySelectorAll('.phone-ringing').forEach(b => b.classList.remove('phone-ringing'));
+    }
+    function answerStranger() { stopStrangerRing(); vinceBusyUntil = 0; strangerCall(); }
+    // the calls start a few minutes after your first Scritchy Scratcher, then come back now and then
+    setInterval(() => {
+        if (document.hidden || isSpinning || strangerRinging || !store.get('painWheelScritchy', false)) return;
+        const next = store.get('painWheelStrangerNext', 0);
+        if (!next) { store.set('painWheelStrangerNext', Date.now() + (3 + Math.random() * 5) * 60000); return; }
+        if (Date.now() < next) return;
+        store.set('painWheelStrangerNext', Date.now() + (20 + Math.random() * 25) * 60000);
+        strangerRing();
+    }, 30000);
     function strangerCall() {   // a mysterious caller with one piece of scratch-off advice
         const box = document.createElement('div');
         box.style.cssText = 'position:fixed;z-index:79;left:16px;bottom:84px;width:min(360px,calc(100vw - 32px));padding:12px 14px;border-radius:12px;border:2px solid #a855f7;background:linear-gradient(170deg,#0c0a14,#1e1033);color:#e9d5ff;box-shadow:0 10px 30px rgba(0,0,0,.6)';
@@ -7059,6 +7099,7 @@
         'Our GPS is a murloc in the nose cone.', 'Please stand behind the yellow line. There is no yellow line.', 'Insurance: no.',
         'Keys are in the ignition. Please do not steal the rocket. (Kevin.)', 'Chickens and Kevins: please clear the launch area.', 'Pilot today: unknown. Pilot tomorrow: also unknown.'];
     function renderPad() {
+        if ($('padRocketImg') && !$('padRocketImg').getAttribute('src')) $('padRocketImg').src = PHOTO_ROCKET;
         const owned = !!garage.rocket, r = $('padRocket');
         r.classList.toggle('empty', !owned); r.title = owned ? 'Click to launch' : 'No rocket on the pad';
         if (!padBusy) {
@@ -7471,6 +7512,7 @@
                     if (scratchTicket && !scratchTicket.open) return;
                     if (!spend(tk.cost, 'a ticket')) return;
                     scratchStats.bought++; scratchStats.spent += tk.cost; store.set('painWheelScratchStats', scratchStats);
+                    if (tk.id === 'scritchy' && !store.get('painWheelScritchy', false)) store.set('painWheelScritchy', true);   // ...and now the phone will ring
                     const ms = SCRITCHY_MILESTONES[scratchStats.bought]; if (ms) setTimeout(() => moveToast('🎟️ ' + ms), 400);
                     scratchTicket = makeTicket(tk); $('scratchOut').textContent = 'Scratch it!'; renderShop();
                 });
@@ -8138,7 +8180,7 @@
         if (wildChicken || pets.chicken || cluckStage === 3) return;
         if (!force && !idleScreen()) return;
         const c = document.createElement('div'); c.id = 'wildChicken'; c.title = 'Westfall Chicken';
-        c.innerHTML = '<div class="bub hidden"></div><span class="em">🐔</span>';
+        c.innerHTML = `<div class="bub hidden"></div><span class="em"><img class="chicken-spr" src="${PHOTO_CHICKEN}" alt="🐔" style="width:58px;height:auto;display:block"></span>`;
         c.dataset.need = '1'; c.dataset.got = '0';   // just type chicken once (no slash needed)
         const ltr = Math.random() < 0.5, secs = 28;
         if (ltr) c.classList.add('flip');   // the emoji faces left, so flip it when walking right
