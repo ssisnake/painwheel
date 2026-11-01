@@ -6374,6 +6374,49 @@
         const b = w.querySelector('.pet-bubble'); b.textContent = text; b.classList.remove('hidden');
         clearTimeout(w._t); w._t = setTimeout(() => b.classList.add('hidden'), 3800);
     }
+    // ---------- 🐸 the murloc attacks the yacht now and then; 🐉 the whelp chases the falling holiday stuff ----------
+    const onView = (r) => r && r.width > 0 && r.bottom > 60 && r.top < innerHeight - 20 && r.right > 0 && r.left < innerWidth;
+    function murlocRaid() {
+        const w = $('pet-murloc'), house = $('houseEmoji'); if (!w || !house || houseLevel !== HOUSE_LEVELS.length - 1 || $('timeshareHouse').classList.contains('hidden')) return false;
+        const r = house.getBoundingClientRect(); if (!onView(r)) return false;
+        w._talking = true;
+        w.style.transition = 'transform 1.1s ease-in'; const tx = r.left - 58, ty = r.bottom - 92;
+        const f = w.querySelector('.pet-flip'); if (f) f.style.transform = tx > (w._x || 0) ? 'scaleX(-1)' : '';
+        w.style.transform = `translate(${Math.round(tx)}px, ${Math.round(ty)}px)`; w._x = tx; w._y = ty;
+        setTimeout(() => {
+            const spr = w.querySelector('.murloc-spr'); if (spr) spr.style.animation = 'murSpear .25s steps(6) infinite, murWaddle .12s ease-in-out infinite alternate';
+            if (f) f.style.transform = 'scaleX(-1)';   // face the yacht
+            petSay('murloc', pick(['MRGLGLGLGL!!! (attacking the yacht)', 'Mrgl! (this boat is MINE)', 'MRRRGL! (stab stab stab)', 'Aaaaaughibbrgubugbugrguburgle! (boarding party)']));
+            house.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-4deg)' }, { transform: 'rotate(3deg)' }, { transform: 'rotate(-2deg)' }, { transform: 'rotate(0)' }], { duration: 500, iterations: 4 });
+            chatBurst(['THE MURLOC IS ATTACKING THE YACHT', 'mrglglgl', 'not the yacht', 'murloc raid', 'someone call the coast guard', 'gallywix is going to be so mad'], 4, 2500);
+            if (Math.random() < 0.4) setTimeout(() => sqPost('yacht', pick(['reminder: please stop letting your murloc attack the yacht', 'the murloc poked a hole in the hull. Gary is now outside the yacht', 'murloc boarding attempt #47 repelled. barely'])), 3000);
+        }, 1150);
+        setTimeout(() => {
+            const spr = w.querySelector('.murloc-spr'); if (spr) spr.style.animation = '';
+            moveToast(pick(["🐸 The murloc attacked the yacht. Gallywix's insurance covers murlocs. Barely.", '🐸 Mrgl gave up on the yacht. For now.', '🐸 The yacht survived the murloc raid. The paint did not.']));
+            w._talking = false; const t = petTarget(w); petMove(w, t.x, t.y);
+        }, 5600);
+        return true;
+    }
+    function whelpChase() {
+        const w = $('pet-whelp'); if (!w || !driftParts.length || w._talking) return false;
+        const H = innerHeight, p = driftParts.find(q => q.y > 140 && q.y < H * 0.55 && q.x > 60 && q.x < innerWidth - 60); if (!p) return false;
+        w._talking = true;
+        const lead = 1.3, ty = p.y + p.vy * lead, tx = p.x + Math.sin(p.sway + lead) * 18;
+        const f = w.querySelector('.pet-flip'); if (f) f.style.transform = tx > (w._x || 0) ? 'scaleX(-1)' : '';
+        w.style.transition = `transform ${lead}s ease-in-out`; w.style.transform = `translate(${Math.round(tx - 35)}px, ${Math.round(ty - 40)}px)`; w._x = tx - 35; w._y = ty - 40;
+        setTimeout(() => {
+            const caught = p.e; p.y = -60; p.x = Math.random() * innerWidth;   // gulp
+            petSay('whelp', pick([`*CHOMP* ${caught} *hic* 🔥`, `got it! ${caught} *hic*`, `*munch* ${caught} ...it tastes like holidays *hic* 🔥`, `${caught}?? MINE *hic*`]));
+            setTimeout(() => { w._talking = false; const t = petTarget(w); petMove(w, t.x, t.y); }, 2600);
+        }, lead * 1000);
+        return true;
+    }
+    setInterval(() => {
+        if (document.hidden || isSpinning) return;
+        if (pets.murloc && Math.random() < 1 / 8) murlocRaid();          // roughly every 15 minutes with the yacht
+        if (pets.whelp && themeDrift && Math.random() < 1 / 3) whelpChase();   // during holidays, every few minutes
+    }, 120000);
     function petsReact(type, ctx) {
         Object.keys(PETS).filter(k => pets[k]).forEach((k, i) => {
             if (Math.random() < 0.6) setTimeout(() => petSay(k, PETS[k].say(type, ctx)), 900 + i * 1100);
