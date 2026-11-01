@@ -1039,6 +1039,7 @@
     const GIF_LOST = "media/gif_lost.gif?v=0694f342";      // Enron Ethics Handbook
     const PHOTO_DOUBLE_ENDER = "media/photo_double_ender.jpg?v=436a5e85";
     const PHOTO_NICKS_MOM = "media/photo_nicks_mom.jpg?v=bd3c018a";
+    const PHOTO_PARDNER_HELP = "media/photo_pardner_help.jpg?v=75fab1d8";
     const PHOTO_ROAD_BEERS = "media/photo_road_beers.jpg?v=d112894f";
     const PHOTO_GNOME = "media/photo_gnome.jpg?v=616157df";  // no croissants today, boss
 
@@ -1134,7 +1135,8 @@
         { id: "LIL_D", n: 1, label: "😭😭 Lil'D 😭😭", pill: "LIL'D 😭", bg: "#0284c7", text: "#ffffff", border: "#bae6fd", color: "text-sky-400", glow: "bg-sky-500", key: "l", rig: "LLD",
           win: { size: SIZE.big, sub: (s) => `POUR ONE OUT! Landed on 😭😭 Lil'D 😭😭 (Slice #${s})!` } },
         { id: "PARDNER", n: 1, label: "🤠 Pardner 🤠", pill: "PARDNER", bg: "#92400e", text: "#fef3c7", border: "#fbbf24", color: "text-amber-400", glow: "bg-amber-600", key: "w", rig: "PRD",
-          win: { title: "🤠 WOMP WOMP 🤠", size: SIZE.bigger, sub: (s) => `HOWDY PARDNER! Landed on Slice #${s} — Womp womp!` } },
+          win: { title: "🤠 PARDNER 🤠", size: SIZE.bigger, sub: (s) => `Slice #${s}. A reminder from the guild: nobody deserves to be abused, and help is always there. Look out for each other.`,
+                 media: { src: PHOTO_PARDNER_HELP, fallback: null, caption: "📞 1-800-799-7233 · Text BEGIN to 88788 · thehotline.org · Free, confidential, 24/7" } } },
         { id: "SHITTY_VAULT", n: 1, label: "💀 SHITTY VAULT 💀", pill: "SHITTY VAULT", bg: "#000000", text: "#ef4444", border: "#475569", color: "text-red-500", glow: "bg-red-950", key: "v", rig: "VLT",
           win: { size: SIZE.big, sound: "womp", sub: () => pickFresh(shittyVaultLoot) } },
         { id: "THIS_MF", n: 1, label: "This Mother Fucker", pill: "THIS MF", bg: "#78350f", text: "#fef3c7", border: "#d97706", color: "text-amber-500", glow: "bg-amber-800", key: "-", rig: "TMF",
@@ -6074,9 +6076,14 @@
         bible: ['Any farmers around? Asking for a friend.', 'Just out for a drive. Totally not looking for combines.', 'Wellness check on Reb.', "If you hear sirens, it's probably fine.",
             'Lost a finger, gained a passion for driving fast.', 'Does anyone here need CPR? No? Are you sure? I could practice.',
             "Just checking on my finger. It's on the SPIN button, living its best life. Still pointing.", "My finger has spun the wheel more times than Kevin. I'm so proud of it.",
-            'If anyone finds a finger on the wheel, that is mine. Please do not press it. (Press it.)'],
+            'If anyone finds a finger on the wheel, that is mine. Please do not press it. (Press it.)',
+            'Sorry, eh! Sorry. Just a wellness check. Sorry.', 'This ambulance runs on maple syrup and Tim Hortons. Mostly Tim Hortons.',
+            'Checking for farmers, moose, and anyone who needs a double-double.', "Hockey injury? Combine injury? Same paperwork, bud.",
+            "Back home this would be free. Down here it's 4,000 gold. Sorry."],
         cop: ['Just patrolling. Ignore the donut.', 'License and registration. Of your wheel.', 'Anyone seen my alt? He looks exactly like me.', 'Slow down, you\'re spinning too fast.',
-            'Routine check. Has anyone here been raiding under the influence?', 'I am the law. Also I am on my alt.'] };
+            'Routine check. Has anyone here been raiding under the influence?', 'I am the law. Also I am on my alt.',
+            'Hooah. Patrol route secured. Donut acquired.', 'Back in the Army we called this a Tuesday.', 'This cruiser has better armor than my old Humvee. Barely.',
+            'Roger that, rolling out. Oscar Mike.', "I've eaten MREs that were better than Kevin's DPS. Not many, but some.", "Up at 0500 again. The Army ruined sleeping in forever."] };
     let patrolOn = false;
     function patrol() {
         if (patrolOn || vehicles.amb || vehicles.cop || document.hidden || isSpinning) return;
@@ -6085,7 +6092,7 @@
         const ltr = Math.random() < 0.5, lanes = [66, Math.round(innerHeight * 0.45), innerHeight - 150];
         const el = document.createElement('div');
         el.style.cssText = `position:fixed;z-index:63;top:${pick(lanes)}px;left:0;font-size:44px;line-height:1;pointer-events:none;transform:translateX(${ltr ? -120 : innerWidth + 40}px);transition:transform 14s linear`;
-        el.innerHTML = `<div style="display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:4px;width:max-content;max-width:260px;background:#fffbe6;color:#111;font-size:12.5px;font-weight:800;line-height:1.3;padding:4px 9px;border-radius:9px;border:2px solid #111;white-space:normal"></div><div class="siren-glow" style="font-size:18px;text-align:center">🚨</div><span style="display:inline-block;${ltr === cop ? 'transform:scaleX(-1)' : ''}">${cop ? '🚓' : '🚑'}</span>`;
+        el.innerHTML = `<div style="display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:4px;width:max-content;max-width:260px;background:#fffbe6;color:#111;font-size:12.5px;font-weight:800;line-height:1.3;padding:4px 9px;border-radius:9px;border:2px solid #111;white-space:normal"></div><div class="siren-glow" style="font-size:18px;text-align:center">${cop ? '🚨🎖️' : '🚨🍁'}</div><span style="display:inline-block;${ltr === cop ? 'transform:scaleX(-1)' : ''}">${cop ? '🚓' : '🚑'}</span>`;
         document.body.appendChild(el);
         requestAnimationFrame(() => requestAnimationFrame(() => { el.style.transform = `translateX(${ltr ? innerWidth + 40 : -120}px)`; }));
         setTimeout(() => { const b = el.firstChild; b.style.display = 'block'; b.textContent = (cop ? '🚓 ChAoTiC: ' : '🚑 Biblehumping: ') + (!cop && garage.finger && Math.random() < 0.5 ? pick(PATROL_LINES.bible.filter(l => /finger/i.test(l) && !/^Lost/.test(l))) : pick(PATROL_LINES[cop ? 'cop' : 'bible'].filter(l => cop || garage.finger || !/my finger|SPIN button/i.test(l)))); setTimeout(() => { b.style.display = 'none'; }, 4200); }, 4500);
@@ -6333,7 +6340,7 @@
     const COMBINE_LINES = ["Well... that's one way to harvest a farmer.", "Biblehumping, that's the third combine this month.", "Sir, I'm gonna need you to step out of the fireball.",
         "Dispatch, we've got a 10-50... Biblehumping again.", "The farmers called 911 about Biblehumping. Biblehumping was the 911.", "Ambulance vs. combine. The corn won.",
         "I'm writing you a ticket for reckless farming.", "This is why the farmers moved to the city.",
-        "Biblehumping, you can't keep calling this 'triage'.", "That combine had a family. A whole tractor family.", "Adding 'one combine' to your list of victims, Biblehumping.",
+        "Biblehumping, you can't keep calling this 'triage'.", "Combine down! Medic! ...Oh right. The medic did this.", "I did two tours. Never saw anything like what this man does to farm equipment.", "That combine had a family. A whole tractor family.", "Adding 'one combine' to your list of victims, Biblehumping.",
         "The corn is pressing charges.", "Sir, this is the fourth harvest season you've ruined.", "Dispatch, cancel the farmer call. Biblehumping got there first."];
     function combineCrash(amb) {
         trafficOn = false;
@@ -6444,7 +6451,8 @@
         ['ChAoTiC', 'The vault is fine. The vault is always fine.'], ['Biblehumping', 'I can save the swordfish. I cannot save the other swordfish.'],
         ['ChAoTiC', 'I was on my alt. Had to log over to my cop for this.'], ['Biblehumping', 'I brought the defib. For the yacht.'],
         ['ChAoTiC', 'License, registration, and proof of yacht insurance.'], ['Biblehumping', 'The swordfish is stable. Gary is not.'],
-        ['ChAoTiC', 'Nobody touch the vault. The vault is evidence now.'], ['Biblehumping', 'Rocket vs. yacht. Still better odds than a farmer vs. me.']];
+        ['ChAoTiC', 'Nobody touch the vault. The vault is evidence now.'], ['Biblehumping', 'Rocket vs. yacht. Still better odds than a farmer vs. me.'],
+        ['Biblehumping', "Sorry about your yacht, eh. That one's on me. Sorry."], ['ChAoTiC', "I've seen combat. This is worse. Hooah."]];
     const WHEEL_CRASH_LINES = [
         ['Biblehumping', 'Who rigged the rocket? ...ChAoTiC, put your hand down.'], ['Biblehumping', "The wheel is on fire. That's... honestly normal."],
         ['ChAoTiC', "Don't worry, the odds are still rigged. Fire can't fix that."], ['Biblehumping', "Clear! ...no wait, that's for people."],
@@ -6452,7 +6460,8 @@
         ['ChAoTiC', 'Casimir says this is a feature.'], ['Biblehumping', 'Stop, drop and roll. The wheel only knows how to roll.'],
         ['ChAoTiC', "I'm confiscating this wheel. ...Okay, one more spin first."], ['Biblehumping', 'I can save the wheel. I cannot save the Kevin slices.'],
         ['ChAoTiC', 'I rigged it to land on No One. The rocket un-rigged it.'], ['Biblehumping', 'Good news: no farmers on the wheel. I checked twice.'],
-        ['ChAoTiC', 'Somebody call the fire department. Not my alt. The real one.'], ['Biblehumping', 'The wheel is now medium rare.']];
+        ['ChAoTiC', 'Somebody call the fire department. Not my alt. The real one.'], ['Biblehumping', 'The wheel is now medium rare.'],
+        ['Biblehumping', "Sorry, sorry, sorry. I'll put it out. Sorry. Anyone want a Timbit?"], ['ChAoTiC', 'Fire on the wheel! Get down! ...Sorry. Army habit.']];
     let rocketMishap = false, rocketBag = [];
     let rocketTargets = [];
     function rocketTargetWheel() {   // misses alternate yacht / wheel (shuffled in pairs), so you see both
@@ -7439,6 +7448,8 @@
         ['chaotic', 'pulled over a guy for doing 90 in a 45. it was Biblehumping. the ambulance was empty. he was "just vibing"'],
         ['bible', 'ChAoTiC has been on the same alt for 11 minutes. new record. someone check on him'], ['vince', 'NEVER SELL. ALSO SELL. I AM VERY BUSY.'],
         ['kevin', 'why does everyone keep poking a doll and then looking at me'],
+        ['bible', 'drove to the guild hall in a blizzard. it was -40. the farmers stayed inside for once 🍁'], ['bible', 'sorry. (that one was preemptive) 🍁'],
+        ['chaotic', 'up at 0500 out of habit. thanks, Army 🎖️'], ['chaotic', 'hooah. that is the whole post. hooah.'],
         ["kevin", "elan said my stock is trash. elan has never even seen me play. (that is why)"],
         ["elan", "might buy the guild hall. might rename it to X-Guild. might not. 🚀"],
         ["vince", "I GOT A TEXT. IT SAYS \"STOP CALLING\". WHO IS THIS"],
