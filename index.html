@@ -4833,7 +4833,7 @@
     }
     const inRange = (d, m1, d1, m2, d2) => { const v = (d.getMonth() + 1) * 100 + d.getDate(); return v >= m1 * 100 + d1 && v <= m2 * 100 + d2; };
     const THEMES = [
-        { id: 'halloween', name: 'Halloween 🎃', when: d => inRange(d, 10, 15, 11, 1),
+        { id: 'halloween', name: 'Halloween 🎃', when: d => inRange(d, 10, 15, 10, 31),
           tint: 'radial-gradient(ellipse at 50% 0%, rgba(234,88,12,0.18), transparent 60%), radial-gradient(ellipse at 50% 100%, rgba(88,28,135,0.25), transparent 60%)',
           pain: '#f97316', badge: ['🎃 ', ' 👻'], tagline: 'Haunted Decision Engine • Abandon All Hope • 4x Spooky Zoom',
           kevin: [['#0c0a09', '🎃', '🕷️', '#fdba74'], ['#2e1065', '👻', '🦇', '#e9d5ff']], kevinLabel: '👻 Kevin',
@@ -4865,7 +4865,7 @@
                  'KEVIN ATTEMPTS A SALUTE. HITS HIMSELF IN THE FACE. VETS ARE GRACIOUS ABOUT IT.',
                  'THANK YOU TO EVERY VETERAN WHO HAS EVER CARRIED THIS GUILD, IN GAME AND OUT.'],
           callouts: ['THANK YOU FOR YOUR SERVICE', 'SALUTE TO OUR VETS', 'HOOAH / OORAH / HOOYAH']},
-        { id: 'thanksgiving', name: 'Thanksgiving 🦃', when: d => inRange(d, 11, 2, 11, 30),
+        { id: 'thanksgiving', name: 'Thanksgiving 🦃', when: d => inRange(d, 11, 1, 11, 30),
           tint: 'radial-gradient(ellipse at 50% 0%, rgba(180,83,9,0.22), transparent 60%)',
           pain: '#d97706', badge: ['🦃 ', ' 🥧'], tagline: 'Gravy-Powered Decision Engine • 4x Stuffing Zoom',
           kevin: [['#7c2d12', '🍂', '🦃', '#fed7aa'], ['#78350f', '🍁', '🥧', '#fde68a']], kevinLabel: '🦃 Kevin',
