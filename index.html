@@ -732,7 +732,7 @@
             <div class="mt-5 pt-4 border-t border-slate-800">
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 2, 12:06 AM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 2, 12:11 AM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -9092,7 +9092,7 @@
         el.classList.toggle('hidden', stars === 0); el.classList.toggle('wanted', stars >= 5);
         const star = (on) => (on ? HEAT_STAR_ON : HEAT_STAR_OFF) ? `<img src="${on ? HEAT_STAR_ON : HEAT_STAR_OFF}" alt="">` : '★';
         el.innerHTML = '<span class="hl">HEAT</span>' + [0, 1, 2, 3, 4].map(i => `<span class="st${i < stars ? ' on' : ''}">${star(i < stars)}</span>`).join('');
-        el.title = stars >= 5 ? `WANTED. ${bac} drinks in. Any drinking slice now and ChAoTiC might pull you over (RUI fine: 20% of everything you own). You sober up one drink every 5 minutes.`
+        el.title = stars >= 5 ? `WANTED. ${bac} drinks in. Any drinking slice now and ChAoTiC might pull you over (RUI fine: 10% of everything you own). You sober up one drink every 5 minutes.`
             : `Heat: ${bac} drink${bac === 1 ? '' : 's'}. At 5 stars ChAoTiC starts looking for you. You sober up one drink every 5 minutes.`;
         el.setAttribute('aria-label', `Heat ${stars} of 5 stars`);
     }
@@ -9108,13 +9108,13 @@
         if (Date.now() - store.get('painWheelRuiAt', 0) < 30 * 60000) return;   // one stop per half hour
         store.set('painWheelRuiAt', Date.now());
         bac = 0; store.set('painWheelBac', 0); renderHeat();
-        const fine = Math.round(totalAssets() * 0.2);
+        const fine = Math.round(totalAssets() * 0.1);
         debts.court += fine; saveDebts(); unlock('rui');
         if (garage.police && !vehicles.cop) drivePolice();
         funEvent('🚔 BUSTED: RAIDING UNDER THE INFLUENCE', 6000);
         sqPost('chaotic', `just pulled over ${playerName || 'a raider'} for Raiding Under the Influence. he blew a .40 on the DPS meter`);
         const bottles = (bag["Reb's Empty Bottle"] && bag["Reb's Empty Bottle"].n) || 0;
-        moveToast(`🚔 ChAoTiC pulled you over for Raiding Under the Influence${bottles ? ` (evidence: ${bottles} empty Knob Creek bottle${bottles > 1 ? 's' : ''} in your bag)` : ''}. Fine: ${fmt(fine)} (20% of your total assets) at 400% interest until paid.`);
+        moveToast(`🚔 ChAoTiC pulled you over for Raiding Under the Influence${bottles ? ` (evidence: ${bottles} empty Knob Creek bottle${bottles > 1 ? 's' : ''} in your bag)` : ''}. Fine: ${fmt(fine)} (10% of your total assets) at 400% interest until paid.`);
         chatBurst(['BUSTED', 'RUI KEKW', 'chaotic got him', 'license and registration', 'he blew a .40 on the dps meter', 'free him'], 6, 3000);
     }
 
