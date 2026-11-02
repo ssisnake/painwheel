@@ -200,6 +200,12 @@
         font: 700 13px 'Pixelify Sans', ui-monospace, monospace; letter-spacing: .12em; color: #fdba74;
         background: repeating-linear-gradient(90deg, #4a2a12 0 6px, #5b3416 6px 9px, #3d220e 9px 14px); padding: 6px 0; }
     @media (prefers-reduced-motion: reduce) { #miniFinger, #miniYachts img { animation: none; } #miniYachts img { left: auto; } }
+    /* Wheelception: every level is drawn inside the wood-grain TV (screen cut out of the sprite; the console strip sits under it) */
+    #miniNest .bezel { border-style: solid; border-width: 26px 46px 96px 50px; border-radius: 0; border-color: transparent;
+        border-image: url(media/photo_tv2600.png?v=dd04cd4b) 26 40 92 46 stretch; background: #050b18; background-clip: padding-box;
+        box-shadow: 0 18px 40px rgba(0,0,0,.55); padding: 6px; image-rendering: pixelated; }
+    #miniNest .bezel.atari::after { display: none; }
+    #miniNest .bezel .bezel { border-width: 16px 28px 58px 30px; padding: 4px; }   /* inner TVs are smaller so 5 deep still fits */
     #miniRes { min-height: 50px; max-width: 460px; font-weight: 800; font-size: 17px; color: #f1f5f9; line-height: 1.35; }
     #miniBtns { display: flex; gap: 10px; }
     #miniBtns .btn { font-size: 16px; padding: 10px 18px; }

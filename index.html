@@ -436,7 +436,16 @@
         #heatMeter .hl { font: 900 11px/1 ui-monospace, monospace; letter-spacing: .12em; color: #fca5a5; margin-right: 3px; }
         #heatMeter .st { font-size: 17px; line-height: 1; color: #3f3f46; -webkit-text-stroke: 1px #000; }
         #heatMeter .st.on { color: #f8fafc; text-shadow: 0 0 6px rgba(255,255,255,.5); }
-        #heatMeter .st img { height: 17px; width: auto; image-rendering: pixelated; vertical-align: middle; }
+        #heatMeter .st { position: relative; display: inline-block; }
+        #heatMeter .st img { height: 20px; width: auto; vertical-align: middle; display: block; }
+        #heatMeter .st.on { text-shadow: none; }
+        #heatMeter .st.on .b { position: absolute; left: 0; top: 0; opacity: 0; animation: sirenSwap 1.4s steps(1) infinite; }
+        #heatMeter.wanted .st.on .b { animation-duration: .5s; }
+        #heatMeter .st.on .r { filter: drop-shadow(0 0 4px rgba(255,80,80,.55)); }
+        @keyframes sirenSwap { 50% { opacity: 1; } }
+        @keyframes boatBob { 50% { transform: translateY(3px) rotate(-1deg); } }
+        @keyframes ufoHover { 50% { transform: translateY(-6px); } }
+        @media (prefers-reduced-motion: reduce) { #heatMeter .st.on .b { animation: none; } }
         #heatMeter.wanted { border-color: #ef4444; animation: heatFlash .7s steps(2) infinite; }
         @keyframes heatFlash { 50% { background: #450a0a; } }
         @media (prefers-reduced-motion: reduce) { #heatMeter.wanted { animation: none; background: #450a0a; } }
@@ -1392,6 +1401,11 @@
     const PHOTO_CHICKEN = "media/photo_chicken.png?v=d6697602";
     const PHOTO_WHELP = "media/photo_whelp.png?v=e83a9376";
     const PHOTO_LOGO = "media/photo_logo.png?v=7e59cc27";
+    const PHOTO_CRASH = "media/photo_crash.png?v=1ba43d4a";             // ChAoTiC's cruiser + Biblehumping's ambulance, nose to nose
+    const PHOTO_AMB_CHICKEN = "media/photo_amb_chicken.png?v=79925cdf"; // the ambulance right after the chicken (feathers)
+    const PHOTO_POLICE_BOAT = "media/photo_police_boat.png?v=c2345a95";
+    const PHOTO_UFO = "media/photo_ufo.png?v=a2359442";
+    const PHOTO_UFO_BEAM = "media/photo_ufo_beam.png?v=41a5f93d";     // tractor beam, chicken included
     const PHOTO_COMBINE = "media/photo_combine.png?v=287d61b7";
     const PHOTO_ROAD_BEERS = "media/photo_road_beers.jpg?v=d112894f";
     const PHOTO_GNOME = "media/photo_gnome.jpg?v=616157df";  // no croissants today, boss
@@ -7013,7 +7027,35 @@
             const spr = w.querySelector('.murloc-spr'); if (spr) spr.style.animation = '';
             moveToast(pick(["🐸 The murloc attacked the yacht. Gallywix's insurance covers murlocs. Barely.", '🐸 Mrgl gave up on the yacht. For now.', '🐸 The yacht survived the murloc raid. The paint did not.']));
             w._talking = false; const t = petTarget(w); petMove(w, t.x, t.y);
+            if (Math.random() < 0.5) setTimeout(() => policeBoat(), 1200);
         }, 5600);
+        return true;
+    }
+    const BOAT_LINES = [
+        ['ChAoTiC', 'Undermine Lake Patrol. Which is me. In a boat.'], ['Biblehumping', 'Nobody told me there would be boats. I get seasick, bud.'],
+        ['ChAoTiC', 'Sir, is this your murloc?'], ['Biblehumping', 'I can patch the yacht. I cannot patch the murloc. Sorry eh.'],
+        ['ChAoTiC', 'Murloc, you have the right to remain mrgl.'], ['Biblehumping', 'Any farmers on board? ...No? Then why am I here.'],
+        ['ChAoTiC', 'Writing the murloc a ticket for piracy. And for being a murloc.'], ['Biblehumping', 'I brought a life jacket for Gary. Gary declined.'],
+        ['ChAoTiC', 'Spotted: one murloc, one yacht, zero witnesses. Except Gary.'], ['Biblehumping', 'This boat runs on maple syrup too. It is going very slowly.']];
+    let boatOn = false;
+    function policeBoat() {   // ChAoTiC and Biblehumping cruise up to the yacht, trade a line each, and leave
+        const house = $('houseEmoji');
+        if (boatOn || !house || document.hidden || $('timeshareHouse').classList.contains('hidden')) return false;
+        const r = house.getBoundingClientRect(); if (!onView(r)) return false;
+        boatOn = true;
+        const b = document.createElement('div'), stopAt = Math.max(10, Math.round(r.left - 200));
+        b.style.cssText = `position:fixed;z-index:63;left:0;top:${Math.round(r.bottom - 92)}px;width:190px;pointer-events:none;transform:translateX(-220px);transition:transform 3s cubic-bezier(.2,.7,.3,1)`;
+        b.innerHTML = `<div class="gb" style="display:none;position:absolute;bottom:100%;margin-bottom:4px;left:50%;transform:translateX(-50%);width:max-content;max-width:min(380px,70vw);background:#fffbe6;color:#000;font-size:18px;font-weight:800;line-height:1.3;padding:7px 12px;border-radius:9px;border:2px solid #111;white-space:normal"></div><img src="${PHOTO_POLICE_BOAT}" alt="" style="display:block;width:190px;animation:boatBob 1.6s ease-in-out infinite">`;
+        document.body.appendChild(b);
+        const stopSiren = playSiren(2.5);
+        requestAnimationFrame(() => requestAnimationFrame(() => { b.style.transform = `translateX(${stopAt}px)`; }));
+        const lines = [pickFresh(BOAT_LINES)]; let l2; do { l2 = pickFresh(BOAT_LINES); } while (l2[0] === lines[0][0]); lines.push(l2);
+        const bub = b.firstChild, show = ([who, t]) => { bub.textContent = (who === 'ChAoTiC' ? '🚓 ' : '🚑 ') + who + ': ' + t; bub.style.display = 'block'; };
+        setTimeout(() => show(lines[0]), 3000);
+        setTimeout(() => show(lines[1]), 6200);
+        if (Math.random() < 0.4) setTimeout(() => sqPost('chaotic', pick(['lake patrol update: the murloc has been warned. the murloc said mrgl. i am taking that as a yes', 'commandeered a boat. it was already a police boat. still counts'])), 4500);
+        setTimeout(() => { bub.style.display = 'none'; stopSiren(); b.style.transition = 'transform 3.4s ease-in'; b.style.transform = `translateX(${innerWidth + 40}px)`; }, 9600);
+        setTimeout(() => { b.remove(); boatOn = false; }, 13200);
         return true;
     }
     function whelpChase() {
@@ -7217,6 +7259,8 @@
                 fxAt('poof', cx, lane + 30, 90);
                 chickenDown(12000, '🍗', '🐔 The chicken respawned. It has questions about Canadian drivers.');
                 amb.style.transition = 'transform .5s ease-out'; amb.style.transform = `translateX(${cx - 40}px)`;
+                const spr = amb.querySelector('.cop-sprite');   // feathers everywhere
+                if (spr) spr.outerHTML = `<img src="${PHOTO_AMB_CHICKEN}" alt="" style="display:block;width:166px;margin:-26px 0 0 -11px;transform:scaleX(-1)">`;
                 say(amb, '🚑 Biblehumping: OH NO. SORRY. SORRY EH!');
                 funEvent('🚑🐔 BIBLEHUMPING HIT THE CHICKEN', 3500);
                 chatBurst(['NICK NOOO', 'CHICKEN DOWN', 'roadkill', 'KFC speedrun', 'the chicken did not make it across', 'sorry eh'], 5, 2500);
@@ -7235,6 +7279,69 @@
             }, 1100);
         }, 1700);
         return true;
+    }
+
+    // 🛸 the chicken gets abducted (our chicken has poor luck). It comes back later. Changed.
+    const UFO_BACK = ['BAWK. (it has seen things)', 'bawk... (it will not talk about it)', 'BAWK BAWK (they have a wheel up there too)', 'b a w k (it knows the truth now)', 'BAWK! (it got a free tour of the galaxy)'];
+    function chickenAbduct(force) {
+        const w = $('pet-chicken');
+        if (!w || w._talking || document.hidden || isSpinning || $('ufoShip')) return false;
+        const cr = w.getBoundingClientRect(); if (!onView(cr) || cr.top < 140) return false;   // needs sky above it
+        if (!force && Date.now() - store.get('painWheelUfoAt', 0) < 4 * 3600 * 1000) return false;   // not more than every 4 hours
+        store.set('painWheelUfoAt', Date.now());
+        w._talking = true;
+        const cx = cr.left + cr.width / 2 + scrollX, feet = cr.bottom + scrollY;   // page coords, so it stays put if you scroll
+        const BW = 150, BH = 258, UW = 140;   // beam sprite size on screen; the saucer sits on top of it
+        const top = feet - BH;
+        const ufo = document.createElement('div'); ufo.id = 'ufoShip';
+        ufo.style.cssText = `position:absolute;z-index:81;left:0;top:0;width:${UW}px;pointer-events:none;transform:translate(${-200}px,${scrollY + 20}px);transition:transform 1.8s cubic-bezier(.3,.8,.3,1)`;
+        ufo.innerHTML = `<img src="${PHOTO_UFO}" alt="" style="display:block;width:100%;animation:ufoHover 1.2s ease-in-out infinite">`;
+        document.body.appendChild(ufo);
+        const hum = playUfoHum(7);
+        petSay('chicken', pick(['BAWK? (what is that)', 'bawk...? (looks up)', 'BAWK! (not again)']));
+        chat(pick(['is that a UFO', 'UFO??', 'look up chicken', 'KEVIN LOOK UP']));
+        requestAnimationFrame(() => requestAnimationFrame(() => { ufo.style.transform = `translate(${Math.round(cx - UW / 2)}px,${Math.round(top - 4)}px)`; }));
+        setTimeout(() => {   // beam it up: the beam sprite has the chicken in it
+            ufo.style.transition = 'none'; ufo.style.width = BW + 'px';
+            ufo.style.transform = `translate(${Math.round(cx - BW / 2)}px,${Math.round(top)}px)`;
+            ufo.innerHTML = `<img src="${PHOTO_UFO_BEAM}" alt="" style="display:block;width:100%;filter:drop-shadow(0 0 14px rgba(94,234,212,.6))">`;
+            const chickImg = ufo.firstChild;
+            w.style.visibility = 'hidden';
+            chickImg.animate([{ opacity: .4 }, { opacity: 1 }], { duration: 300 });
+            funEvent('🛸 THE CHICKEN IS BEING ABDUCTED 🛸', 3200);
+            chatBurst(['THE CHICKEN', 'ABDUCTED', 'X-FILES MUSIC', 'they took the chicken', 'beam me up chicken', 'area 51 chicken', 'F', 'take kevin instead'], 6, 2600);
+            setTimeout(() => floatBubble(pick(['🤡 Kevin: take me instead! ...no wait', '🤡 Kevin: why does the chicken get to go to space', '🤡 Kevin: is it my fault? it feels like my fault']), cx - scrollX, top - scrollY + 40, 2800, true), 1600);
+        }, 2100);
+        setTimeout(() => {   // gone
+            ufo.style.width = UW + 'px'; ufo.innerHTML = `<img src="${PHOTO_UFO}" alt="" style="display:block;width:100%">`;
+            ufo.style.transform = `translate(${Math.round(cx - UW / 2)}px,${Math.round(top - 4)}px)`;
+            requestAnimationFrame(() => requestAnimationFrame(() => { ufo.style.transition = 'transform 1.1s ease-in, opacity 1.1s'; ufo.style.transform = `translate(${innerWidth + 200}px,${scrollY - 260}px) scale(.3)`; ufo.style.opacity = '.2'; }));
+            setTimeout(() => ufo.remove(), 1200);
+            moveToast('🛸 The chicken has been abducted. It will be back. Probably.');
+        }, 5400);
+        setTimeout(() => sqPost('chaotic', pick(['BOLO: one chicken. last seen going UP. if you see a chicken in the sky do NOT engage', 'filed a missing chicken report. under "direction last seen" i wrote "up"'])), 6500);
+        setTimeout(() => sqPost('bible', pick(['responded to a chicken call. the chicken was not on the ground. it was in the sky. i do not have a ladder that tall', 'that chicken has been hit by me, a glaive and now aliens. it is the most durable chicken in Westfall'])), 11000);
+        setTimeout(() => {   // dropped back off, slightly changed
+            const sx = w._x || cx - 30, sy = w._y || feet - 60;
+            w.style.transition = 'none'; w.style.transform = `translate(${Math.round(sx)}px, ${Math.round(scrollY - 120)}px)`; w.style.visibility = '';
+            requestAnimationFrame(() => requestAnimationFrame(() => { w.style.transition = 'transform 1.4s cubic-bezier(.5,0,.6,1.3)'; w.style.transform = `translate(${Math.round(sx)}px, ${Math.round(sy)}px)`; }));
+            setTimeout(() => { petSay('chicken', pick(UFO_BACK)); featherBurst(sx - scrollX + 30, sy - scrollY + 30, 6); chat(pick(['THE CHICKEN IS BACK', 'he came back', 'chicken returned from space', 'what did they do to him'])); }, 1500);
+            setTimeout(() => { w._talking = false; }, 5500);
+        }, force ? 15000 : 40000);
+        return true;
+    }
+    function playUfoHum(secs) {   // a wobbly theremin warble
+        if (!soundOn()) return () => {};
+        try {
+            ensureAudio();
+            const t = audioCtx.currentTime, o = audioCtx.createOscillator(), lfo = audioCtx.createOscillator(), lg = audioCtx.createGain(), g = audioCtx.createGain();
+            o.type = 'sine'; o.frequency.value = 520; lfo.frequency.value = 6; lg.gain.value = 60;
+            lfo.connect(lg); lg.connect(o.frequency);
+            o.frequency.setValueAtTime(520, t); o.frequency.linearRampToValueAtTime(880, t + 2.2); o.frequency.linearRampToValueAtTime(420, t + secs);
+            g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.05, t + 0.5); g.gain.setValueAtTime(0.05, t + secs - 0.6); g.gain.linearRampToValueAtTime(0.0001, t + secs);
+            o.connect(g); g.connect(outGain); o.start(t); lfo.start(t); o.stop(t + secs + 0.05); lfo.stop(t + secs + 0.05);
+            return () => { try { o.stop(); lfo.stop(); } catch (e) {} };
+        } catch (e) { return () => {}; }
     }
 
     const SVG_ICEBERG_OLD = '<svg viewBox="0 0 120 90" width="120" height="90" aria-hidden="true"><path d="M8 70 L28 34 L40 44 L56 10 L72 38 L84 28 L110 70 Z" fill="#e0f2fe" stroke="#0c4a6e" stroke-width="3" stroke-linejoin="round"/>'
@@ -7275,8 +7382,9 @@
         if (r < 0.06) strayGlaive();
         else if (r < 0.09 && pets.chicken) chickenRoadkill();
         else if (r < 0.13) yachtIceberg();
+        else if (r < 0.16 && pets.chicken) chickenAbduct();
     }, 150000);
-    window.strayGlaive = strayGlaive; window.chickenRoadkill = chickenRoadkill; window.yachtIceberg = yachtIceberg;
+    window.strayGlaive = strayGlaive; window.chickenRoadkill = chickenRoadkill; window.yachtIceberg = yachtIceberg; window.chickenAbduct = chickenAbduct; window.policeBoat = policeBoat;
 
     // ---------- Reb's liver: beer and bourbon slices hurt it; it slowly heals ----------
     let liver = store.get('painWheelLiver', 100), liverDown = false;
@@ -7573,13 +7681,17 @@
         trafficOn = false;
         const amb = vehicles.amb, cop = vehicles.cop;
         [amb, cop].forEach(v => { v.stop(); v.el.style.transition = 'transform .5s ease-out, opacity 1.2s 1.2s'; });
-        amb.el.style.transform = `translateX(${(x + 30).toFixed(1)}px) rotate(18deg)`; cop.el.style.transform = `translateX(${(x - 60).toFixed(1)}px) rotate(-14deg)`;
+        amb.el.style.opacity = '0'; cop.el.style.opacity = '0'; amb.el.style.transition = cop.el.style.transition = 'none';   // swap in the wreck
+        const wreck = document.createElement('img'); wreck.src = PHOTO_CRASH; wreck.alt = '';
+        wreck.style.cssText = `position:fixed;z-index:77;bottom:${VEH_Y - 8}px;left:${Math.round(x - 150)}px;width:300px;pointer-events:none;filter:drop-shadow(0 6px 8px rgba(0,0,0,.5));transition:opacity 1s`;
+        document.body.appendChild(wreck); wreck.animate([{ transform: 'translateX(0) rotate(0)' }, { transform: 'translateX(-6px) rotate(-2deg)' }, { transform: 'translateX(5px) rotate(1.5deg)' }, { transform: 'translateX(0) rotate(0)' }], { duration: 420 });
+        setTimeout(() => { wreck.style.opacity = '0'; setTimeout(() => wreck.remove(), 1100); }, 2200);
         playCrash();
         const boom = boomEl();
         boom.style.cssText = `position:fixed;z-index:78;bottom:${VEH_Y + 10}px;left:${x}px;font-size:40px;pointer-events:none;transform:translateX(-30%) scale(.3);transition:transform .35s ease-out, opacity .8s .9s`;
         document.body.appendChild(boom); requestAnimationFrame(() => boom.style.transform = 'translateX(-30%) scale(3.2)');
         document.body.animate([{ transform: 'translate(0,0)' }, { transform: 'translate(-8px,4px)' }, { transform: 'translate(7px,-5px)' }, { transform: 'translate(-4px,3px)' }, { transform: 'translate(0,0)' }], { duration: 450 });
-        setTimeout(() => { boom.style.opacity = '0'; amb.el.style.opacity = '0'; cop.el.style.opacity = '0'; }, 400);
+        setTimeout(() => { boom.style.opacity = '0'; }, 400);
         setTimeout(() => { boom.remove(); amb.el.remove(); cop.el.remove(); delete vehicles.amb; delete vehicles.cop; }, 2600);
         chatBurst(['CRASH', 'FENDER BENDER', 'OH NO', 'first responders responding to each other', 'insurance claim incoming', 'who had the right of way'], 6, 2500);
         unlock('fenderbender'); sendEvent({ k: 'crash' });
@@ -7587,7 +7699,7 @@
             const o = document.createElement('div');
             o.style.cssText = 'position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(2,6,23,.75)';
             o.innerHTML = `<div style="width:min(540px,100%);background:#0f172a;border:2px solid #f97316;border-radius:18px;padding:20px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6)">
-                <div style="display:flex;align-items:center;justify-content:center;gap:4px">${ambSprite(false, 1.2)}<span style="font-size:40px;line-height:1">💥</span>${copSprite(true, 1.2)}</div>
+                <img src="${PHOTO_CRASH}" alt="The cruiser and the ambulance, nose to nose" style="display:block;margin:0 auto;width:min(360px,100%)">
                 <div style="font-weight:900;font-size:22px;color:#fdba74;margin-top:8px">Biblehumping and ChAoTiC are now arguing whose fault it is.</div>
                 <div data-arg style="margin-top:12px;text-align:left;font-size:19px;line-height:1.5;min-height:120px"></div>
                 <button data-x style="margin-top:12px;padding:6px 18px;border-radius:8px;background:#334155;color:#fff;font-weight:800;cursor:pointer;border:none">File the insurance claim</button></div>`;
@@ -9085,13 +9197,15 @@
 
     // ---------- 🚔 Raiding Under the Influence: road beers + Knob Creek add up ----------
     let bac = store.get('painWheelBac', 0);
-    const HEAT_STAR_ON = null, HEAT_STAR_OFF = null;   // pixel star sprites go here when they're drawn (falls back to ★)
+    const HEAT_STAR_RED = "media/photo_star_red.png?v=f31b6145", HEAT_STAR_BLUE = "media/photo_star_blue.png?v=c10c0ad3";
+    const HEAT_STAR_HALF = "media/photo_star_half.png?v=45af667a", HEAT_STAR_OFF = "media/photo_star_empty.png?v=51e9d979";   // half star: spare, for later
     function renderHeat() {
         const el = $('heatMeter'); if (!el) return;
         const stars = Math.max(0, Math.min(5, bac));   // one star per drink; 5 = wanted
         el.classList.toggle('hidden', stars === 0); el.classList.toggle('wanted', stars >= 5);
-        const star = (on) => (on ? HEAT_STAR_ON : HEAT_STAR_OFF) ? `<img src="${on ? HEAT_STAR_ON : HEAT_STAR_OFF}" alt="">` : '★';
-        el.innerHTML = '<span class="hl">HEAT</span>' + [0, 1, 2, 3, 4].map(i => `<span class="st${i < stars ? ' on' : ''}">${star(i < stars)}</span>`).join('');
+        // lit stars alternate red/blue like a light bar and swap colors (faster when you're wanted)
+        const star = (i, on) => on ? `<img class="r" src="${i % 2 ? HEAT_STAR_BLUE : HEAT_STAR_RED}" alt=""><img class="b" src="${i % 2 ? HEAT_STAR_RED : HEAT_STAR_BLUE}" alt="">` : `<img src="${HEAT_STAR_OFF}" alt="">`;
+        el.innerHTML = '<span class="hl">HEAT</span>' + [0, 1, 2, 3, 4].map(i => `<span class="st${i < stars ? ' on' : ''}">${star(i, i < stars)}</span>`).join('');
         el.title = stars >= 5 ? `WANTED. ${bac} drinks in. Any drinking slice now and ChAoTiC might pull you over (RUI fine: 10% of everything you own). You sober up one drink every 5 minutes.`
             : `Heat: ${bac} drink${bac === 1 ? '' : 's'}. At 5 stars ChAoTiC starts looking for you. You sober up one drink every 5 minutes.`;
         el.setAttribute('aria-label', `Heat ${stars} of 5 stars`);
