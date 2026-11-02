@@ -6436,9 +6436,20 @@
         el.textContent = knobShares ? `You own ${knobShares} share${knobShares > 1 ? 's' : ''} (${Math.round(knobShares * knobNow).toLocaleString()}g)` : 'You own 0 shares · paid in gold';
     }
     window.onKnobTick = (p) => { knobNow = p; renderKnobHold(); };
+    // short on gold for stocks? offer to pull the difference out of the Goblin Vault (moves it into your wallet, then the buy goes through)
+    function vaultCovers(cost, what, newsId) {
+        const short = Math.ceil(cost - gold), v = vaultGold();
+        if (short <= 0) return true;
+        if (v < short) return false;
+        if (!confirm(`You're ${short.toLocaleString()}g short for ${what}.\n\nPull ${short.toLocaleString()}g out of your Goblin Vault to cover it?\n(Vault has ${v.toLocaleString()}g. The goblins will judge you.)`)) return false;
+        store.set('painWheelVault', Math.round(v - short)); setGold(gold + short);
+        if (newsId && $(newsId)) setTimeout(() => { $(newsId).textContent = `🏦 ${$(newsId).textContent} (${short.toLocaleString()}g came out of the vault)`; }, 0);
+        if (Math.random() < 0.5) chat(pick(['raiding the vault for STONKS', 'the vault was supposed to be for emergencies', 'this is an emergency apparently', 'goblins are shaking their heads']));
+        return true;
+    }
     function buyKnob(n) {
         const cost = Math.max(1, Math.round(knobNow)) * n;
-        if (gold < cost) { $('knobNews').textContent = `📉 You need ${cost.toLocaleString()}g for ${n} share${n > 1 ? 's' : ''}. You have ${gold.toLocaleString()}g.`; return; }
+        if (gold < cost && !vaultCovers(cost, `${n.toLocaleString()} $KNOB`, 'knobNews')) { if (gold < cost) $('knobNews').textContent = `📉 You need ${cost.toLocaleString()}g for ${n} share${n > 1 ? 's' : ''}. You have ${gold.toLocaleString()}g.`; return; }
         knobShares += n; store.set('painWheelKnobShares', knobShares); setGold(gold - cost);
         if (n > 1) $('knobNews').textContent = `📈 Bought ${n.toLocaleString()} shares for ${cost.toLocaleString()}g.`;
         renderKnobHold();
@@ -9587,7 +9598,7 @@
     }
     function exBuy(st, n) {
         const cost = Math.max(1, Math.round(exPrice[st.sym] * n));
-        if (gold < cost) { $('exNews').textContent = `📉 ${n} $${st.sym} costs ${cost.toLocaleString()}g. You have ${gold.toLocaleString()}g.`; return; }
+        if (gold < cost && !vaultCovers(cost, `${n.toLocaleString()} $${st.sym}`, 'exNews')) { if (gold < cost) $('exNews').textContent = `📉 ${n} $${st.sym} costs ${cost.toLocaleString()}g. You have ${gold.toLocaleString()}g.`; return; }
         setGold(gold - cost); exHold[st.sym] = (exHold[st.sym] || 0) + n; store.set('painWheelStocks', exHold);
         $('exNews').textContent = `📈 Bought ${n.toLocaleString()} $${st.sym} for ${cost.toLocaleString()}g.`; exRender();
         if (n >= 100) chat(pick(['WHALE ALERT', `${st.sym} TO THE MOON`, 'insider trading?', 'SEC has entered the chat']));
