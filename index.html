@@ -625,7 +625,7 @@
     <!-- Hourly popup ad (rotates between several fake ads) -->
     <div id="lawAd" class="fixed inset-0 z-[64] hidden items-center justify-center bg-black/60 p-4">
         <div class="relative w-full max-w-lg" style="font-family: Arial, Helvetica, sans-serif;">
-            <div class="absolute -top-6 left-0 text-[10px] text-slate-400 uppercase tracking-wider">Advertisement</div>
+            <div id="adLabel" class="absolute -top-6 left-0 text-[10px] text-slate-400 uppercase tracking-wider">Advertisement</div>
             <button id="lawAdClose" title="Close ad" aria-label="Close ad" class="absolute -top-2 -right-2 z-10 w-4 h-4 leading-none text-[10px] rounded-sm bg-white/90 text-slate-500 hover:text-black border border-slate-300 cursor-pointer hidden">×</button>
             <div id="lawAdCountdown" class="absolute -top-6 right-0 text-[10px] text-slate-300">You can close this ad in 3</div>
             <div id="adSlot"></div>
@@ -5990,7 +5990,22 @@
                 lastShown = memLast = Date.now(); set('painWheelAdLastShown', lastShown); tsukBlocked(pickAd.id); return;
             }
             currentAdId = pickAd.id;
-            slot.innerHTML = pickAd.html;
+            const tsukOwned = store.get('painWheelTsukOwned', {});
+            if (pickAd.id === 'tsukblock' && Object.keys(tsukOwned).length) {   // you already bought it: Tsussie just says thanks and leaves
+                const tier = tsukOwned.rikers ? 'rikers' : tsukOwned.premium ? 'premium' : 'free';
+                slot.innerHTML = `<div style="padding:28px 22px;text-align:center;background:linear-gradient(160deg,#1e1b4b,#0f172a);border:3px solid #a78bfa;border-radius:14px;color:#ede9fe">
+                    <div style="font-size:56px;line-height:1">🛡️</div>
+                    <div style="font:900 26px/1.15 system-ui,sans-serif;margin-top:10px;color:#facc15">THANK YOU FOR PURCHASING TSUKBLOCK™</div>
+                    <div style="font-size:18px;margin-top:10px"></div>
+                    <div style="font-size:14px;margin-top:12px;color:#c4b5fd">Tsukaar has returned to tanking. This message will close itself.</div></div>`;
+                slot.querySelector('div > div:nth-child(3)').textContent = { free: "You're on TsukBlock Free. That's fine. Tsukaar respects the hustle. (Premium is right there though.)",
+                    premium: 'TsukBlock Premium is protecting you. Tsussie is in full glam and tanking your pop-ups.', rikers: 'Maximum Security: Rikers Island Edition is active. No ads. No visitors. No parole.' }[tier];
+                x.classList.add('hidden'); cd.classList.add('hidden'); $('adLabel').textContent = 'A message from TsukBlock';
+                ad.classList.remove('hidden'); ad.classList.add('flex');
+                setTimeout(() => { if (currentAdId === 'tsukblock') { ad.classList.add('hidden'); ad.classList.remove('flex'); } }, 3500);   // no countdown, no timer reset: it just goes away
+                return;
+            }
+            $('adLabel').textContent = 'Advertisement'; slot.innerHTML = pickAd.html;
             lastShown = memLast = Date.now();
             set('painWheelAdLastShown', lastShown); set('painWheelAdLastId', pickAd.id);
             x.classList.add('hidden'); cd.classList.remove('hidden');
@@ -6028,7 +6043,8 @@
         });
         window.showAdById = (id, typed) => {   // slices/events that summon an ad still have to get past TsukBlock (typed codes don't)
             if (!ad.classList.contains('hidden') || isSpinning) return;
-            if (!typed && !tsukAllows(id)) { tsukBlocked(id); return; }
+            const thanks = id === 'tsukblock' && Object.keys(store.get('painWheelTsukOwned', {})).length;   // owners get a thank-you, not an ad
+            if (!typed && !thanks && !tsukAllows(id)) { tsukBlocked(id); return; }
             show(id);
         };
         setTimeout(tryShow, 10000);
