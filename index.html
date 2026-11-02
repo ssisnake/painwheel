@@ -670,27 +670,28 @@
 
     <!-- My Stats -->
     <div id="statsPanel" class="fixed inset-0 z-[71] hidden items-center justify-center bg-slate-950/90 p-4">
-        <div class="w-full max-w-2xl max-h-[88vh] overflow-y-auto bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl">
+        <div class="w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-2xl">
             <div class="flex items-center justify-between mb-3">
                 <div class="text-lg font-black uppercase tracking-tight">📊 <span id="statsName">Your</span> Stats</div>
                 <button id="statsClose" class="text-slate-400 hover:text-white text-sm font-bold cursor-pointer">✕</button>
             </div>
             <div id="statsGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4"></div>
-            <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Most landed</div>
+            <div class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-2">Most landed</div>
             <div id="statsTop" class="space-y-1 mb-4 text-sm"></div>
-            <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Achievements <span id="achCount" class="text-amber-300"></span></div>
+            <div class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-2">Achievements <span id="achCount" class="text-amber-300"></span></div>
             <div id="achList" class="grid grid-cols-1 sm:grid-cols-2 gap-1.5"></div>
-            <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mt-4 mb-1">Slices you haven't landed on yet <span id="unseenCount" class="text-amber-300"></span></div>
+            <div class="text-sm font-bold uppercase tracking-wider text-slate-300 mt-4 mb-1">Slices you haven't landed on yet <span id="unseenCount" class="text-amber-300"></span></div>
             <div class="text-[11px] text-slate-500 mb-2">Land on 40 different kinds for <b>Seen It All</b>. Numbers are slice numbers on the wheel (they show in the zoom cam).</div>
             <div id="unseenList" class="flex flex-wrap gap-1 text-[11px]"></div>
             <div id="guildSection" class="hidden mt-5">
                 <div class="flex items-center justify-between mb-2">
-                    <div class="text-xs font-bold uppercase tracking-wider text-slate-400">🏰 Guild leaderboard</div>
-                    <span id="guildStatus" class="text-[11px] text-slate-500"></span>
+                    <div class="text-sm font-bold uppercase tracking-wider text-slate-300">🏰 Guild leaderboard <span class="normal-case font-normal text-slate-500">(ranked by spins)</span></div>
+                    <span id="guildStatus" class="text-sm text-slate-400"></span>
                 </div>
-                <div class="overflow-x-auto"><table id="guildTable" class="w-full text-sm" style="font-variant-numeric: tabular-nums"></table></div>
+                <div class="overflow-x-auto"><table id="guildTable" class="w-full text-base" style="font-variant-numeric: tabular-nums"></table></div>
+                <p class="text-xs text-slate-500 mt-2">Gold is shown in scientific notation (1.5e9 = 1,500,000,000) and includes the Goblin Vault. Hover a gold number to see it in full.</p>
             </div>
-            <p id="statsNote" class="text-[11px] text-slate-500 mt-4">Stats are saved in this browser only. To copy them to another device, open ⚙️ Settings.</p>
+            <p id="statsNote" class="text-sm text-slate-400 mt-4">The numbers at the top come from this browser. To copy them to another device, open ⚙️ Settings.</p>
         </div>
     </div>
 
@@ -4414,18 +4415,24 @@
         [[10, 'spins10'], [25, 'spins25'], [50, 'spins50'], [100, 'spins100'], [250, 'spins250'], [500, 'spins500'], [1000, 'spins1000'], [2000, 'spins2000'], [5000, 'spins5000'], [10000, 'spins10000']]
             .forEach(([n, id]) => { if (total >= n) unlock(id); });
     }
+    function sciGold(g) {   // big gold reads better as 1.23e15 than as a wall of digits
+        if (g === null || g === undefined || g === '' || !isFinite(+g)) return '—';
+        g = Math.max(0, +g); if (g < 1e4) return Math.round(g).toLocaleString();
+        return g.toExponential(2).replace('e+', 'e');
+    }
     function renderStats() {
         $('statsName').textContent = playerName ? playerName + "'s" : 'Your';
         const kev = stats.byType.KEVIN || 0;
-        const tiles = [['Total spins', stats.spins.toLocaleString()], ['Kevins', kev.toLocaleString()],
+        const tiles = [['Spins (this browser)', stats.spins.toLocaleString()], ...(LEADERBOARD_URL && playerName ? [['Spins (all devices)', guildSpinsNow() ? guildSpinsNow().toLocaleString() : '—']] : []),
+            ['Gold (with vault)', sciGold(gold + vaultGold())], ['Kevins', kev.toLocaleString()],
             ['Kevin rate', stats.spins ? Math.round(kev / stats.spins * 100) + '%' : '—'], ['Best Kevin streak', stats.bestKevinStreak],
             ['Ret buffs', stats.byType.RET_PALADIN || 0], ['No One', stats.byType.NO_ONE || 0],
             ['Different slices', Object.keys(stats.byType).length + ' / ' + TYPES.length], ['Spinning since', stats.firstSpin ? new Date(stats.firstSpin).toLocaleDateString() : '—']];
         const grid = $('statsGrid'); grid.innerHTML = '';
         tiles.forEach(([k, v]) => {
-            const d = document.createElement('div'); d.className = 'bg-slate-950/70 border border-slate-800 rounded-lg p-2.5';
-            const a = document.createElement('div'); a.className = 'text-[10px] uppercase tracking-wider text-slate-500 font-bold'; a.textContent = k;
-            const b = document.createElement('div'); b.className = 'text-xl font-black text-slate-100'; b.style.fontVariantNumeric = 'tabular-nums'; b.textContent = v;
+            const d = document.createElement('div'); d.className = 'bg-slate-950/70 border border-slate-800 rounded-lg p-2.5'; d.dataset.tile = k;
+            const a = document.createElement('div'); a.className = 'text-xs uppercase tracking-wider text-slate-400 font-bold'; a.textContent = k;
+            const b = document.createElement('div'); b.className = 'text-2xl font-black text-slate-100'; b.style.fontVariantNumeric = 'tabular-nums'; b.textContent = v;
             d.append(a, b); grid.appendChild(d);
         });
         const seen = Object.keys(stats.byType).length, un = $('unseenList'); un.innerHTML = '';
@@ -4557,27 +4564,36 @@
     function loadGuildBoard() {
         if (!LEADERBOARD_URL) return;
         $('guildSection').classList.remove('hidden');
-        $('statsNote').textContent = playerName ? 'Your spins also count on the guild leaderboard (rigged spins don\'t).' : 'Set a name to show up on the guild leaderboard.';
+        $('statsNote').textContent = playerName ? 'The numbers at the top come from this browser. The guild leaderboard adds up every device you spin on under your name. Rigged spins and dev gold never count on it.' : 'Set a name in ⚙️ Settings to show up on the guild leaderboard.';
         const status = $('guildStatus'), table = $('guildTable');
         status.textContent = 'Loading…';
         fetch(LEADERBOARD_URL + '?action=board').then(r => r.json()).then(d => {
             noteGuildSpins(d.players);
-            const rows = (d.players || []).slice().sort((a, b) => b.spins - a.spins).slice(0, 15);
-            status.textContent = (d.totalSpins || 0).toLocaleString() + ' guild spins';
+            const gt = document.querySelector('[data-tile="Spins (all devices)"] > div:last-child'); if (gt && guildSpinsNow()) gt.textContent = guildSpinsNow().toLocaleString();
+            const all = (d.players || []).slice().sort((a, b) => b.spins - a.spins || (b.gold || 0) - (a.gold || 0));
+            let rows = all.slice(0, 20);
+            const myIdx = playerName ? all.findIndex(p => p.name.toLowerCase() === playerName.toLowerCase()) : -1;
+            if (myIdx >= 20) rows = rows.concat([all[myIdx]]);   // you always see your own row
+            status.textContent = (d.totalSpins || 0).toLocaleString() + ' guild spins · ' + all.length + ' players';
             table.innerHTML = '';
             const head = document.createElement('tr'); head.className = 'text-[10px] uppercase tracking-wider text-slate-500';
-            ['#', 'Name', 'Spins', 'Kevins', 'Best streak', 'Ret', 'No One', '🏆', '⭐ Fave'].forEach((h, i) => {
-                const th = document.createElement('th'); th.textContent = h; th.className = 'py-1 px-1.5 font-bold ' + (i < 2 ? 'text-left' : 'text-right'); head.appendChild(th);
+            head.className = 'text-xs uppercase tracking-wider text-slate-400';
+            ['#', 'Name', 'Spins', '💰 Gold', 'Kevins', 'Best Kevin streak', 'Ret buffs', 'No One', '🏆', '⭐ Fave'].forEach((h, i) => {
+                const th = document.createElement('th'); th.textContent = h; th.className = 'py-1.5 px-2 font-bold ' + (i < 2 ? 'text-left' : 'text-right'); head.appendChild(th);
             });
             table.appendChild(head);
-            if (!rows.length) { const tr = document.createElement('tr'); const td = document.createElement('td'); td.colSpan = 9; td.className = 'text-slate-500 py-2'; td.textContent = 'Nobody has spun yet.'; tr.appendChild(td); table.appendChild(tr); }
+            if (!rows.length) { const tr = document.createElement('tr'); const td = document.createElement('td'); td.colSpan = 10; td.className = 'text-slate-500 py-2'; td.textContent = 'Nobody has spun yet.'; tr.appendChild(td); table.appendChild(tr); }
             rows.forEach((p, i) => {
                 const tr = document.createElement('tr');
                 const me = playerName && p.name.toLowerCase() === playerName.toLowerCase();
                 tr.className = 'border-t border-slate-800 ' + (me ? 'text-amber-300 font-bold' : 'text-slate-200');
-                [i + 1, p.name + (p.ashbringers ? ' ⚔️' : ''), p.spins, p.kevins, p.bestStreak, p.ret, p.noone, p.achievements, p.favorite || '—'].forEach((v, j) => {
-                    const td = document.createElement('td'); td.textContent = v; td.className = 'py-1 px-1.5 ' + (j < 2 ? 'text-left' : j === 8 ? 'text-right text-[10px] text-slate-400' : 'text-right'); tr.appendChild(td);
-                    if (j === 1 && p.title) { const t = document.createElement('div'); t.className = 'text-[10px] italic text-amber-400/80 font-normal'; t.textContent = p.title; td.appendChild(t); }
+                const rank = all.indexOf(p) + 1, num = (n) => (+n || 0).toLocaleString();
+                [rank, p.name + (p.ashbringers ? ' ⚔️' : ''), num(p.spins), sciGold(p.gold), num(p.kevins), num(p.bestStreak), num(p.ret), num(p.noone), `${num(p.achievements)}/${ACHIEVEMENTS.length}`, p.favorite || '—'].forEach((v, j) => {
+                    const td = document.createElement('td'); td.textContent = v; td.className = 'py-1.5 px-2 ' + (j < 2 ? 'text-left' : j === 9 ? 'text-right text-sm text-slate-400' : j === 3 ? 'text-right text-amber-300 mono' : 'text-right');
+                    if (j === 3 && p.gold !== null && p.gold !== undefined) td.title = Math.round(+p.gold || 0).toLocaleString() + 'g';
+                    if (j === 0 && rank <= 3) td.textContent = ['🥇', '🥈', '🥉'][rank - 1];
+                    tr.appendChild(td);
+                    if (j === 1 && p.title) { const t = document.createElement('div'); t.className = 'text-xs italic text-amber-400/80 font-normal'; t.textContent = p.title; td.appendChild(t); }
                 });
                 table.appendChild(tr);
             });
