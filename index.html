@@ -732,7 +732,7 @@
             <div class="mt-5 pt-4 border-t border-slate-800">
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 1, 11:37 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 2, 12:06 AM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -9088,23 +9088,23 @@
     const HEAT_STAR_ON = null, HEAT_STAR_OFF = null;   // pixel star sprites go here when they're drawn (falls back to ★)
     function renderHeat() {
         const el = $('heatMeter'); if (!el) return;
-        const stars = bac >= 4 ? 5 : Math.max(0, bac);
+        const stars = Math.max(0, Math.min(5, bac));   // one star per drink; 5 = wanted
         el.classList.toggle('hidden', stars === 0); el.classList.toggle('wanted', stars >= 5);
         const star = (on) => (on ? HEAT_STAR_ON : HEAT_STAR_OFF) ? `<img src="${on ? HEAT_STAR_ON : HEAT_STAR_OFF}" alt="">` : '★';
         el.innerHTML = '<span class="hl">HEAT</span>' + [0, 1, 2, 3, 4].map(i => `<span class="st${i < stars ? ' on' : ''}">${star(i < stars)}</span>`).join('');
-        el.title = stars >= 5 ? `WANTED. ${bac} drinks in. Land on another drinking slice and ChAoTiC might pull you over (RUI fine: 20% of everything you own). You sober up one drink every 20 minutes.`
-            : `Heat: ${bac} drink${bac === 1 ? '' : 's'}. At 5 stars (4 drinks) ChAoTiC starts looking for you. You sober up one drink every 20 minutes.`;
+        el.title = stars >= 5 ? `WANTED. ${bac} drinks in. Any drinking slice now and ChAoTiC might pull you over (RUI fine: 20% of everything you own). You sober up one drink every 5 minutes.`
+            : `Heat: ${bac} drink${bac === 1 ? '' : 's'}. At 5 stars ChAoTiC starts looking for you. You sober up one drink every 5 minutes.`;
         el.setAttribute('aria-label', `Heat ${stars} of 5 stars`);
     }
     setTimeout(renderHeat, 0);
     function addDrink(why) {
         bac++; store.set('painWheelBac', bac); renderHeat();
-        if (bac === 4) chat(pick(['5 STARS', 'he has 5 stars LMAO', 'chaotic is on his way', 'WANTED']));
-        if (bac === 3) moveToast("🍺 That's 3 drinks. ChAoTiC's cruiser was spotted circling the guild hall...");
+        if (bac === 5) chat(pick(['5 STARS', 'he has 5 stars LMAO', 'chaotic is on his way', 'WANTED']));
+        if (bac === 4) moveToast("🍺 That's 4 drinks (4 stars). ChAoTiC's cruiser was spotted circling the guild hall...");
     }
-    setInterval(() => { if (bac > 0 && !document.hidden) { bac--; store.set('painWheelBac', bac); renderHeat(); } }, 20 * 60000);   // sober up one drink every 20 minutes
+    setInterval(() => { if (bac > 0 && !document.hidden) { bac--; store.set('painWheelBac', bac); renderHeat(); } }, 5 * 60000);   // sober up one drink every 5 minutes
     function ruiCheck() {
-        if (bac < 4 || Math.random() > 0.5) return;
+        if (bac < 5 || Math.random() > 0.5) return;   // 5 stars = wanted
         if (Date.now() - store.get('painWheelRuiAt', 0) < 30 * 60000) return;   // one stop per half hour
         store.set('painWheelRuiAt', Date.now());
         bac = 0; store.set('painWheelBac', 0); renderHeat();
