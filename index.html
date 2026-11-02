@@ -417,6 +417,11 @@
         #socialRow { display: flex; gap: 16px; align-items: flex-start; }
         #socialRow > #chatCard, #socialRow > #sqDock { flex: 1 1 0; min-width: 0; }
         #chatHome { display: none; }
+        #outcomeRow { display: flex; gap: 16px; align-items: stretch; }
+        #outcomeRow > * { flex: 1 1 0; min-width: 0; }
+        #feedCard:not(.hidden) { display: flex; }
+        .card-float { position: fixed !important; z-index: 63; left: 0; top: 0; width: min(380px, calc(100vw - 24px)); height: 300px !important; box-shadow: 0 14px 40px rgba(0,0,0,.55); }
+        .card-float .pop-head { cursor: grab; touch-action: none; user-select: none; }
         #sqDock:empty { display: none; }
         #squawkWin.sq-docked .sq-drag-hint { display: none; }
         #squawkWin.sq-docked #sqPop { margin-left: auto; }
@@ -1016,22 +1021,24 @@
             </div>
 
 
-            <!-- Guild feed (what everyone else just spun) -->
-            <div id="feedCard" class="hidden bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl">
-                <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                    <span>🛰️ Guild feed</span><span class="flex items-center gap-1.5 text-[10px] text-emerald-400"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 ad-blink"></span>LIVE</span>
+            <!-- Guild feed (what everyone else just spun) and Recent Outcomes, side by side; ⧉ pops either out -->
+            <div id="outcomeRow">
+            <div id="feedCard" class="hidden bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl flex-col" style="height: 260px;">
+                <div id="feedHead" class="flex items-center justify-between gap-2 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+                    <span>🛰️ Guild feed</span><span class="flex items-center gap-2"><span class="flex items-center gap-1.5 text-[10px] text-emerald-400"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 ad-blink"></span>LIVE</span><button id="feedPop" class="pop-btn" title="Pop the guild feed out into its own window">⧉</button></span>
                 </div>
-                <div id="feedList" class="space-y-1 text-xs mono"></div>
+                <div id="feedList" class="flex-1 overflow-y-auto space-y-1 text-xs mono pr-1"></div>
             </div>
 
-            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col h-52">
-                <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 flex items-center justify-between">
+            <div id="historyCard" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col" style="height: 260px;">
+                <div id="historyHead" class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2 flex items-center justify-between gap-2">
                     <span>Recent Outcomes</span>
-                    <button id="clearHistoryBtn" class="text-[11px] text-slate-500 hover:text-slate-300 transition">Clear</button>
+                    <span class="flex items-center gap-2"><button id="clearHistoryBtn" class="text-[11px] text-slate-500 hover:text-slate-300 transition">Clear</button><button id="historyPop" class="pop-btn" title="Pop recent outcomes out into its own window">⧉</button></span>
                 </div>
                 <div id="historyList" class="flex-1 overflow-y-auto space-y-1.5 text-xs mono pr-1">
                     <div class="text-slate-600 italic py-10 text-center">No spins recorded yet. Pull the trigger!</div>
                 </div>
+            </div>
             </div>
         </div>
 
@@ -6076,6 +6083,39 @@
         addEventListener('resize', chatPlace);
     })();
     setTimeout(() => chatSetPop(chatState.pop), 0);   // after the rest of the page code has loaded
+
+    // ---------- any card can pop out into a window you drag by its header (📌 docks it back) ----------
+    function makePoppable(cardId, headId, btnId, key, label) {
+        const card = $(cardId), head = $(headId), btn = $(btnId); if (!card || !head || !btn) return;
+        const st = Object.assign({ pop: false, x: null, y: 160 }, store.get(key, {}));
+        const home = document.createElement('div'); home.style.display = 'none'; card.before(home);
+        head.classList.add('pop-head');
+        const place = () => {
+            if (!st.pop) return;
+            const W = card.offsetWidth || 380;
+            if (st.x == null) st.x = innerWidth - W - 24;
+            st.x = Math.min(Math.max(4, st.x), innerWidth - W - 4); st.y = Math.min(Math.max(4, st.y), innerHeight - 60);
+            card.style.transform = `translate(${st.x}px, ${st.y}px)`;
+        };
+        const set = (p) => {
+            st.pop = p && !IS_PHONE();
+            if (st.pop) { document.body.appendChild(card); card.classList.add('card-float'); place(); }
+            else { home.after(card); card.classList.remove('card-float'); card.style.transform = ''; }
+            btn.textContent = st.pop ? '📌' : '⧉'; btn.title = st.pop ? `Dock ${label} back in the page` : `Pop ${label} out into its own window`;
+            btn.style.display = IS_PHONE() ? 'none' : '';
+            store.set(key, st);
+        };
+        btn.addEventListener('click', (e) => { e.stopPropagation(); set(!st.pop); });
+        let drag = null;
+        head.addEventListener('pointerdown', (e) => { if (!st.pop || e.target.closest('button')) return; drag = { dx: e.clientX - st.x, dy: e.clientY - st.y }; head.setPointerCapture(e.pointerId); });
+        head.addEventListener('pointermove', (e) => { if (!drag) return; st.x = e.clientX - drag.dx; st.y = e.clientY - drag.dy; place(); });
+        const end = () => { if (drag) { drag = null; store.set(key, st); } };
+        head.addEventListener('pointerup', end); head.addEventListener('pointercancel', end);
+        addEventListener('resize', place);
+        setTimeout(() => set(st.pop), 0);
+    }
+    makePoppable('feedCard', 'feedHead', 'feedPop', 'painWheelFeedPos', 'the guild feed');
+    makePoppable('historyCard', 'historyHead', 'historyPop', 'painWheelHistoryPos', 'recent outcomes');
     function chatBurst(lines, count, spread) {   // no line twice in the same burst
         const deck = shuffled(lines);
         for (let i = 0; i < count; i++) { const line = deck[i % deck.length]; setTimeout(() => chat(line), 150 + Math.random() * (spread || 2200)); }
