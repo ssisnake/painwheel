@@ -430,6 +430,16 @@
         .card-float { position: fixed !important; z-index: 63; left: 0; top: 0; width: min(380px, calc(100vw - 24px)); height: 300px !important; box-shadow: 0 14px 40px rgba(0,0,0,.55); }
         .card-float .pop-head { cursor: grab; touch-action: none; user-select: none; }
         .is-min { height: auto !important; }
+        /* GTA-style heat: how close ChAoTiC is to pulling you over */
+        #heatMeter { display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: 6px; background: #0b0b0b; border: 1px solid #3f3f46; cursor: help; }
+        #heatMeter.hidden { display: none; }
+        #heatMeter .hl { font: 900 11px/1 ui-monospace, monospace; letter-spacing: .12em; color: #fca5a5; margin-right: 3px; }
+        #heatMeter .st { font-size: 17px; line-height: 1; color: #3f3f46; -webkit-text-stroke: 1px #000; }
+        #heatMeter .st.on { color: #f8fafc; text-shadow: 0 0 6px rgba(255,255,255,.5); }
+        #heatMeter .st img { height: 17px; width: auto; image-rendering: pixelated; vertical-align: middle; }
+        #heatMeter.wanted { border-color: #ef4444; animation: heatFlash .7s steps(2) infinite; }
+        @keyframes heatFlash { 50% { background: #450a0a; } }
+        @media (prefers-reduced-motion: reduce) { #heatMeter.wanted { animation: none; background: #450a0a; } }
         #toyBox { transform-origin: top right; transition: transform .28s cubic-bezier(.3,.9,.3,1.2), opacity .2s; }
         #toyBox:not(.toy-open) { transform: translateY(-14px) scaleY(.2); opacity: 0; pointer-events: none !important; }
         #toyBox.toy-open { transform: none; opacity: 1; }
@@ -722,7 +732,7 @@
             <div class="mt-5 pt-4 border-t border-slate-800">
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 1, 11:34 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 1, 11:37 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -1106,6 +1116,7 @@
             </div>
             <div id="betCard" style="max-width: min(1150px, calc(100vh - 380px));" class="w-full mt-3 bg-slate-900/90 border border-amber-700/50 rounded-2xl px-4 py-3 shadow-xl flex flex-wrap items-center gap-2 text-xs">
                 <span class="font-black text-amber-300 text-sm mono" id="goldText">🪙 1,000g</span>
+                <span id="heatMeter" class="hidden" role="img"></span>
                 <span class="text-slate-500">Bet</span>
                 <div class="flex gap-1" id="betAmounts"></div>
                 <span class="text-slate-500">on</span>
@@ -9074,16 +9085,29 @@
 
     // ---------- 🚔 Raiding Under the Influence: road beers + Knob Creek add up ----------
     let bac = store.get('painWheelBac', 0);
+    const HEAT_STAR_ON = null, HEAT_STAR_OFF = null;   // pixel star sprites go here when they're drawn (falls back to ★)
+    function renderHeat() {
+        const el = $('heatMeter'); if (!el) return;
+        const stars = bac >= 4 ? 5 : Math.max(0, bac);
+        el.classList.toggle('hidden', stars === 0); el.classList.toggle('wanted', stars >= 5);
+        const star = (on) => (on ? HEAT_STAR_ON : HEAT_STAR_OFF) ? `<img src="${on ? HEAT_STAR_ON : HEAT_STAR_OFF}" alt="">` : '★';
+        el.innerHTML = '<span class="hl">HEAT</span>' + [0, 1, 2, 3, 4].map(i => `<span class="st${i < stars ? ' on' : ''}">${star(i < stars)}</span>`).join('');
+        el.title = stars >= 5 ? `WANTED. ${bac} drinks in. Land on another drinking slice and ChAoTiC might pull you over (RUI fine: 20% of everything you own). You sober up one drink every 20 minutes.`
+            : `Heat: ${bac} drink${bac === 1 ? '' : 's'}. At 5 stars (4 drinks) ChAoTiC starts looking for you. You sober up one drink every 20 minutes.`;
+        el.setAttribute('aria-label', `Heat ${stars} of 5 stars`);
+    }
+    setTimeout(renderHeat, 0);
     function addDrink(why) {
-        bac++; store.set('painWheelBac', bac);
+        bac++; store.set('painWheelBac', bac); renderHeat();
+        if (bac === 4) chat(pick(['5 STARS', 'he has 5 stars LMAO', 'chaotic is on his way', 'WANTED']));
         if (bac === 3) moveToast("🍺 That's 3 drinks. ChAoTiC's cruiser was spotted circling the guild hall...");
     }
-    setInterval(() => { if (bac > 0 && !document.hidden) { bac--; store.set('painWheelBac', bac); } }, 20 * 60000);   // sober up one drink every 20 minutes
+    setInterval(() => { if (bac > 0 && !document.hidden) { bac--; store.set('painWheelBac', bac); renderHeat(); } }, 20 * 60000);   // sober up one drink every 20 minutes
     function ruiCheck() {
         if (bac < 4 || Math.random() > 0.5) return;
         if (Date.now() - store.get('painWheelRuiAt', 0) < 30 * 60000) return;   // one stop per half hour
         store.set('painWheelRuiAt', Date.now());
-        bac = 0; store.set('painWheelBac', 0);
+        bac = 0; store.set('painWheelBac', 0); renderHeat();
         const fine = Math.round(totalAssets() * 0.2);
         debts.court += fine; saveDebts(); unlock('rui');
         if (garage.police && !vehicles.cop) drivePolice();
