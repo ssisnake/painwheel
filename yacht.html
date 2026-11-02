@@ -441,7 +441,7 @@
     const PER_PAGE = SLOTS.length;
     // a few achievements get their own trophy
     const ICONS = { kevind: '🤡', yacht: '🛥️', castle: '🏰', debtfree: '💸', taxman: '🧾', goldcookie: '🍪', cluck: '🐔', clippy: '📎', fenderbender: '🚑',
-        soc1: '🔺', soc2: '💀', soc3: '🦉', soc4: '👁️', soc5: '🦎', soc6: '📜', aboard: '⚓', wheelception: '🖥️', purpleheart: '💜', vault: '🏦', chocobar: '🍫', hearth: '🪨', first: '🩸' };
+        soc1: '🔺', soc2: '💀', soc3: '🦉', soc4: '👁️', soc5: '🦎', soc6: '📜', aboard: '⚓', wheelception: '🖥️', wheelception5: '🌀', purpleheart: '💜', vault: '🏦', chocobar: '🍫', hearth: '🪨', first: '🩸' };
     const iconFor = (d) => ICONS[d.id] || (/^aipac/.test(d.id) ? '🏛️' : /^spins/.test(d.id) ? '🎡' : d.secret ? '💎' : '🏆');
     let page = 0;
     function renderCabinet(fresh) {
@@ -747,7 +747,7 @@
                 $('miniRes').textContent = 'You went too deep. It\'s Kevins all the way down. You wake up back at the first wheel.';
                 return;
             }
-            sfx.open(); depth++; renderMini();
+            sfx.open(); depth++; renderMini(); if (depth >= MAX_DEPTH) award('wheelception5');   // 5 wheels deep
             $('miniRes').textContent = pick(['You landed on THE WHEEL. Here is a smaller wheel. Spin it.', 'Another wheel?? Inside the wheel?? Inside THE Wheel??', 'We have to go deeper.', 'It\'s wheels. It\'s always been wheels.']);
             return;
         }
