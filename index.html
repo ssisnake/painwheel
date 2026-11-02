@@ -412,7 +412,12 @@
         #squawkWin.sq-docked { position: relative !important; transform: none !important; width: 100% !important; left: auto; top: auto; z-index: auto !important; }
         #squawkWin.sq-docked #sqHead { cursor: default; border-radius: 16px 16px 0 0; padding: 8px 14px; }
         #squawkWin.sq-docked.sq-min #sqHead { border-radius: 16px; }
-        #squawkWin.sq-docked #sqBody { max-height: 360px; border-radius: 0 0 16px 16px; box-shadow: none; }
+        #squawkWin.sq-docked #sqBody { height: 300px; max-height: none; border-radius: 0 0 16px 16px; box-shadow: none; }
+        /* chat and Squawkr side by side; pop one out and the other fills the row */
+        #socialRow { display: flex; gap: 16px; align-items: flex-start; }
+        #socialRow > #chatCard, #socialRow > #sqDock { flex: 1 1 0; min-width: 0; }
+        #chatHome { display: none; }
+        #sqDock:empty { display: none; }
         #squawkWin.sq-docked .sq-drag-hint { display: none; }
         #squawkWin.sq-docked #sqPop { margin-left: auto; }
         #chatCard.chat-float { position: fixed !important; z-index: 63; left: 0; top: 0; width: min(360px, calc(100vw - 24px)); height: 340px !important; box-shadow: 0 14px 40px rgba(0,0,0,.55); }
@@ -958,14 +963,16 @@
 
 
             <!-- Fake Twitch chat (docked here; ⧉ pops it out into a window you can drag) -->
+            <div id="socialRow">
             <div id="chatHome"></div>
-            <div id="chatCard" class="bg-slate-900/90 border border-slate-800 rounded-2xl shadow-xl flex flex-col overflow-hidden" style="height: 300px;">
+            <div id="chatCard" class="bg-slate-900/90 border border-slate-800 rounded-2xl shadow-xl flex flex-col overflow-hidden" style="height: 340px;">
                 <div id="chatHead" class="flex items-center justify-between gap-2 px-4 py-2 border-b border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400">
                     <span>💬 Stream chat</span><span class="flex items-center gap-2"><span id="chatViewers" class="text-[10px] text-red-400 normal-case">🔴 1,337 viewers</span><button id="chatPop" class="pop-btn" title="Pop chat out into its own window">⧉</button></span>
                 </div>
                 <div id="chatLog" class="flex-1 px-3 py-2 text-[12px] leading-snug select-text" style="overflow-y:auto; scrollbar-width:thin; scrollbar-color:#475569 transparent;"></div>
             </div>
             <div id="sqDock"></div>
+            </div>
 
             <!-- $KNOB stock ticker -->
             <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl">
