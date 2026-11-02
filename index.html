@@ -741,7 +741,7 @@
             <div class="mt-5 pt-4 border-t border-slate-800">
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 2, 1:13 AM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 2, 4:12 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -1401,6 +1401,8 @@
     const PHOTO_CHICKEN = "media/photo_chicken.png?v=d6697602";
     const PHOTO_WHELP = "media/photo_whelp.png?v=e83a9376";
     const PHOTO_LOGO = "media/photo_logo.png?v=7e59cc27";
+    const PHOTO_UWU_KEYBOARD = "media/photo_uwu_keyboard.png?v=83788d62";   // Uwutek checking if your keyboard is plugged in
+    const PHOTO_YACHT_BIG = "media/photo_yacht_big.png?v=9c00044b";   // the bigger pixel yacht (house level 6)
     const PHOTO_STAR_RED = "media/photo_star_red.png?v=f31b6145";
     const PHOTO_STAR_BLUE = "media/photo_star_blue.png?v=c10c0ad3";
     const PHOTO_STAR_HALF = "media/photo_star_half.png?v=45af667a";
@@ -6725,6 +6727,24 @@
     let bossState = null;
     $('bossIconImg').src = PHOTO_UWU_ICON; $('bossArtImg').src = PHOTO_UWU_ART; $('partyHatImg').src = PHOTO_PARTY_HAT;
     $('hearthIcon').src = PHOTO_TOY_HEARTH; $('toyIcon').src = PHOTO_TOYBOX;
+    function uwuKeyboardCheck() {   // after the Lower DPS popup closes, Uwutek pops up in the boss card to check your keyboard
+        const art = $('bossArt'), img = $('bossArtImg'); if (!art || !img) return;
+        const k = store.get('painWheelClass', ''), c = (typeof WOW_CLASSES !== 'undefined' && WOW_CLASSES.find(x => x[0] === k)) || null;
+        const cls = c && k !== 'nowow' ? c[1] : null;
+        const line = k === 'nowow' ? "Uwutek checked your keyboard. It isn't plugged in. You also don't play WoW. Honestly, that tracks."
+            : cls ? pick([`Uwutek checked your keyboard. It isn't plugged in. That explains the ${cls} DPS.`, `Uwutek found the problem: your keyboard was never plugged in. Every ${cls} parse makes sense now.`,
+                `Uwutek plugged your keyboard in for you. Your ${cls} DPS went up 400%. It is still last.`, `Uwutek is holding your USB cable. "Is this how ${cls}s are supposed to play?"`])
+            : "Uwutek checked your keyboard. It isn't plugged in. (Pick a class in ⚙️ Settings so Uwutek knows who to blame.)";
+        let tries = 0;
+        (function wait() {   // wait for the slice popup to go away first
+            if (!winnerModal.classList.contains('hidden') && tries++ < 60) return setTimeout(wait, 500);
+            const oldSrc = img.src, oldB = art.querySelector('b').textContent, oldS = art.querySelector('small').textContent;
+            img.src = PHOTO_UWU_KEYBOARD; art.querySelector('b').textContent = 'UWUTEK (TECH SUPPORT)'; art.querySelector('small').textContent = line;
+            art.style.display = 'block'; art.style.width = '300px'; art.querySelector('small').style.fontSize = '15px';
+            chat(pick(['is it plugged in tho', 'uwutek doing tech support', 'IT IS NOT PLUGGED IN', 'have you tried turning it off and on again']));
+            setTimeout(() => { art.style.display = ''; art.style.width = ''; img.src = oldSrc; art.querySelector('b').textContent = oldB; art.querySelector('small').textContent = oldS; art.querySelector('small').style.fontSize = ''; }, 8000);
+        })();
+    }
     function renderBoss(b) {
         if (!b || typeof b !== 'object') return;
         const num = (v) => { v = Number(v); return isFinite(v) ? v : 0; };   // the Sheet should always send numbers; if it doesn't, show zeros instead of NaN
@@ -6827,7 +6847,7 @@
     const GIF_YACHT = "media/gif_yacht.gif?v=24983ac3";
     // the yacht gets its animated pixel sprite; the other houses are still emoji for now
     function houseHTML(h, px) { if (h.img) return `<img src="${h.img}" alt="${h.e}" width="${Math.round(px * 1.35)}" style="display:inline-block;height:auto;max-width:none;margin:-${Math.round(px * .22)}px -${Math.round(px * .1)}px -${Math.round(px * .12)}px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.5))">`;
-        return h.e === '🛥️' ? `<img src="${GIF_YACHT}" alt="🛥️" width="${px}" height="${px}" style="image-rendering:pixelated;display:inline-block;margin:-${Math.round(px * .3)}px 0 -${Math.round(px * .17)}px">` : h.e; }
+        return h.e === '🛥️' ? `<img src="${PHOTO_YACHT_BIG}" alt="🛥️" width="${Math.round(px * 1.7)}" style="image-rendering:pixelated;display:inline-block;height:auto;max-width:none;margin:-${Math.round(px * .2)}px 0 -${Math.round(px * .1)}px">` : h.e; }
     function renderHouseIcon() {
         const h = houseInfo(); $('houseEmoji').innerHTML = houseHTML(h, 96);
         $('houseLabel').textContent = houseLevel ? `Your ${h.name}` : 'Your Timeshare (1/52nd)';
@@ -9999,6 +10019,7 @@
         else if (minQ || flask || Math.random() < (hasPerk('raid') ? 0.45 : 0.33)) setTimeout(() => giveLoot(rollQuality(minQ), flask ? '🧪 Flask of Loot' : undefined), 1400);
         newSliceFx(s.type); exOnLand(s.type);
         if (s.type === 'AOTC' && fair) unlock('aotclegit');   // only a natural landing counts
+        if (s.type === 'LOWER_DPS') uwuKeyboardCheck();
         if (s.type === 'KROM' && Math.random() < 0.25) setTimeout(() => { if (window.showAdById) window.showAdById('aotc-carry'); }, 6000);
         // set perks that pay out on landings
         let bonus = 0;
