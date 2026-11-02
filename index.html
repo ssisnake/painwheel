@@ -430,6 +430,10 @@
         .card-float { position: fixed !important; z-index: 63; left: 0; top: 0; width: min(380px, calc(100vw - 24px)); height: 300px !important; box-shadow: 0 14px 40px rgba(0,0,0,.55); }
         .card-float .pop-head { cursor: grab; touch-action: none; user-select: none; }
         .is-min { height: auto !important; }
+        #toyBox { transform-origin: top right; transition: transform .28s cubic-bezier(.3,.9,.3,1.2), opacity .2s; }
+        #toyBox:not(.toy-open) { transform: translateY(-14px) scaleY(.2); opacity: 0; pointer-events: none !important; }
+        #toyBox.toy-open { transform: none; opacity: 1; }
+        #toyBox #garageDock { max-width: min(420px, calc(100vw - 40px)) !important; }
         #chatHead, #chatHead span { white-space: nowrap; } #chatHead { gap: 6px; } #chatViewers { overflow: hidden; text-overflow: ellipsis; }
         .is-min > .min-head { margin-bottom: 0 !important; border-bottom: 0 !important; }
         #sqDock:empty { display: none; }
@@ -541,15 +545,15 @@
     <!-- 2 AM Infomercial + Guild News Tickers (always running) -->
     <div id="tickerStrip" class="sticky top-0 inset-x-0 z-30 pointer-events-none shadow-[0_6px_20px_rgba(0,0,0,0.6)]">
         <div class="flex items-stretch bg-red-700 border-b-2 border-yellow-400">
-            <span class="shrink-0 px-3 py-1.5 bg-yellow-400 text-slate-950 font-black text-xs mono flex items-center">📺 2 AM ADS</span>
+            <span class="shrink-0 px-3 py-1.5 bg-yellow-400 text-slate-950 font-black text-sm mono flex items-center">📺 2 AM ADS</span>
             <div class="flex-1 overflow-hidden flex items-center">
-                <div id="adTicker" class="ticker-move ticker-left text-xs md:text-sm font-extrabold text-white uppercase py-1.5"></div>
+                <div id="adTicker" class="ticker-move ticker-left text-sm md:text-lg font-extrabold text-white uppercase py-1.5"></div>
             </div>
         </div>
         <div class="flex items-stretch bg-slate-900 border-b border-slate-700">
-            <span class="shrink-0 px-3 py-1 bg-sky-500 text-slate-950 font-black text-xs mono flex items-center">📰 GUILD NEWS</span>
+            <span class="shrink-0 px-3 py-1 bg-sky-500 text-slate-950 font-black text-sm mono flex items-center">📰 GUILD NEWS</span>
             <div class="flex-1 overflow-hidden flex items-center">
-                <div id="newsTicker" class="ticker-move ticker-left text-xs font-bold text-sky-200 uppercase py-1 mono"></div>
+                <div id="newsTicker" class="ticker-move ticker-left text-sm md:text-base font-bold text-sky-200 uppercase py-1 mono"></div>
             </div>
         </div>
     </div>
@@ -567,21 +571,15 @@
         </div>
         <div id="headerControls" class="flex flex-wrap items-center justify-center gap-2 text-xs">
             <button id="playerTag" title="Change your name in ⚙️ Settings" class="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-700 text-slate-200 font-bold cursor-pointer flex items-center gap-1.5">
-                <span>🪪</span><span id="playerShow"></span><span id="titleShow" class="text-amber-300 italic"></span>
+                <span id="classShow">🪪</span><span id="playerShow"></span><span id="titleShow" class="text-amber-300 italic"></span>
             </button>
             <button id="statsBtn" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold cursor-pointer">📊 My Stats</button>
             <button id="settingsBtn" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold cursor-pointer">⚙️ Settings</button>
             <button id="bagBtn" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold cursor-pointer">🎒 Bag</button>
             <button id="homeBtn" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold cursor-pointer">🏠 Home</button>
             <button id="shopBtn" class="px-2.5 py-1 rounded-md bg-amber-600 hover:bg-amber-500 border border-amber-400 text-black font-black cursor-pointer">🛒 Shop</button>
-            <button id="hearthBtn" title="Hearthstone: Gallywix's Yacht (10 sec cast)" style="display:none" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-sky-700 text-sky-200 font-bold cursor-pointer items-center gap-1.5"><svg viewBox="0 0 64 64" width="22" height="22" aria-hidden="true">
-            <defs><radialGradient id="hsStone" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#9aa6b8"/><stop offset=".6" stop-color="#5b6577"/><stop offset="1" stop-color="#2b3140"/></radialGradient>
-            <radialGradient id="hsRune" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#e0f2fe"/><stop offset=".5" stop-color="#38bdf8"/><stop offset="1" stop-color="#0369a1" stop-opacity="0"/></radialGradient></defs>
-            <ellipse cx="32" cy="34" rx="25" ry="22" fill="url(#hsStone)" stroke="#1e2430" stroke-width="2"/>
-            <ellipse cx="32" cy="34" rx="15" ry="13" fill="url(#hsRune)" opacity=".85"/>
-            <path d="M32 24 C40 26 41 36 33 38 C27 39 26 32 31 31 C34 31 34 34 32 34" fill="none" stroke="#f0f9ff" stroke-width="2.6" stroke-linecap="round"/>
-        </svg><span>Hearth</span></button>
-            <button id="toyBtn" title="Show / hide your toys (bottom-right corner)" style="display:none" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold cursor-pointer items-center gap-1.5"><span>🧰</span><span id="toyLbl">Toys</span></button>
+            <button id="hearthBtn" title="Hearthstone: Gallywix's Yacht (10 sec cast)" style="display:none" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-sky-700 text-sky-200 font-bold cursor-pointer items-center gap-1.5"><img id="hearthIcon" alt="" style="height:1.5em;width:auto;margin:-.25em 0"><span>Hearth</span></button>
+            <button id="toyBtn" title="Show / hide your toys (bottom-right corner)" style="display:none" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold cursor-pointer items-center gap-1.5"><img id="toyIcon" alt="" style="height:1.5em;width:auto;margin:-.25em 0"><span id="toyLbl">Toys</span></button>
             <button id="partyBtn" class="px-2.5 py-1 rounded-md bg-fuchsia-800 hover:bg-fuchsia-700 border border-fuchsia-500 text-white font-bold cursor-pointer inline-flex items-center gap-1.5"><img id="partyHatImg" alt="" style="height:1.5em;width:auto;margin:-.25em 0"><span>Party</span></button>
         </div>
     </header>
@@ -662,6 +660,7 @@
             <div class="text-xl font-black uppercase tracking-tight">Who's spinning?</div>
             <p class="text-xs text-slate-400 mt-1">Your name, stats and achievements are saved in this browser.</p>
             <input id="welcomeName" type="text" maxlength="20" placeholder="e.g. Axazon" class="mt-4 w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-center text-lg text-white placeholder:text-slate-600">
+            <select id="welcomeClass" class="class-pick mt-3 w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-center text-lg text-white cursor-pointer"></select>
             <div class="mt-4 flex justify-center gap-2">
                 <button type="submit" class="px-5 py-2 rounded-lg bg-red-600 hover:bg-red-500 font-bold cursor-pointer">Let's go</button>
                 <button type="button" id="welcomeSkip" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold cursor-pointer">Skip</button>
@@ -705,6 +704,8 @@
             </div>
             <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🪪 Your name</div>
             <input id="playerName" type="text" maxlength="20" placeholder="Your name" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-base text-slate-100 placeholder:text-slate-600">
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mt-4 mb-2">⚔️ Favorite class</div>
+            <select id="settingsClass" class="class-pick w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-base text-slate-100 cursor-pointer"></select>
             <p class="text-[11px] text-slate-500 mt-1">This is the name on the guild leaderboard. Change it here and it asks to bring your stats along. Your title comes from the 🛒 Shop.</p>
             <div class="mt-5 pt-4 border-t border-slate-800">
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🌗 Appearance</div>
@@ -777,6 +778,10 @@
             </div>
             <div id="updDate" class="text-xs mono text-slate-400 mb-3"></div>
             <ul id="updList" class="space-y-2.5 text-base text-slate-200"></ul>
+            <div class="mt-5 pt-3 border-t border-amber-900/60">
+                <div class="text-sm font-black uppercase tracking-wider text-amber-400 mb-2">📜 Past updates</div>
+                <div id="updHistory" class="space-y-2"></div>
+            </div>
             <label class="mt-4 flex items-center justify-center gap-2 text-sm text-slate-400 cursor-pointer select-none"><input id="updNever" type="checkbox" class="w-4 h-4 accent-amber-500 cursor-pointer"> Don't pop these up for future updates (Settings → Patch notes still has them)</label>
             <div class="mt-4 text-center"><button id="updOk" class="px-6 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-black font-black cursor-pointer">Got it. Let me spin.</button></div>
         </div>
@@ -1649,7 +1654,11 @@
                      "Tsussie took 40 minutes to get ready. The pull timer waited.", "Tanking in full glam. Not one smudge after a wipe.",
                      "Sword, shield, setting spray. Tsussie is fully geared.", "The T is silent. The taunt is not."]) + " 🛡️ This popup was brought to you by TsukBlock™: Tsussie tanks the ads so you don't have to." } },
         { id: "MOOD", n: 1, label: "🚬 Mood 🌲", pill: "MOOD", bg: "#7c2d12", text: "#fed7aa", border: "#fb923c", color: "text-orange-300", glow: "bg-orange-700", key: "u", rig: "MOO",
-          win: { title: "🚬 MOOD 🌲", size: SIZE.mid, sub: () => pick(["Staring at the lake. Thinking about the raid. Thinking about the life choices that led to the raid.", "Some days you're the Sasquatch. Some days you're the cigarette.", "Not sad. Just sitting on a log, contemplating the 6% Ret buff that never came.", "Nobody believes he exists. Nobody believes the healers exist either.", "He came out of the woods for one reason: to land on this slice and sigh."]), media: { src: PHOTO_MOOD, fallback: null, caption: "🌲 *long exhale* 🌲" } } },
+          win: { title: "🚬 MOOD 🌲", size: SIZE.mid, sub: () => pick(["Sat in the truck in the driveway for 20 minutes before going inside. Not sad. Just... mood.",
+                     "Mortgage. Knees. Raid at 7. He lit one and stared at the treeline. Life happened to him.", "The thousand-yard stare of a man who just found out the truck needs a $3,000 repair.",
+                     "He's not thinking about anything. That's the point. That's the mood.", "Back hurts. Knee hurts. Raid wiped. He is going to sit on this log until something stops hurting.",
+                     "That quiet 'damn' a man says to nobody after checking his bank account.", "Stood in the garage holding a beer for 15 minutes. Didn't open it. Didn't need to.",
+                     "40-something, sitting on the tailgate, watching the sun go down. Ret got nerfed again. Mood.", "His kid asked what he's doing. 'Nothing, bud.' He was doing everything."]), media: { src: PHOTO_MOOD, fallback: null, caption: "🌲 *long exhale* 🌲" } } },
         { id: "EMPORIUM", n: 1, label: "👗 Axazon's Clothing Emporium 👗", pill: "AXAZON'S EMPORIUM", bg: "#a21caf", text: "#fdf4ff", border: "#f0abfc", color: "text-fuchsia-300", glow: "bg-fuchsia-600", key: ")", rig: "EMP",
           win: { title: "👗 AXAZON'S CLOTHING EMPORIUM 👗", size: SIZE.small, sub: () => pick(["Now open! Axazon's Clothing Emporium. God help us all.", "Fishnet, eyeball shoulders, a butterfly loincloth and pink sandals. The Light has left the chat. God help us all.", "Every outfit hand-picked by a Ret Paladin with no mirror. God help us all.", "Today's special: the full look. Returns are not accepted. Neither is this outfit. God help us all.", "The halo is the only holy thing about it. God help us all."]), media: { src: PHOTO_EMPORIUM, fallback: null, caption: "✨ THIS SEASON'S LOOK. GOD HELP US ALL. ✨" } } },
         { id: "KFC_Q", n: 1, label: "🍗 KFC? 🍗", pill: "KFC?", bg: "#b91c1c", text: "#fff7ed", border: "#fca5a5", color: "text-red-300", glow: "bg-red-700", key: "?", rig: "KFQ",
@@ -1679,7 +1688,7 @@
                  sub: () => pick(["From each according to his DPS, to each according to his Kevin.", "The Kevin belongs to the people now, comrade.",
                      "There is no my Kevin. There is only our Kevin.", "The guild bank has been redistributed. Everyone got one Kevin."]) } },
         { id: "WHISTLETHY", n: 1, label: "🐢 Whistlethy 🐢", pill: "WHISTLETHY", bg: "#8b3a52", text: "#d9f99d", border: "#a3e635", color: "text-lime-300", glow: "bg-lime-500", key: "~", rig: "TRT",
-          win: { title: "🐢 WHISTLETHY 🐢", size: SIZE.big,
+          win: { title: "🐢 WHISTLETHY 🐢", size: SIZE.big, sound: "turtle",
                  sub: () => pick(["Whistlethy has been summoned. All wipes tonight are forgiven.", "One toot from Whistlethy and Kevin finally moved out of the fire.",
                      "Official guild mascot. Handmade, hand-painted, and tougher than any tank we've had.", "Whistlethy tooted. Raid morale +100%.",
                      "Slow and steady wins the race. (Unlike Ret Paladins, who are just slow.)", "Whistlethy has more fans in this guild than the raid leader.",
@@ -2581,6 +2590,13 @@
     const PHOTO_GLAIVE = "media/photo_glaive.png?v=077bc278";
     const PHOTO_UWU_ICON = "media/photo_uwu_icon.png?v=87cf6d3b";
     const PHOTO_UWU_ART = "media/photo_uwu_art.png?v=fdcbd07b";
+    const PHOTO_TOY_PHONE = "media/photo_toy_phone.png?v=0a602f3e";
+    const PHOTO_TOY_HEARTH = "media/photo_toy_hearth.png?v=f69e11c0";
+    const PHOTO_TOY_DONUT = "media/photo_toy_donut.png?v=6ea2d469";
+    const PHOTO_TOY_DOLL = "media/photo_toy_doll.png?v=e0c4e6bc";
+    const PHOTO_TOYBOX = "media/photo_toybox.png?v=40719b02";
+    const PHOTO_SHACK_BURNT = "media/photo_shack_burnt.png?v=ed73c8b3";
+    const PHOTO_SHACK_ROCKET = "media/photo_shack_rocket.png?v=2facfd43";
     const FALLBACK_IMG = {
         ceilingCat: "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240"><rect width="400" height="240" fill="#e7e5e4"/><g stroke="#d6d3d1" stroke-width="3"><path d="M0 80 H400 M0 160 H400 M100 0 V240 M200 0 V240 M300 0 V240"/></g><rect x="150" y="0" width="100" height="78" fill="#1c1917"/><path d="M150 78 L170 92 L190 80 L210 94 L230 81 L250 78 Z" fill="#a8a29e"/><g transform="translate(200 70)"><path d="M-46 -40 L-34 -78 L-14 -50 Z" fill="#fafaf9" stroke="#a8a29e" stroke-width="2"/><path d="M46 -40 L34 -78 L14 -50 Z" fill="#fafaf9" stroke="#a8a29e" stroke-width="2"/><path d="M-38 -60 L-33 -72 L-24 -55 Z M38 -60 L33 -72 L24 -55 Z" fill="#fda4af"/><ellipse cx="0" cy="-20" rx="50" ry="44" fill="#fafaf9" stroke="#a8a29e" stroke-width="2"/><ellipse cx="-18" cy="-24" rx="11" ry="13" fill="#facc15"/><ellipse cx="18" cy="-24" rx="11" ry="13" fill="#facc15"/><ellipse cx="-18" cy="-22" rx="4" ry="11" fill="#1c1917"/><ellipse cx="18" cy="-22" rx="4" ry="11" fill="#1c1917"/><path d="M-5 -2 L5 -2 L0 4 Z" fill="#fb7185"/><path d="M0 4 Q-8 12 -14 8 M0 4 Q8 12 14 8" stroke="#57534e" stroke-width="2" fill="none"/><path d="M-22 2 L-56 -4 M-22 6 L-56 8 M22 2 L56 -4 M22 6 L56 8" stroke="#a8a29e" stroke-width="1.5"/></g><text x="200" y="200" font-family="Impact, sans-serif" font-size="30" fill="#1c1917" text-anchor="middle">CEILING CAT</text><text x="200" y="228" font-family="Impact, sans-serif" font-size="20" fill="#1c1917" text-anchor="middle">IS WATCHING YOU</text></svg>`),
         roadBeers: "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 230"><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f97316"/><stop offset="1" stop-color="#fde68a"/></linearGradient></defs><rect width="420" height="230" fill="url(#sky)"/><path d="M0 150 L80 110 L160 140 L250 95 L330 130 L420 105 V160 H0 Z" fill="#a16207" opacity="0.6"/><rect y="160" width="420" height="70" fill="#374151"/><path d="M0 196 H60 M100 196 H160 M200 196 H260 M300 196 H360 M400 196 H420" stroke="#facc15" stroke-width="5"/><g transform="translate(60 92)"><path d="M0 70 V40 H150 V20 L200 20 L236 46 H262 V70 Z" fill="#1d4ed8" stroke="#1e3a8a" stroke-width="3"/><path d="M160 26 H196 L224 46 H160 Z" fill="#bae6fd"/><rect x="20" y="16" width="70" height="28" rx="3" fill="#dc2626" stroke="#7f1d1d" stroke-width="3"/><rect x="20" y="16" width="70" height="8" fill="#f8fafc"/><g fill="#93c5fd" stroke="#1e40af" stroke-width="1.5"><rect x="96" y="22" width="12" height="20" rx="2"/><rect x="112" y="26" width="12" height="16" rx="2" transform="rotate(20 118 34)"/><rect x="128" y="22" width="12" height="20" rx="2"/></g><circle cx="52" cy="72" r="18" fill="#111827" stroke="#9ca3af" stroke-width="4"/><circle cx="214" cy="72" r="18" fill="#111827" stroke="#9ca3af" stroke-width="4"/></g><rect x="300" y="18" width="104" height="44" rx="4" fill="#15803d" stroke="#f8fafc" stroke-width="3"/><text x="352" y="38" font-family="sans-serif" font-weight="900" font-size="13" fill="#f8fafc" text-anchor="middle">ROAD BEERS</text><text x="352" y="54" font-family="sans-serif" font-weight="700" font-size="10" fill="#f8fafc" text-anchor="middle">NEXT 400 MILES</text></svg>`),
@@ -3185,6 +3201,7 @@
         hearth:  { play: () => playHearthSound(),      cooldownMin: 0 },  // Murder Row port
         yank:    { play: () => playYankSound(),        cooldownMin: 0 },  // Stop Yanking Me (Leap of Faith)
         aotc:    { play: () => { playWinSound(); playHolySound(); }, cooldownMin: 0 },  // AOTC: fanfare + choir
+        turtle:  { play: () => setTimeout(playTurtleToot, 250), cooldownMin: 0 },   // Whistlethy's whistle is the whole sound
         mash:    { play: () => AUDIO_MASH ? playClip('mash', AUDIO_MASH, playChopperSound) : playChopperSound(), cooldownMin: 0 },  // M*A*S*H (clip slot)
         mephist: { play: () => AUDIO_MEPHIST ? playClip('mephist', AUDIO_MEPHIST, playMicBlast) : playMicBlast(), cooldownMin: 0 },  // Mephisto (clip slot)
         exxon:   { play: () => playClip('exxon', AUDIO_EXXON, playWinSound), cooldownMin: 0 },  // Exxon soundboard clip  // croissant videos carry their own audio
@@ -3446,14 +3463,19 @@
         ensureAudio();
         const start = (buf) => {
             try { if (clipSources[name]) clipSources[name].stop(); } catch (e) {}
-            const src = audioCtx.createBufferSource(); src.buffer = buf; src.connect(masterGain); src.start();
-            clipSources[name] = src;
+            const src = audioCtx.createBufferSource(), g = audioCtx.createGain(); src.buffer = buf; src.connect(g); g.connect(masterGain); src.start();
+            clipSources[name] = src; clipGains[name] = g;
         };
         if (clipBuffers[name]) return start(clipBuffers[name]);
         loadBytes(dataUrl)
             .then(ab => new Promise((res, rej) => audioCtx.decodeAudioData(ab, res, rej)))
             .then(buf => { clipBuffers[name] = buf; start(buf); })
             .catch(() => fallback && fallback());
+    }
+    const clipGains = {};
+    function fadeClip(name, ms) {   // fade a playing clip out over ms, then stop it
+        const g = clipGains[name], src = clipSources[name]; if (!g || !src || !audioCtx) return;
+        try { const t = audioCtx.currentTime; g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value, t); g.gain.linearRampToValueAtTime(0.0001, t + ms / 1000); src.stop(t + ms / 1000 + 0.05); } catch (e) {}
     }
     function stopAllClips() { for (const k in clipSources) { try { clipSources[k].stop(); } catch (e) {} } }
 
@@ -4085,13 +4107,15 @@
         const turns = 2 + power * 10 + (Math.random() - 0.5) * 0.6;
         let distance = (Math.floor(turns) + Math.random()) * Math.PI * 2;  // strength sets how long it spins; the stop spot is fully random
         const target = forcedTarget();
+        const wrongSpec = riggedMode === "FAIR" && (Math.random() < 1 / 40 || curseTake('wrongspec'));   // random event: Wrong Spec sends the wheel backwards
         if (target !== null) {
             const frac = 0.18 + Math.random() * 0.64;
             const desired = -Math.PI / 2 - (target + frac) * SLICE_ANGLE;
             let delta = desired - (currentRotation % (Math.PI * 2));
-            while (delta < 0) delta += Math.PI * 2;
-            distance = Math.floor(turns) * Math.PI * 2 + delta;
-        }
+            if (wrongSpec) { while (delta > 0) delta -= Math.PI * 2; distance = -Math.floor(turns) * Math.PI * 2 + delta; }
+            else { while (delta < 0) delta += Math.PI * 2; distance = Math.floor(turns) * Math.PI * 2 + delta; }
+        } else if (wrongSpec) distance = -distance;
+        if (wrongSpec) funEvent('🔄 WRONG SPEC! The wheel is spinning backwards.');
 
         // random event: Kevin Takeover (1 in 75 spins) paints every slice Kevin for this spin
         if (Math.random() < 1 / 75 || curseTake('kevin')) {
@@ -4099,8 +4123,6 @@
             funEvent('🤡 KEVIN HAS TAKEN OVER THE WHEEL 🤡', 3500);
             chatBurst(['KEVIN TAKEOVER', 'ITS ALL KEVIN', 'KEVIN KEVIN KEVIN', 'monkaS', 'the wheel is compromised', 'kevinpocalypse'], 6, 3000);
         }
-        // random event: Wrong Spec (1 in 40 fair spins) sends the wheel backwards
-        if (target === null && (Math.random() < 1 / 40 || curseTake('wrongspec'))) { distance = -distance; funEvent('🔄 WRONG SPEC! The wheel is spinning backwards.'); }
         // a fair landing on AOTC only sticks 1 time in 1,000; otherwise it slides onto the next slice
         if (target === null && slices[getActiveSliceIndex(currentRotation + distance)].type === "AOTC" && Math.random() >= AOTC_KEEP) distance += Math.sign(distance) * SLICE_ANGLE;
         const turbo = turboNext;
@@ -4444,6 +4466,30 @@
             tx.append(n, ds); d.append(ic, tx); list.appendChild(d);
         });
     }
+    // ---------- ⚔️ favorite class (shows next to your name) ----------
+    const WOW_CLASSES = [['warrior', 'Warrior', '⚔️', '#C69B6D'], ['paladin', 'Paladin', '🔨', '#F48CBA'], ['hunter', 'Hunter', '🏹', '#AAD372'], ['rogue', 'Rogue', '🗡️', '#FFF468'],
+        ['priest', 'Priest', '✨', '#FFFFFF'], ['shaman', 'Shaman', '⚡', '#0070DD'], ['mage', 'Mage', '❄️', '#3FC7EB'], ['warlock', 'Warlock', '🔮', '#8788EE'], ['monk', 'Monk', '👊', '#00FF98'],
+        ['druid', 'Druid', '🐻', '#FF7C0A'], ['dh', 'Demon Hunter', '🦇', '#A330C9'], ['dk', 'Death Knight', '💀', '#C41E3A'], ['evoker', 'Evoker', '🐉', '#33937F'], ['nowow', "I don't play WoW", '', '#94a3b8']];
+    function showClass() {
+        const k = store.get('painWheelClass', ''), c = WOW_CLASSES.find(x => x[0] === k), el = $('classShow');
+        if (!c) { el.textContent = '🪪'; el.title = ''; return; }
+        el.title = c[1];
+        if (k === 'nowow') el.innerHTML = `<img src="${PHOTO_LOGO}" alt="" style="height:1.2em;width:auto;display:inline-block;vertical-align:-.2em">`;
+        else { el.textContent = c[2]; }
+        $('playerShow').style.color = k === 'nowow' ? '' : c[3];
+    }
+    document.querySelectorAll('.class-pick').forEach(sel => {
+        sel.innerHTML = '<option value="">Pick your main…</option>';
+        WOW_CLASSES.forEach(([k, n, e]) => { const o = document.createElement('option'); o.value = k; o.textContent = (k === 'nowow' ? '🎡 ' : e + ' ') + n; sel.appendChild(o); });
+        sel.value = store.get('painWheelClass', '');
+        sel.addEventListener('keydown', (e) => e.stopPropagation());
+        sel.addEventListener('change', () => {
+            store.set('painWheelClass', sel.value); document.querySelectorAll('.class-pick').forEach(o => { o.value = sel.value; }); showClass();
+            const quip = { paladin: 'another paladin. Kevin approves', druid: 'John Blizzard is already nerfing it', dh: 'glaives out', warrior: 'charge in, die first', hunter: 'pet tank strats', rogue: 'where did he go', priest: 'healer?? in THIS guild??', shaman: 'totem enjoyer', mage: 'free food', warlock: 'summon pls', monk: 'kung fu panda', dk: 'death grip into the fire', evoker: 'dragon man', nowow: "doesn't even play WoW KEKW" }[sel.value];
+            if (quip && typeof chat === 'function') chat(quip);
+        });
+    });
+    setTimeout(showClass, 0);
     (function setupPlayer() {
         const input = $('playerName'), welcome = $('welcome');
         input.value = playerName;
@@ -4504,7 +4550,7 @@
         if (!LEADERBOARD_URL || !playerName) { achPosts.length = 0; return; }
         const body = JSON.stringify({ name: playerName, type: s.type, label: TYPE[s.type].label || TYPE[s.type].pill || s.type,
             fair: !!fair, ashbringer: !!ash, achievements: Object.keys(achieved).length, unlocked: achPosts.splice(0, 4),
-            gold: Math.round(Math.min(1e300, gold + vaultGold())), loot: lootPost.splice(0, 1)[0] || null, favorite: favoriteLabel(), title: titleChoice, donated: aipacTotal });
+            gold: Math.max(0, Math.round(Math.min(1e300, gold + vaultGold())) - store.get('painWheelDevGold', 0)), loot: lootPost.splice(0, 1)[0] || null, favorite: favoriteLabel(), title: titleChoice, donated: aipacTotal });
         setTimeout(refreshGuild, 3500);
         try { fetch(LEADERBOARD_URL, { method: 'POST', mode: 'no-cors', body, keepalive: true }).catch(() => {}); } catch (e) {}
     }
@@ -4822,7 +4868,7 @@
                 const d = document.createElement('div'); d.className = c + ' chopper-part'; modalCard.appendChild(d);
             });
             later(() => modalCard.classList.add('chopper-bob'), 500);
-            later(() => { modalCard.classList.remove('chopper-bob'); void modalCard.offsetWidth; modalCard.classList.add('chopper-away'); }, 4500);
+            later(() => { modalCard.classList.remove('chopper-bob'); void modalCard.offsetWidth; modalCard.classList.add('chopper-away'); fadeClip('mash', 2300); }, 4500);
             later(() => closeModal(), 4500 + 2400);
         }
         if (w.lasso) {
@@ -5170,9 +5216,14 @@
             playAshbringer(null, true);
             return;
         }
+        if (typedBuffer.endsWith("axazongold")) {   // dev gold for testing: the leaderboard never sees it
+            typedBuffer = ""; setRigMode("FAIR");
+            const grant = 1e15; store.set('painWheelDevGold', store.get('painWheelDevGold', 0) + grant); setGold(gold + grant);
+            moveToast('🛠️ Dev gold: +1,000,000,000,000,000g. This never counts on the guild leaderboard.'); return;
+        }
         if (typedBuffer.endsWith("knob")) {         // force the Knob Creek ad (to test the $KNOB crash)
             typedBuffer = ""; setRigMode("FAIR");
-            if (window.showAdById) window.showAdById('knobcreek');
+            if (window.showAdById) window.showAdById('knobcreek', true);
             return;
         }
         if (typedBuffer.endsWith("chicken") || typedBuffer.endsWith("cluck")) {   // typing chicken (or cluck) at a wandering chicken
@@ -5841,9 +5892,9 @@
         rikers: { name: 'TsukBlock Maximum Security: Rikers Island Edition', cost: 250000000, desc: 'Blocks EVERY ad. No visitors. No parole. ⚠️ You will miss game content unless you let specific ads out on parole with the whitelist below.' } };
     function tsukAllows(id) {
         const mode = store.get('painWheelTsukMode', 'off'), wl = store.get('painWheelTsukWhitelist', {});
-        if (mode === 'off' || wl[id]) return true;
+        if (mode === 'off' || wl[id] === true) return true;
         if (mode === 'rikers') return false;
-        if (CONTENT_ADS.has(id)) return true;
+        if (CONTENT_ADS.has(id)) return wl[id] !== false;   // Premium lets game-content ads out unless you uncheck them
         return mode === 'free' ? Math.random() < 0.5 : false;
     }
     function tsukBlocked(id) {
@@ -5975,7 +6026,11 @@
             }
             else closeAd();
         });
-        window.showAdById = (id) => { if (ad.classList.contains('hidden') && !isSpinning) show(id); };
+        window.showAdById = (id, typed) => {   // slices/events that summon an ad still have to get past TsukBlock (typed codes don't)
+            if (!ad.classList.contains('hidden') || isSpinning) return;
+            if (!typed && !tsukAllows(id)) { tsukBlocked(id); return; }
+            show(id);
+        };
         setTimeout(tryShow, 10000);
         setInterval(tryShow, 15000);   // check often while the page stays open
     })();
@@ -6355,7 +6410,7 @@
         knobShares += n; store.set('painWheelKnobShares', knobShares); setGold(gold - cost);
         if (n > 1) $('knobNews').textContent = `📈 Bought ${n.toLocaleString()} shares for ${cost.toLocaleString()}g.`;
         renderKnobHold();
-        chat(pick(n >= 100 ? ['WHALE ALERT', 'he bought 100 KEKW', 'Reb is buying a boat', 'market manipulation'] : ['buying the top KEKW', 'diamond hands', 'Reb thanks you', '$KNOB to the moon']));
+        chat(pick(n >= 100 ? ['WHALE ALERT', `he bought ${n.toLocaleString()} KEKW`, `${n.toLocaleString()} shares?? Reb is buying a boat`, 'market manipulation'] : [n > 1 ? `bought ${n} shares KEKW` : 'one (1) share KEKW', 'buying the top KEKW', 'diamond hands', 'Reb thanks you', '$KNOB to the moon']));
     }
     document.querySelectorAll('[data-kb]').forEach(b => b.addEventListener('click', () => {
         let n = b.dataset.kb === 'max' ? Math.floor(gold / Math.max(1, Math.round(knobNow))) : +b.dataset.kb;   // Max = as many as you can afford
@@ -6375,7 +6430,7 @@
         poor: ["Reb's Empty Bottle", 'Half a Stale Cheeto', "Kevin's Participation Trophy", 'Broken Hearthstone', 'Soggy Croissant Crumb',
             'Torn Discord Log', 'Jar of Sewer Pickle Juice', 'Frayed Leap of Faith Rope', 'Expired Healthstone'],
         common: ['Linen Cloth (x3)', 'Conjured Mana Bun', 'Light Feather', "Kevin's Spare Keyboard", 'Six-Pack of Garage Beers', 'Glazed Donut', "Kevin's ROG Ally Battery"],
-        uncommon: ['Slurpee (Blue Raspberry)', 'Slurpee (Cherry)', 'Slurpee (Coke)', 'Slurpee (Mystery Flavor)', 'Belt of Standing in Fire', 'Ret Paladin 6% Buff Coupon', 'Goblin Timeshare Brochure', "Platemage's Spare Plate",
+        uncommon: ['Slurpee (Blue Raspberry)', 'Slurpee (Cherry)', 'Slurpee (Coke)', 'Slurpee (Mystery Flavor)', "Slurpee (Dr Pepper)", "Slurpee (Mountain Dew Code Red)", "Slurpee (Wild Cherry Pepsi)", "Slurpee (Half & Half Mix)", "Slurpee (Sugar Free, For Reb's Doctor)", 'Belt of Standing in Fire', 'Ret Paladin 6% Buff Coupon', 'Goblin Timeshare Brochure', "Platemage's Spare Plate",
             'Murder Row Teleport Scroll', 'Road Beer (Still Cold)', "Axazon's Empty Heart Pill Bottle"],
         rare: ["Biblehumping's Holy Lasso", "Axa's Defibrillator", 'Knob Creek Single Barrel', "ChAoTiC's Blown-Out Headset", 'M*A*S*H Medevac Voucher', "ChAoTiC's Last Nerve"],
         epic: ['Shield of Kevin Avoidance', "Gammon's Saving Grace", "Clussy's Clown Nose of Doom", 'The Undermine Deed', "Uwutek's Pocket Lint", "Rubber Replica of Biblehumping's Finger"],
@@ -6393,7 +6448,7 @@
         "Kevin's Spare Keyboard": 'Every key is bound to "stand in fire".', 'Six-Pack of Garage Beers': 'Best enjoyed at 10 AM.', 'Glazed Donut': 'Perfectly fine. Suspicious.',
         'Belt of Standing in Fire': '+10 Fire Resistance. -100 Awareness.', 'Slurpee (Blue Raspberry)': 'Turns your tongue blue for 3 raid nights.',
         'Slurpee (Cherry)': 'Brain freeze on use. 30 second cooldown.', 'Slurpee (Coke)': 'The classic. Straight from the 7/11 by the guild hall.',
-        'Slurpee (Mystery Flavor)': 'Nobody knows. Not even 7/11.', 'Ret Paladin 6% Buff Coupon': 'Void where prohibited (everywhere).',
+        'Slurpee (Mystery Flavor)': 'Nobody knows. Not even 7/11.', "Slurpee (Dr Pepper)": '23 flavors, all of them frozen. Most requested in guild history.', "Slurpee (Mountain Dew Code Red)": 'Gamer fuel. +5% APM, -5% sleep.', "Slurpee (Wild Cherry Pepsi)": 'For when the 7/11 is out of Dr Pepper.', "Slurpee (Half & Half Mix)": 'Every flavor at once. The machine wept.', "Slurpee (Sugar Free, For Reb's Doctor)": 'Reb has never touched it.', 'Ret Paladin 6% Buff Coupon': 'Void where prohibited (everywhere).',
         'Goblin Timeshare Brochure': 'Page 2 is just a bomb emoji.', "Platemage's Spare Plate": 'Not plate. Not a mage. A plate.',
         'Murder Row Teleport Scroll': 'Not a rat. Strategically elsewhere.', 'Road Beer (Still Cold)': 'Do not drink and fly a gryphon.',
         "Biblehumping's Holy Lasso": 'Yanks allies into danger with love.', "Axa's Defibrillator": 'CLEAR! (Batteries not included.)',
@@ -6452,7 +6507,7 @@
         if (name === "Corrinne's Platinum Achievement") setTimeout(() => chatBurst(['CORRINNE IS GOING TO BE SO MAD', 'you STOLE that', 'he earned that', 'give it back', 'ninja looted a platinum KEKW'], 4), 1200);
         if (name === "ChAoTiC's Last Nerve") setTimeout(() => chatBurst(['that was his LAST one', 'do NOT step on it', 'kevin is already stepping on it'], 3), 1200);
         bag[name] = { q, n: ((bag[name] && bag[name].n) || 0) + 1 }; store.set('painWheelBag', bag);
-        if (name === "Reb's Empty Bottle" || name === 'Road Beer (Still Cold)' || name === 'Six-Pack of Garage Beers') addDrink();
+        if (name === 'Road Beer (Still Cold)' || name === 'Six-Pack of Garage Beers') addDrink();   // (an empty bottle isn't a drink)
         const isNew = !foundItems[name];
         if (isNew) { foundItems[name] = true; store.set('painWheelFound', foundItems); setTimeout(() => checkSets(name), 900); }
         if (q === 'legendary') unlock('orangetext');
@@ -6499,6 +6554,7 @@
         else if (e.key === 'painWheelStats' && v && typeof v === 'object') { Object.assign(stats, v); }
         else if (e.key === 'painWheelAllTimeSpins') { const n = parseInt(e.newValue, 10); if (n > allTimeSpins) { allTimeSpins = n; updateSpinBadge(); } }
     });
+    const ITEM_ICON = { 'Golden Chocolate Donut': PHOTO_TOY_DONUT };
     function renderBag() {
         const g = $('bagGrid'); g.innerHTML = '';
         const items = Object.entries(bag).sort((a, b) => Q_ORDER.indexOf(a[1].q) - Q_ORDER.indexOf(b[1].q) || a[0].localeCompare(b[0]));
@@ -6508,6 +6564,7 @@
             const d = document.createElement('div'); d.className = `bg-slate-950/70 border rounded-lg px-3 py-1.5 cursor-pointer q-${v.q}`;
             const top = document.createElement('div'); top.className = 'flex items-center justify-between gap-2';
             const a = document.createElement('span'); a.className = 'font-bold'; a.textContent = `[${name}]`;
+            if (ITEM_ICON[name]) { const im = document.createElement('img'); im.src = ITEM_ICON[name]; im.alt = ''; im.style.cssText = 'display:inline-block;height:22px;width:auto;vertical-align:middle;margin-right:6px'; a.prepend(im); }
             const b = document.createElement('span'); b.className = 'text-slate-400 text-xs mono shrink-0'; b.textContent = `${v.q} ×${v.n}`;
             top.append(a, b); d.appendChild(top);
             if (bagOpenItem === name) {
@@ -6589,6 +6646,7 @@
     const bossDmgFor = (type, ash) => (BOSS_DMG[type] || 10) + (ash ? 1000 : 0);
     let bossState = null;
     $('bossIconImg').src = PHOTO_UWU_ICON; $('bossArtImg').src = PHOTO_UWU_ART; $('partyHatImg').src = PHOTO_PARTY_HAT;
+    $('hearthIcon').src = PHOTO_TOY_HEARTH; $('toyIcon').src = PHOTO_TOYBOX;
     function renderBoss(b) {
         if (!b || typeof b !== 'object') return;
         const num = (v) => { v = Number(v); return isFinite(v) ? v : 0; };   // the Sheet should always send numbers; if it doesn't, show zeros instead of NaN
@@ -7192,7 +7250,7 @@
     function sendEvent(ev) {   // non-spin things the Sheet / Discord should know about
         if (!LEADERBOARD_URL || !playerName) return false;
         try { fetch(LEADERBOARD_URL, { method: 'POST', mode: 'no-cors', keepalive: true,
-            body: JSON.stringify({ name: playerName, event: ev, gold: Math.round(Math.min(1e300, gold + vaultGold())), donated: aipacTotal, title: titleChoice, favorite: favoriteLabel() }) }).catch(() => {}); } catch (e) {}
+            body: JSON.stringify({ name: playerName, event: ev, gold: Math.max(0, Math.round(Math.min(1e300, gold + vaultGold())) - store.get('painWheelDevGold', 0)), donated: aipacTotal, title: titleChoice, favorite: favoriteLabel() }) }).catch(() => {}); } catch (e) {}
         return true;
     }
     function shopMsg(t) { const m = $('shopMsg'); if (m) { m.textContent = t; clearTimeout(shopMsg.t); shopMsg.t = setTimeout(() => m.textContent = '', 6000); } }
@@ -7793,8 +7851,19 @@
             document.body.appendChild(boom); requestAnimationFrame(() => { boom.style.transform = 'translate(-50%,-30%) scale(3.4)'; });
             setTimeout(() => { boom.style.opacity = '0'; }, 300); setTimeout(() => boom.remove(), 1700);
             document.body.animate([{ transform: 'translate(0,0)' }, { transform: 'translate(-7px,4px)' }, { transform: 'translate(6px,-4px)' }, { transform: 'translate(0,0)' }], { duration: 400 });
-            shack.innerHTML = fireOver(shackHTML(), 64);
-            setTimeout(() => { shack.innerHTML = fireOver('<span style="font-size:60px;line-height:1">🏚️</span>', 40); }, 2500); setTimeout(() => { shack.innerHTML = shackHTML(); moveToast('🏜️ The shack has been rebuilt. Insurance did not cover rockets.'); }, 7000);
+            const sign = shack.querySelector('.shack-sign');
+            if (sign) {   // the $13.50 sign goes flying
+                const sr = sign.getBoundingClientRect(), fly = sign.cloneNode(true);
+                fly.style.cssText = `position:fixed;z-index:80;left:${sr.left}px;top:${sr.top}px;width:${sr.width}px;margin:0;pointer-events:none;transition:transform 1.6s cubic-bezier(.2,.8,.4,1),opacity 1.6s`;
+                document.body.appendChild(fly);
+                requestAnimationFrame(() => requestAnimationFrame(() => { fly.style.transform = `translate(${180 + Math.random() * 160}px,-${220 + Math.random() * 120}px) rotate(${540 + Math.random() * 360}deg) scale(.6)`; fly.style.opacity = '0'; }));
+                setTimeout(() => fly.remove(), 1700);
+                if (Math.random() < 0.5) setTimeout(() => chat(pick(['THE SIGN', 'there goes the $13.50', 'price just went up', 'the for sale sign is in orbit'])), 900);
+            }
+            const shackImg = (src) => `<img src="${src}" alt="🏚️" width="112" style="display:block;filter:drop-shadow(0 3px 6px rgba(0,0,0,.6))">`;
+            shack.innerHTML = fireOver(shackImg(PHOTO_SHACK_ROCKET), 64);
+            const sb = shack.getBoundingClientRect(); fxAt('boom', sb.left + sb.width / 2, sb.top + sb.height * 0.35, 80, 700);
+            setTimeout(() => { fxAt('poof', sb.left + sb.width / 2, sb.top + sb.height * 0.4, 120, 900); shack.innerHTML = fireOver(shackImg(PHOTO_SHACK_BURNT), 40); }, 2500); setTimeout(() => { shack.innerHTML = shackHTML(); moveToast('🏜️ The shack has been rebuilt. Insurance did not cover rockets.'); }, 7000);
             funEvent('💥 HOUSTON, WE HAVE A SHACK PROBLEM 💥', 3500);
             chatBurst(['HE CRASHED INTO HIS OWN SHACK', 'what goes up', 'billionaire space program KEKW', 'the shack 😭', 'insurance claim #2'], 5, 2500);
         }, 3050);
@@ -7820,25 +7889,28 @@
     let toyOpen = store.get('painWheelToyOpen', true);
     function renderToyBox() {
         const n = $('garageDock').children.length, box = $('toyBox');
-        box.style.display = n && toyOpen ? 'flex' : 'none';
+        placeToyBox(); box.style.display = n ? 'flex' : 'none'; box.classList.toggle('toy-open', !!(n && toyOpen));
         $('toyBtn').style.display = n ? 'inline-flex' : 'none';
         $('toyLbl').textContent = toyOpen ? 'Hide toys' : `Toys (${n})`;
     }
+    function placeToyBox() {   // the toy box hangs under its button in the top bar (page coordinates, so it scrolls with the header)
+        const box = $('toyBox'), b = $('toyBtn'); if (!box || !b) return;
+        if (box.parentElement !== document.body) document.body.appendChild(box);
+        const r = b.getBoundingClientRect();
+        box.style.position = 'absolute'; box.style.zIndex = '66';
+        box.style.top = (r.bottom + scrollY + 8) + 'px';
+        box.style.right = Math.max(8, document.documentElement.clientWidth - (r.right + scrollX)) + 'px';
+    }
+    addEventListener('resize', () => { if ($('toyBox').classList.contains('toy-open')) placeToyBox(); });
     $('toyBtn').addEventListener('click', () => { toyOpen = !toyOpen; store.set('painWheelToyOpen', toyOpen); renderToyBox(); });
     (function stackCorner() {   // bills, toy box, then the badges (which always stay visible), stacked in the corner
         const st = $('rightStack');
-        ['billsBox', 'toyBox', 'societyBadge', 'aipacBadge'].forEach(id => {
+        ['billsBox', 'societyBadge', 'aipacBadge'].forEach(id => {
             const e = $(id); e.classList.remove('fixed'); e.style.position = 'relative'; e.style.right = ''; e.style.bottom = ''; e.style.pointerEvents = 'auto'; st.appendChild(e);
         });
     })();
-    var SVG_PHONE = '<svg viewBox="0 0 26 50" width="26" height="48" aria-hidden="true"><rect x="16" y="0" width="4" height="13" rx="1.5" fill="#27272a"/><rect x="3" y="10" width="20" height="38" rx="3.5" fill="#3f3f46" stroke="#18181b" stroke-width="1.5"/>' +
-        '<rect x="6" y="14" width="14" height="6" rx="1" fill="#84cc16"/>' + [0, 1, 2, 3].map(r => [0, 1, 2].map(c => `<rect x="${6.5 + c * 4.6}" y="${24 + r * 5}" width="3.4" height="3" rx=".8" fill="#d4d4d8"/>`).join('')).join('') +
-        '<circle cx="8" cy="44" r=".9" fill="#f9a8d4"/><circle cx="17" cy="45" r=".8" fill="#fde047"/><circle cx="12" cy="12.5" r=".7" fill="#f9a8d4"/><circle cx="20" cy="22" r=".7" fill="#fde047"/></svg>';
-    var SVG_DOLL = '<svg viewBox="0 0 40 50" width="38" height="48" aria-hidden="true"><path d="M20 20 L9 26 M20 20 L31 26" stroke="#a07a45" stroke-width="5" stroke-linecap="round"/>' +
-        '<path d="M14 21 h12 l2 16 l-4 11 h-3 l-1-8 l-1 8 h-3 l-4-11 z" fill="#c8a26a" stroke="#7c5a2a" stroke-width="1.4"/><circle cx="20" cy="12" r="10" fill="#c8a26a" stroke="#7c5a2a" stroke-width="1.4"/>' +
-        '<path d="M14 9 l4 4 M18 9 l-4 4 M22 9 l4 4 M26 9 l-4 4" stroke="#1f2937" stroke-width="1.6"/><path d="M15 17 h10" stroke="#7c5a2a" stroke-width="1.2" stroke-dasharray="1.5 1.5"/>' +
-        '<rect x="16.5" y="25" width="7" height="7" rx="1" fill="#ef4444"/><text x="20" y="31" font-size="6" font-weight="900" text-anchor="middle" fill="#fff" font-family="Arial">K</text>' +
-        '<path d="M28 4 L22 12 M33 24 L24 29" stroke="#9ca3af" stroke-width="1.2"/><circle cx="28" cy="4" r="2" fill="#3b82f6"/><circle cx="33" cy="24" r="2" fill="#22c55e"/></svg>';
+    var SVG_PHONE = '<img src="' + PHOTO_TOY_PHONE + '" alt="📞" style="display:block;height:56px;width:auto">';
+    var SVG_DOLL = '<img src="' + PHOTO_TOY_DOLL + '" alt="🪡" style="display:block;height:52px;width:auto">';
 
     // ---------- 📞 Vince's 1980s brick phone ----------
     const VINCE_LINES = ["BUY BUY BUY! ...wait, SELL! No, BUY! I'm on a car phone, I can't hear you!", "Kid, I've got a hot tip on $KEVN. It's going to the moon. The moon is Kevin's house.",
@@ -7908,7 +7980,7 @@
     }, 30000);
     function chickenFingerHeist() {
         const f = $('nickFinger'); if (!f || f.style.display === 'none') return;
-        store.set('painWheelChickenFingerDay', new Date().toDateString());
+        { const today = new Date().toDateString(), hl = store.get('painWheelHeistLog', {}); store.set('painWheelHeistLog', { day: today, n: hl.day === today ? (hl.n || 0) + 1 : 1, at: Date.now() }); }
         const pet = $('pet-chicken'); if (pet) { fxPoofAt(pet, 80); pet.style.visibility = 'hidden'; }   // your own chicken is the one going for it
         const petBack = (ms) => setTimeout(() => { const p2 = $('pet-chicken'); if (p2) p2.style.visibility = ''; }, ms);
         const fr = f.getBoundingClientRect(), tx = fr.left + fr.width / 2, ty = fr.top + fr.height / 2, fromLeft = tx > innerWidth / 2 ? false : Math.random() < 0.5;
@@ -7958,7 +8030,7 @@
     }
     setInterval(() => {   // about once a day, while you're looking at the wheel
         if (!garage.finger || document.hidden || isSpinning || !wheelOnScreen || !$('winnerModal').classList.contains('hidden')) return;
-        if (store.get('painWheelChickenFingerDay', '') === new Date().toDateString()) return;
+        const hl = store.get('painWheelHeistLog', {}); if (hl.day === new Date().toDateString() && (hl.n >= 2 || Date.now() - (hl.at || 0) < 3 * 3600000)) return;   // twice a day at most, 3 hours apart
         if (Math.random() < 1 / 6) chickenFingerHeist();
     }, 90000);
     function strangerCall() {   // a mysterious caller with one piece of scratch-off advice
@@ -8101,7 +8173,13 @@
         });
     }
     document.querySelectorAll('#modePicks [data-mode]').forEach(b => b.addEventListener('click', () => {
-        uiMode = b.dataset.mode; try { localStorage.setItem('painWheelMode', JSON.stringify(uiMode)); } catch (e) {}
+        const was = uiMode; uiMode = b.dataset.mode; try { localStorage.setItem('painWheelMode', JSON.stringify(uiMode)); } catch (e) {}
+        if (uiMode === 'light' && was !== 'light') {   // the guild has opinions
+            funEvent('☀️ LIGHT MODE ENABLED. THE GUILD HAS BEEN NOTIFIED.', 3500);
+            chatBurst(['FLASHBANG', 'MY EYES', 'light mode user spotted', 'who turned on the sun', 'he uses light mode KEKW', 'reported', 'unfollowed', 'my retinas 😭'], 6, 2500);
+            moveToast(pick(['☀️ Light mode. Bold choice. Wrong, but bold.', '☀️ Your monitor just filed a complaint.', '☀️ Somewhere, a vampire guildie just burst into flames.', '☀️ Light mode: for people who raid at noon, apparently.']));
+            setTimeout(() => sqPost(pick(['chaotic', 'bible', 'kevin']), pick(['writing a ticket for light mode. that is assault on my retinas', 'responding to a call: someone switched to light mode. bring sunglasses eh', 'even i use dark mode and i stand in fire'])), 2500);
+        } else if (uiMode === 'dark' && was === 'light') chat(pick(['welcome back to the dark side', 'he came back. good.', 'sanity restored']));
         applyUiMode(); renderModePicks();
     }));
     renderModePicks(); setTimeout(applyUiMode, 1500);   // catch cards built after load
@@ -8126,15 +8204,56 @@
             ['🐦', 'Squawkr chirps on real posts (🔊 mutes it). Uwutek\'s health bar matches the holiday theme. Overclocked spins get a thick border and a glowing wheel.'],
             ['📎', 'Clippy is 31 years old now. He would like you to know that he is the oldest talking paperclip in the world.'],
             ['🧊', 'John Blizzard nerfed Guardian Druid again and is trading Knob Creek stonks. Reb is still drinking the actual bottles.'],
-            ['🏆', 'Fixed: spin achievements count your spins from every device, pets stay put when you scroll, overclocked spins no longer lag, two open tabs no longer eat your gold, and every box on the left can be minimized.']
+            ['🏆', 'Fixed: spin achievements count your spins from every device, pets stay put when you scroll, overclocked spins no longer lag, two open tabs no longer eat your gold, and every box on the left can be minimized.'],
+            ['🔥', 'When a rocket hits the shack, the $13.50 sign goes flying, the rocket sticks in the roof, and the whole thing burns down before it gets rebuilt.'],
+            ['🧰', 'New pixel art for the brick phone, voodoo doll, hearthstone and golden donut. The Toys box drops down right under its button.'],
+            ['⚔️', 'Pick your favorite class (or "I don\'t play WoW") when you set your name, or in Settings. It shows next to your name.'],
+            ['📚', 'You can actually buy WinRAR now. You get a license number and a badge to prove it. Nobody else will have one.'],
+            ['📣', 'Paid shoutouts show up as a big headline on every guildie\'s wheel (and Squawkr), not just Discord.'],
+            ['☀️', 'Light mode users will be judged. Loudly.'],
+            ['🛡️', 'TsukBlock now blocks the ads that slices try to sneak in too. Premium lets you uncheck game-content ads to block them.'],
+            ['🚔', 'Fixed: RUI stops only happen after drinking slices, at most once every half hour ("This Is Fine" no longer fines you). Wrong Spec spins backwards again, even with a Ret boost. Stonk chat shows how many you really bought. The chicken goes after the finger more often. Whistlethy whistles without the fanfare on top, M*A*S*H fades as the chopper leaves, the party hat stays on, and Clippy\'s feet are back on screen.'],
+            ['📜', 'Patch notes now keep a history. Scroll down here to read the past updates.']
         ]
     };
+    const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
+        { title: 'The yacht, the rocket, and the IRS', date: 'October 31, 2026', lines: [
+            ['🛥️', 'Step inside the yacht, VIP room and all. Pixel-art cop car, ambulance and yacht, plus 5 new slices (180 total).'],
+            ['🚀', 'SpaceZ rocket pad: launch rockets at things. They miss. A lot.'],
+            ['🐦', 'Squawkr, the guild\'s own feed, with Elan posting through it all. The IRS, the Cartel and RUI stops are now things that happen to you.'],
+            ['🧸', 'The toy box: Biblehumping\'s Finger, the voodoo doll, Vince\'s brick phone, and investments you will regret.'],
+            ['🎖️', 'The Purple Heart, the Pardner hotline, and police patrols. Name changes can bring your leaderboard stats along.'],
+            ['🔺', 'Secret Societies, TsukBlock, a fake login queue, and AIPAC grew into a Super PAC.'],
+            ['🖥️', 'A big performance pass, and the Barrens Chat theme.']] },
+        { title: 'The shop opens', date: 'October 30, 2026', lines: [
+            ['🛒', 'The Shop: titles, themes, the garage, party mode, pets, and AIPAC. Tuesday tax is real. Kevin can take over.'],
+            ['📈', 'The Degenerate Exchange, with stock splits. Reb\'s liver is now a stat.'],
+            ['🧿', 'Curses, guild alerts, and a transfer link to move your save to another device.'],
+            ['🐢', 'New slices: Whistlethy, Communism, Tsussie, 7/11, and the Shack in the Desert (175 slices). Cop car and donut.'],
+            ['🎟️', 'Gallywix\'s Golden Ticket, the golden cookie, spin achievements up to 10,000, and the Ret Vision and Veterans Day themes.']] },
+        { title: 'Uwutek arrives', date: 'October 29, 2026', lines: [
+            ['👹', 'Uwutek the raid boss: every spin hits him. Stream chat, loot, betting, and $KNOB.'],
+            ['📰', 'The Guild Feed, bounties, the timeshare, and Ret ascension.'],
+            ['🎡', 'The wheel hit 150 slices, and loot sets came in.']] }
+    ];
+    function renderUpdateHistory(skip) {
+        const box = $('updHistory'); box.innerHTML = '';
+        UPDATE_HISTORY.filter(h => h !== skip).forEach(h => {
+            const d = document.createElement('details'); d.className = 'rounded-lg border border-slate-700 bg-slate-950/50 px-3 py-2';
+            d.innerHTML = '<summary class="cursor-pointer font-bold text-slate-200"><span></span> <span class="text-xs mono text-slate-500"></span></summary><ul class="mt-2 space-y-2 text-sm text-slate-300"></ul>';
+            d.querySelector('summary span').textContent = h.title; d.querySelectorAll('summary span')[1].textContent = h.date;
+            const ul = d.querySelector('ul');
+            h.lines.forEach(([e, t]) => { const li = document.createElement('li'); li.className = 'flex gap-3'; li.innerHTML = '<span class="text-xl leading-none shrink-0 w-7 text-center"></span><span></span>'; li.firstChild.textContent = e; li.lastChild.textContent = t; ul.appendChild(li); });
+            box.appendChild(d);
+        });
+    }
     function showUpdateNotes() {
-        $('updTitle').textContent = UPDATE_NOTES.title; $('updDate').textContent = UPDATE_NOTES.date;
+        const live = !UPDATE_NOTES.showAfter || Date.now() >= UPDATE_NOTES.showAfter, cur = live ? UPDATE_NOTES : UPDATE_HISTORY[0];   // tonight's notes stay secret until midnight
+        $('updTitle').textContent = cur.title; $('updDate').textContent = cur.date; renderUpdateHistory(live ? null : cur);
         const ul = $('updList'); ul.innerHTML = '';
-        UPDATE_NOTES.lines.forEach(([e, t]) => { const li = document.createElement('li'); li.className = 'flex gap-3'; li.innerHTML = '<span class="text-2xl leading-none shrink-0 w-8 text-center"></span><span></span>'; li.firstChild.textContent = e; li.lastChild.textContent = t; ul.appendChild(li); });
+        cur.lines.forEach(([e, t]) => { const li = document.createElement('li'); li.className = 'flex gap-3'; li.innerHTML = '<span class="text-2xl leading-none shrink-0 w-8 text-center"></span><span></span>'; li.firstChild.textContent = e; li.lastChild.textContent = t; ul.appendChild(li); });
         const p = $('updatePanel'); p.classList.remove('hidden'); p.classList.add('flex');
-        store.set('painWheelSeenUpdate', UPDATE_NOTES.id);
+        if (live) store.set('painWheelSeenUpdate', UPDATE_NOTES.id);
     }
     const hideUpdateNotes = () => { const p = $('updatePanel'); p.classList.add('hidden'); p.classList.remove('flex'); };
     $('updateClose').addEventListener('click', hideUpdateNotes); $('updOk').addEventListener('click', hideUpdateNotes);
@@ -8238,7 +8357,7 @@
         c.innerHTML = '<div class="pet-bubble hidden"></div><span class="clippy-body has-img"><img src="' + PHOTO_CLIPPY + '" alt="📎" class="clippy-img"><span class="googly"><i></i><i></i></span></span>'; document.body.appendChild(c);
         let x = innerWidth - 120, y = innerHeight - 120, tx = x, ty = y;
         c.style.transform = `translate(${x}px,${y}px)`;
-        window.addEventListener('mousemove', (e) => { tx = Math.min(innerWidth - 60, e.clientX + 24); ty = Math.min(innerHeight - 60, e.clientY + 20); }, { passive: true });
+        window.addEventListener('mousemove', (e) => { tx = Math.min(innerWidth - 70, e.clientX + 24); ty = Math.min(innerHeight - 100, e.clientY + 20); }, { passive: true });
         (function follow() {   // lazy follow, a bit behind the cursor
             if (!document.hidden && (Math.abs(tx - x) > 0.4 || Math.abs(ty - y) > 0.4)) { x += (tx - x) * 0.12; y += (ty - y) * 0.12; c.style.transform = `translate(${x.toFixed(1)}px,${y.toFixed(1)}px)`; }
             if (c.isConnected) requestAnimationFrame(follow);
@@ -8385,7 +8504,7 @@
             add(shopHead("🛡️ Kevin Repel (Kevin's lawyers are billionaires; priced accordingly)"));
             REPELS.forEach(([n, c, name]) => add(shopRow('🛡️', name, `The next ${n} spin${n > 1 ? 's' : ''} can't land on Kevin. Still counts as a fair spin. (Active: ${kevinShield})`, 'Buy: ' + fmt(c),
                 () => { if (!spend(c, name)) return; kevinShield += n; updateShieldBadge(); shopMsg(`Repel applied. ${kevinShield} Kevin-free spin${kevinShield > 1 ? 's' : ''} queued.`); renderShop(); })));
-            add(shopHead('📣 Buy a Shoutout (posts in Discord)'));
+            add(shopHead('📣 Buy a Shoutout (Discord + everyone\'s wheel)'));
             const w = document.createElement('div'); w.className = 'flex gap-2';
             w.innerHTML = '<input id="shoutText" maxlength="140" placeholder="Say something to the guild..." class="flex-1 min-w-0 bg-slate-950 border border-slate-700 rounded px-2 py-1.5 text-xs text-slate-200"><button id="shoutBtn" class="shrink-0 px-3 rounded bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold cursor-pointer">Post: 1,000,000g</button>';
             add(w);
@@ -8395,7 +8514,7 @@
                 if (!txt) { shopMsg('Type something first.'); return; }
                 if (!LEADERBOARD_URL || !playerName) { shopMsg('Shoutouts need the guild wheel and a player name.'); return; }
                 if (!spend(1000000, 'a shoutout')) return;
-                sendEvent({ k: 'shout', text: txt.slice(0, 140) }); $('shoutText').value = ''; shopMsg('Shoutout sent to Discord. One million gold well spent. No refunds.');
+                sendEvent({ k: 'shout', text: txt.slice(0, 140) }); $('shoutText').value = ''; shopMsg('Shoutout sent to Discord and every guildie\'s wheel. One million gold well spent. No refunds.'); showShoutout(`📣 ${playerName}: "${txt.slice(0, 140)}"`);
             });
             if (cluckStage === 1) add(shopRow('🌾', 'Special Chicken Feed (quest item)', 'For the CLUCK! quest. A Westfall chicken will come looking for it.', 'Buy: 5,000g', () => {
                 if (!spend(5000, 'Special Chicken Feed')) return; setCluck(2); closeShop();
@@ -8493,13 +8612,14 @@
             }
             if (owned.premium || owned.rikers) {
                 add(shopHead('Whitelist (ads allowed out on parole)'));
-                const wl = store.get('painWheelTsukWhitelist', {});
+                const wl = store.get('painWheelTsukWhitelist', {}), rk = store.get('painWheelTsukMode', 'off') === 'rikers';
+                add(Object.assign(document.createElement('div'), { className: 'text-xs text-slate-400', textContent: rk ? 'Rikers: only checked ads get out. Everything else stays locked up.' : 'Premium: checked ads get through. Uncheck a ⭐ ad to block it too.' }));
                 POPUP_ADS.forEach(a => {
                     const row = document.createElement('label'); row.className = 'flex items-center gap-2 bg-slate-950/60 border border-slate-700 rounded-lg px-3 py-1.5 text-xs cursor-pointer';
                     row.innerHTML = '<input type="checkbox" style="accent-color:#22c55e"><span style="flex:1;min-width:0"></span><span style="font-size:10px;font-weight:900;color:#facc15"></span>';
-                    const cb = row.querySelector('input'); cb.checked = !!wl[a.id];
+                    const cb = row.querySelector('input'); cb.checked = wl[a.id] === true || (!rk && CONTENT_ADS.has(a.id) && wl[a.id] !== false);
                     row.children[1].textContent = adName(a.id); row.children[2].textContent = CONTENT_ADS.has(a.id) ? '⭐ adds game content' : '';
-                    cb.addEventListener('change', () => { const w2 = store.get('painWheelTsukWhitelist', {}); if (cb.checked) w2[a.id] = true; else delete w2[a.id]; store.set('painWheelTsukWhitelist', w2); });
+                    cb.addEventListener('change', () => { const w2 = store.get('painWheelTsukWhitelist', {}); w2[a.id] = cb.checked; store.set('painWheelTsukWhitelist', w2); });
                     add(row);
                 });
             }
@@ -8692,7 +8812,7 @@
     $('partyBtn').addEventListener('click', () => {
         const on = !document.body.classList.contains('party-on');
         document.body.classList.toggle('party-on', on);
-        $('partyBtn').textContent = on ? '🪩 Stop' : '🪩 Party';
+        $('partyBtn').querySelector('span').textContent = on ? 'Stop' : 'Party';
         if (on) chatBurst(['PARTY', 'club the wheel', 'untz untz untz', 'DJ Kevin in the house', '🕺💃'], 4, 2500);
         if (on) partyPets();
         $('partyBtn').blur();
@@ -8911,6 +9031,8 @@
     setInterval(() => { if (bac > 0 && !document.hidden) { bac--; store.set('painWheelBac', bac); } }, 20 * 60000);   // sober up one drink every 20 minutes
     function ruiCheck() {
         if (bac < 4 || Math.random() > 0.5) return;
+        if (Date.now() - store.get('painWheelRuiAt', 0) < 30 * 60000) return;   // one stop per half hour
+        store.set('painWheelRuiAt', Date.now());
         bac = 0; store.set('painWheelBac', 0);
         const fine = Math.round(totalAssets() * 0.2);
         debts.court += fine; saveDebts(); unlock('rui');
@@ -8940,7 +9062,7 @@
         elan: ['Elan', '@ElanOfficial', '🚀', true], kevin: ['Kevin', '@Kevin_Official', '🤡', false], vince: ['Vince', '@VinceOnTheBrick', '📞', false],
         reb: ["Reb's Liver", '@RebsLiver', '🫀', false], chaotic: ['ChAoTiC', '@ChAoTiC', '🚓', true], alt: ['ChAoTiC (alt)', '@ChAoTiC_alt' + (7 + Math.floor(Math.random() * 40)), '🔄', false],
         bible: ['Biblehumping', '@Biblehumping_EMT', '🚑', true], grandma: ['Grandma', '@Grandma_Cookies', '👵', false], shack: ['The Shack', '@TheShackInTheDesert', '🏜️', false],
-        gary: ['Gary', '@SwordfishGary', '🐟', false], uwutek: ['Uwutek', '@Uwutek_Boss', '👹', true], goblinx: ['Goblin Express', '@GoblinExpressCard', '💳', true],
+        gary: ['Gary', '@SwordfishGary', '🐟', false], uwutek: ['Uwutek', '@Uwutek_Boss', '👹', true], shout: ['Paid Shoutout', '@GuildShoutouts', '📣', true], goblinx: ['Goblin Express', '@GoblinExpressCard', '💳', true],
         irs: ['Goblin IRS', '@GoblinIRS', '🧾', true], casimir: ['Casimir', '@Casimir_Rigs', '🔧', false], yacht: ["Gallywix's Yacht Club", '@GallywixYachtClub', '🛥️', true] };
     // vehicle sprites double as Squawkr profile pictures (cropped into the round avatar)
     const SQ_IMG = (src) => () => `<span style="display:grid;place-items:center;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b"><img src="${src}" alt="" style="width:30px;height:30px;object-fit:contain"></span>`;
@@ -9170,7 +9292,18 @@
             <div style="padding:12px;font-size:12px;line-height:1.4">WinRAR is not free. Your 40 day trial ended a long, long time ago.<br><br>You have been a <b>winrar</b> anyway. Congratulations.</div>
             <div style="display:flex;gap:8px;justify-content:flex-end;padding:0 12px 12px"><button data-buy style="padding:3px 14px;border:1px solid #003c74;background:#f4f3ee;cursor:pointer;font-size:12px">Buy</button><button data-x style="padding:3px 14px;border:1px solid #003c74;background:#f4f3ee;cursor:pointer;font-size:12px">Close</button></div>`;
         document.body.appendChild(n);
-        n.querySelector('[data-buy]').addEventListener('click', () => { n.querySelector('div:nth-child(2)').innerHTML = 'Nobody has ever clicked this before. We don\'t know what to do. Closing.'; setTimeout(() => n.remove(), 1600); });
+        n.querySelector('[data-buy]').textContent = store.get('painWheelWinrar', null) ? 'Already licensed' : 'Buy (29,990g)';
+        n.querySelector('[data-buy]').addEventListener('click', () => {
+            const body = n.querySelector('div:nth-child(2)');
+            if (store.get('painWheelWinrar', null)) { body.innerHTML = 'You already own WinRAR. You are the only person on Earth who does.'; setTimeout(() => n.remove(), 2200); return; }
+            if (!spend(29990, 'a WinRAR license')) { body.innerHTML = 'You need 29,990g. Keep being a winrar for free.'; return; }
+            const seg = () => Math.random().toString(36).slice(2, 6).toUpperCase();
+            const lic = { no: `WR-${seg()}-${seg()}-${seg()}`, at: new Date().toISOString() }; store.set('painWheelWinrar', lic); renderWinrarBadge();
+            body.innerHTML = `Nobody has ever clicked this before. Thank you?<br><br>License: <b>${lic.no}</b>`;
+            funEvent('📚 SOMEONE ACTUALLY BOUGHT WINRAR', 4000);
+            chatBurst(['HE PAID FOR WINRAR', 'first time in history', 'the trial was 40 days bro', 'absolute legend', 'WinRAR stock up 1000%'], 5, 2500);
+            setTimeout(() => n.remove(), 3500);
+        });
         n.querySelectorAll('[data-x]').forEach(x => x.addEventListener('click', () => n.remove()));
         setTimeout(() => n.isConnected && n.remove(), 15000);
         if (pets.clippy) {   // Clippy can't help himself
@@ -9179,6 +9312,16 @@
             n.querySelectorAll('[data-x]').forEach(x => x.addEventListener('click', () => petSay('clippy', 'Classic. Another winrar who will never pay.')));
         }
     }
+    function renderWinrarBadge() {   // the rarest flex: a paid WinRAR license (sits above the secret society / AIPAC badges)
+        const lic = store.get('painWheelWinrar', null); let b = $('winrarBadge');
+        if (!lic || !lic.no) { if (b) b.remove(); return; }
+        if (!b) { b = document.createElement('div'); b.id = 'winrarBadge'; const st = $('rightStack'), first = $('societyBadge'); st.insertBefore(b, first && first.parentElement === st ? first : null); }
+        b.style.cssText = 'position:relative;pointer-events:auto;padding:4px 10px;border-radius:6px;border:2px solid #facc15;background:linear-gradient(135deg,#4c1d95,#6b21a8);color:#fef9c3;font:800 11px/1.25 Tahoma,Verdana,sans-serif;text-align:right;box-shadow:0 4px 14px rgba(0,0,0,.5)';
+        b.title = 'A real, paid WinRAR license. Nobody else has one.';
+        b.innerHTML = '<div style="font-size:13px">📚 WinRAR Licensed Owner</div><div style="font-family:monospace;color:#fde68a"></div><div style="opacity:.8;font-weight:600"></div>';
+        b.children[1].textContent = '#' + lic.no; b.children[2].textContent = 'Purchased ' + new Date(lic.at).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+    setTimeout(renderWinrarBadge, 0);
     function flashbang() {
         const f = document.createElement('div');
         f.style.cssText = 'position:fixed;inset:0;z-index:95;background:#fff;opacity:.95;pointer-events:none;transition:opacity 2.8s ease-out';
@@ -9227,12 +9370,12 @@
     function newSliceFx(type) {
         const ws = $('whistlethyScene');
         if (ws) { ws.classList.toggle('hidden', type !== 'WHISTLETHY'); ws.classList.toggle('flex', type === 'WHISTLETHY'); }
-        if (type === 'WHISTLETHY') { if (!$('whistlethyImg').src) $('whistlethyImg').src = PHOTO_WHISTLETHY; setTimeout(playTurtleToot, 700); }
+        if (type === 'WHISTLETHY') { if (!$('whistlethyImg').src) $('whistlethyImg').src = PHOTO_WHISTLETHY; }
         const ts = $('tsussieScene');
         if (type === 'TSUSSIE' && !$('tsussieImg').src) $('tsussieImg').src = PHOTO_TSUSSIE;
         if (ts) { ts.classList.toggle('hidden', type !== 'TSUSSIE'); ts.classList.toggle('flex', type === 'TSUSSIE'); }
         if (type === 'SEVEN_ELEVEN') {
-            setTimeout(() => giveLoot('uncommon', '🥤 Thank you, come again', pick(['Slurpee (Blue Raspberry)', 'Slurpee (Cherry)', 'Slurpee (Coke)', 'Slurpee (Mystery Flavor)'])), 1200);
+            setTimeout(() => giveLoot('uncommon', '🥤 Thank you, come again', pick(['Slurpee (Blue Raspberry)', 'Slurpee (Cherry)', 'Slurpee (Coke)', 'Slurpee (Mystery Flavor)', "Slurpee (Dr Pepper)", "Slurpee (Mountain Dew Code Red)", "Slurpee (Wild Cherry Pepsi)", "Slurpee (Half & Half Mix)", "Slurpee (Sugar Free, For Reb's Doctor)", "Slurpee (Dr Pepper)"])), 1200);
             const f = document.createElement('div');   // brain freeze: a soft blue frost that fades
             f.style.cssText = 'position:fixed;inset:0;z-index:58;pointer-events:none;background:radial-gradient(circle,transparent 40%,rgba(56,189,248,.45));opacity:1;transition:opacity 2.5s';
             document.body.appendChild(f); setTimeout(() => f.style.opacity = '0', 900); setTimeout(() => f.remove(), 3600);
@@ -9541,6 +9684,11 @@
 
     // ---------- guild alerts: big moments from anyone in the guild pop up on everyone's wheel ----------
     let alertQueue = [], alertShowing = false;
+    function showShoutout(x) {   // paid shoutouts: a big headline on everyone's wheel plus a Squawkr post
+        funEvent(x, 9000);
+        try { sqPost('shout', x.replace(/^📣\s*/, '')); } catch (e) {}
+        chatBurst(['SHOUTOUT', 'one million gold for THAT', 'W shoutout', 'he paid for this', 'rich people stuff'], 3, 2500);
+    }
     function guildAlerts(events) {
         let seen = store.get('painWheelAlertSeen', -1);
         const maxId = events.reduce((m, e) => Math.max(m, +e.id || 0), 0);
@@ -9549,7 +9697,7 @@
         }
         events.filter(e => +e.id > seen).sort((a, b) => a.id - b.id).slice(-4)
             .filter(e => !playerName || ![e.n, e.v].some(x => String(x || '').toLowerCase() === playerName.toLowerCase()))
-            .forEach(e => alertQueue.push(String(e.x || '')));
+            .forEach(e => { const x = String(e.x || ''); if (x.startsWith('📣')) showShoutout(x); else alertQueue.push(x); });
         store.set('painWheelAlertSeen', Math.max(seen, maxId));
         if (!alertShowing) nextAlert();
     }
@@ -9648,7 +9796,7 @@
         const betDelta = gold - g0;
         if (s.type === 'KNOB_CREEK') { hurtLiver(25, 'Another bottle'); addDrink(); }
         else if (s.type === 'ROAD_BEERS' || s.type === 'GARAGE_BEERS') { hurtLiver(15, 'Beers'); addDrink(); }
-        setTimeout(ruiCheck, 2600);
+        if (['KNOB_CREEK', 'ROAD_BEERS', 'GARAGE_BEERS'].includes(s.type)) setTimeout(ruiCheck, 2600);   // only drinking gets you pulled over
         const t = TYPE[s.type];
         chatBurst(CHAT_LAND[s.type] || [`${t.pill} LUL`, 'Pog', 'KEKW', 'ez', 'rigged', 'this wheel is scuffed', 'W', 'L', `${t.pill}?? ok`], 3, 2400);
         if (ash) chatBurst(['ASHBRINGER???', 'SERVER FIRST', 'HOLY', 'CLIP IT'], 4);
