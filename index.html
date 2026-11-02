@@ -347,27 +347,63 @@
         /* invisible overlays shouldn't keep animating in the background */
         #evelynDimOverlay.opacity-0 *, #sponsorBanner.opacity-0 * { animation-play-state: paused !important; }
         /* launch pad */
-        /* ☀️ Light mode: the page goes light; pop-up game windows keep their dark goblin look */
-        html.light-mode body { background-color: #e8ecf2 !important; }
-        html.light-mode header, html.light-mode .lm-surf { color: #0f172a; }
-        html.light-mode #titleShow { color: #b45309 !important; }
-        html.light-mode #logoImg { filter: drop-shadow(0 0 1px #000) drop-shadow(0 1px 2px rgba(0,0,0,.6)); }
+        /* ☀️ Light mode: the exact opposite of the normal dark look, pop-up windows included.
+           Things that are "screens" on purpose (the wheel, the zoom cam, the tickers, ads, the SpaceZ night sky, speech bubbles) keep their colors. */
+        html.light-mode body { background-color: #f4f6fa !important; color: #0f172a; }
         html.light-mode header, html.light-mode section { border-color: #cbd5e1 !important; }
-        html.light-mode #tagline, html.light-mode header .text-slate-400 { color: #475569 !important; }
-        html.light-mode #headerControls > button.bg-slate-800, html.light-mode #headerControls > button.bg-slate-900 { background: #ffffff !important; border-color: #cbd5e1 !important; color: #0f172a !important; }
-        html.light-mode #headerControls > button.bg-slate-800:hover { background: #f1f5f9 !important; }
-        html.light-mode .lm-surf { background-color: #ffffff !important; border-color: #cbd5e1 !important; box-shadow: 0 4px 18px rgba(15,23,42,.08) !important; }
-        html.light-mode .lm-surf :is(.text-slate-100, .text-slate-200, .text-slate-300) { color: #0f172a !important; }
-        html.light-mode .lm-surf :is(.text-slate-400, .text-slate-500) { color: #475569 !important; }
-        html.light-mode .lm-surf .text-slate-600 { color: #64748b !important; }
-        html.light-mode .lm-surf :is(.border-slate-700, .border-slate-800, .border-slate-800\/80) { border-color: #e2e8f0 !important; }
-        html.light-mode .lm-surf :is(.bg-slate-800, .bg-slate-900, .bg-slate-950\/70, .bg-slate-950\/60) { background-color: #f1f5f9 !important; }
-        html.light-mode .lm-surf :is(.text-amber-300, .text-amber-200, .text-yellow-300) { color: #b45309 !important; }
-        html.light-mode .lm-surf :is(.text-emerald-300, .text-emerald-400, .text-green-400) { color: #047857 !important; }
-        html.light-mode .lm-surf :is(.text-sky-300, .text-cyan-300) { color: #0369a1 !important; }
+        /* surfaces */
+        html.light-mode :is(.bg-slate-950, .bg-slate-950\/95, .bg-slate-950\/88, .bg-slate-900, .bg-slate-900\/90, .bg-slate-900\/95) { background-color: #ffffff !important; }
+        html.light-mode :is(.bg-slate-950\/70, .bg-slate-950\/60, .bg-slate-950\/50) { background-color: #f1f5f9 !important; }
+        html.light-mode .bg-slate-800 { background-color: #e2e8f0 !important; }
+        html.light-mode :is(.bg-slate-700, .hover\:bg-slate-700:hover) { background-color: #cbd5e1 !important; }
+        html.light-mode .bg-slate-600 { background-color: #94a3b8 !important; }
+        /* window backdrops: a light frost instead of a dark one */
+        html.light-mode .fixed.inset-0:is(.bg-slate-950\/90, .bg-slate-950\/88, .bg-black\/60, .bg-black\/90, .bg-black\/70) { background-color: rgba(226,232,240,.82) !important; }
+        /* text */
+        html.light-mode :is(.text-slate-50, .text-slate-100, .text-slate-200) { color: #0f172a !important; }
+        html.light-mode .text-slate-300 { color: #1e293b !important; }
+        html.light-mode .text-slate-400 { color: #475569 !important; }
+        html.light-mode .text-slate-500 { color: #64748b !important; }
+        html.light-mode .text-slate-600 { color: #94a3b8 !important; }
+        html.light-mode :is(.border-slate-600, .border-slate-700, .border-slate-800, .border-slate-900, .border-slate-800\/80, .border-slate-700\/80, .border-slate-700\/70) { border-color: #cbd5e1 !important; }
+        /* bright accent text that would vanish on white gets its darker shade */
+        html.light-mode :is(.text-amber-50, .text-amber-100, .text-amber-200, .text-amber-300) { color: #92400e !important; }
+        html.light-mode .text-amber-400 { color: #b45309 !important; }
+        html.light-mode :is(.text-yellow-200, .text-yellow-300, .text-yellow-400) { color: #a16207 !important; }
+        html.light-mode :is(.text-emerald-200, .text-emerald-300, .text-emerald-400, .text-green-300, .text-green-400) { color: #047857 !important; }
+        html.light-mode :is(.text-sky-200, .text-sky-300, .text-sky-400, .text-cyan-300, .text-cyan-400) { color: #0369a1 !important; }
+        html.light-mode :is(.text-fuchsia-200, .text-fuchsia-300, .text-purple-300, .text-violet-300) { color: #a21caf !important; }
+        html.light-mode :is(.text-red-300, .text-red-400) { color: #dc2626 !important; }
+        html.light-mode :is(.text-lime-300, .text-lime-400) { color: #4d7c0f !important; }
+        html.light-mode :is(.text-orange-300, .text-orange-400) { color: #c2410c !important; }
+        html.light-mode :is(.text-pink-300, .text-pink-400) { color: #be185d !important; }
+        html.light-mode .text-indigo-300 { color: #4338ca !important; } html.light-mode .text-teal-300 { color: #0f766e !important; } html.light-mode .text-rose-300 { color: #be123c !important; }
+        html.light-mode .q-poor { color: #6b7280; } html.light-mode .q-common { color: #334155; } html.light-mode .q-uncommon { color: #15803d; border-color: #16a34a; } html.light-mode .q-epic { color: #7e22ce; } html.light-mode .q-legendary { color: #c2410c; }
+        /* windows that carry their own dark gradients */
+        html.light-mode :is(#shopPanel, #updatePanel) > div { background: linear-gradient(170deg, #fffbeb, #ffffff 45%, #f0fdf4) !important; }
+        html.light-mode #housePanel > div { background: linear-gradient(170deg, #f0fdf4, #ffffff 45%, #fffbeb) !important; }
+        html.light-mode #moveToast { background: #ecfdf5 !important; color: #065f46 !important; }
+        html.light-mode #achToast { background: linear-gradient(135deg, #fffbeb, #fde68a) !important; }
+        html.light-mode #achToast :is(.text-amber-50, .text-amber-100\/80) { color: #78350f !important; }
+        html.light-mode #lootToast { background: #ffffff !important; }
+        html.light-mode :is(#toyBox, #societyBadge, #aipacBadge) { background: rgba(255,255,255,.94) !important; border-color: #cbd5e1 !important; }
+        html.light-mode .font-pick { background: #ffffff; border-color: #cbd5e1; }
+        html.light-mode .font-pick .fp-name { color: #0f172a; }
+        html.light-mode .bet-chip { background: #ffffff; color: #0f172a; border-color: #94a3b8; }
+        html.light-mode :is(#perfPicks, #modePicks) button[style*="#0f172a"] { background: #f1f5f9 !important; color: #334155 !important; border-color: #cbd5e1 !important; }
+        /* Squawkr */
+        html.light-mode :is(#sqHead, #sqBody) { background: #ffffff !important; border-color: #cbd5e1 !important; }
+        html.light-mode #sqHead b { color: #0f172a !important; }
+        html.light-mode #sqBody > div { color: #0f172a !important; border-bottom-color: #e2e8f0 !important; }
+        html.light-mode #sqBody div[style*="border-radius:50%"] { background: #e2e8f0 !important; }
+        html.light-mode :is(#sqSound, #sqMin, .pop-btn) { background: #f1f5f9 !important; color: #334155 !important; border-color: #cbd5e1 !important; }
+        /* chat */
         html.light-mode #chatLog .chat-line { color: #0f172a !important; }
         html.light-mode #chatLog .chat-line > span { filter: brightness(.62) saturate(1.4); }
-        html.light-mode #oddsDetails summary { color: #475569 !important; }
+        html.light-mode #titleShow { color: #b45309 !important; }
+        html.light-mode #centerSpinBtn { background-color: #020617 !important; }   /* the hub is part of the wheel: it stays dark */
+        html.light-mode #centerSpinBtn * { color: #f1f5f9 !important; }
+        html.light-mode #logoImg { filter: drop-shadow(0 0 1px #000) drop-shadow(0 1px 2px rgba(0,0,0,.6)); }
         .zoom-pick { font: 800 11px/1 'JetBrains Mono', monospace; padding: 5px 7px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #94a3b8; cursor: pointer; }
         .zoom-pick.on { background: #d97706; border-color: #fbbf24; color: #111; }
         html.light-mode .zoom-pick:not(.on) { background: #f1f5f9; border-color: #cbd5e1; color: #334155; }
@@ -649,9 +685,7 @@
                     <button type="button" data-mode="dark" class="px-3 py-1.5 rounded border text-sm font-bold cursor-pointer">🌙 Dark</button>
                     <button type="button" data-mode="light" class="px-3 py-1.5 rounded border text-sm font-bold cursor-pointer">☀️ Light</button>
                 </div>
-                <p class="text-[11px] text-slate-500 mt-1">Light mode brightens the page. The pop-up windows (shop, bag, stats...) stay dark.</p>
-                <div class="flex items-center gap-3 mt-3"><span class="text-sm" title="Dimmer">🔅</span><input id="brightSlider" type="range" min="40" max="100" step="5" value="100" class="flex-1 accent-amber-400 cursor-pointer"><span class="text-sm" title="Brighter">🔆</span><span id="brightLabel" class="mono text-xs text-amber-300 w-10 text-right">100%</span></div>
-                <p class="text-[11px] text-slate-500 mt-1">Screen brightness: dim the whole wheel for late-night raids without touching your monitor.</p>
+                <p class="text-[11px] text-slate-500 mt-1">Dark is the normal look. Light flips everything to white.</p>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🎨 Theme</div>
             <select id="themePicker" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-base text-slate-200 cursor-pointer"></select>
@@ -1956,8 +1990,8 @@
         "🚑 BIBLEHUMPING'S AMBULANCE RIDE-SHARE: FIVE STARS FROM EVERY PATIENT WHO SURVIVED (ONE PATIENT)",
         "🚓 CHAOTIC'S DONUT PATROL: TO PROTECT AND SERVE (GLAZED, CHOCOLATE, OR GOLDEN)",
         "🛥️ YACHT WEEK AT GALLYWIX'S: SWORDFISH SINGS NIGHTLY. DO NOT CALL THE OTHER SWORDFISH GARY.",
-        "📈 SELL YOUR KNOB CREEK STONKS TODAY! REB IS BUYING. REB IS ALSO THE ONLY SELLER.",
-        "🥃 KNOB CREEK STONKS: SELL HIGH, DRINK LOW. NOT FINANCIAL ADVICE. BARELY LIQUID ADVICE.",
+        "📈 JOHN BLIZZARD IS BUYING KNOB CREEK STONKS! JOHN BLIZZARD IS SELLING KNOB CREEK STONKS! NOBODY KNOWS WHAT JOHN BLIZZARD IS DOING!",
+        "🥃 JOHN BLIZZARD'S KNOB CREEK STONK ACADEMY: BUY HIGH, SELL LOW, BLAME SOMEONE ELSE. (HE BLAMES YOU.)",
         "🐻 GUARDIAN DRUID SUPPORT GROUP: MEETS TUESDAYS. JOHN BLIZZARD WILL NERF THE MEETING BY 10%.",
         "🪨 HEARTHSTONE REPAIR SHOP: IS YOUR HEARTHSTONE ON A 30-MINUTE COOLDOWN? SO IS OUR CUSTOMER SERVICE.",
         "🔧 CASIMIR'S WHEEL RIGGING SERVICES: DISCREET. PROFESSIONAL. ALREADY DONE BEFORE YOU CALLED.",
@@ -2157,12 +2191,14 @@
         "LOCAL: PLATEMAGE TAKES OFF PLATE ARMOR; IS STILL CALLED PLATEMAGE; STILL A HOLY PRIEST",
         "OPINION: WHY THE VAULT COMBINATION SHOULD STAY 1234 — BY REB",
         "TRAVEL: HEARTHSTONE USERS STRANDED MID-CAST AFTER KEVIN PULLS THE BOSS",
-        "PATCH NOTES: JOHN BLIZZARD PERSONALLY NERFS GUARDIAN DRUID AGAIN. 'IT WAS STILL ALIVE,' HE EXPLAINED",
-        "BREAKING: GUARDIAN DRUIDS FILE CLASS-ACTION LAWSUIT AGAINST JOHN BLIZZARD. CLASS: DRUID. ACTION: NERFED",
-        "JOHN BLIZZARD DENIES HATING BEARS: 'SOME OF MY BEST FRIENDS ARE TREANTS'",
-        "HOTFIX: GUARDIAN DRUID NERFED BY 4%. JOHN BLIZZARD: 'THEY KNOW WHAT THEY DID'",
-        "MARKETS: KNOB CREEK STONKS DIP AFTER REB SELLS HIS ENTIRE POSITION FOR ONE (1) BOTTLE OF KNOB CREEK",
-        "MARKETS: ANALYSTS SAY NOW IS THE TIME TO SELL KNOB CREEK STONKS. REB SAYS NOW IS THE TIME TO DRINK THEM",
+        "PATCH NOTES: JOHN BLIZZARD NERFED GUARDIAN DRUID AGAIN. NOBODY KNOWS WHY. EVERYONE KNOWS WHO",
+        "BREAKING: RAID WIPES ON TRASH. INVESTIGATORS BLAME JOHN BLIZZARD",
+        "JOHN BLIZZARD NERFS GUARDIAN DRUID FOR THE 47TH TIME: 'IT WAS LOOKING AT ME FUNNY'",
+        "LOCAL MAN STANDS IN FIRE, BLAMES JOHN BLIZZARD. JOHN BLIZZARD ACCEPTS FULL RESPONSIBILITY (AS ALWAYS)",
+        "MARKETS: JOHN BLIZZARD DUMPS ALL HIS KNOB CREEK STONKS, BUYS THEM BACK 10 MINUTES LATER. SEC 'LOOKING INTO IT'",
+        "MARKETS: JOHN BLIZZARD SELLS HIS KNOB CREEK STONKS. REB BUYS THE ACTUAL BOTTLES. BOTH CALL IT 'DIVERSIFYING'",
+        "MARKETS: KNOB CREEK STONKS CRASH AFTER JOHN BLIZZARD DUMPS HIS SHARES. REB UNAFFECTED, STILL DRINKING THE PRODUCT",
+        "MARKETS: JOHN BLIZZARD SHORTS KNOB CREEK STONKS, NERFS GUARDIAN DRUID, BUYS THE DIP. ANALYSTS: 'CLASSIC JOHN'",
         "REAL ESTATE: MURLOC IN THE YACHT PORTHOLE REVEALED TO BE PAYING RENT",
         "EDUCATION: SPACEZ OPENS ROCKET SCHOOL; FIRST AND ONLY LESSON IS 'NOT AT THE SHACK'",
         "FINANCE: GOBLIN EXPRESS ANNOUNCES 0% INTRO APR FOR THE FIRST 0 DAYS",
@@ -2599,8 +2635,6 @@
     var uiMode = (function () { try { return JSON.parse(localStorage.getItem('painWheelMode')) || 'dark'; } catch (e) { return 'dark'; } })();
     function applyUiMode() {
         document.documentElement.classList.toggle('light-mode', uiMode === 'light');
-        // the page's own cards (not the pop-up windows) are the surfaces that go light
-        document.querySelectorAll('main .bg-slate-900\\/90, section .bg-slate-900\\/90, main .bg-slate-900').forEach(el => { if (!el.closest('.fixed')) el.classList.add('lm-surf'); });
     }
     applyUiMode();
     (function measureFrames() {   // ~4 seconds of frame timing, starting 3s after load
@@ -5966,7 +6000,7 @@
         ['KnobCreekCEO', '#f59e0b'], ['not_a_rat_btw', '#c4b5fd'], ['ret_buff_when', '#f9a8d4'], ['BigGammonEnergy', '#34d399'],
         ['Hawkeyez_pet', '#60a5fa'], ['clussy_enjoyer', '#fb7185'], ['MephistoEarRape', '#ef4444'], ['wheel_addict69', '#22d3ee'],
         ['uwutek_simp', '#e879f9'], ['dalaran_sewer_rat', '#a3e635'], ['ChAoTiC_rigs_it', '#fca5a5'], ['goblin_banker', '#4ade80']];
-    const CHAT_IDLE = ['who is this streamer', 'first time chatter, long time Kevin', '!discord', 'Reb drinking again?', 'is this pre-recorded',
+    const CHAT_IDLE = ['john blizzard nerfed guardian druid again', 'this is john blizzards fault', 'blame john blizzard', 'john blizzard is selling his knob creek stonks again', 'who is this streamer', 'first time chatter, long time Kevin', '!discord', 'Reb drinking again?', 'is this pre-recorded',
         'modCheck', 'where is ret buff', 'catJAM', 'PogU', 'Kappa', 'raid tonight?', 'ChAoTiC rigging again', 'gamba time', 'L wheel',
         'spin it coward', 'how many Kevins is this wheel', 'Uwutek is so back', 'buy $KNOB', 'sell $KNOB', 'this chat is bots', 'hi mom',
         '!uptime', 'PepeHands', 'Clippy where', 'the wheel knows', '5Head play', 'monkaS', 'Sadge', 'OMEGALUL', 'W streamer', 'any healers here?',
@@ -7915,12 +7949,7 @@
         applyUiMode(); renderModePicks();
     }));
     renderModePicks(); setTimeout(applyUiMode, 1500);   // catch cards built after load
-    // 🔅 brightness: a see-through black layer over everything (clicks pass straight through it)
-    const dimmer = document.createElement('div'); dimmer.id = 'screenDim';
-    dimmer.style.cssText = 'position:fixed;inset:0;z-index:2147483000;pointer-events:none;background:#000;opacity:0;transition:opacity .2s'; document.body.appendChild(dimmer);
-    function applyBright(v) { v = Math.min(100, Math.max(40, +v || 100)); dimmer.style.opacity = String((100 - v) / 100); dimmer.style.display = v >= 100 ? 'none' : 'block'; $('brightSlider').value = v; $('brightLabel').textContent = v + '%'; }
-    applyBright(store.get('painWheelBright', 100));
-    $('brightSlider').addEventListener('input', (e) => { applyBright(e.target.value); store.set('painWheelBright', +e.target.value); });
+    try { localStorage.removeItem('painWheelBright'); } catch (e) {}
     renderPerfPicks();
 
     // ---------- 📰 What's new: one popup per big update ----------
