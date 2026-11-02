@@ -681,7 +681,7 @@
             <div class="text-sm font-bold uppercase tracking-wider text-slate-300 mb-2">Achievements <span id="achCount" class="text-amber-300"></span></div>
             <div id="achList" class="grid grid-cols-1 sm:grid-cols-2 gap-1.5"></div>
             <div class="text-sm font-bold uppercase tracking-wider text-slate-300 mt-4 mb-1">Slices you haven't landed on yet <span id="unseenCount" class="text-amber-300"></span></div>
-            <div class="text-[11px] text-slate-500 mb-2">Land on 40 different kinds for <b>Seen It All</b>. Numbers are slice numbers on the wheel (they show in the zoom cam).</div>
+            <div class="text-sm text-slate-400 mb-2">Land on any 40 different kinds for <b>Seen It All</b>. Numbers are slice numbers on the wheel (they show in the zoom cam).</div>
             <div id="unseenList" class="flex flex-wrap gap-1 text-[11px]"></div>
             <div id="guildSection" class="hidden mt-5">
                 <div class="flex items-center justify-between mb-2">
@@ -4436,7 +4436,7 @@
             d.append(a, b); grid.appendChild(d);
         });
         const seen = Object.keys(stats.byType).length, un = $('unseenList'); un.innerHTML = '';
-        $('unseenCount').textContent = `(${seen} / 40 kinds landed${(stats.byType.KEVIN || 0) < 50 ? ` · Kevins ${stats.byType.KEVIN || 0} / 50` : ''})`;
+        $('unseenCount').textContent = `(${seen} / ${TYPES.length} kinds landed${seen < 40 ? ` · ${40 - seen} more for Seen It All` : ' · Seen It All ✓'}${(stats.byType.KEVIN || 0) < 50 ? ` · Kevins ${stats.byType.KEVIN || 0} / 50` : ''})`;
         TYPES.filter(t => !stats.byType[t.id]).forEach(t => {
             const chip = document.createElement('span');
             chip.className = 'px-1.5 py-0.5 rounded border border-slate-700 bg-slate-950/70 text-slate-300';
