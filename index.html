@@ -368,6 +368,19 @@
         html.light-mode #chatLog .chat-line { color: #0f172a !important; }
         html.light-mode #chatLog .chat-line > span { filter: brightness(.62) saturate(1.4); }
         html.light-mode #oddsDetails summary { color: #475569 !important; }
+        .zoom-pick { font: 800 11px/1 'JetBrains Mono', monospace; padding: 5px 7px; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #94a3b8; cursor: pointer; }
+        .zoom-pick.on { background: #d97706; border-color: #fbbf24; color: #111; }
+        html.light-mode .zoom-pick:not(.on) { background: #f1f5f9; border-color: #cbd5e1; color: #334155; }
+        .pop-btn { width: 26px; height: 22px; border-radius: 6px; border: 1px solid #334155; background: #111827; color: #cbd5e1; cursor: pointer; line-height: 1; font-size: 13px; text-transform: none; }
+        .pop-btn:hover { background: #1f2937; color: #fff; }
+        #squawkWin.sq-docked { position: relative !important; transform: none !important; width: 100% !important; left: auto; top: auto; z-index: auto !important; }
+        #squawkWin.sq-docked #sqHead { cursor: default; border-radius: 16px 16px 0 0; padding: 8px 14px; }
+        #squawkWin.sq-docked.sq-min #sqHead { border-radius: 16px; }
+        #squawkWin.sq-docked #sqBody { max-height: 360px; border-radius: 0 0 16px 16px; box-shadow: none; }
+        #squawkWin.sq-docked .sq-drag-hint { display: none; }
+        #squawkWin.sq-docked #sqPop { margin-left: auto; }
+        #chatCard.chat-float { position: fixed !important; z-index: 63; left: 0; top: 0; width: min(360px, calc(100vw - 24px)); height: 340px !important; box-shadow: 0 14px 40px rgba(0,0,0,.55); }
+        #chatCard.chat-float #chatHead { cursor: grab; touch-action: none; user-select: none; }
         .panel-x { font-size: 22px !important; line-height: 1; width: 44px; height: 44px; flex: none; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; background: rgba(148,163,184,.14); color: #e2e8f0 !important; cursor: pointer; }
         .panel-x:hover { background: rgba(239,68,68,.35); }
         .panel-head { position: sticky; top: -20px; z-index: 6; margin: -20px -20px 12px !important; padding: 12px 20px 10px; background: inherit; border-radius: 16px 16px 0 0; }
@@ -637,6 +650,8 @@
                     <button type="button" data-mode="light" class="px-3 py-1.5 rounded border text-sm font-bold cursor-pointer">☀️ Light</button>
                 </div>
                 <p class="text-[11px] text-slate-500 mt-1">Light mode brightens the page. The pop-up windows (shop, bag, stats...) stay dark.</p>
+                <div class="flex items-center gap-3 mt-3"><span class="text-sm" title="Dimmer">🔅</span><input id="brightSlider" type="range" min="40" max="100" step="5" value="100" class="flex-1 accent-amber-400 cursor-pointer"><span class="text-sm" title="Brighter">🔆</span><span id="brightLabel" class="mono text-xs text-amber-300 w-10 text-right">100%</span></div>
+                <p class="text-[11px] text-slate-500 mt-1">Screen brightness: dim the whole wheel for late-night raids without touching your monitor.</p>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🎨 Theme</div>
             <select id="themePicker" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-base text-slate-200 cursor-pointer"></select>
@@ -786,7 +801,8 @@
         <div id="sqHead" title="Drag to move" style="display:flex;align-items:center;gap:8px;padding:7px 10px;background:#0b0f19;border:1px solid #334155;border-radius:14px 14px 0 0;cursor:grab;touch-action:none;user-select:none">
             <span style="font-size:16px">🐦</span><b style="font-size:13px;letter-spacing:.04em;color:#e2e8f0">Squawkr</b>
             <span id="sqBadge" style="display:none;min-width:18px;padding:0 5px;border-radius:9px;background:#ef4444;color:#fff;font-size:11px;font-weight:900;text-align:center"></span>
-            <span style="margin-left:auto;font-size:10px;color:#64748b">drag to move</span>
+            <span class="sq-drag-hint" style="margin-left:auto;font-size:10px;color:#64748b">drag to move</span>
+            <button id="sqPop" class="pop-btn" title="Pop Squawkr out / dock it">⧉</button>
             <button id="sqSound" title="Squawkr sound on/off" style="width:26px;height:22px;border-radius:6px;border:1px solid #334155;background:#111827;color:#cbd5e1;cursor:pointer;line-height:1;font-size:13px">🔊</button>
             <button id="sqMin" title="Minimize" style="width:24px;height:22px;border-radius:6px;border:1px solid #334155;background:#111827;color:#cbd5e1;font-weight:900;cursor:pointer;line-height:1">—</button>
         </div>
@@ -890,9 +906,10 @@
                 <div class="flex items-center justify-between mb-3">
                     <span class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
                         <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
-                        Enlarged 4x Needle Zoom Cam & Preview
+                        Enlarged <span id="zoomLbl">4x</span> Needle Zoom Cam & Preview
                     </span>
-                    <span id="sliceIndexBadge" class="text-xs mono px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700 font-bold">#001</span>
+                    <span class="flex items-center gap-1.5"><span id="zoomPicks" class="flex gap-1"><button type="button" data-z="2" class="zoom-pick">2x</button><button type="button" data-z="4" class="zoom-pick">4x</button><button type="button" data-z="6" class="zoom-pick">6x</button></span>
+                    <span id="sliceIndexBadge" class="text-xs mono px-2.5 py-1 rounded bg-slate-800 text-slate-300 border border-slate-700 font-bold">#001</span></span>
                 </div>
                 <div class="relative w-full h-56 rounded-xl overflow-hidden bg-slate-950 border border-slate-800 shadow-inner">
                     <canvas id="zoomCanvas" class="w-full h-full block"></canvas>
@@ -906,13 +923,15 @@
             </div>
 
 
-            <!-- Fake Twitch chat -->
-            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl shadow-xl flex flex-col overflow-hidden" style="height: 300px;">
-                <div class="flex items-center justify-between px-4 py-2 border-b border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400">
-                    <span>💬 Stream chat</span><span id="chatViewers" class="text-[10px] text-red-400 normal-case">🔴 1,337 viewers</span>
+            <!-- Fake Twitch chat (docked here; ⧉ pops it out into a window you can drag) -->
+            <div id="chatHome"></div>
+            <div id="chatCard" class="bg-slate-900/90 border border-slate-800 rounded-2xl shadow-xl flex flex-col overflow-hidden" style="height: 300px;">
+                <div id="chatHead" class="flex items-center justify-between gap-2 px-4 py-2 border-b border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400">
+                    <span>💬 Stream chat</span><span class="flex items-center gap-2"><span id="chatViewers" class="text-[10px] text-red-400 normal-case">🔴 1,337 viewers</span><button id="chatPop" class="pop-btn" title="Pop chat out into its own window">⧉</button></span>
                 </div>
                 <div id="chatLog" class="flex-1 px-3 py-2 text-[12px] leading-snug select-text" style="overflow-y:auto; scrollbar-width:thin; scrollbar-color:#475569 transparent;"></div>
             </div>
+            <div id="sqDock"></div>
 
             <!-- $KNOB stock ticker -->
             <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl">
@@ -1937,6 +1956,9 @@
         "🚑 BIBLEHUMPING'S AMBULANCE RIDE-SHARE: FIVE STARS FROM EVERY PATIENT WHO SURVIVED (ONE PATIENT)",
         "🚓 CHAOTIC'S DONUT PATROL: TO PROTECT AND SERVE (GLAZED, CHOCOLATE, OR GOLDEN)",
         "🛥️ YACHT WEEK AT GALLYWIX'S: SWORDFISH SINGS NIGHTLY. DO NOT CALL THE OTHER SWORDFISH GARY.",
+        "📈 SELL YOUR KNOB CREEK STONKS TODAY! REB IS BUYING. REB IS ALSO THE ONLY SELLER.",
+        "🥃 KNOB CREEK STONKS: SELL HIGH, DRINK LOW. NOT FINANCIAL ADVICE. BARELY LIQUID ADVICE.",
+        "🐻 GUARDIAN DRUID SUPPORT GROUP: MEETS TUESDAYS. JOHN BLIZZARD WILL NERF THE MEETING BY 10%.",
         "🪨 HEARTHSTONE REPAIR SHOP: IS YOUR HEARTHSTONE ON A 30-MINUTE COOLDOWN? SO IS OUR CUSTOMER SERVICE.",
         "🔧 CASIMIR'S WHEEL RIGGING SERVICES: DISCREET. PROFESSIONAL. ALREADY DONE BEFORE YOU CALLED.",
         "🧙 PLATEMAGE LIFE COACHING: ARE YOU A PRIEST? A MAGE? PLATE? LET'S FIND OUT TOGETHER. $49.99/SESSION",
@@ -2135,6 +2157,12 @@
         "LOCAL: PLATEMAGE TAKES OFF PLATE ARMOR; IS STILL CALLED PLATEMAGE; STILL A HOLY PRIEST",
         "OPINION: WHY THE VAULT COMBINATION SHOULD STAY 1234 — BY REB",
         "TRAVEL: HEARTHSTONE USERS STRANDED MID-CAST AFTER KEVIN PULLS THE BOSS",
+        "PATCH NOTES: JOHN BLIZZARD PERSONALLY NERFS GUARDIAN DRUID AGAIN. 'IT WAS STILL ALIVE,' HE EXPLAINED",
+        "BREAKING: GUARDIAN DRUIDS FILE CLASS-ACTION LAWSUIT AGAINST JOHN BLIZZARD. CLASS: DRUID. ACTION: NERFED",
+        "JOHN BLIZZARD DENIES HATING BEARS: 'SOME OF MY BEST FRIENDS ARE TREANTS'",
+        "HOTFIX: GUARDIAN DRUID NERFED BY 4%. JOHN BLIZZARD: 'THEY KNOW WHAT THEY DID'",
+        "MARKETS: KNOB CREEK STONKS DIP AFTER REB SELLS HIS ENTIRE POSITION FOR ONE (1) BOTTLE OF KNOB CREEK",
+        "MARKETS: ANALYSTS SAY NOW IS THE TIME TO SELL KNOB CREEK STONKS. REB SAYS NOW IS THE TIME TO DRINK THEM",
         "REAL ESTATE: MURLOC IN THE YACHT PORTHOLE REVEALED TO BE PAYING RENT",
         "EDUCATION: SPACEZ OPENS ROCKET SCHOOL; FIRST AND ONLY LESSON IS 'NOT AT THE SHACK'",
         "FINANCE: GOBLIN EXPRESS ANNOUNCES 0% INTRO APR FOR THE FIRST 0 DAYS",
@@ -3845,12 +3873,16 @@
         if (now < fireUntil || now < rimFireUntil || flames.length) drawWheelFire(cx, cy, r);
     }
 
+    let zoomLevel = (function () { try { return [2, 4, 6].includes(+JSON.parse(localStorage.getItem('painWheelZoom'))) ? +JSON.parse(localStorage.getItem('painWheelZoom')) : 4; } catch (e) { return 4; } })();
+    function renderZoomPicks() { document.querySelectorAll('#zoomPicks .zoom-pick').forEach(b => b.classList.toggle('on', +b.dataset.z === zoomLevel)); $('zoomLbl').textContent = zoomLevel + 'x'; }
+    document.querySelectorAll('#zoomPicks .zoom-pick').forEach(b => b.addEventListener('click', () => { zoomLevel = +b.dataset.z; try { localStorage.setItem('painWheelZoom', JSON.stringify(zoomLevel)); } catch (e) {} renderZoomPicks(); renderZoomLens(); b.blur(); }));
+    renderZoomPicks();
     function renderZoomLens() {
         const zw = zoomCanvas.clientWidth || 320, zh = zoomCanvas.clientHeight || 144;
         zoomCtx.clearRect(0, 0, zw, zh);
-        const vr = Math.max(480, zw * 1.45), vcx = zw / 2, vcy = vr + 18;
+        const zm = zoomLevel / 4, vr = Math.max(480, zw * 1.45) * zm, vcx = zw / 2, vcy = vr + 18, reach = zm < 1 ? Math.ceil(8 / zm * 1.7) + 2 : Math.ceil(8 / zm) + 1;
         const active = getActiveSliceIndex(currentRotation);
-        for (let off = -8; off <= 8; off++) {
+        for (let off = -reach; off <= reach; off++) {
             const i = (active + off + TOTAL_SLICES) % TOTAL_SLICES;
             drawSlice(zoomCtx, i, vcx, vcy, vr, vr * 0.72, { zoom: true, zw, active: i === active });
         }
@@ -4210,8 +4242,8 @@
         t.style.background = ph ? 'linear-gradient(135deg,#1e0b2e,#4c1d95)' : 'linear-gradient(135deg,#1c1917,#422006)';
         t.style.borderColor = ph ? '#c084fc' : '';
         t.classList.remove('show', 'hidden'); void t.offsetWidth; t.classList.add('show');
-        playAchievementSound();
         setTimeout(() => { t.classList.remove('show'); t.classList.add('hidden'); nextAchToast(); }, 4600);
+        try { playAchievementSound(); } catch (e) {}   // a sound hiccup must never stall the queue
     }
     function playAchievementSound() {
         if (!soundOn()) return;
@@ -4224,6 +4256,20 @@
                 o.connect(g); g.connect(outGain); o.start(t0 + at); o.stop(t0 + at + 0.65);   // on the main output so a new spin doesn't cut it
             });
         } catch (e) {}
+    }
+    // your spins on the guild board (all devices added together), plus whatever you've spun since we last looked
+    let guildSpinBase = store.get('painWheelGuildSpins', 0), guildSpinLocalAt = allTimeSpins;
+    const guildSpinsNow = () => guildSpinBase ? guildSpinBase + Math.max(0, allTimeSpins - guildSpinLocalAt) : 0;
+    function checkSpinAchievements() {
+        const total = Math.max(stats.spins, allTimeSpins, guildSpinsNow());
+        [[10, 'spins10'], [25, 'spins25'], [50, 'spins50'], [100, 'spins100'], [250, 'spins250'], [500, 'spins500'], [1000, 'spins1000'], [2000, 'spins2000'], [5000, 'spins5000'], [10000, 'spins10000']]
+            .forEach(([n, id]) => { if (total >= n) unlock(id); });
+    }
+    function noteGuildSpins(players) {
+        if (!playerName || !players) return;
+        const me = players.find(p => p.name && p.name.toLowerCase() === playerName.toLowerCase()); if (!me) return;
+        guildSpinBase = +me.spins || 0; guildSpinLocalAt = allTimeSpins; store.set('painWheelGuildSpins', guildSpinBase);
+        checkSpinAchievements();
     }
     function recordSpin(s, fair) {
         if (fair === false) { stats.rigged = (stats.rigged || 0) + 1; if (stats.rigged >= 25) unlock('rigger'); }
@@ -4247,7 +4293,7 @@
         if (T === 'RET_PALADIN' && retHitsAt(s.index) >= RET_MAX_HITS) unlock('retmax');
         if (stats.kromSeen.length >= 4) unlock('kromall');
         if (Object.keys(stats.byType).length >= 40) unlock('collector');
-        const total = Math.max(stats.spins, allTimeSpins);   // old spins count too
+        const total = Math.max(stats.spins, allTimeSpins, guildSpinsNow());   // old spins and your other devices (guild board) count too
         [[10, 'spins10'], [25, 'spins25'], [50, 'spins50'], [100, 'spins100'], [250, 'spins250'], [500, 'spins500'], [1000, 'spins1000'], [2000, 'spins2000'], [5000, 'spins5000'], [10000, 'spins10000']]
             .forEach(([n, id]) => { if (total >= n) unlock(id); });
     }
@@ -4362,6 +4408,7 @@
         const status = $('guildStatus'), table = $('guildTable');
         status.textContent = 'Loading…';
         fetch(LEADERBOARD_URL + '?action=board').then(r => r.json()).then(d => {
+            noteGuildSpins(d.players);
             const rows = (d.players || []).slice().sort((a, b) => b.spins - a.spins).slice(0, 15);
             status.textContent = (d.totalSpins || 0).toLocaleString() + ' guild spins';
             table.innerHTML = '';
@@ -5960,6 +6007,34 @@
         while (chatLog.children.length > 50) chatLog.firstChild.remove();   // keeps the last 50 lines
         if (atBottom) chatLog.scrollTop = chatLog.scrollHeight;
     }
+
+    // ---------- 💬 stream chat can pop out too (drag it by its header; 📌 docks it back) ----------
+    const chatState = Object.assign({ pop: false, x: null, y: 140 }, store.get('painWheelChatPos', {}));
+    function chatPlace() {
+        const c = $('chatCard'); if (!chatState.pop) return;
+        const W = c.offsetWidth || 360, H = c.offsetHeight || 340;
+        if (chatState.x == null) chatState.x = 24;
+        chatState.x = Math.min(Math.max(4, chatState.x), innerWidth - W - 4); chatState.y = Math.min(Math.max(4, chatState.y), innerHeight - 60);
+        c.style.transform = `translate(${chatState.x}px, ${chatState.y}px)`;
+    }
+    function chatSetPop(p) {
+        const c = $('chatCard'); chatState.pop = p && !IS_PHONE();
+        if (chatState.pop) { document.body.appendChild(c); c.classList.add('chat-float'); chatPlace(); }
+        else { $('chatHome').after(c); c.classList.remove('chat-float'); c.style.transform = ''; }
+        $('chatPop').textContent = chatState.pop ? '📌' : '⧉'; $('chatPop').title = chatState.pop ? 'Dock chat back in the page' : 'Pop chat out into its own window';
+        $('chatPop').style.display = IS_PHONE() ? 'none' : '';
+        store.set('painWheelChatPos', chatState); $('chatLog').scrollTop = $('chatLog').scrollHeight;
+    }
+    $('chatPop').addEventListener('click', (e) => { e.stopPropagation(); chatSetPop(!chatState.pop); });
+    (function chatDrag() {
+        let drag = null; const h = $('chatHead');
+        h.addEventListener('pointerdown', (e) => { if (!chatState.pop || e.target.closest('button')) return; drag = { dx: e.clientX - chatState.x, dy: e.clientY - chatState.y }; h.setPointerCapture(e.pointerId); });
+        h.addEventListener('pointermove', (e) => { if (!drag) return; chatState.x = e.clientX - drag.dx; chatState.y = e.clientY - drag.dy; chatPlace(); });
+        const end = () => { if (!drag) return; drag = null; store.set('painWheelChatPos', chatState); };
+        h.addEventListener('pointerup', end); h.addEventListener('pointercancel', end);
+        addEventListener('resize', chatPlace);
+    })();
+    setTimeout(() => chatSetPop(chatState.pop), 0);   // after the rest of the page code has loaded
     function chatBurst(lines, count, spread) {   // no line twice in the same burst
         const deck = shuffled(lines);
         for (let i = 0; i < count; i++) { const line = deck[i % deck.length]; setTimeout(() => chat(line), 150 + Math.random() * (spread || 2200)); }
@@ -7840,6 +7915,12 @@
         applyUiMode(); renderModePicks();
     }));
     renderModePicks(); setTimeout(applyUiMode, 1500);   // catch cards built after load
+    // 🔅 brightness: a see-through black layer over everything (clicks pass straight through it)
+    const dimmer = document.createElement('div'); dimmer.id = 'screenDim';
+    dimmer.style.cssText = 'position:fixed;inset:0;z-index:2147483000;pointer-events:none;background:#000;opacity:0;transition:opacity .2s'; document.body.appendChild(dimmer);
+    function applyBright(v) { v = Math.min(100, Math.max(40, +v || 100)); dimmer.style.opacity = String((100 - v) / 100); dimmer.style.display = v >= 100 ? 'none' : 'block'; $('brightSlider').value = v; $('brightLabel').textContent = v + '%'; }
+    applyBright(store.get('painWheelBright', 100));
+    $('brightSlider').addEventListener('input', (e) => { applyBright(e.target.value); store.set('painWheelBright', +e.target.value); });
     renderPerfPicks();
 
     // ---------- 📰 What's new: one popup per big update ----------
@@ -8748,7 +8829,17 @@
     }
     $('sqFab').addEventListener('click', () => { sqState.min = false; sqUnread = 0; sqRenderMin(); });
     if (IS_PHONE()) sqState.min = true;   // phones: start as the little bird button, never as a sheet over the page
+    if (sqState.docked === undefined) { sqState.docked = true; sqState.min = false; }   // new layout: docked under the chat by default
+    function sqSetDock(d) {
+        const w = $('squawkWin'); sqState.docked = d && !IS_PHONE();
+        if (sqState.docked) { $('sqDock').appendChild(w); w.classList.add('sq-docked'); w.style.transform = ''; }
+        else { document.body.appendChild(w); w.classList.remove('sq-docked'); sqPlace(); }
+        $('sqPop').textContent = sqState.docked ? '⧉' : '📌'; $('sqPop').title = sqState.docked ? 'Pop Squawkr out into a window you can drag' : 'Dock Squawkr back under the chat';
+        $('sqPop').style.display = IS_PHONE() ? 'none' : '';
+        sqSaveState();
+    }
     function sqPlace() {
+        if (sqState.docked) return;
         const w = $('squawkWin'), W = w.offsetWidth || 350, H = $('sqHead').offsetHeight || 36;
         if (sqState.x == null) sqState.x = innerWidth - W - 16;
         sqState.x = Math.min(Math.max(4, sqState.x), innerWidth - W - 4); sqState.y = Math.min(Math.max(4, sqState.y), innerHeight - H - 4);
@@ -8804,10 +8895,11 @@
     }
     (function sqInit() {
         if (!sqFeed.length) { [[1, 7], [0, 14], [3, 21], [2, 28]].forEach(([i, m]) => { const a = SQ_AMBIENT[i]; sqFeed.push({ who: a[0], text: a[1], impact: '', at: Date.now() - m * 60000, c: '1.2K', r: '3.4K', l: '42.0K' }); }); }   // newest on top, replies above what they reply to
-        sqRender(); sqRenderMin(); sqPlace(); $('squawkWin').style.visibility = 'visible';
+        sqRender(); sqRenderMin(); sqSetDock(sqState.docked); sqPlace(); $('squawkWin').style.visibility = 'visible';
+        $('sqPop').addEventListener('click', () => { if (!sqState.docked && sqState.min) { sqState.min = false; sqRenderMin(); } sqSetDock(!sqState.docked); });
         let drag = null;
         $('sqHead').addEventListener('pointerdown', (e) => {
-            if (e.target.closest('#sqMin, #sqSound')) return;
+            if (e.target.closest('#sqMin, #sqSound, #sqPop') || sqState.docked) return;
             drag = { dx: e.clientX - sqState.x, dy: e.clientY - sqState.y, moved: false }; $('sqHead').setPointerCapture(e.pointerId); $('sqHead').style.cursor = 'grabbing';
         });
         $('sqHead').addEventListener('pointermove', (e) => {
