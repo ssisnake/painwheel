@@ -505,6 +505,7 @@
             <ellipse cx="32" cy="34" rx="15" ry="13" fill="url(#hsRune)" opacity=".85"/>
             <path d="M32 24 C40 26 41 36 33 38 C27 39 26 32 31 31 C34 31 34 34 32 34" fill="none" stroke="#f0f9ff" stroke-width="2.6" stroke-linecap="round"/>
         </svg><span>Hearth</span></button>
+            <button id="toyBtn" title="Show / hide your toys (bottom-right corner)" style="display:none" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold cursor-pointer items-center gap-1.5"><span>🧰</span><span id="toyLbl">Toys</span></button>
             <button id="partyBtn" class="px-2.5 py-1 rounded-md bg-fuchsia-800 hover:bg-fuchsia-700 border border-fuchsia-500 text-white font-bold cursor-pointer">🪩 Party</button>
         </div>
     </header>
@@ -777,7 +778,6 @@
     <div id="rightStack" style="position:fixed;z-index:61;right:16px;bottom:12px;display:flex;flex-direction:column;align-items:flex-end;gap:8px;max-width:calc(100vw - 32px);pointer-events:none">
         <div id="toyBox" style="pointer-events:auto;display:none;align-items:flex-end;gap:6px;background:rgba(2,6,23,.82);border:1px solid #334155;border-radius:14px;padding:6px 8px;box-shadow:0 8px 24px rgba(0,0,0,.45)">
             <div id="garageDock" class="flex items-end gap-2 flex-wrap justify-end" style="max-width:min(330px, calc(100vw - 110px))"></div>
-            <button id="toyBtn" title="Toy box" style="flex:none;display:flex;flex-direction:column;align-items:center;background:none;border:0;cursor:pointer;padding:0 2px;color:#cbd5e1"><span style="font-size:30px;line-height:1">🧰</span><span id="toyLbl" style="font-size:9px;font-weight:900;letter-spacing:.06em;text-transform:uppercase">Toys</span></button>
         </div>
     </div>
     <div id="billsBox" style="z-index: 66; right: 16px; bottom: 150px; width: min(300px, calc(100vw - 32px)); display: none;" class="fixed"></div>
@@ -5134,7 +5134,7 @@
           callouts: ['THE SPIRITS ARE SPINNING THE WHEEL', 'DON\'T LOOK BEHIND YOU. IT\'S KEVIN.', 'TRICK OR TREAT! (IT\'S A TRICK)'] },
         { id: 'veterans', name: "Veterans Day 🎖️", when: d => inRange(d, 11, 8, 11, 12),
           tint: 'radial-gradient(ellipse at 50% 0%, rgba(30,64,175,0.25), transparent 60%), radial-gradient(ellipse at 50% 100%, rgba(185,28,28,0.2), transparent 60%)',
-          pain: '#60a5fa', badge: ['🎖️ ', ' 🇺🇸'], tagline: 'Honoring Our Veterans • Thank You For Your Service',
+          pain: '#60a5fa', badge: ['🎖️ ', ' 🪖'], tagline: 'Honoring Our Veterans • Thank You For Your Service',
           kevin: [['#1e3a8a', '⭐', '🎖️', '#dbeafe'], ['#4d5d2a', '🇺🇸', '⭐', '#ecfccb']], kevinLabel: '🎖️ Kevin',
           drift: ['🪖', 'TANK', '🎖️', '🪖', '🎖️'],
           ads: ['🎖️ TO EVERY VETERAN IN DEGENERATE REJECTS: THANK YOU FOR YOUR SERVICE. YOU HAVE SURVIVED WORSE THAN KEVIN.',
@@ -5148,7 +5148,7 @@
           callouts: ['THANK YOU FOR YOUR SERVICE', 'SALUTE TO OUR VETS', 'HOOAH / OORAH / HOOYAH']},
         { id: 'thanksgiving', name: 'Thanksgiving 🦃', when: d => inRange(d, 11, 1, 11, 30),
           tint: 'radial-gradient(ellipse at 50% 0%, rgba(180,83,9,0.22), transparent 60%)',
-          pain: '#d97706', badge: ['🦃 ', ' 🥧'], tagline: 'Gravy-Powered Decision Engine • 4x Stuffing Zoom',
+          pain: '#d97706', badge: ['🦃 ', ' 🎃'], tagline: 'Gravy-Powered Decision Engine • 4x Stuffing Zoom',
           kevin: [['#7c2d12', '🍂', '🦃', '#fed7aa'], ['#78350f', '🍁', '🥧', '#fde68a']], kevinLabel: '🦃 Kevin',
           drift: ['🦃', '🍁', '🎃', '🍁', '🍂'],
           ads: ['🦃 THIS THANKSGIVING, BE THANKFUL YOU\'RE NOT IN KEVIN\'S M+ GROUP',
@@ -5395,8 +5395,9 @@
         document.body.style.backgroundColor = th && th.bg ? th.bg : '';
         document.body.style.backgroundAttachment = 'fixed';
         $('painWord').style.color = th ? th.pain : '';
-        $('themeBadgeL').textContent = th ? th.badge[0] : '';
-        $('themeBadgeR').textContent = th ? th.badge[1] : '';
+        const badgeHTML = (b) => { const k = (b || '').trim(); return SPRITE_EMOJI[k] ? `<img src="${SPRITE_EMOJI[k]}" alt="${k}" style="display:inline-block;height:1.5em;width:auto;vertical-align:middle;margin:0 .2em;filter:drop-shadow(0 2px 3px rgba(0,0,0,.5))">` : (b || '').replace(/[<>&]/g, ''); };
+        $('themeBadgeL').innerHTML = th ? badgeHTML(th.badge[0]) : '';
+        $('themeBadgeR').innerHTML = th ? badgeHTML(th.badge[1]) : '';
         $('tagline').textContent = th ? th.tagline : 'High-Precision Decision Engine • 4x Live Optic Zoom';
         slices.forEach(sl => {
             if (sl.type !== 'KEVIN') return;
@@ -6723,6 +6724,176 @@
     }
     setInterval(() => { if (Math.random() < 1 / 4) patrol(); }, 60000);   // roughly every 4 minutes
 
+
+    // ======================= 🗡️ stray glaive · 🐔 roadkill · 🧊 iceberg =======================
+    function floatBubble(text, x, y, ms, below) {   // a goblin speech bubble pinned to a screen point
+        const b = document.createElement('div'); b.className = 'gb' + (below ? ' gb-up' : '');
+        b.style.cssText = `position:fixed;z-index:82;left:${Math.round(Math.min(innerWidth - 120, Math.max(120, x)))}px;top:${Math.round(y)}px;transform:translate(-50%,${below ? '0' : '-100%'});width:max-content;max-width:min(420px,80vw);background:#fffbe6;color:#000;font-size:20px;font-weight:800;line-height:1.3;padding:8px 14px;border-radius:9px;border:2px solid #111;pointer-events:none`;
+        b.textContent = text; document.body.appendChild(b);
+        setTimeout(() => { b.style.transition = 'opacity .4s'; b.style.opacity = '0'; setTimeout(() => b.remove(), 450); }, ms || 2600);
+        return b;
+    }
+    function featherBurst(x, y, n) {
+        for (let i = 0; i < (n || 10); i++) {
+            const f = document.createElement('div'); f.textContent = '🪶';
+            f.style.cssText = `position:fixed;z-index:79;left:${x}px;top:${y}px;font-size:${20 + Math.random() * 14}px;pointer-events:none;transition:transform 2.4s ease-out, opacity 2.4s`;
+            document.body.appendChild(f);
+            requestAnimationFrame(() => { f.style.transform = `translate(${(Math.random() - .5) * 320}px, ${60 + Math.random() * 160}px) rotate(${(Math.random() - .5) * 400}deg)`; f.style.opacity = '0'; });
+            setTimeout(() => f.remove(), 2500);
+        }
+    }
+    function chickenDown(ms, as, back) {   // the pet chicken is (temporarily) no more
+        const w = $('pet-chicken'), em = w && w.querySelector('.pet-em'); if (!em) return;
+        w._talking = true; const was = em.innerHTML; em.innerHTML = `<span style="font-size:44px;line-height:1">${as || '🍗'}</span>`;
+        setTimeout(() => { if (em.isConnected) em.innerHTML = was; w._talking = false; petSay('chicken', 'BAWK! (it walked it off)'); moveToast(back || '🐔 The chicken respawned at the Westfall graveyard. It is fine. It is a Westfall chicken.'); }, ms || 9000);
+    }
+    const GLAIVE_WARN = ['ChAoTiC', 'Biblehumping', 'Reb', 'Axazon', 'Corrinne', 'Platemage', 'Tsukaar', 'Uwutek'];
+    let strayStuck = null;
+    function strayGlaive(force) {
+        if (document.hidden || isSpinning || strayStuck) return false;
+        const vis = (el) => el && onView(el.getBoundingClientRect());
+        const T = [];
+        if (vis($('pet-chicken')) && !$('pet-chicken')._talking) T.push('chicken');
+        if (vis($('wheelCanvas'))) T.push('wheel', 'wheel');
+        if (vis($('houseEmoji')) && !$('timeshareHouse').classList.contains('hidden')) T.push('house');
+        if (vis($('sqBody')) && !sqState.min) T.push('squawk');
+        if (vis($('logoImg'))) T.push('logo');
+        if (!T.length) return false;
+        const kind = force || pick(T);
+        const el = { chicken: $('pet-chicken'), wheel: $('wheelCanvas'), house: $('houseEmoji'), squawk: $('squawkWin'), logo: $('logoImg') }[kind];
+        const r = el.getBoundingClientRect();
+        let tx = r.left + r.width / 2, ty = r.top + r.height / 2;
+        if (kind === 'wheel') { const a = -Math.PI * (0.15 + Math.random() * 0.7), rad = r.width * 0.43; tx += Math.cos(a) * rad; ty += Math.sin(a) * rad; }
+        if (kind === 'squawk') { tx = r.left + 40 + Math.random() * (r.width - 80); ty = r.top + 14; }
+        floatBubble(`🗣️ ${pick(GLAIVE_WARN)}: KEVIN LOOK OUT IT'S A GLAIVE!`, tx, ty - 60, 1500);
+        const fromLeft = tx > innerWidth / 2 ? false : true, sx = fromLeft ? -120 : innerWidth + 120, sy = Math.max(60, ty - 220 + Math.random() * 140);
+        const g = document.createElement('div');
+        g.style.cssText = `position:fixed;z-index:80;left:0;top:0;width:84px;height:84px;pointer-events:none;transform:translate(${sx - 42}px,${sy - 42}px)`;
+        g.innerHTML = `<img src="${FALLBACK_IMG.glaive}" alt="" style="width:100%;height:100%;animation:glaiveSpin .3s linear infinite;filter:drop-shadow(0 0 10px rgba(163,230,53,.9))">`;
+        document.body.appendChild(g); playSlashSound();
+        const t0 = performance.now(), dur = 900;
+        (function fly(now) {
+            const u = Math.min(1, (now - t0) / dur), x = sx + (tx - sx) * u, y = sy + (ty - sy) * u - Math.sin(u * Math.PI) * 40;
+            g.style.transform = `translate(${x - 42}px,${y - 42}px)`;
+            if (u < 1) return requestAnimationFrame(fly);
+            playSlashSound();   // THUNK
+            const img = g.firstChild; img.style.animation = 'none'; img.style.transform = `rotate(${fromLeft ? 35 : -35}deg)`;
+            // stuck: page-anchored things keep the glaive in place when you scroll
+            if (kind !== 'squawk') { g.style.position = 'absolute'; g.style.transform = `translate(${tx - 42 + scrollX}px,${ty - 42 + scrollY}px)`; }
+            el.animate([{ transform: 'translate(0,0)' }, { transform: 'translate(-5px,3px)' }, { transform: 'translate(4px,-3px)' }, { transform: 'translate(0,0)' }], { duration: 300, composite: 'add' });
+            setTimeout(() => floatBubble(pick(['🤡 Kevin: I am not even ON the screen', "🤡 Kevin: why is it always me they're yelling at", '🤡 Kevin: what is a glai—', '🤡 Kevin: ...was that me?']), tx, ty - 50, 2800), 1000);
+            const lines = {
+                chicken: ['THE CHICKEN', 'chicken down', 'YOU ARE NOT PREPARED (the chicken was not)', 'F for the chicken', 'who is throwing glaives'],
+                wheel: ['IT IS IN THE WHEEL', 'the wheel got glaived', 'rigged by a demon hunter', 'that is a new slice now', 'DH main spotted'],
+                house: ['THE YACHT', 'glaive in the hull', 'not the swordfish', 'Gallywix is going to bill you'],
+                squawk: ['SQUAWKR IS DOWN', 'the bird app got glaived', 'ratio + glaive'],
+                logo: ['THE LOGO', 'branding damage', 'that is a feature now']
+            }[kind];
+            chatBurst(lines, 4, 2400);
+            if (kind === 'chicken') { featherBurst(tx, ty, 12); chickenDown(10000, '🪦'); funEvent('🗡️ A STRAY GLAIVE GOT THE CHICKEN', 3000); }
+            else if (kind === 'wheel') funEvent('🗡️ A GLAIVE IS STUCK IN THE WHEEL. SPIN TO SHAKE IT LOOSE.', 3500);
+            else if (kind === 'house') { funEvent('🗡️ A GLAIVE HIT THE YACHT', 3000); if (Math.random() < 0.5) setTimeout(() => sqPost('yacht', 'there is a glaive in the hull. Gary is fine. Gary is furious.'), 2500); }
+            else if (kind === 'squawk') { sqPost('kevin', 'something just hit squawkr and everyone is yelling my name again'); }
+            else funEvent('🗡️ A GLAIVE HIT THE LOGO. STILL LOOKS BETTER THAN RET.', 3000);
+            if (Math.random() < 0.4) setTimeout(() => sqPost(pick(['chaotic', 'bible', 'reb']), pick(['who keeps throwing glaives. i have a DH alt but it was not him (it was him)', 'treated one (1) glaive wound. it was the chicken again', 'glaive went right past my bottle. i did not spill. priorities'])), 4500);
+            strayStuck = g;
+            const stuckUntil = Date.now() + (kind === 'wheel' ? 45000 : 14000);
+            const iv = setInterval(() => {   // it stays until the wheel spins (it flies off) or a while passes
+                if (isSpinning || Date.now() > stuckUntil) {
+                    clearInterval(iv); strayStuck = null;
+                    if (isSpinning && kind === 'wheel') { g.style.transition = 'transform .8s ease-in, opacity .8s'; g.style.transform += ` translate(${fromLeft ? 600 : -600}px,-500px) rotate(720deg)`; g.style.opacity = '0'; setTimeout(() => g.remove(), 850); chat('the glaive flew off LMAO'); }
+                    else { g.style.transition = 'opacity .6s'; g.style.opacity = '0'; setTimeout(() => g.remove(), 650); }
+                }
+            }, 250);
+        })(t0);
+        return true;
+    }
+
+    function chickenRoadkill(force) {   // Biblehumping hits the chicken; ChAoTiC pulls up for dinner
+        const w = $('pet-chicken');
+        if (!w || w._talking || patrolOn || vehicles.amb || vehicles.cop || document.hidden || isSpinning) return false;
+        if (!force && store.get('painWheelRoadkillDay', '') === new Date().toDateString()) return false;   // once a day
+        store.set('painWheelRoadkillDay', new Date().toDateString());
+        patrolOn = true; w._talking = true;
+        const lane = innerHeight - 150, cx = Math.round(innerWidth * 0.55);
+        w.style.transition = 'transform 1.6s ease-in-out'; w.style.transform = `translate(${cx - 31 + scrollX}px, ${lane + 6 + scrollY}px)`; w._x = cx - 31 + scrollX; w._y = lane + 6 + scrollY;
+        petSay('chicken', 'BAWK? (crossing the road)');
+        chat('why did the chicken cross the road');
+        const mk = (cop) => {
+            const v = document.createElement('div');
+            v.style.cssText = `position:fixed;z-index:63;top:${lane}px;left:0;font-size:44px;line-height:1;pointer-events:none;transform:translateX(${cop ? innerWidth + 40 : -170}px)`;
+            v.innerHTML = `<div class="gb" style="display:none;position:absolute;bottom:100%;margin-bottom:4px;left:50%;transform:translateX(-50%);width:max-content;max-width:min(420px,70vw);background:#fffbe6;color:#000;font-size:20px;font-weight:800;line-height:1.3;padding:8px 14px;border-radius:9px;border:2px solid #111;white-space:normal"></div><div class="siren-glow" style="font-size:18px;text-align:center">${cop ? '' : '🍁'}</div>${cop ? copSprite(false) : ambSprite(true)}`;
+            document.body.appendChild(v); return v;
+        };
+        const talking = [];
+        const say = (v, t) => { talking.forEach(o => { if (o !== v) o.firstChild.style.display = 'none'; }); if (!talking.includes(v)) talking.push(v); const b = v.firstChild; b.textContent = t; b.style.display = 'block'; };   // one bubble at a time
+        const amb = mk(false);
+        setTimeout(() => {   // floor it
+            amb.style.transition = 'transform 1.1s cubic-bezier(.5,0,1,1)'; amb.style.transform = `translateX(${cx - 120}px)`;
+            setTimeout(() => {   // BONK
+                playCrash(); featherBurst(cx, lane + 20, 12);
+                fxAt('poof', cx, lane + 30, 90);
+                chickenDown(12000, '🍗', '🐔 The chicken respawned. It has questions about Canadian drivers.');
+                amb.style.transition = 'transform .5s ease-out'; amb.style.transform = `translateX(${cx - 40}px)`;
+                say(amb, '🚑 Biblehumping: OH NO. SORRY. SORRY EH!');
+                funEvent('🚑🐔 BIBLEHUMPING HIT THE CHICKEN', 3500);
+                chatBurst(['NICK NOOO', 'CHICKEN DOWN', 'roadkill', 'KFC speedrun', 'the chicken did not make it across', 'sorry eh'], 5, 2500);
+                const cop = mk(true);
+                setTimeout(() => { cop.style.transition = 'transform 1.2s cubic-bezier(.2,.7,.3,1)'; cop.style.transform = `translateX(${cx + 90}px)`; }, 900);
+                setTimeout(() => say(cop, pick(['🚓 ChAoTiC: ...yum. Dinner.', '🚓 ChAoTiC: Oh nice. Dinner.', "🚓 ChAoTiC: I'll take a drumstick. For evidence."])), 2300);
+                setTimeout(() => say(amb, pick(["🚑 Biblehumping: Nine fingers and not one of them can save this chicken.", "🚑 Biblehumping: I'm a paramedic. I can't fix this, bud.", '🚑 Biblehumping: I swear it ran INTO me.'])), 4300);
+                setTimeout(() => say(cop, pick(['🚓 ChAoTiC: Writing you a ticket for vehicular poultry. ...Pass the gravy.', "🚓 ChAoTiC: I'm not mad. I'm hungry.", '🚓 ChAoTiC: Case closed. Plate open.'])), 6200);
+                setTimeout(() => sqPost('bible', 'responded to a chicken call. i WAS the chicken call. sorry eh'), 5000);
+                setTimeout(() => sqPost('chaotic', 'dinner is served 🍗 (do not tell the chicken)'), 8000);
+                setTimeout(() => {   // everyone leaves
+                    [amb, cop].forEach(v => { v.firstChild.style.display = 'none'; v.style.transition = 'transform 2.6s ease-in'; v.style.transform = `translateX(${innerWidth + 200}px)`; });
+                    cop.querySelector('.cop-sprite').style.transform = 'scaleX(-1)';
+                    setTimeout(() => { amb.remove(); cop.remove(); patrolOn = false; }, 2800);
+                }, 8600);
+            }, 1100);
+        }, 1700);
+        return true;
+    }
+
+    const SVG_ICEBERG = '<svg viewBox="0 0 120 90" width="120" height="90" aria-hidden="true"><path d="M8 70 L28 34 L40 44 L56 10 L72 38 L84 28 L110 70 Z" fill="#e0f2fe" stroke="#0c4a6e" stroke-width="3" stroke-linejoin="round"/>'
+        + '<path d="M56 10 L62 40 L50 70 M28 34 L34 70 M84 28 L80 70" fill="none" stroke="#7dd3fc" stroke-width="3"/><path d="M0 72 Q15 66 30 72 T60 72 T90 72 T120 72 V90 H0 Z" fill="#0ea5e9" opacity=".7"/></svg>';
+    function yachtIceberg(force) {
+        const house = $('houseEmoji');
+        if (!house || houseLevel !== HOUSE_LEVELS.length - 1 || $('timeshareHouse').classList.contains('hidden') || document.hidden || isSpinning) return false;
+        const r = house.getBoundingClientRect(); if (!onView(r)) return false;
+        if (!force && Date.now() - (store.get('painWheelIcebergAt', 0)) < 3 * 3600 * 1000) return false;   // not more than every 3 hours
+        store.set('painWheelIcebergAt', Date.now());
+        const ice = document.createElement('div');
+        ice.style.cssText = `position:fixed;z-index:62;left:0;top:${Math.round(r.bottom - 82)}px;pointer-events:none;transform:translateX(${innerWidth + 30}px);transition:transform 3.2s cubic-bezier(.3,.6,.4,1)`;
+        ice.innerHTML = SVG_ICEBERG; document.body.appendChild(ice);
+        floatBubble("🛥️ Lookout: ICEBERG, RIGHT AHEAD!", r.left + r.width / 2, r.top - 10, 2600);
+        requestAnimationFrame(() => requestAnimationFrame(() => { ice.style.transform = `translateX(${Math.round(r.right - 40)}px)`; }));
+        setTimeout(() => {   // CRUNCH
+            playCrash();
+            house.style.transition = 'transform 1.8s ease-in'; house.style.transformOrigin = '50% 100%'; house.style.transform = 'rotate(-14deg) translateY(14px)';
+            funEvent("🧊 GALLYWIX'S YACHT HIT AN ICEBERG 🧊", 4000);
+            chatBurst(['ICEBERG', 'IN THE DESERT??', 'the yacht is sinking', 'women and goblins first', 'not the swordfish', 'Gary is free', 'this ship is unsinkable they said'], 6, 3000);
+            setTimeout(() => floatBubble(pick(["🥃 Reb: I'll never let go... of this bottle.", '🥃 Reb: Somebody save the Knob Creek!', "🥃 Reb: Iceberg? I'll take some for my drink."]), r.left + r.width / 2, r.top - 10, 3200), 1400);
+            if (pets.murloc && $('pet-murloc')) setTimeout(() => petSay('murloc', 'MRGL!! (free ice!)'), 2600);
+            setTimeout(() => sqPost('yacht', pick(['update: we hit an iceberg. in Undermine. we are investigating how.', 'the captain has been fired. the captain was Kevin.', 'the band kept playing. the band is Reb with a kazoo.'])), 3000);
+        }, 3100);
+        setTimeout(() => {   // the iceberg melts (it's Undermine), the yacht rights itself
+            ice.style.transition = 'transform 2s ease-in, opacity 2s'; ice.style.opacity = '0'; ice.style.transform += ' scale(.5) translateY(40px)';
+            house.style.transition = 'transform 1.4s ease-out'; house.style.transform = '';
+            moveToast("🧊 The iceberg melted. It's Undermine. It's 112 degrees. The yacht is fine (Gallywix's insurance is not).");
+            setTimeout(() => ice.remove(), 2100);
+        }, 11000);
+        return true;
+    }
+    setInterval(() => {   // every few minutes, maybe something stupid happens
+        if (document.hidden || isSpinning) return;
+        const r = Math.random();
+        if (r < 0.06) strayGlaive();
+        else if (r < 0.09 && pets.chicken) chickenRoadkill();
+        else if (r < 0.13) yachtIceberg();
+    }, 150000);
+    window.strayGlaive = strayGlaive; window.chickenRoadkill = chickenRoadkill; window.yachtIceberg = yachtIceberg;
+
     // ---------- Reb's liver: beer and bourbon slices hurt it; it slowly heals ----------
     let liver = store.get('painWheelLiver', 100), liverDown = false;
     function renderLiver() {
@@ -7384,9 +7555,9 @@
     let toyOpen = store.get('painWheelToyOpen', true);
     function renderToyBox() {
         const n = $('garageDock').children.length, box = $('toyBox');
-        box.style.display = n ? 'flex' : 'none';
-        $('garageDock').style.display = toyOpen ? 'flex' : 'none';
-        $('toyLbl').textContent = toyOpen ? 'Hide' : `Toys (${n})`;
+        box.style.display = n && toyOpen ? 'flex' : 'none';
+        $('toyBtn').style.display = n ? 'inline-flex' : 'none';
+        $('toyLbl').textContent = toyOpen ? 'Hide toys' : `Toys (${n})`;
     }
     $('toyBtn').addEventListener('click', () => { toyOpen = !toyOpen; store.set('painWheelToyOpen', toyOpen); renderToyBox(); });
     (function stackCorner() {   // bills, toy box, then the badges (which always stay visible), stacked in the corner
