@@ -3652,9 +3652,10 @@
     const PHOTO_GIZ_TAPE = "media/photo_giz_tape.png?v=d3bfd27c";
     const PHOTO_GIZ_DESK = "media/photo_giz_desk.png?v=ac411a15";
     const PHOTO_GIZ_GRIN = "media/photo_giz_grin.png?v=3dc45f46";
+    const GIF_FLAG = "media/gif_flag.gif?v=0a66f3cb";   // waving flag (Veterans Day, next to the logo)
     // pixel-art stand-ins for emoji: anything drawn through emojiSprite (falling holiday decorations, confetti) uses the sprite instead
     const SPRITE_EMOJI = { '🦃': PHOTO_DRIFT_TURKEY, '🍁': PHOTO_DRIFT_LEAF, '🎃': PHOTO_DRIFT_PUMPKIN, '🪖': PHOTO_DRIFT_HELMET, 'TANK': PHOTO_DRIFT_TANK,
-        '🎖️': PHOTO_DRIFT_MEDAL, '🍪': PHOTO_COOKIE_GOLD, 'C1': PHOTO_COIN_1, 'C2': PHOTO_COIN_2, 'C3': PHOTO_COIN_3, 'C4': PHOTO_COIN_4 };
+        '🎖️': PHOTO_DRIFT_MEDAL, 'FLAG': GIF_FLAG, '🍪': PHOTO_COOKIE_GOLD, 'C1': PHOTO_COIN_1, 'C2': PHOTO_COIN_2, 'C3': PHOTO_COIN_3, 'C4': PHOTO_COIN_4 };
     const SPRITE_NAME = { TANK: 'an entire tank', C1: '🪙', C2: '🪙', C3: '🪙', C4: '🪙' };   // how a sprite key reads in text
     const COINS = ['C1', 'C2', 'C3', 'C4', 'C1', 'C4'];   // spread into confetti lists: the crown coin and the stack show up most
     // one-shot / looping sprite-sheet effects (4 frames each): explosion, smoke puff, fire
@@ -5229,7 +5230,7 @@
           callouts: ['THE SPIRITS ARE SPINNING THE WHEEL', 'DON\'T LOOK BEHIND YOU. IT\'S KEVIN.', 'TRICK OR TREAT! (IT\'S A TRICK)'] },
         { id: 'veterans', name: "Veterans Day 🎖️", when: d => inRange(d, 11, 8, 11, 12),
           tint: 'radial-gradient(ellipse at 50% 0%, rgba(30,64,175,0.25), transparent 60%), radial-gradient(ellipse at 50% 100%, rgba(185,28,28,0.2), transparent 60%)',
-          pain: '#60a5fa', badge: ['🎖️ ', ' 🪖'], tagline: 'Honoring Our Veterans • Thank You For Your Service',
+          pain: '#60a5fa', badge: ['🎖️ ', ' FLAG'], tagline: 'Honoring Our Veterans • Thank You For Your Service',
           kevin: [['#1e3a8a', '⭐', '🎖️', '#dbeafe'], ['#4d5d2a', '🇺🇸', '⭐', '#ecfccb']], kevinLabel: '🎖️ Kevin',
           drift: ['🪖', 'TANK', '🎖️', '🪖', '🎖️'],
           ads: ['🎖️ TO EVERY VETERAN IN DEGENERATE REJECTS: THANK YOU FOR YOUR SERVICE. YOU HAVE SURVIVED WORSE THAN KEVIN.',
@@ -8002,18 +8003,22 @@
     // ---------- 📰 What's new: one popup per big update ----------
     // To announce an update: change UPDATE_NOTES.id (any new string) and the lines. Everyone sees it once, next time they open the wheel.
     const UPDATE_NOTES = {
-        id: '2026-11-01', title: 'Big update: the pixel art patch', date: 'November 1, 2026',
+        id: '2026-11-01-day', title: "Everything new today", date: 'November 1, 2026',
+        showAfter: Date.parse('2026-11-02T06:00:00Z'),   // midnight Central: the whole day's changes go out together
         lines: [
-            ['🚀', 'The SpaceZ pad is now a drawer on the right edge of the screen. Click the tab to slide it out. The rocket flies a real arc now and steers itself into whatever it hits.'],
-            ['🏠', 'Every home upgrade has real pixel art, from the timeshare all the way up to the castle.'],
-            ['💥', 'New explosions, smoke and fire everywhere something blows up (it is a lot of places).'],
-            ['🦃', 'Thanksgiving and Veterans Day decorations are pixel art now. The whelp still eats them.'],
-            ['🐸', 'The murloc raids the yacht now and then. Gallywix is filing a claim.'],
-            ['🍪', 'The golden cookie (and its cursed cousin) got real sprites.'],
-            ['🧻', 'New slice: The Great TP Shortage of 2020.'],
-            ['🎒', 'New loot: five new guild items, a new set, and everything sells for 10× more. Two mystery sets are coming soon...'],
-            ['⚙️', 'The theme picker moved into Settings. The buttons up top are bigger.'],
-            ['✕', 'Click anywhere outside a window, or press Esc, to close it. No more scrolling back up for the X.']
+            ['🎨', 'Pixel art everywhere: every home upgrade, the holiday decorations, golden and cursed cookies, gold coins, explosions, smoke and fire, and a waving flag by the logo on Veterans Day. Gizzlenut has three moods now.'],
+            ['🚀', 'The SpaceZ pad slides out from the right edge (click the LAUNCH tab). The rocket flies a real arc and steers itself into whatever it hits.'],
+            ['🗡️', 'New chaos: stray glaives ("KEVIN LOOK OUT"), Biblehumping hitting the chicken (ChAoTiC: "yum, dinner"), the yacht hitting an iceberg in the desert, murloc raids on the yacht, and a whelp that eats the falling decorations.'],
+            ['🧻', 'New slice: The Great TP Shortage of 2020. Smokes, Let\'s Go finally has its gif.'],
+            ['🎒', 'Loot: five new guild items (yes, Corrinne\'s Platinum Achievement), a Lost & Found set, two mystery sets coming soon, and everything sells for 10× more.'],
+            ['💬', 'Chat and Squawkr sit side by side, and so do the Guild Feed and Recent Outcomes. Pop any of them out with ⧉ into a window you can drag; 📌 puts it back.'],
+            ['🔍', 'Zoom cam has 2x / 4x / 6x buttons.'],
+            ['⚙️', 'Settings has your name, Dark / Light mode, the theme picker and a Performance setting (Lite helps older PCs and phones). The top bar has bigger buttons plus Hearth and Toys.'],
+            ['✕', 'Every window closes with its X, a click outside it, or Esc. Chat keeps the last 50 lines so you can scroll back and copy.'],
+            ['🐦', 'Squawkr chirps on real posts (🔊 mutes it). Uwutek\'s health bar matches the holiday theme. Overclocked spins get a thick border and a glowing wheel.'],
+            ['📎', 'Clippy is 31 years old now. He would like you to know that he is the oldest talking paperclip in the world.'],
+            ['🧊', 'John Blizzard nerfed Guardian Druid again and is trading Knob Creek stonks. Reb is still drinking the actual bottles.'],
+            ['🏆', 'Fixed: spin achievements now count your spins from every device, and pets stay put when you scroll.']
         ]
     };
     function showUpdateNotes() {
@@ -8030,6 +8035,7 @@
     $('updateReopen').addEventListener('click', () => { $('settingsClose').click(); showUpdateNotes(); });
     const maybeAnnounce = (function maybeAnnounce(tries) {
         if (store.get('painWheelSeenUpdate', '') === UPDATE_NOTES.id || store.get('painWheelNoUpdates', false)) return;
+        if (UPDATE_NOTES.showAfter && Date.now() < UPDATE_NOTES.showAfter) { const wait = UPDATE_NOTES.showAfter - Date.now(); if (wait < 6 * 3600 * 1000) setTimeout(() => maybeAnnounce(0), wait + 5000); return; }   // not out yet
         if (!playerName) { store.set('painWheelSeenUpdate', UPDATE_NOTES.id); return; }   // brand-new players get the welcome, not patch notes
         const busy = isSpinning || ['welcome', 'lawAd', 'statsPanel', 'settingsPanel', 'bagPanel', 'housePanel', 'shopPanel', 'moveModal', 'cheatSheet', 'winnerModal', 'questDialog']
             .some(id => $(id) && !$(id).classList.contains('hidden'));
