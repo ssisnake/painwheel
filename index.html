@@ -741,7 +741,7 @@
             <div class="mt-5 pt-4 border-t border-slate-800">
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 2, 12:11 AM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 2, 1:13 AM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -1401,6 +1401,10 @@
     const PHOTO_CHICKEN = "media/photo_chicken.png?v=d6697602";
     const PHOTO_WHELP = "media/photo_whelp.png?v=e83a9376";
     const PHOTO_LOGO = "media/photo_logo.png?v=7e59cc27";
+    const PHOTO_STAR_RED = "media/photo_star_red.png?v=f31b6145";
+    const PHOTO_STAR_BLUE = "media/photo_star_blue.png?v=c10c0ad3";
+    const PHOTO_STAR_HALF = "media/photo_star_half.png?v=45af667a";
+    const PHOTO_STAR_EMPTY = "media/photo_star_empty.png?v=51e9d979";   // GTA-style heat stars
     const PHOTO_CRASH = "media/photo_crash.png?v=1ba43d4a";             // ChAoTiC's cruiser + Biblehumping's ambulance, nose to nose
     const PHOTO_AMB_CHICKEN = "media/photo_amb_chicken.png?v=79925cdf"; // the ambulance right after the chicken (feathers)
     const PHOTO_POLICE_BOAT = "media/photo_police_boat.png?v=c2345a95";
@@ -9197,8 +9201,8 @@
 
     // ---------- 🚔 Raiding Under the Influence: road beers + Knob Creek add up ----------
     let bac = store.get('painWheelBac', 0);
-    const HEAT_STAR_RED = "media/photo_star_red.png?v=f31b6145", HEAT_STAR_BLUE = "media/photo_star_blue.png?v=c10c0ad3";
-    const HEAT_STAR_HALF = "media/photo_star_half.png?v=45af667a", HEAT_STAR_OFF = "media/photo_star_empty.png?v=51e9d979";   // half star: spare, for later
+    const HEAT_STAR_RED = PHOTO_STAR_RED, HEAT_STAR_BLUE = PHOTO_STAR_BLUE;
+    const HEAT_STAR_HALF = PHOTO_STAR_HALF, HEAT_STAR_OFF = PHOTO_STAR_EMPTY;   // half star: spare, for later
     function renderHeat() {
         const el = $('heatMeter'); if (!el) return;
         const stars = Math.max(0, Math.min(5, bac));   // one star per drink; 5 = wanted
