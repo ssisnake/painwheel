@@ -820,7 +820,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="conspiracy.html" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:40 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:41 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -7781,7 +7781,7 @@
         requestAnimationFrame(() => requestAnimationFrame(() => { v.style.transform = `translateX(${x0}px)`; }));
         setTimeout(() => { v.animate([{ transform: `translateX(${x0}px)` }, { transform: `translateX(${x0 + 3}px)` }, { transform: `translateX(${x0 - 3}px)` }], { duration: 90, iterations: 10 }); }, 2400);
         setTimeout(() => {
-            const b = v.getBoundingClientRect(); playCrash(); fxAt('boom', b.left + b.width / 2, b.top + b.height / 2, 190, 900);
+            const b = v.getBoundingClientRect(); playVehicleCrash(); fxAt('boom', b.left + b.width / 2, b.top + b.height / 2, 190, 900);
             document.body.animate([{ transform: 'translate(0,0)' }, { transform: 'translate(-7px,4px)' }, { transform: 'translate(6px,-4px)' }, { transform: 'translate(0,0)' }], { duration: 420 });
             v.style.filter = 'brightness(.28) sepia(.6) saturate(.4)'; v.innerHTML = fireOver(v.innerHTML, 90);
             funEvent(who === 'bible' ? "💥 BIBLEHUMPING'S AMBULANCE EXPLODED (NO CAUSE FOUND)" : "💥 CHAOTIC'S CRUISER EXPLODED (NO CAUSE FOUND)", 3000);
@@ -8122,7 +8122,7 @@
         setTimeout(() => {   // floor it
             amb.style.transition = 'transform 1.1s cubic-bezier(.5,0,1,1)'; amb.style.transform = `translateX(${cx - 120}px)`;
             setTimeout(() => {   // BONK
-                playCrash(); featherBurst(cx, lane + 20, 12);
+                playVehicleCrash(); featherBurst(cx, lane + 20, 12);
                 fxAt('poof', cx, lane + 30, 90);
                 chickenDown(12000, '🍗', '🐔 The chicken respawned. It has questions about Canadian drivers.');
                 amb.style.transition = 'transform .5s ease-out'; amb.style.transform = `translateX(${cx - 40}px)`;
@@ -8226,7 +8226,7 @@
         floatBubble("🛥️ Lookout: ICEBERG, RIGHT AHEAD!", r.left + r.width / 2, r.top - 10, 2600);
         requestAnimationFrame(() => requestAnimationFrame(() => { ice.style.transform = `translateX(${Math.round(r.right - 26)}px)`; }));
         setTimeout(() => {   // CRUNCH
-            playCrash();
+            playVehicleCrash();
             house.style.transition = 'transform 1.8s ease-in'; house.style.transformOrigin = '50% 100%'; house.style.transform = 'rotate(-14deg) translateY(14px)';
             funEvent("🧊 GALLYWIX'S YACHT HIT AN ICEBERG 🧊", 4000);
             chatBurst(['ICEBERG', 'IN THE DESERT??', 'the yacht is sinking', 'women and goblins first', 'not the swordfish', 'Gary is free', 'this ship is unsinkable they said'], 6, 3000);
@@ -8486,6 +8486,8 @@
         const i = k === 2 ? Math.floor(Math.random() * 4) : k - 1;
         playClip('rocketboom' + i, all[i], playCrash);
     }
+    const AUDIO_VEHICLE_CRASH = "media/audio_vehicle_crash.mp3?v=79b8f34b";
+    function playVehicleCrash() { if (soundOn()) playClip('vcrash', AUDIO_VEHICLE_CRASH, playCrash); }   // wrecks, roadkill, the combine, the iceberg
     function playCrash() {
         if (!soundOn()) return;
         try {
@@ -8570,7 +8572,7 @@
         const x = amb.combineX; amb.stop(); delete vehicles.amb;
         amb.el.style.transition = 'transform .4s ease-out, opacity 1s 1s'; amb.el.style.transform = `translateX(${x + 40}px) rotate(-25deg)`;
         amb.combine.style.transition = 'transform .4s ease-out, opacity 1s 1s'; amb.combine.style.transform = `translateX(${x - 20}px) rotate(12deg)`;
-        playCrash();
+        playVehicleCrash();
         const boom = boomEl();
         boom.style.cssText = `position:fixed;z-index:78;bottom:${VEH_Y + 10}px;left:${x + 40}px;font-size:40px;pointer-events:none;transform:translateX(-30%) scale(.3);transition:transform .35s ease-out, opacity .8s .9s`;
         document.body.appendChild(boom); requestAnimationFrame(() => boom.style.transform = 'translateX(-30%) scale(3.4)');
@@ -8623,7 +8625,7 @@
         wreck.style.cssText = `position:fixed;z-index:77;bottom:${VEH_Y - 8}px;left:${Math.round(x - 150)}px;width:300px;pointer-events:none;filter:drop-shadow(0 6px 8px rgba(0,0,0,.5));transition:opacity 1s`;
         document.body.appendChild(wreck); wreck.animate([{ transform: 'translateX(0) rotate(0)' }, { transform: 'translateX(-6px) rotate(-2deg)' }, { transform: 'translateX(5px) rotate(1.5deg)' }, { transform: 'translateX(0) rotate(0)' }], { duration: 420 });
         setTimeout(() => { wreck.style.opacity = '0'; setTimeout(() => wreck.remove(), 1100); }, 2200);
-        playCrash();
+        playVehicleCrash();
         const boom = boomEl();
         boom.style.cssText = `position:fixed;z-index:78;bottom:${VEH_Y + 10}px;left:${x}px;font-size:40px;pointer-events:none;transform:translateX(-30%) scale(.3);transition:transform .35s ease-out, opacity .8s .9s`;
         document.body.appendChild(boom); requestAnimationFrame(() => boom.style.transform = 'translateX(-30%) scale(3.2)');
@@ -9365,7 +9367,8 @@
             ['💥', 'Rockets explode for real now: new explosion sounds for the OSHA crash, missed launches, the yacht and the shack.'],
             ['🎡', 'The wheel sounds like a real prize wheel now: the Classic click is 24 real recorded clicks, never the same one twice in a row.'],
             ['🏆', 'New achievement unlocked sound, four new real victory fanfares, and a real sad trombone.'],
-            ['🚨', 'Real sirens: Biblehumping\'s ambulance and ChAoTiC\'s cop car each have their own now.']
+            ['🚨', 'Real sirens: Biblehumping\'s ambulance and ChAoTiC\'s cop car each have their own now.'],
+            ['🚗', 'Real crash sound for the fender-benders, the combine, roadkill, exploding vehicles and the iceberg.']
         ]
     };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
