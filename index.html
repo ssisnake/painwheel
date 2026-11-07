@@ -8433,10 +8433,10 @@
             return () => { try { o.stop(); } catch (e) {} };
         } catch (e) { return () => {}; }
     }
-    const AUDIO_ROCKET_BOOM_1 = "media/audio_rocket_boom_1.mp3?v=1288159e";
-    const AUDIO_ROCKET_BOOM_2 = "media/audio_rocket_boom_2.mp3?v=756c913b";
-    const AUDIO_ROCKET_BOOM_3 = "media/audio_rocket_boom_3.mp3?v=3af56102";
-    const AUDIO_ROCKET_BOOM_4 = "media/audio_rocket_boom_4.mp3?v=a32887bf";
+    const AUDIO_ROCKET_BOOM_1 = "media/audio_rocket_boom_1.mp3?v=81094707";
+    const AUDIO_ROCKET_BOOM_2 = "media/audio_rocket_boom_2.mp3?v=9f314fcb";
+    const AUDIO_ROCKET_BOOM_3 = "media/audio_rocket_boom_3.mp3?v=ffea15c9";
+    const AUDIO_ROCKET_BOOM_4 = "media/audio_rocket_boom_4.mp3?v=c12585a1";
     function playRocketBoom(k) {   // real rocket explosions: 1 OSHA crash, 2 a miss, 3 the yacht, 4 the shack (a miss can use any of them)
         const all = [AUDIO_ROCKET_BOOM_1, AUDIO_ROCKET_BOOM_2, AUDIO_ROCKET_BOOM_3, AUDIO_ROCKET_BOOM_4];
         const i = k === 2 ? Math.floor(Math.random() * 4) : k - 1;
