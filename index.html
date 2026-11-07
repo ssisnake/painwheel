@@ -820,7 +820,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="conspiracy.html" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:49 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:50 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -3950,8 +3950,9 @@
     // Bike-horn HONK HONK for Clussy
     function playHonkSound() {
         if (!soundOn()) return;
+        ensureAudio(); loadHonks();
+        if (honkBufs.length) { playRealHonk(0, 1, 0, 0.8); playRealHonk(0.45, 1.05, 0, 0.8); return; }   // HONK HONK
         try {
-            ensureAudio();
             const now = audioCtx.currentTime;
             [0, 0.28, 0.75].forEach((t, i) => {
                 const o = audioCtx.createOscillator(), o2 = audioCtx.createOscillator();
@@ -8431,8 +8432,27 @@
     };
     let ownedPacks = store.get('painWheelPacks', { classic: true });
     tickPack = store.get('painWheelTickPack', 'classic');
+    const AUDIO_HONK_1 = "media/audio_honk_1.mp3?v=61ab1276";
+    const AUDIO_HONK_2 = "media/audio_honk_2.mp3?v=04020f90";
+    let honkBufs = [], honkLoading = false, lastHonkAt = 0;
+    function loadHonks() {
+        if (honkLoading || !audioCtx) return; honkLoading = true;
+        [AUDIO_HONK_1, AUDIO_HONK_2].forEach(u => loadBytes(u).then(ab => new Promise((res, rej) => audioCtx.decodeAudioData(ab, res, rej))).then(b => honkBufs.push(b)).catch(() => {}));
+    }
+    function playRealHonk(at, rate, len, gain) {   // one real clown honk; len cuts it short for the tick pack
+        const b = pick(honkBufs), t = audioCtx.currentTime + (at || 0), src = audioCtx.createBufferSource(), g = audioCtx.createGain();
+        src.buffer = b; src.playbackRate.value = rate || 1; g.gain.setValueAtTime(gain || 0.8, t);
+        if (len) { g.gain.setValueAtTime(gain || 0.8, t + len * 0.6); g.gain.linearRampToValueAtTime(0.0001, t + len); }
+        src.connect(g); g.connect(masterGain); src.start(t); if (len) src.stop(t + len + 0.02);
+    }
     function playPackTick(isSpecial) {
         ensureAudio();
+        if (tickPack === 'honk') { loadHonks();
+            if (honkBufs.length) {   // real honks, sped up and clipped short; at most one every 90ms so a fast spin stays a honk-storm, not a wall
+                if (performance.now() - lastHonkAt < 90) return; lastHonkAt = performance.now();
+                return playRealHonk(0, 1.25 + Math.random() * 0.4, 0.16, isSpecial ? 0.45 : 0.35);
+            }
+        }
         const t = audioCtx.currentTime, o = audioCtx.createOscillator(), g = audioCtx.createGain();
         const vol = isSpecial ? 0.09 : 0.07;
         if (tickPack === 'murloc') { o.type = 'square'; const f = 700 + Math.random() * 500; o.frequency.setValueAtTime(f, t); o.frequency.exponentialRampToValueAtTime(f * 0.6, t + 0.05); }
@@ -9400,7 +9420,8 @@
             ['🐦', 'Squawkr has a real notification sound (the speaker button in Squawkr still turns it off).'],
             ['🛸', 'The UFO sounds like a UFO now, tractor beam and all. Vince\'s brick phone has a real 80s ring.'],
             ['🔥', 'Real fire crackle when things burn, and casino tokens clink out of the machine when you get one.'],
-            ['🚁', 'The M*A*S*H chopper actually takes off now.']
+            ['🚁', 'The M*A*S*H chopper actually takes off now.'],
+            ['🤡', 'The Clown Honks spin sound uses real honks now.']
         ]
     };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
