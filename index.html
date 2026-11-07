@@ -742,7 +742,7 @@
             <div class="mt-5 pt-4 border-t border-slate-800">
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 6, 9:26 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 6, 9:27 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -7123,7 +7123,7 @@
             'WILSON? never heard of him.', '*bobs menacingly*', 'i was a prize. now i am free.', 'do not ask about the island.', 'IT IS SO NICE TO BE OUT OF THE CLAW', 'i can see the bottom of the ocean. it can see me.', 'blub. (that was not me. that was the murloc.)']) };
     const PET_LIMIT = 4;   // pets on screen at once (the rest wait in the shop)
     const petShown = (k) => store.get('painWheelPetsShown', {})[k] !== false;
-    const activePets = () => Object.keys(PETS).filter(k => pets[k] && petShown(k)).slice(0, PET_LIMIT);
+    const activePets = () => Object.keys(PETS).filter(k => k !== 'clippy' && pets[k] && petShown(k)).slice(0, PET_LIMIT);   // Clippy doesn't count: he's less a pet, more a punishment
     function renderPets() {
         document.querySelectorAll('.pet-walker').forEach(e => e.remove());
         activePets().filter(k => k !== 'clippy').slice(0, IS_PHONE() ? 2 : 99).forEach(k => {
@@ -8714,7 +8714,7 @@
     let clippyUnlocked = store.get('painWheelClippyUnlocked', false);
     function renderClippyPet() {
         let c = $('pet-clippy');
-        if (!pets.clippy || !activePets().includes('clippy')) { if (c) c.remove(); return; }
+        if (!pets.clippy || !petShown('clippy')) { if (c) c.remove(); return; }
         if (c) return;
         c = document.createElement('div'); c.id = 'pet-clippy'; c.className = 'clippy-pet';
         c.innerHTML = '<div class="pet-bubble hidden"></div><span class="clippy-body has-img"><img src="' + PHOTO_CLIPPY + '" alt="📎" class="clippy-img"><span class="googly"><i></i><i></i></span></span>'; document.body.appendChild(c);
@@ -8899,6 +8899,7 @@
                 chicken: `<img src="${PHOTO_CHICKEN}" alt="" style="display:inline-block;height:28px;vertical-align:middle">`, whelp: `<img src="${PHOTO_WHELP}" alt="" style="display:inline-block;height:28px;vertical-align:middle">`,
                 accountant: `<img src="${PHOTO_GIZ_GRIN}" alt="" style="display:inline-block;height:34px;vertical-align:middle">`, volley: `<img src="${PHOTO_VOLLEY}" alt="" style="display:inline-block;height:28px;vertical-align:middle">` };
             add(shopRow(`<img src="${PHOTO_CLAW}" alt="" style="display:inline-block;height:30px;vertical-align:middle">`, 'Claw & Disorder', 'THE WHEEL™ claw machine at Little St. Jeff\'s Prize Island. New pets live inside. Nobody gets what they came for. Usually.', 'Play: ' + fmt(CLAW_COST), () => { closeShop(); openClaw(); }));
+            { const n = document.createElement('div'); n.className = 'text-sm text-slate-300'; n.textContent = `Up to ${PET_LIMIT} pets can be out at once (${activePets().length}/${PET_LIMIT} now). Clippy doesn't count. Clippy is not a pet. Clippy is a consequence.`; add(n); }
             Object.entries(PETS).forEach(([k, p0]) => {
                 const p = PET_ICON[k] ? Object.assign({}, p0, { e: PET_ICON[k] }) : p0;
                 if (p.secret && !clippyUnlocked && !pets[k]) return;
@@ -8908,13 +8909,13 @@
                     const on = petShown(k);
                     add(shopRow(p.e, p.name, p.desc, on ? '👁 Showing' : '🙈 Hidden', () => {
                         const sh = store.get('painWheelPetsShown', {});
-                        if (!on && activePets().length >= PET_LIMIT) { shopMsg(`Only ${PET_LIMIT} pets out at once. Hide one first. The screen has a fire code.`); return; }
+                        if (!on && k !== 'clippy' && activePets().length >= PET_LIMIT) { shopMsg(`Only ${PET_LIMIT} pets out at once. Hide one first. The screen has a fire code.`); return; }
                         sh[k] = !on; store.set('painWheelPetsShown', sh); renderPets(); renderShop();
                     }, 'equip')); return;
                 }
                 add(shopRow(p.e, p.name, p.desc, pets[k] ? 'Owned ✓' : 'Adopt: ' + fmt(p.cost), () => {
                     if (!spend(p.cost, p.name)) return;
-                    if (activePets().length >= PET_LIMIT) { const sh = store.get('painWheelPetsShown', {}); sh[k] = false; store.set('painWheelPetsShown', sh); shopMsg(`${p.name} is yours, but you already have ${PET_LIMIT} pets out. Hide one to bring them out.`); } pets[k] = true; store.set('painWheelPets', pets); renderPets();
+                    if (k !== 'clippy' && activePets().length >= PET_LIMIT) { const sh = store.get('painWheelPetsShown', {}); sh[k] = false; store.set('painWheelPetsShown', sh); shopMsg(`${p.name} is yours, but you already have ${PET_LIMIT} pets out. Hide one to bring them out.`); } pets[k] = true; store.set('painWheelPets', pets); renderPets();
                     if (k === 'clippy') unlock('clippy');
                     shopMsg(`${p.name} has joined you!`); setTimeout(() => petSay(k, PETS[k].say('', {})), 400);
                     chatBurst(['PET POG', 'cute', 'new friend', 'pet collector'], 2); renderShop();
