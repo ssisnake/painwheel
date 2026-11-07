@@ -222,7 +222,7 @@
         #partyLights { position: fixed; inset: 0; z-index: 58; pointer-events: none; display: none; overflow: hidden; }
         body.party-on #partyLights { display: block; }
         body.party-on .pet-walker .pet-em { animation: petDance .45s ease-in-out infinite alternate !important; }
-        body.party-on #garageDock button, body.party-on #shackSpot button { animation: petDance .6s ease-in-out infinite alternate; }
+        body.party-on #garageDock button > *:not(.pet-bubble), body.party-on #shackSpot button { animation: petDance .6s ease-in-out infinite alternate; }
         body.is-spinning #petDock *, body.is-spinning .pet-walker *, body.is-spinning #garageDock *, body.is-spinning #shackSpot *, body.is-spinning #houseEmoji, body.is-spinning .siren-glow, body.is-spinning .cop-sprite, body.is-spinning #goldenCookie { animation-play-state: paused !important; }
         .pet-walker .pet-em { will-change: transform; }
         /* fonts: one "display" face for titles, buttons and labels, one "body" face for everything you read (picked in Settings) */
@@ -466,7 +466,18 @@
         #toyBox { transform-origin: top right; transition: transform .28s cubic-bezier(.3,.9,.3,1.2), opacity .2s; }
         #toyBox:not(.toy-open) { transform: translateY(-14px) scaleY(.2); opacity: 0; pointer-events: none !important; }
         #toyBox.toy-open { transform: none; opacity: 1; }
-        #toyBox #garageDock { max-width: min(420px, calc(100vw - 40px)) !important; }
+        #toyBox { flex-direction: column; align-items: stretch !important; gap: 8px !important; padding: 8px 10px 10px !important; border-radius: 6px !important;
+            background: linear-gradient(#3a2414, #24160b) !important; border: 3px solid #8a5a2b !important; box-shadow: inset 0 0 0 2px #1a0f06, 0 10px 28px rgba(0,0,0,.6) !important; }
+        #toyBox .toy-head { display: flex; align-items: center; gap: 8px; color: #fde68a; font-family: 'Pixelify Sans', ui-monospace, monospace; font-size: 18px; letter-spacing: .04em; text-transform: uppercase; }
+        #toyBox .toy-head img { height: 30px; width: auto; image-rendering: pixelated; }
+        #toyBox .toy-head span { color: #d6b98c; font-size: 14px; flex: 1; }
+        #toyBox .toy-head button { color: #d6b98c; font-weight: 800; font-size: 16px; padding: 0 4px; background: none; border: 0; cursor: pointer; }
+        #toyBox #garageDock { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 8px; width: min(360px, calc(100vw - 40px)); }
+        #garageDock > button { display: flex !important; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; min-height: 104px; padding: 8px 4px 6px !important;
+            background: radial-gradient(circle at 50% 40%, #3b3a44, #17161c) !important; border: 2px solid #5b4a36 !important; border-radius: 5px; }
+        #garageDock > button:hover { border-color: #facc15 !important; }
+        #garageDock > button::after { content: attr(data-label); font-size: 13px; font-weight: 800; color: #f5e6c8; line-height: 1.15; text-align: center; }
+        html.light-mode #toyBox .toy-head, html.light-mode #garageDock > button::after { color: #1f2937; }
         #chatHead, #chatHead span { white-space: nowrap; } #chatHead { gap: 6px; } #chatViewers { overflow: hidden; text-overflow: ellipsis; }
         .is-min > .min-head { margin-bottom: 0 !important; border-bottom: 0 !important; }
         #sqDock:empty { display: none; }
@@ -557,12 +568,28 @@
         #partyLights .b2 { background: radial-gradient(circle, #22d3ee 0%, rgba(34,211,238,.5) 30%, transparent 68%); right: -25vmax; top: 10vh; animation: beamB 11s ease-in-out infinite alternate; }
         #partyLights .b3 { background: radial-gradient(circle, #a3e635 0%, rgba(163,230,53,.5) 30%, transparent 68%); left: 20vw; bottom: -35vmax; animation: beamC 13s ease-in-out infinite alternate; }
         #partyLights .b4 { background: radial-gradient(circle, #a855f7 0%, rgba(168,85,247,.5) 30%, transparent 68%); right: 5vw; bottom: -30vmax; animation: beamA 15s ease-in-out infinite alternate-reverse; }
-        #partyLights .ball { position: absolute; left: 50%; top: 4px; transform: translateX(-50%); font-size: 54px; animation: ballSpin 6s linear infinite; }
+        #partyLights .ball { position: absolute; left: 50%; top: 0; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; transform-origin: 50% 0; }
+        body.party-on #partyLights .ball { animation: ballDrop 1.5s cubic-bezier(.3,1.35,.5,1) both, ballSwing 4.5s ease-in-out 1.5s infinite alternate; }
+        #partyLights .ball .chain { width: 3px; height: 64px; background: repeating-linear-gradient(#cbd5e1 0 4px, #475569 4px 7px); }
+        #partyLights .ball img { height: 118px; width: auto; image-rendering: pixelated; margin-top: -2px; filter: drop-shadow(0 0 18px rgba(236,72,153,.55)); }
+        #partyLights .speck { position: absolute; width: 9px; height: 9px; border-radius: 2px; opacity: .55; animation: speckDrift 9s linear infinite; }
+        @keyframes ballDrop { from { transform: translate(-50%,-260px); } to { transform: translate(-50%,0); } }
+        @keyframes ballSwing { from { transform: translateX(-50%) rotate(-4deg); } to { transform: translateX(-50%) rotate(4deg); } }
+        @keyframes speckDrift { from { transform: translate(0,0); } to { transform: translate(38vw,22vh); } }
+        .loot-card { position: fixed; z-index: 90; left: 50%; top: 200px; transform: translateX(-50%); width: min(360px, calc(100vw - 32px)); padding: 10px 14px; border-radius: 6px;
+            background: rgba(6,10,32,.95); border: 2px solid #9ca3af; box-shadow: 0 0 0 1px #000, 0 12px 30px rgba(0,0,0,.6); color: #fff; font-size: 17px; line-height: 1.35; pointer-events: none; transition: opacity .6s; }
+        .loot-card .nm { color: #b048f8; font-weight: 800; font-size: 20px; } .loot-card .g { color: #1eff00; } .loot-card .fl { color: #ffd100; font-style: italic; }
+        .loot-card .row { display: flex; justify-content: space-between; } .loot-card .ic { float: right; height: 52px; width: auto; image-rendering: pixelated; margin: -2px 0 4px 8px; border: 2px solid #b048f8; border-radius: 4px; background: #111; }
+        .dance-line { position: fixed; z-index: 63; left: 50%; bottom: 10px; transform: translateX(-50%); transform-origin: 50% 100%; display: flex; align-items: flex-end; gap: 22px; pointer-events: none; }
+        .dance-slot { position: relative; }
+        .dance-slot > :not(.pet-bubble) { animation: petDance .45s ease-in-out infinite alternate; animation-delay: inherit; }
+        .dance-slot.veh > :not(.pet-bubble) { animation-duration: .7s; }
+        .dance-slot .pet-bubble { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 6px; }
+        .dance-slot:nth-child(even) .pet-bubble { margin-bottom: 44px; }
         @keyframes beamA { to { transform: translate(40vw, 30vh); } }
         @keyframes beamB { to { transform: translate(-45vw, 25vh); } }
         @keyframes beamC { to { transform: translate(30vw, -40vh); } }
         @keyframes hueSpin { to { filter: blur(60px) hue-rotate(360deg); } }
-        @keyframes ballSpin { from { transform: translateX(-50%) rotate(0); } to { transform: translateX(-50%) rotate(360deg); } }
         /* CLUCK! quest */
         #wildChicken { position: fixed; z-index: 59; bottom: 64px; left: -80px; font-size: 46px; line-height: 1; cursor: pointer; user-select: none; transition: left linear; }
         #wildChicken .em { display: inline-block; animation: chickenWalk .35s ease-in-out infinite alternate; }
@@ -570,7 +597,7 @@
         @keyframes chickenWalk { from { translate: 0 0; } to { translate: 0 -4px; } }
         #wildChicken .bub { position: absolute; bottom: 52px; left: 50%; transform: translateX(-50%); white-space: nowrap; background: #fffbe6; color: #111; font-size: 12px; font-weight: 800; padding: 3px 8px; border-radius: 8px; border: 1.5px solid #111; }
         .quest-box { background: linear-gradient(180deg,#f5e6c4,#e6cf9c); color: #3b2512; border: 3px solid #7c5a2a; box-shadow: 0 10px 40px rgba(0,0,0,.7); font-family: Georgia, serif; }
-        @media (prefers-reduced-motion: reduce) { #partyLights .beam, #partyLights .ball { animation: none; } }
+        @media (prefers-reduced-motion: reduce) { #partyLights .beam, body.party-on #partyLights .ball, #partyLights .speck, .dance-slot > * { animation: none; } }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between bg-slate-950 text-slate-100 select-none">
@@ -756,7 +783,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="conspiracy.html" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 6, 10:04 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 6, 10:15 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -890,11 +917,12 @@
         </div>
     </div>
     <div id="retVisionFx" aria-hidden="true" style="display:none;position:fixed;inset:0;z-index:56;pointer-events:none;backdrop-filter:grayscale(.9) blur(.6px) contrast(.9);-webkit-backdrop-filter:grayscale(.9) blur(.6px) contrast(.9)"></div>
-    <div id="partyLights" aria-hidden="true"><div class="beam b1"></div><div class="beam b2"></div><div class="beam b3"></div><div class="beam b4"></div><div class="ball">🪩</div></div>
+    <div id="partyLights" aria-hidden="true"><div class="beam b1"></div><div class="beam b2"></div><div class="beam b3"></div><div class="beam b4"></div><div class="ball"><i class="chain"></i><img id="discoImg" alt=""></div></div>
     <div id="shackSpot" style="position:fixed;z-index:61;left:16px;bottom:12px"></div>
     <div id="rightStack" style="position:fixed;z-index:61;right:16px;bottom:12px;display:flex;flex-direction:column;align-items:flex-end;gap:8px;max-width:calc(100vw - 32px);pointer-events:none">
         <div id="toyBox" style="pointer-events:auto;display:none;align-items:flex-end;gap:6px;background:rgba(2,6,23,.82);border:1px solid #334155;border-radius:14px;padding:6px 8px;box-shadow:0 8px 24px rgba(0,0,0,.45)">
-            <div id="garageDock" class="flex items-end gap-2 flex-wrap justify-end" style="max-width:min(330px, calc(100vw - 110px))"></div>
+            <div class="toy-head"><img id="toyHeadIcon" alt=""><b>Toy Box</b><span id="toyCount"></span><button id="toyClose" type="button" title="Close the toy box" aria-label="Close the toy box">✕</button></div>
+            <div id="garageDock"></div>
         </div>
     </div>
     <div id="billsBox" style="z-index: 66; right: 16px; bottom: 150px; width: min(300px, calc(100vw - 32px)); display: none;" class="fixed"></div>
@@ -1491,6 +1519,8 @@
     const PHOTO_FAMILY_50S = "media/photo_family_50s.jpg?v=14e49b4c";
     const PHOTO_DYLAN_ROAD = "media/photo_dylan_road.jpg?v=ec785aa5";
     const PHOTO_DYLAN_DRONES = "media/photo_dylan_drones.jpg?v=7da22f8d";
+    const PHOTO_OSHA = "media/photo_osha.jpg?v=69fa9bf1";
+    const PHOTO_DISCO = "media/photo_disco.png?v=97e27dbb";
     const PHOTO_DEPENDS = "media/photo_depends.jpg?v=70acfece";
     const PHOTO_VOLLEY = "media/photo_volley.png?v=906ddeb0";
     const PHOTO_VOLLEY_ISLAND = "media/photo_volley_island.jpg?v=adabf069";
@@ -1728,7 +1758,7 @@
         { id: "SIXTY_SEVEN", n: 1, fixed: 66, label: "67 67 67 67 67", pill: "67", bg: "#facc15", text: "#020617", border: "#020617", color: "text-yellow-300", glow: "bg-yellow-400", key: "&", rig: "67",
           win: { title: "67 67 67 67 67", size: SIZE.big, sub: () => "67 67 67 67 67 67 (Slice #67, obviously)" } },
         { id: "OSHA", n: 1, label: "⚠️ OSHA Violations ⚠️", pill: "OSHA", bg: "#facc15", text: "#020617", border: "#020617", fill: "hazard", whiteText: true, color: "text-yellow-400", glow: "bg-yellow-500", key: "O", rig: "OSH",
-          win: { title: "⚠️ OSHA VIOLATION ⚠️", size: SIZE.mid, sub: () => pickFresh(oshaViolations) } },
+          win: { title: "⚠️ OSHA VIOLATION ⚠️", size: SIZE.mid, sub: () => pickFresh(oshaViolations), media: { src: PHOTO_OSHA, fallback: null, caption: "🦺 Proudly 0 days without an incident" } } },
         { id: "QUICK_KEY", n: 1, label: "🔑 Quick Key Before Raid 🔑", pill: "QUICK KEY", bg: "#0e7490", text: "#ecfeff", border: "#67e8f9", color: "text-cyan-300", glow: "bg-cyan-600", key: "Q", rig: "QKY",
           win: { title: "🔑 QUICK KEY BEFORE RAID 🔑", size: SIZE.small, sub: () => "For when you need to be 30 minutes late to an event you're supposed to be 15 minutes early for." } },
         { id: "KROMS_KOOL_KIDS", n: 1, label: "😎 Krom's Kool Kids 😎", pill: "KROM'S KOOL KIDS", bg: "#065f46", text: "#d1fae5", border: "#34d399", color: "text-emerald-300", glow: "bg-emerald-600", key: "D", rig: "KKK",
@@ -7480,8 +7510,8 @@
         ['ChAoTiC', 'Who stores rocket fuel next to the break room?'], ['Biblehumping', 'That is the fourth workplace fire this week, eh. I have a punch card now.'], ['ChAoTiC', 'Hard hats were "optional." They are now mandatory. Retroactively.'],
         ['Biblehumping', 'Third-degree burns. On the wheel. The wheel will live.']];
     function oshaRocket() {
-        if (document.hidden) return;
-        const cv = $('wheelCanvas'); if (!cv) return; const w = cv.getBoundingClientRect(); if (w.bottom < 0 || w.top > innerHeight) return;
+        if (document.hidden) return false;
+        const cv = $('wheelCanvas'); if (!cv) return false; const w = cv.getBoundingClientRect(); if (w.bottom < 0 || w.top > innerHeight) return false;
         const o = padOrigin(), tx = w.left + w.width * (0.3 + Math.random() * 0.4), ty = w.top + w.height * (0.3 + Math.random() * 0.4);
         const r = document.createElement('div'); r.style.cssText = 'position:fixed;z-index:80;pointer-events:none'; r.innerHTML = rocketImg(64); document.body.appendChild(r);
         funEvent('🚀⚠️ UNSCHEDULED LAUNCH (WORKPLACE INCIDENT)', 2200); chatBurst(['WHO PRESSED THE BUTTON', 'that is not up to code', 'OSHA IS HERE', 'hard hats ON'], 3, 1200);
@@ -7495,7 +7525,7 @@
     const OSHA_TRIP_LINES = ['Workplace injury, eh. He tripped over the wet floor sign. The sign was there to warn him about the sign.', 'Got him. Strapping him in. He keeps asking if the ambulance accepts Goblin Express.',
         "Sir, you don't get worker's comp. You're a goblin. ...Fine, I'll fill out the form.", "He's fine. He's billing me for the ride. I'm the ambulance."];
     function oshaTrip() {   // the goblin banker eats it on a wet floor sign, Biblehumping carts him off
-        if (document.hidden) return;
+        if (document.hidden) return false;
         const y = VEH_Y + 4, x0 = Math.round(innerWidth * 0.35);
         const sign = document.createElement('div'); sign.textContent = '🚧';
         sign.style.cssText = `position:fixed;z-index:77;bottom:${y}px;left:${x0 + 120}px;font-size:46px;line-height:1;pointer-events:none`;
@@ -7515,6 +7545,115 @@
             setTimeout(() => { amb.firstChild.style.display = 'none'; stopSiren(); amb.style.transition = 'transform 2.4s ease-in'; amb.style.transform = `translateX(-260px)`; }, 7200);
             setTimeout(() => { amb.remove(); gob.remove(); sign.remove(); }, 9800);
         }, 3600);
+    }
+    // ---------- ⚠️ more OSHA violations: things around the page just... break ----------
+    const oshaSay = (t, x, y, ms) => floatBubble('🦺 OSHA: ' + t, x, y, ms || 3600);
+    function oshaSliceFall() {   // a wedge of the wheel comes loose and drops off the screen
+        const cv = $('wheelCanvas'); if (!cv || isSpinning) return false; const R = cv.getBoundingClientRect(); if (!onView(R)) return false;
+        const g = wheelGeom(), k = R.width / g.w, P = cv.width / R.width, r = g.r * k, cx = R.left + R.width / 2, cy = R.top + R.height / 2;
+        const a0 = Math.PI * (0.12 + Math.random() * 0.62), span = 0.3, S = Math.ceil(r * 2 + 6), Sp = Math.ceil(S * P);
+        const mk = () => { const c = document.createElement('canvas'); c.width = Sp; c.height = Sp; c.style.cssText = `position:fixed;left:${cx - S / 2}px;top:${cy - S / 2}px;width:${S}px;height:${S}px;pointer-events:none;z-index:79`; return c; };
+        const wedge = (x) => { x.beginPath(); x.moveTo(Sp / 2, Sp / 2); x.arc(Sp / 2, Sp / 2, r * P, a0, a0 + span); x.closePath(); };
+        const piece = mk(), px = piece.getContext('2d'); wedge(px); px.save(); px.clip(); px.drawImage(cv, cv.width / 2 - Sp / 2, cv.height / 2 - Sp / 2, Sp, Sp, 0, 0, Sp, Sp); px.restore();
+        px.lineWidth = 2 * P; px.strokeStyle = '#111'; wedge(px); px.stroke();
+        const hole = mk(), hx = hole.getContext('2d'); wedge(hx); hx.fillStyle = '#05070d'; hx.fill(); hx.lineWidth = 3 * P; hx.strokeStyle = '#facc15'; hx.setLineDash([8 * P, 6 * P]); hx.stroke();
+        piece.style.zIndex = '80'; document.body.append(hole, piece);
+        const mid = a0 + span / 2, ex = Math.cos(mid) * r * 0.65, ey = Math.sin(mid) * r * 0.65;   // where the wedge sits, for the bubbles
+        piece.style.transformOrigin = `${S / 2 + ex}px ${S / 2 + ey}px`;
+        piece.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-3deg)' }, { transform: 'rotate(3deg)' }, { transform: 'rotate(0)' }], { duration: 300, iterations: 3 });
+        playTickSound(false);
+        setTimeout(() => {
+            const drop = innerHeight - (cy + ey) + 120;
+            piece.animate([{ transform: 'translate(0,0) rotate(0)' }, { transform: `translate(${Math.cos(mid) * 60}px,${drop}px) rotate(${Math.random() < 0.5 ? -200 : 200}deg)` }], { duration: 1300, easing: 'cubic-bezier(.5,0,1,1)', fill: 'forwards' });
+            setTimeout(() => { playCrash(); fxAt('poof', cx + ex, innerHeight - 40, 120, 800); chatBurst(['A SLICE FELL OFF', 'the wheel is shedding', 'that was load bearing', 'OSHA VIOLATION', 'is the wheel ok'], 3, 900); }, 1250);
+        }, 950);
+        funEvent('⚠️ A SLICE FELL OFF THE WHEEL ⚠️', 2600);
+        setTimeout(() => oshaSay(pick(['That slice was held on with one (1) screw. It is now held on with zero.', 'Who was in charge of tightening the wheel? Write their name down.', 'This wheel has not been inspected since Vanilla.', 'Do NOT spin a wheel with a hole in it. ...They are going to spin it.']), cx + ex, cy + ey - 20), 1500);
+        let gone = false; const fix = () => { if (gone) return; gone = true; piece.remove(); hole.style.transition = 'opacity .5s'; hole.style.opacity = '0'; setTimeout(() => hole.remove(), 600); };
+        const watch = setInterval(() => { if (isSpinning) { clearInterval(watch); fix(); } }, 150);
+        setTimeout(() => { clearInterval(watch); if (!gone) moveToast('🦺 The slice has been duct-taped back on. It is now up to code. (It is not up to code.)'); fix(); }, 11000);
+        return true;
+    }
+    const VEH_BOOM_LINES = { bible: ['My ambulance! I need an ambulance for my ambulance, eh.', 'That is coming out of my paycheck. My paycheck is 11 dollars.', 'Nobody touch it. It is still beeping. Why is it still beeping.'],
+        chaotic: ["My cruiser! That was a RENTAL.", "I'm writing myself a ticket. Then I'm appealing it.", 'FUBAR. Absolutely FUBAR.', 'The donut survived. That is all that matters.'] };
+    function oshaVehicleBoom() {   // a cop car or ambulance rolls in, idles, and spontaneously explodes
+        const who = Math.random() < 0.5 ? 'bible' : 'chaotic', x0 = Math.round(innerWidth * (0.3 + Math.random() * 0.35));
+        const v = document.createElement('div');
+        v.style.cssText = `position:fixed;z-index:79;bottom:${VEH_Y}px;left:0;pointer-events:none;transform:translateX(${innerWidth + 40}px);transition:transform 2.2s cubic-bezier(.2,.8,.3,1)`;
+        v.innerHTML = (who === 'bible' ? ambSprite(false, 2) : copSprite(false, 2)); document.body.appendChild(v);
+        requestAnimationFrame(() => requestAnimationFrame(() => { v.style.transform = `translateX(${x0}px)`; }));
+        setTimeout(() => { v.animate([{ transform: `translateX(${x0}px)` }, { transform: `translateX(${x0 + 3}px)` }, { transform: `translateX(${x0 - 3}px)` }], { duration: 90, iterations: 10 }); }, 2400);
+        setTimeout(() => {
+            const b = v.getBoundingClientRect(); playCrash(); fxAt('boom', b.left + b.width / 2, b.top + b.height / 2, 190, 900);
+            document.body.animate([{ transform: 'translate(0,0)' }, { transform: 'translate(-7px,4px)' }, { transform: 'translate(6px,-4px)' }, { transform: 'translate(0,0)' }], { duration: 420 });
+            v.style.filter = 'brightness(.28) sepia(.6) saturate(.4)'; v.innerHTML = fireOver(v.innerHTML, 90);
+            funEvent(who === 'bible' ? "💥 BIBLEHUMPING'S AMBULANCE EXPLODED (NO CAUSE FOUND)" : "💥 CHAOTIC'S CRUISER EXPLODED (NO CAUSE FOUND)", 3000);
+            chatBurst(['WHAT', 'it just BLEW UP', 'spontaneous combustion', 'recall notice incoming', 'OSHA VIOLATION', 'nobody touched it'], 4, 1500);
+            setTimeout(() => floatBubble((who === 'bible' ? '🚑 Biblehumping: ' : '🚓 ChAoTiC: ') + pick(VEH_BOOM_LINES[who]), b.left + b.width / 2, b.top - 10, 3800), 900);
+            setTimeout(() => oshaSay(pick(['Fuel line was patched with chewing gum. Strawberry.', 'The check engine light was on since 2019. They put a sticker over it.', 'Vehicle failed inspection. Vehicle also failed being a vehicle.']), b.left + b.width / 2, b.top - 90), 4900);
+            setTimeout(() => sqPost(who, who === 'bible' ? 'my ambulance blew up while parked. OSHA says chewing gum. i say sabotage. ChAoTiC says "no comment"' : 'cruiser exploded while idling. not my fault. filing it under FUBAR. Biblehumping, do NOT laugh'), 6000);
+        }, 3400);
+        setTimeout(() => { v.style.transition = 'opacity 1s'; v.style.opacity = '0'; }, 10500); setTimeout(() => v.remove(), 11600);
+        return true;
+    }
+    function oshaPetTrip() {   // one of your pets eats it on the floor
+        const ws = [...document.querySelectorAll('.pet-walker')].filter(w => !w._talking && onView(w.getBoundingClientRect())); if (!ws.length) return false;
+        const w = pick(ws), em = w.querySelector('.pet-em'), k = w.id.replace('pet-', ''), r = w.getBoundingClientRect(); if (!em) return false;
+        w._talking = true;
+        em.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-25deg) translateY(-6px)' }, { transform: 'rotate(95deg) translateY(4px)' }], { duration: 450, easing: 'ease-in', fill: 'forwards' });
+        playCrash();
+        const sign = document.createElement('div'); sign.textContent = '🚧'; sign.style.cssText = `position:fixed;z-index:77;left:${r.right + 4}px;top:${r.bottom - 46}px;font-size:40px;line-height:1;pointer-events:none`; document.body.appendChild(sign);
+        const ow = { murloc: 'MRGLGL!! (my fin!)', accountant: 'I am billing the floor for this.', chicken: 'BAWK! (worker\'s comp)', whelp: '*sad little smoke puff*', volley: 'i am a ball. how did i trip.' }[k] || 'OW.';
+        setTimeout(() => petSay(k, ow), 400);
+        setTimeout(() => oshaSay(pick(['Wet floor, no sign. The sign showed up AFTER. Classic.', 'Pet-related slip-and-fall. Third one this week.', 'Floor is rated for zero (0) pets.']), r.left + r.width / 2, r.top - 40), 1300);
+        setTimeout(() => { em.animate([{ transform: 'rotate(95deg) translateY(4px)' }, { transform: 'rotate(0)' }], { duration: 500, fill: 'forwards' }).onfinish = () => { em.getAnimations().forEach(a => a.cancel()); }; w._talking = false; }, 4200);
+        setTimeout(() => sign.remove(), 5200);
+        return true;
+    }
+    function oshaButtonFall() {   // one of the top bar plates comes loose and falls to the floor; click it (or wait) to bolt it back on
+        const bs = [...document.querySelectorAll('.plate-btn')].filter(b => onView(b.getBoundingClientRect()) && b.style.visibility !== 'hidden'); if (!bs.length) return false;
+        const btn = pick(bs), r = btn.getBoundingClientRect(), img = btn.querySelector('img');
+        const f = img.cloneNode(); f.className = 'plate-img'; f.title = 'Click to bolt it back on';
+        f.style.cssText = `position:fixed;z-index:80;left:${r.left}px;top:${r.top}px;height:${r.height}px;cursor:pointer;pointer-events:auto`;
+        btn.style.visibility = 'hidden'; document.body.appendChild(f);
+        const floor = innerHeight - r.height - 14 - r.top, dx = (Math.random() - 0.5) * 160, rot = (Math.random() < 0.5 ? -1 : 1) * (8 + Math.random() * 14);
+        f.animate([{ transform: 'translate(0,0) rotate(0)' }, { transform: 'translate(0,6px) rotate(-6deg)', offset: 0.12 }, { transform: `translate(${dx}px,${floor}px) rotate(${rot}deg)`, offset: 0.75 }, { transform: `translate(${dx}px,${floor - 22}px) rotate(${rot * 0.6}deg)`, offset: 0.87 }, { transform: `translate(${dx}px,${floor}px) rotate(${rot}deg)` }], { duration: 1500, easing: 'ease-in', fill: 'forwards' });
+        setTimeout(() => { playCrash(); chat(pick(['the button fell off', 'THE UI IS FALLING APART', 'who installed that', 'OSHA VIOLATION', 'just like my real house'])); }, 1100);
+        setTimeout(() => oshaSay(pick(['That button was mounted with a single thumbtack. Who signed off on this?', 'Loose fixture in the top bar. Everyone stay away from the Settings.', 'Falling-button hazard. Hard hats are now required to click things.']), r.left + r.width / 2 + dx, innerHeight - r.height - 40), 1600);
+        let done = false; const fix = () => { if (done) return; done = true; f.remove(); btn.style.visibility = ''; btn.animate([{ transform: 'translateY(-10px)' }, { transform: 'translateY(0)' }], { duration: 300, easing: 'ease-out' }); };
+        f.addEventListener('click', () => { fix(); moveToast('🔩 You bolted it back on yourself. OSHA would like a word.'); });
+        setTimeout(() => { if (!done) moveToast('🔩 Maintenance bolted the button back on. With tape.'); fix(); }, 15000);
+        return true;
+    }
+    function oshaClippyEye() {   // Clippy pokes one of his own googly eyes out
+        const c = $('pet-clippy'), eye = c && c.querySelector('.googly i'); if (!eye || eye.style.visibility === 'hidden') return false;
+        const r = eye.getBoundingClientRect(); if (!onView(r)) return false;
+        const e = document.createElement('div'); e.style.cssText = `position:fixed;z-index:81;left:${r.left}px;top:${r.top}px;width:${Math.max(12, r.width * 1.4)}px;height:${Math.max(12, r.width * 1.4)}px;border-radius:50%;background:#fff;border:2px solid #111;pointer-events:none`;
+        e.innerHTML = '<i style="position:absolute;left:25%;top:25%;width:50%;height:50%;border-radius:50%;background:#111"></i>';
+        eye.style.visibility = 'hidden'; document.body.appendChild(e);
+        const floor = innerHeight - r.top - 20, dx = (Math.random() < 0.5 ? -1 : 1) * (60 + Math.random() * 120);
+        e.animate([{ transform: 'translate(0,0) rotate(0)' }, { transform: `translate(${dx * 0.3}px,-40px) rotate(180deg)`, offset: 0.25 }, { transform: `translate(${dx * 0.7}px,${floor}px) rotate(540deg)`, offset: 0.7 }, { transform: `translate(${dx * 0.85}px,${floor - 18}px) rotate(640deg)`, offset: 0.82 }, { transform: `translate(${dx}px,${floor}px) rotate(760deg)` }], { duration: 1700, easing: 'ease-in', fill: 'forwards' });
+        petSay('clippy', pick(["It looks like you've lost an eye. Would you like help filing an injury report?", 'I was trying to see what you were typing. I got too close.', 'I have been a paperclip for 31 years and this has never happened before. (It has happened four times.)']));
+        setTimeout(() => oshaSay('Self-inflicted eye injury. Paperclips are now classified as sharp objects.', r.left, r.top - 30), 2200);
+        setTimeout(() => { e.style.transition = 'opacity .6s'; e.style.opacity = '0'; setTimeout(() => e.remove(), 700); eye.style.visibility = ''; petSay('clippy', 'Found it. It was in the couch. It is a little linty now.'); }, 20000);
+        return true;
+    }
+    function oshaShackFire() {   // the shack just... catches fire
+        const b = $('shackSpot') && $('shackSpot').querySelector('button'); if (!b || !onView(b.getBoundingClientRect())) return false;
+        const img = (src) => `<img src="${src}" alt="🏚️" width="112" style="display:block;filter:drop-shadow(0 3px 6px rgba(0,0,0,.6))">`;
+        b.innerHTML = fireOver(img(PHOTO_SHACK), 70); const sb = b.getBoundingClientRect();
+        funEvent('🔥 THE SHACK IS ON FIRE (AGAIN) 🔥', 3000); chatBurst(['THE SHACK', 'not the shack 😭', 'who left the hot plate on', 'OSHA VIOLATION', 'insurance claim #3'], 4, 1500);
+        setTimeout(() => oshaSay(pick(['Space heater, extension cord, extension cord, extension cord, power strip, wall.', 'The smoke detector was a picture of a smoke detector.', 'Shack was built out of pallets and optimism. Optimism is very flammable.']), sb.left + sb.width / 2 + 80, sb.top - 20), 1200);
+        setTimeout(() => { fxAt('poof', sb.left + sb.width / 2, sb.top + sb.height * 0.4, 120, 900); b.innerHTML = fireOver(img(PHOTO_SHACK_BURNT), 40); }, 4200);
+        setTimeout(() => { b.innerHTML = shackHTML(); moveToast('🏜️ The shack has been rebuilt. Out of the same pallets.'); }, 10000);
+        setTimeout(() => sqPost('shack', 'i am on fire. this is not a metaphor. the lizard is fine'), 3000);
+        return true;
+    }
+    let oshaLast = '';
+    function oshaEvent() {   // after an OSHA landing: something breaks. Pick one that can happen right now (never the same one twice in a row)
+        const all = [['rocket', oshaRocket], ['trip', oshaTrip], ['slice', oshaSliceFall], ['boom', oshaVehicleBoom], ['pet', oshaPetTrip], ['button', oshaButtonFall], ['clippy', oshaClippyEye], ['shack', oshaShackFire]];
+        const opts = all.filter(([k]) => k !== oshaLast).sort(() => Math.random() - 0.5);
+        for (const [k, fn] of opts) { if (fn() !== false) { oshaLast = k; return; } }
     }
     function floatBubble(text, x, y, ms, below) {   // a goblin speech bubble pinned to a screen point
         const b = document.createElement('div'); b.className = 'gb' + (below ? ' gb-up' : '');
@@ -8470,8 +8609,11 @@
     let toyOpen = store.get('painWheelToyOpen', true);
     function renderToyBox() {
         const n = $('garageDock').children.length, box = $('toyBox');
+        [...$('garageDock').children].forEach(b => { if (!b.dataset.label) b.dataset.label = (b.title || '').split(' (')[0].replace(/^(Biblehumping's|ChAoTiC's|Vince's 1980s|Kevin) /, ''); });
+        $('toyHeadIcon').src = PHOTO_TOYBOX; $('toyCount').textContent = `${n} toy${n === 1 ? '' : 's'}`;
+        $('toyBtn').style.display = n ? 'inline-flex' : 'none';   // the button has to be showing before the box can measure where to hang
         placeToyBox(); box.style.display = n ? 'flex' : 'none'; box.classList.toggle('toy-open', !!(n && toyOpen));
-        $('toyBtn').style.display = n ? 'inline-flex' : 'none';
+        requestAnimationFrame(placeToyBox);
         $('toyLbl').textContent = toyOpen ? 'Hide toys' : `Toys (${n})`;
     }
     function placeToyBox() {   // the toy box hangs under its button in the top bar (page coordinates, so it scrolls with the header)
@@ -8483,6 +8625,8 @@
         box.style.right = Math.max(8, document.documentElement.clientWidth - (r.right + scrollX)) + 'px';
     }
     addEventListener('resize', () => { if ($('toyBox').classList.contains('toy-open')) placeToyBox(); });
+    if ('ResizeObserver' in window) new ResizeObserver(() => { if ($('toyBox').classList.contains('toy-open')) placeToyBox(); }).observe(document.querySelector('header'));   // the top bar shifts as the button art loads
+    $('toyClose').addEventListener('click', () => { toyOpen = false; store.set('painWheelToyOpen', false); renderToyBox(); });
     $('toyBtn').addEventListener('click', () => { toyOpen = !toyOpen; store.set('painWheelToyOpen', toyOpen); renderToyBox(); });
     (function stackCorner() {   // bills, toy box, then the badges (which always stay visible), stacked in the corner
         const st = $('rightStack');
@@ -8820,6 +8964,9 @@
             ['🎖️', "More Jody calls on Iraqi Freedom, plus Thanksgiving and Veterans Day lines on the seasonal slice."],
             ['🥐', "Croissant 2: the new cut is in."],
             ['📌', "Someone pinned a conspiracy board up. It's in Settings, if you want to look."],
+            ['🦺', 'Six new OSHA violations: a slice falls off the wheel, the ambulance or cop car just explodes, a pet trips, a top-bar button falls off (click it to bolt it back on), Clippy pokes his own eye out, and the shack catches fire. The OSHA slice has a proper sign now too.'],
+            ['🪩', "Party mode got real: Gallywix's Disco Ball drops in (with its loot card), and your pets line up to dance with the ambulance and the cop car on the ends."],
+            ['🧰', 'The toy box is an actual box now, with a slot and a label for every toy.'],
             ['🎨', 'Art cleanup: pick your class from a grid of the real class sigils, the window headers use the new button art, and shop items with pixel art now show it instead of an emoji.']
         ]
     };
@@ -9436,15 +9583,50 @@
         document.body.classList.toggle('party-on', on);
         $('partyBtn').querySelector('span').textContent = on ? 'Stop' : 'Party';
         if (on) chatBurst(['PARTY', 'club the wheel', 'untz untz untz', 'DJ Kevin in the house', '🕺💃'], 4, 2500);
-        if (on) partyPets();
+        if (on) { partyStart(); partyPets(); } else partyStop();
         $('partyBtn').blur();
     });
+    // the disco ball drops in, a loot card pops for it, and everyone lines up to dance with the ambulance and the cop car on the ends
+    function partyStart() {
+        $('discoImg').src = PHOTO_DISCO;
+        const L = $('partyLights'); L.querySelectorAll('.speck').forEach(e => e.remove());
+        for (let i = 0; i < 14; i++) { const sp = document.createElement('i'); sp.className = 'speck'; sp.style.left = (Math.random() * 70) + 'vw'; sp.style.top = (Math.random() * 70) + 'vh';
+            sp.style.background = pick(['#fff', '#f9a8d4', '#a5f3fc', '#fde68a']); sp.style.animationDelay = (-Math.random() * 9) + 's'; L.appendChild(sp); }
+        setTimeout(() => {
+            if (!document.body.classList.contains('party-on')) return;
+            const c = document.createElement('div'); c.className = 'loot-card'; c.id = 'discoCard';
+            c.innerHTML = `<img class="ic" src="${PHOTO_DISCO}" alt=""><div class="nm">Gallywix's Disco Ball</div><div>Binds when picked up</div><div>Unique</div><div class="row"><span>Toy</span><span>Trinket</span></div>
+                <div class="g">Use: Drops a disco ball. Every pet within 40 yards is forced to dance. Including the ambulance.</div><div class="g">Equip: Kevin's DPS increased by 0%.</div>
+                <div class="fl">"Found in the VIP room. Still sticky."</div><div>Sell Price: 13 silver 50 copper</div>`;
+            document.body.appendChild(c); setTimeout(() => { c.style.opacity = '0'; setTimeout(() => c.remove(), 700); }, 6500);
+        }, 1300);
+        const line = document.createElement('div'); line.className = 'dance-line'; line.id = 'danceLine';
+        const slot = (k, html, veh) => { const d = document.createElement('div'); d.className = 'dance-slot' + (veh ? ' veh' : ''); d.id = 'dance-' + k; d.style.animationDelay = (Math.random() * -0.5) + 's';
+            d.innerHTML = '<div class="pet-bubble hidden px-2 py-1 rounded-lg bg-slate-900/95 border border-slate-600 text-slate-100 text-[13px] font-bold whitespace-nowrap shadow-lg"></div>' + html; line.appendChild(d); };
+        slot('amb', ambSprite(false, 1.3), true);
+        document.querySelectorAll('.pet-walker').forEach(w => { const f = w.querySelector('.pet-flip'); if (!f) return; const k = w.id.replace('pet-', ''); w.style.visibility = 'hidden';
+            const cl = f.cloneNode(true); cl.style.transform = ''; slot(k, cl.outerHTML); });
+        slot('cop', copSprite(true, 1.3), true);
+        document.body.appendChild(line);
+        const fit = () => { line.style.transform = 'translateX(-50%)'; const w = line.scrollWidth; if (w > innerWidth - 24) line.style.transform = `translateX(-50%) scale(${((innerWidth - 24) / w).toFixed(3)})`; };
+        fit(); line._fit = fit; addEventListener('resize', fit);
+    }
+    function partyStop() {
+        const line = $('danceLine'); if (line) { removeEventListener('resize', line._fit); line.remove(); }
+        const c = $('discoCard'); if (c) c.remove();
+        document.querySelectorAll('.pet-walker').forEach(w => { w.style.visibility = ''; });
+    }
+    function danceSay(k, text) { const d = $('dance-' + k), b = d && d.querySelector('.pet-bubble'); if (!b) return false; b.textContent = text; b.classList.remove('hidden'); clearTimeout(d._t); d._t = setTimeout(() => b.classList.add('hidden'), 3800); return true; }
 
     const PARTY_LINES = { murloc: ['MRGL MRGL MRGL (dancing)', 'mrglglgl! 🕺', '*murloc shuffle*'], accountant: ['I bill for dancing too.', 'This is NOT in the budget.', '*reluctant two-step*'],
         chicken: ['BAWK BAWK BAWK (in rhythm)', '*does the chicken dance*', 'bok bok 🕺'], whelp: ['*hic* 🔥 *hic* 🔥 (on beat)', 'RAWR 🎶', '*breathes a little fire on the dance floor*'],
+        volley: ['*bobs to the beat*', 'I HAVE NOT DANCED SINCE THE ISLAND', 'the handprint is doing the robot'],
         clippy: ["It looks like you're trying to dance. Would you like help?", '*paperclip worm*', 'I have been waiting 31 years for this. My joints have not.'] };
+    const PARTY_VEH_LINES = ['🚑 Biblehumping: Is this a party or a mass casualty event? Asking for work.', '🚓 ChAoTiC: Noise complaint. I am the noise complaint.', '🚑 Biblehumping: I am on call. This is how I am on call.',
+        '🚓 ChAoTiC: Lights are ON. Siren is OFF. I am a professional.', '🚓 ChAoTiC: Everyone show me your dance license.', '🚑 Biblehumping: Do the worm, I dare you. I have a stretcher.'];
     function partyPets() {
-        Object.keys(PARTY_LINES).filter(k => pets[k]).forEach((k, i) => setTimeout(() => { if (document.body.classList.contains('party-on')) petSay(k, pick(PARTY_LINES[k])); }, 600 + i * 900));
+        Object.keys(PARTY_LINES).filter(k => pets[k]).forEach((k, i) => setTimeout(() => { if (document.body.classList.contains('party-on')) { const t = pick(PARTY_LINES[k]); if (!danceSay(k, t)) petSay(k, t); } }, 600 + i * 900));
+        setTimeout(() => { if (document.body.classList.contains('party-on')) danceSay(Math.random() < 0.5 ? 'amb' : 'cop', pick(PARTY_VEH_LINES)); }, 2400);
     }
     setInterval(() => { if (document.body.classList.contains('party-on') && !document.hidden) partyPets(); }, 9000);
 
@@ -10446,7 +10628,7 @@
         if (s.type === 'AOTC' && fair) unlock('aotclegit');   // only a natural landing counts
         if (s.type === 'LOWER_DPS') uwuKeyboardCheck();
         if (s.type === 'BIKE_SLICE') afterModal(bikeCop);
-        if (s.type === 'OSHA' && Math.random() < 0.6) afterModal(() => (Math.random() < 0.5 ? oshaRocket : oshaTrip)());
+        if (s.type === 'OSHA' && Math.random() < 0.75) afterModal(oshaEvent);
         if (s.type === 'KROM' && Math.random() < 0.25) setTimeout(() => { if (window.showAdById) window.showAdById('aotc-carry'); }, 6000);
         // set perks that pay out on landings
         let bonus = 0;
