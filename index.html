@@ -820,7 +820,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="conspiracy.html" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:52 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:53 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -7577,6 +7577,8 @@
     }
     // ---------- 🐸 the murloc attacks the yacht now and then; 🐉 the whelp chases the falling holiday stuff ----------
     const onView = (r) => r && r.width > 0 && r.bottom > 60 && r.top < innerHeight - 20 && r.right > 0 && r.left < innerWidth;
+    const AUDIO_YACHT_HORN = "media/audio_yacht_horn.mp3?v=381604f6";
+    function yachtHorn() { if (soundOn()) playClip('yachthorn', AUDIO_YACHT_HORN); }   // the yacht in distress: iceberg, rocket, murloc raid
     function murlocRaid() {
         const w = $('pet-murloc'), house = $('houseEmoji'); if (!w || !house || houseLevel !== HOUSE_LEVELS.length - 1 || $('timeshareHouse').classList.contains('hidden')) return false;
         const r = house.getBoundingClientRect(); if (!onView(r)) return false;
@@ -7589,6 +7591,7 @@
             if (f) f.style.transform = 'scaleX(-1)';   // face the yacht
             petSay('murloc', pick(['MRGLGLGLGL!!! (attacking the yacht)', 'Mrgl! (this boat is MINE)', 'MRRRGL! (stab stab stab)', 'Aaaaaughibbrgubugbugrguburgle! (boarding party)']));
             house.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-4deg)' }, { transform: 'rotate(3deg)' }, { transform: 'rotate(-2deg)' }, { transform: 'rotate(0)' }], { duration: 500, iterations: 4 });
+            setTimeout(yachtHorn, 700);
             chatBurst(['THE MURLOC IS ATTACKING THE YACHT', 'mrglglgl', 'not the yacht', 'murloc raid', 'someone call the coast guard', 'gallywix is going to be so mad'], 4, 2500);
             if (Math.random() < 0.4) setTimeout(() => sqPost('yacht', pick(['reminder: please stop letting your murloc attack the yacht', 'the murloc poked a hole in the hull. Gary is now outside the yacht', 'murloc boarding attempt #47 repelled. barely'])), 3000);
         }, 1150);
@@ -8268,7 +8271,7 @@
         floatBubble("🛥️ Lookout: ICEBERG, RIGHT AHEAD!", r.left + r.width / 2, r.top - 10, 2600);
         requestAnimationFrame(() => requestAnimationFrame(() => { ice.style.transform = `translateX(${Math.round(r.right - 26)}px)`; }));
         setTimeout(() => {   // CRUNCH
-            playVehicleCrash();
+            playVehicleCrash(); setTimeout(yachtHorn, 900);
             house.style.transition = 'transform 1.8s ease-in'; house.style.transformOrigin = '50% 100%'; house.style.transform = 'rotate(-14deg) translateY(14px)';
             funEvent("🧊 GALLYWIX'S YACHT HIT AN ICEBERG 🧊", 4000);
             chatBurst(['ICEBERG', 'IN THE DESERT??', 'the yacht is sinking', 'women and goblins first', 'not the swordfish', 'Gary is free', 'this ship is unsinkable they said'], 6, 3000);
@@ -8983,7 +8986,7 @@
             chatBurst(toWheel ? ['uh oh', 'IT IS HEADING FOR THE WHEEL', 'NOT THE WHEEL', 'who aimed this'] : ['wrong way', 'THAT IS NOT THE SHACK', 'NOT THE YACHT', 'gps recalculating'], 3, 1200);
         }, 1800);
         setTimeout(() => {
-            clearInterval(smoke); r.remove(); playRocketBoom(3);
+            clearInterval(smoke); r.remove(); playRocketBoom(3); setTimeout(yachtHorn, 1400);
             const boom = boomEl();
             boom.style.cssText = `position:fixed;z-index:80;left:${tx}px;top:${ty}px;font-size:34px;pointer-events:none;transform:translate(-50%,-50%) scale(.4);transition:transform .35s ease-out,opacity .8s .8s`;
             document.body.appendChild(boom); requestAnimationFrame(() => { boom.style.transform = `translate(-50%,-50%) scale(${toWheel ? 6 : 3.6})`; });
@@ -9440,7 +9443,8 @@
             ['🔥', 'Real fire crackle when things burn, and casino tokens clink out of the machine when you get one.'],
             ['🚁', 'The M*A*S*H chopper actually takes off now.'],
             ['🤡', 'The Clown Honks spin sound uses real honks now. The 8/11 door chimes when you walk in.'],
-            ['🕹️', 'The claw machine has a real motor now: moving, dropping, grabbing, and the prize clunking down the chute.']
+            ['🕹️', 'The claw machine has a real motor now: moving, dropping, grabbing, and the prize clunking down the chute.'],
+            ['📯', 'The yacht blows its distress horn when the iceberg, a rocket or the murloc hits it.']
         ]
     };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
