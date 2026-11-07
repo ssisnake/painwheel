@@ -9421,7 +9421,7 @@
             ['🛸', 'The UFO sounds like a UFO now, tractor beam and all. Vince\'s brick phone has a real 80s ring.'],
             ['🔥', 'Real fire crackle when things burn, and casino tokens clink out of the machine when you get one.'],
             ['🚁', 'The M*A*S*H chopper actually takes off now.'],
-            ['🤡', 'The Clown Honks spin sound uses real honks now.']
+            ['🤡', 'The Clown Honks spin sound uses real honks now. The 8/11 door chimes when you walk in.']
         ]
     };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
@@ -10692,7 +10692,9 @@
     const S811_SPILL = ['Clean up on aisle 8. Your gold is gone. So is your Slurpee.', 'Dropped it. The 8/11 has a no-refund policy. And no floor mop.', 'Kevin bumped you. Kevin says he did not bump you.', 'It hit the floor before the lid did. Gravity: 1, you: 0.'];
     let s811Busy = false;
     function s811Say(t, ms) { const d = $('s811Say'); d.textContent = t; d.classList.remove('hidden'); clearTimeout(s811Say.t); s811Say.t = setTimeout(() => d.classList.add('hidden'), ms || 3200); }
+    const AUDIO_DOOR_CHIME = "media/audio_door_chime.mp3?v=34de5993";
     function open811() {
+        if (soundOn()) playClip('doorchime', AUDIO_DOOR_CHIME);   // ding-dong, welcome to the 8/11
         const m = $('store811'); $('s811Scene').style.background = `url(${PHOTO_STORE811}) 0 0 / 100% 100% no-repeat`;
         $('s811Price').textContent = `Every Slurpee costs ${fmt(priceOf(PCT.slurpee))} gold (1% of what you have). Pocket change.`;
         $('s811Cup').classList.add('hidden'); m.classList.remove('hidden'); m.classList.add('flex');
