@@ -820,7 +820,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="conspiracy.html" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:07 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:12 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -9525,9 +9525,9 @@
             tip.innerHTML = '<span>🎨 Bought a theme? Switch themes any time in ⚙️ Settings → Theme.</span>';
             const go = document.createElement('button'); go.className = 'px-3 py-1 rounded bg-amber-600 hover:bg-amber-500 text-black text-xs font-black cursor-pointer'; go.textContent = 'Open Settings';
             go.addEventListener('click', () => { closeShop(); $('settingsBtn').click(); }); tip.appendChild(go); add(tip);
-            add(shopHead('Joke themes · 2,500,000g'));
+            add(shopHead('Joke themes · 15% of your gold'));
             THEMES.filter(t => t.group === 'joke').forEach(t => add(themeRow(t)));
-            add(shopHead('Class themes · 1,000,000g'));
+            add(shopHead('Class themes · 15% of your gold'));
             THEMES.filter(t => t.group === 'class').forEach(t => add(themeRow(t)));
             const n = document.createElement('div'); n.className = 'text-[11px] text-slate-500'; n.textContent = 'Owned themes show up in ⚙️ Settings → Theme. Holiday themes still come for free.'; add(n);
         } else if (shopTab === 'cosmetics') {
@@ -9818,8 +9818,16 @@
             AIPAC_TIERS.forEach(x => { const d = document.createElement('div'); d.className = 'text-xs ' + (aipacTotal >= x[0] ? 'text-emerald-300 font-bold' : 'text-slate-400'); d.textContent = `${aipacTotal >= x[0] ? '✓' : '○'} ${x[1]}: ${fmt(x[0])}`; add(d); });
         }
     }
+    const THEME_SPR = () => ({ holyret: PHOTO_CLS_PALADIN, allkevin: PHOTO_PET_KEVJR, casino: PHOTO_COIN_1, barrens: PHOTO_TUMBLEWEED, discordleak: PHOTO_FX_FIRE,
+        clowncar: COPCAR_SPRITE, retvision: PHOTO_H_CLS_PALADIN, eightbit: PHOTO_CLAW_CAB });
+    function themeIcon(t) {   // the theme's own sprite: class themes use the class sigils
+        const frame = { discordleak: [4, .75], clowncar: [8, 1.5] }[t.id];   // sprite sheets: show just the first frame
+        const src = t.id.startsWith('class-') ? CLS_ICO[t.id.slice(6)] : THEME_SPR()[t.id];
+        if (src && frame) return `<span style="display:inline-block;vertical-align:middle;width:${Math.round(28 * frame[1])}px;height:28px;background:url(${src}) 0 0 / ${frame[0] * 100}% 100% no-repeat;image-rendering:pixelated"></span>`;
+        return src ? sprImg(src, 28) : (t.badge[0].trim() || '🎨');
+    }
     function themeRow(t) {
-        return ownRow(t.badge[0].trim() || '🎨', t.name, t.tagline, t.cost, ownedThemes[t.id], themeChoice === t.id,
+        return ownRow(themeIcon(t), t.name, t.tagline, t.cost, ownedThemes[t.id], themeChoice === t.id,
             () => { if (!spend(t.cost, t.name)) return; ownedThemes[t.id] = true; store.set('painWheelOwnedThemes', ownedThemes); unlock('drip'); rebuildThemePicker(); equipTheme(t.id); },
             () => equipTheme(t.id));
     }
