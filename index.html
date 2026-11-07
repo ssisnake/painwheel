@@ -582,6 +582,7 @@
         .loot-card .row { display: flex; justify-content: space-between; } .loot-card .ic { float: right; height: 52px; width: auto; image-rendering: pixelated; margin: -2px 0 4px 8px; border: 2px solid #b048f8; border-radius: 4px; background: #111; }
         body.ghost-town .pet-walker, body.ghost-town #toyBox, body.ghost-town #shackSpot, body.ghost-town #nickFinger, body.ghost-town #squawkWin, body.ghost-town #sqFab, body.ghost-town #timeshareHouse { visibility: hidden !important; }
         body.ghost-town main { filter: sepia(.35) saturate(.7); }
+        @keyframes spinnyRoll { to { transform: rotate(360deg); } }
         .dance-line { position: fixed; z-index: 63; left: 50%; bottom: 10px; transform: translateX(-50%); transform-origin: 50% 100%; display: flex; align-items: flex-end; gap: 22px; pointer-events: none; }
         .dance-slot { position: relative; }
         .dance-slot > :not(.pet-bubble) { animation: petDance .45s ease-in-out infinite alternate; animation-delay: inherit; }
@@ -786,7 +787,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="conspiracy.html" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 6, 11:15 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 12:26 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -919,7 +920,7 @@
             </div>
         </div>
     </div>
-    <div id="retVisionFx" aria-hidden="true" style="display:none;position:fixed;inset:0;z-index:56;pointer-events:none;backdrop-filter:grayscale(.9) blur(.6px) contrast(.9);-webkit-backdrop-filter:grayscale(.9) blur(.6px) contrast(.9)"></div>
+    <div id="retVisionFx" aria-hidden="true" style="display:none;position:fixed;inset:0;z-index:56;pointer-events:none;backdrop-filter:grayscale(.35) contrast(1.05);-webkit-backdrop-filter:grayscale(.35) contrast(1.05);box-shadow:inset 0 0 160px 40px rgba(0,0,0,.55)"></div>
     <div id="partyLights" aria-hidden="true"><div class="beam b1"></div><div class="beam b2"></div><div class="beam b3"></div><div class="beam b4"></div><div class="ball"><i class="chain"></i><img id="discoImg" alt=""></div></div>
     <div id="shackSpot" style="position:fixed;z-index:61;left:16px;bottom:12px"></div>
     <div id="rightStack" style="position:fixed;z-index:61;right:16px;bottom:12px;display:flex;flex-direction:column;align-items:flex-end;gap:8px;max-width:calc(100vw - 32px);pointer-events:none">
@@ -1522,6 +1523,10 @@
     const PHOTO_FAMILY_50S = "media/photo_family_50s.jpg?v=14e49b4c";
     const PHOTO_DYLAN_ROAD = "media/photo_dylan_road.jpg?v=ec785aa5";
     const PHOTO_DYLAN_DRONES = "media/photo_dylan_drones.jpg?v=7da22f8d";
+    const PHOTO_PET_SPINNY = "media/photo_pet_spinny.png?v=3792bf8d";
+    const PHOTO_PET_GERALD = "media/photo_pet_gerald.png?v=3d65edb9";
+    const PHOTO_PET_NEEDLE = "media/photo_pet_needle.png?v=a6485c9b";
+    const PHOTO_PET_KEVJR = "media/photo_pet_kevjr.png?v=91e218a5";
     const PHOTO_TUMBLEWEED = "media/photo_tumbleweed.png?v=ba8212ac";
     const PHOTO_OSHA = "media/photo_osha.jpg?v=69fa9bf1";
     const PHOTO_DISCO = "media/photo_disco.png?v=97e27dbb";
@@ -4554,7 +4559,9 @@
         { id: 'rui',        name: 'Raiding Under the Influence', desc: 'Get pulled over by ChAoTiC after one too many road beers.', secret: true },
         { id: 'queue',      name: 'Position 1',               desc: 'Sit through the entire fake login queue after a disconnect.', secret: true },
         { id: 'wheelception', name: 'The Wheel Inside The Wheel', desc: "Sit down at the lonely gaming PC in the yacht's VIP room and spin the wheel inside The Wheel.", secret: true },
-        { id: 'clawwin', name: 'Claw & Order', desc: "Rescue Volley McBallface from the claw machine on Little St. Jeff's Prize Island." },
+        { id: 'clawall', name: 'Emptied the Island', desc: 'Win every prize out of the claw machine. Nobody gets what they came for. Except you.' },
+        { id: 'foreveralone', name: 'Forever Alone', desc: 'Stay in the Forever ghost town for 3 minutes. Just you, Clippy and the tumbleweeds.' },
+        { id: 'clawwin', name: 'Claw & Order', desc: "Win a prize from the claw machine on Little St. Jeff's Prize Island." },
         { id: 'wheelception5', name: 'Wheelception', desc: "Go 5 wheels deep on the WHEEL-2600 in the yacht's VIP room. We have to go deeper.", secret: true, secretName: true },
         { id: 'purpleheart', name: 'Purple Heart',            desc: 'Wounded in the line of duty: you survived the Fish Incident. (Land on God_Help_Us.)' },
         { id: 'cluck',      name: 'CLUCK!',                   desc: 'Complete the Westfall chicken\'s quest.' },
@@ -4570,6 +4577,7 @@
         if (achieved[id]) return;
         const a = ACHIEVEMENTS.find(x => x.id === id); if (!a) return;
         achieved[id] = new Date().toISOString();
+        setTimeout(() => { try { giveTokens(1, false, '(achievement bonus. The casino loves a winner)'); } catch (e) {} }, 2500);
         store.set('painWheelAchievements', achieved);
         if (!['first', 'kevind', 'spins10'].includes(id)) achPosts.push({ n: a.name, d: a.desc });   // announced in Discord with the next spin
         achQueue.push(a); if (!achShowing) nextAchToast();
@@ -6458,7 +6466,7 @@
     };
     const chatLog = $('chatLog');
     function chat(msg, who) {
-        if (!chatLog || document.body.classList.contains('ghost-town')) return;
+        if (!chatLog || document.body.classList.contains('ghost-town')) return;   // everyone's in Forever
         const n = who ? CHAT_NAMES.find(x => x[0] === who) || [who, '#e2e8f0'] : pick(CHAT_NAMES);
         if (Date.now() < (window.__murlocUntil || 0)) msg = pick(['Mrglglgl!', 'mrgl mrgl', 'MRGLGLGLGL', 'Aaaaaughibbrgubugbugrguburgle!', 'mrrrgl?', 'blub blub']);
         if (!who && Math.random() < 0.22 && !/\p{Extended_Pictographic}/u.test(msg)) msg += ' ' + pick(CHAT_EMOJI);   // chat loves emojis
@@ -6563,7 +6571,7 @@
         setTimeout(chatIdle, 5000 + Math.random() * 8000);
     })();
     let viewers = 1337;
-    setInterval(() => { if (document.hidden) return; viewers = Math.max(69, Math.round(viewers + (Math.random() - 0.45) * 40)); const v = $('chatViewers'); if (v) v.textContent = '🔴 ' + viewers.toLocaleString() + ' viewers'; }, 5000);
+    setInterval(() => { if (document.hidden || document.body.classList.contains('ghost-town')) return; viewers = Math.max(69, Math.round(viewers + (Math.random() - 0.45) * 40)); const v = $('chatViewers'); if (v) v.textContent = '🔴 ' + viewers.toLocaleString() + ' viewers'; }, 5000);
 
     // ---------- random events ----------
     function funEvent(text, ms) {
@@ -6975,7 +6983,7 @@
     // 🎰 Chief Kick a Bitch casino tokens: the claw machine's currency (gold is worth nothing to people at 1e50)
     let tokens = store.get('painWheelTokens', 0);
     const tokenWord = (n) => `${n} casino token${n === 1 ? '' : 's'}`;
-    function giveTokens(n, intro) {
+    function giveTokens(n, intro, why) {
         tokens += n; store.set('painWheelTokens', tokens);
         if (intro && !store.get('painWheelTokenIntro', false)) {
             store.set('painWheelTokenIntro', true);
@@ -6987,13 +6995,13 @@
                 <div style="margin-top:10px;font-size:17px;line-height:1.45;color:#fde68a">The claw machine at Little St. Jeff's Prize Island takes these now (Shop → Pets). <b>1 token = 1 play.</b> Land on the casino slice for more.</div>
                 <button style="margin-top:14px;padding:10px 30px;border-radius:10px;background:#facc15;color:#000;font-weight:900;font-size:18px;border:none;cursor:pointer">OK</button></div>`;
             document.body.appendChild(o); o.querySelector('button').onclick = () => o.remove();
-        } else moveToast(`🎰 +${tokenWord(n)} from Chief Kick a Bitch's Casino. You have ${tokens}. (Claw machine: Shop → Pets)`);
+        } else moveToast(`🎰 +${tokenWord(n)} ${why || "from Chief Kick a Bitch's Casino"}. You have ${tokens}. (Claw machine: Shop → Pets)`);
     }
     const CLAW_SLOGANS = ['THE CLAW OF DISAPPOINTMENT', 'Prize list sealed by court order.', 'Cameras were down that day. Totally normal.', 'TERMINAL CLAW MACHINE: your odds are worse than your raid\'s survival rate.',
         'The guard fell asleep. The claw did not.', 'Flight logs available upon request. Request denied.', 'Grab your dreams. Watch us drop them.', 'Where dreams go to die and idiots pay admission.'];
     function openClaw() {
         if ($('clawOv')) return;
-        const prizeOn = !pets.volley, ov = document.createElement('div'); ov.id = 'clawOv';
+        let prize0 = CLAW_PRIZES.find(c => !pets[c.k]); const prizeOn = !!prize0, ov = document.createElement('div'); ov.id = 'clawOv';
         ov.style.cssText = 'position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;padding:12px;background:rgba(2,6,23,.82);overflow:auto';
         ov.innerHTML = `<div style="position:relative;width:min(460px,100%,calc((100vh - 250px) * .65));text-align:center">
             <button data-x class="panel-x" style="position:absolute;right:-6px;top:-6px;z-index:5;width:40px;height:40px;border-radius:50%;background:#1e293b;color:#fff;font-size:22px;border:2px solid #64748b;cursor:pointer">✕</button>
@@ -7001,15 +7009,16 @@
               <div data-win style="position:absolute;left:10.5%;top:25%;width:79%;height:35.5%;overflow:hidden">
                 <div data-rope style="position:absolute;top:0;left:0;width:3px;height:6%;background:#57534e;transform:translateX(-50%)"></div>
                 <img data-claw src="${PHOTO_CLAW}" alt="" style="position:absolute;top:2%;left:0;width:19%;transform:translateX(-50%);transition:top 1.1s ease-in-out">
-                <img data-prize src="${PHOTO_VOLLEY}" alt="Volley McBallface" style="position:absolute;bottom:4%;left:0;width:15%;transform:translateX(-50%);transition:bottom 1.1s ease-in-out;${prizeOn ? '' : 'display:none'}">
-                <div data-sold style="position:absolute;inset:0;display:${prizeOn ? 'none' : 'flex'};align-items:center;justify-content:center;padding:10px;color:#fde68a;font:900 15px/1.3 ui-monospace,monospace;text-shadow:0 2px 0 #000">SOLD OUT<br>Volley McBallface was the only prize.<br>The rest are "missing."</div>
+                <img data-prize src="${prize0 ? prize0.img : PHOTO_VOLLEY}" alt="" style="position:absolute;bottom:4%;left:0;width:15%;image-rendering:pixelated;transform:translateX(-50%);transition:bottom 1.1s ease-in-out;${prizeOn ? '' : 'display:none'}">
+                <div data-sold style="position:absolute;inset:0;display:${prizeOn ? 'none' : 'flex'};align-items:center;justify-content:center;padding:10px;color:#fde68a;font:900 15px/1.3 ui-monospace,monospace;text-shadow:0 2px 0 #000">SOLD OUT<br>You won every prize.<br>The claw is empty. Like your token jar.<br>(More prizes coming. Probably.)</div>
               </div>
             </div>
             <div data-slogan style="margin-top:8px;color:#fde68a;font:800 16px/1.3 system-ui,sans-serif;min-height:42px"></div>
-            <div data-msg style="color:#e2e8f0;font:700 17px/1.35 system-ui,sans-serif;min-height:48px">${prizeOn ? `1 casino token a play. You have ${tokens}. Move the claw, then DROP.` : 'Nothing left to win. You can still lose tokens though.'}</div>
-            <div style="display:flex;gap:10px;justify-content:center;margin-top:6px">
+            <div data-msg style="color:#e2e8f0;font:700 17px/1.35 system-ui,sans-serif;min-height:48px">${prizeOn ? `1 casino token a play. You have ${tokens}. Move the claw, then DROP.` : 'Nothing left to win. You can still lose tokens though.'}<br><span style="color:#94a3b8;font-size:14px">Prize ${prizeOn ? CLAW_PRIZES.indexOf(prize0) + 1 : CLAW_PRIZES.length} of ${CLAW_PRIZES.length}</span></div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:6px">
+              <button data-buy title="The cashier cage (2% of your gold)" style="white-space:nowrap;font-size:15px;font-weight:800;padding:10px 12px;border-radius:10px;background:#713f12;color:#fde68a;border:none;cursor:pointer">🎰 Buy token</button>
               <button data-l style="font-size:22px;padding:10px 20px;border-radius:10px;background:#334155;color:#fff;border:none;cursor:pointer">◀</button>
-              <button data-d style="font-size:20px;font-weight:900;padding:10px 26px;border-radius:10px;background:#b91c1c;color:#fff;border:none;cursor:pointer">DROP (1 🎰)</button>
+              <button data-d style="white-space:nowrap;font-size:20px;font-weight:900;padding:10px 18px;border-radius:10px;background:#b91c1c;color:#fff;border:none;cursor:pointer">DROP (1 🎰)</button>
               <button data-r style="font-size:22px;padding:10px 20px;border-radius:10px;background:#334155;color:#fff;border:none;cursor:pointer">▶</button>
             </div>
             <div style="margin-top:8px;color:#64748b;font-size:12px">THE WHEEL™ is not responsible for missing prizes, missing persons, or anything found during a federal investigation. © Exxon-Hawkeyes Wheel Division · All Rights Denied · No Refunds</div>
@@ -7030,6 +7039,11 @@
         let hold; const holdMove = (d) => { move(d); hold = setInterval(() => move(d), 90); };
         [['l', -3], ['r', 3]].forEach(([b, d]) => { const el = q(b); el.onpointerdown = () => holdMove(d); el.onpointerup = el.onpointerleave = () => clearInterval(hold); });
         q('d').onclick = drop;
+        q('buy').onclick = () => {   // the cashier cage: a token costs 2% of whatever you have (min 2,500g), so it stings at any wealth
+            const c = Math.max(2500, Math.round(gold * 0.02));
+            if (!spend(c, 'a casino token')) { msg.textContent = `The cashier wants ${fmt(c)}. You do not have ${fmt(c)}.`; return; }
+            tokens++; store.set('painWheelTokens', tokens); msg.textContent = `🎰 Bought 1 token for ${fmt(c)} (2% of your gold). You have ${tokens}. The cashier bit it to check.`;
+        };
         function drop() {
             if (busy) return;
             if (tokens < 1) { msg.textContent = "No casino tokens. Land on Chief Kick a Bitch's Casino Tokens to get some. Gold is no good here."; return; }
@@ -7044,15 +7058,22 @@
                 claw.style.top = '2%'; rope.style.height = '6%';
                 setTimeout(() => {
                     if (win) {   // straight to the chute
-                        msg.textContent = '🏐 YOU WON VOLLEY McBALLFACE. He is yours now. He does not explain the handprint.';
+                        const P = prize0; msg.textContent = P.won;
                         prize.style.transition = 'left .9s ease-in-out, bottom .9s ease-in'; prize.style.left = '4%'; setTimeout(() => { prize.style.bottom = '-40%'; }, 900);
-                        pets.volley = true; store.set('painWheelPets', pets); renderPets(); unlock('clawwin');
-                        funEvent('🏐 VOLLEY McBALLFACE HAS BEEN RESCUED FROM THE CLAW', 4200);
-                        chatBurst(['HE WON THE CLAW', 'VOLLEY McBALLFACE', 'WILSONNNN', 'the claw actually worked??', 'rigged (in a good way)', 'that ball has seen things'], 6, 2500);
-                        setTimeout(() => { petSay('volley', 'IT IS SO NICE TO BE OUT OF THE CLAW'); showVolleyHome(); }, 2600);
-                        setTimeout(() => { q('sold').style.display = 'flex'; }, 2200);
+                        pets[P.k] = true; store.set('painWheelPets', pets); renderPets(); unlock('clawwin');
+                        if (CLAW_PRIZES.every(c => pets[c.k])) unlock('clawall');
+                        funEvent(P.fun, 4200);
+                        chatBurst(['HE WON THE CLAW', 'the claw actually worked??', 'rigged (in a good way)', P.k === 'volley' ? 'WILSONNNN' : P.k === 'kevjr' ? 'oh no more kevin' : P.k === 'gerald' ? 'GERALD' : P.k === 'needle' ? 'the needle is LOOSE' : 'it is still spinning'], 4, 2500);
+                        setTimeout(() => { petSay(P.k, P.hi); if (P.k === 'volley') showVolleyHome(); }, 2600);
+                        setTimeout(() => {   // load the next prize into the machine (or sell out)
+                            prize0 = CLAW_PRIZES.find(c => !pets[c.k]);
+                            if (!prize0) { q('sold').style.display = 'flex'; return; }
+                            prize.style.transition = 'none'; prize.src = prize0.img; px = 20 + Math.random() * 60; prize.style.left = px + '%'; prize.style.bottom = '4%';
+                            msg.textContent = 'A new prize drops into the machine. It looks nervous.';
+                        }, 2600);
                     } else if (near) {   // the classic: grabs it, then lets go at the top
-                        msg.textContent = pick(['So close. The claw let go. The claw always lets go.', 'It had him. It CHOSE to let go.', 'The claw grip is set to 3%. By design.', 'He slipped. Volley McBallface remains a prisoner of the island.']);
+                        msg.textContent = pick(['So close. The claw let go. The claw always lets go.', 'It had him. It CHOSE to let go.', 'The claw grip is set to 3%. By design.', 'It slipped. The prize remains a prisoner of the island.']);
+                        if (Math.random() < 0.2) setTimeout(() => { tokens++; store.set('painWheelTokens', tokens); msg.textContent += ' ...CLINK. Coin return! You got your token back.'; }, 900);
                         prize.style.transition = 'bottom .6s cubic-bezier(.5,0,1,.5)'; px = Math.max(12, Math.min(88, x + (Math.random() - 0.5) * 30)); prize.style.left = px + '%'; prize.style.bottom = '4%';
                         chat(pick(['NOOOO', 'the claw is rigged', 'every single claw machine ever', 'so close KEKW']));
                     } else if (Math.random() < 0.04) {   // the prize chute clunks... it's the finger
@@ -7321,10 +7342,25 @@
     let pets = store.get('painWheelPets', {});
     // Each pet has a home turf: the murloc paddles around your house/boat, the accountant hangs by your gold,
     // the chicken roams the whole page (never on top of a button), everyone else strolls the bottom of the screen.
-    const PET_HOME = { murloc: 'house', accountant: 'gold', chicken: 'roam', volley: 'house' };
+    const PET_HOME = { murloc: 'house', accountant: 'gold', chicken: 'roam', volley: 'house', needle: 'roam' };
     PETS.volley = { e: '🏐', name: 'Volley McBallface', cost: 0, claw: true, desc: 'Won from the claw machine. Bobs next to the yacht. Has a bloody handprint. Does not explain it.',
         say: (t) => t === 'KEVIN' ? pick(['KEVIN. I REMEMBER YOU FROM THE ISLAND.', 'not kevin again. i will float away. i swear it.']) : pick(['I HAVE BEEN IN THE WATER FOR FOUR YEARS', 'the handprint is ketchup. probably.',
             'WILSON? never heard of him.', '*bobs menacingly*', 'i was a prize. now i am free.', 'do not ask about the island.', 'IT IS SO NICE TO BE OUT OF THE CLAW', 'i can see the bottom of the ocean. it can see me.', 'blub. (that was not me. that was the murloc.)']) };
+    // 🎡 wheel-themed claw prizes (only from the claw machine, one at a time, in this order)
+    PETS.spinny = { e: '🎡', img: PHOTO_PET_SPINNY, w: 34, name: "Lil' Spinny", cost: 0, claw: true, desc: 'A tiny wheel with legs. It has never once landed on anything. It just spins. Constantly. Like you.',
+        say: (t) => t === 'KEVIN' ? pick(['I LANDED ON KEVIN TOO. WE ALL DID.', 'kevin again. i am made of kevin. we all are.']) : pick(['wheeeee', 'i am spinning. i have always been spinning.', 'do NOT hold me to charge', 'i landed on myself. it was Kevin.', 'is it my turn to be spun', 'dizzy. always dizzy.', 'I AM THE WHEEL NOW']) };
+    PETS.gerald = { e: '🐹', img: PHOTO_PET_GERALD, w: 40, name: 'Gerald', cost: 0, claw: true, desc: 'A hamster in a hamster wheel. Gerald claims he powers The Wheel. Nobody has checked. Nobody wants to.',
+        say: (t) => t === 'KEVIN' ? pick(['I RAN FOUR MILES FOR THAT? KEVIN?', 'i am going on strike. kevin again.']) : pick(['every spin is me. you are welcome.', 'running. running. why am i running', 'i have not stopped since 2004', 'union break in 5 minutes', 'my legs are the gold standard', 'squeak (that means "pay me")', 'Gallywix owes me back pay']) };
+    PETS.needle = { e: '📍', img: PHOTO_PET_NEEDLE, w: 26, name: 'The Needle', cost: 0, claw: true, desc: "The wheel's own pointer, on the run. It points at you now. It is judging you. Constantly.",
+        say: (t) => t === 'KEVIN' ? pick(['I POINTED AT KEVIN AGAIN. I AM SO SORRY.', 'do not blame me. i only point. the wheel decides.']) : pick(['*points at you*', '*points at your gold* hm.', 'i have pointed at Kevin 40,000 times', 'i am not rigged. i am VERY rigged.', 'i see what you did there. i am pointing at it.', '*points at the exit*', 'stop looking at me. i am looking at you.']) };
+    PETS.kevjr = { e: '🍕', img: PHOTO_PET_KEVJR, w: 32, name: 'Kevin Jr.', cost: 0, claw: true, desc: 'One single Kevin slice that got loose. He is the smallest Kevin. He is still Kevin.',
+        say: (t) => t === 'KEVIN' ? pick(['DAD?!', 'that is my dad. that is ALL my dads.', 'family reunion!!']) : pick(['i am Kevin (small)', 'can i have some gold. kevin wants some gold.', 'i am 1/150th of a Kevin', 'dad says hi', 'i was on the wheel once. now i am free.', 'which way to the boss? (i am the boss)']) };
+    const CLAW_PRIZES = [
+        { k: 'volley', img: PHOTO_VOLLEY, won: '🏐 YOU WON VOLLEY McBALLFACE. He is yours now. He does not explain the handprint.', fun: '🏐 VOLLEY McBALLFACE HAS BEEN RESCUED FROM THE CLAW', hi: 'IT IS SO NICE TO BE OUT OF THE CLAW' },
+        { k: 'spinny', img: PHOTO_PET_SPINNY, won: "🎡 YOU WON LIL' SPINNY. It has not stopped spinning since you picked it up.", fun: "🎡 LIL' SPINNY ESCAPED THE CLAW (STILL SPINNING)", hi: 'wheeeeee. i am out. wheeeee.' },
+        { k: 'gerald', img: PHOTO_PET_GERALD, won: '🐹 YOU WON GERALD. He says he powers The Wheel. He wants a raise.', fun: '🐹 GERALD IS FREE. WHO IS POWERING THE WHEEL NOW?', hi: 'i am free. who is running the wheel? not me. union rules.' },
+        { k: 'needle', img: PHOTO_PET_NEEDLE, won: '📍 YOU WON THE NEEDLE. It is pointing at you. It will keep doing that.', fun: '📍 THE NEEDLE HAS LEFT THE WHEEL. THE WHEEL IS POINTLESS NOW.', hi: '*points at you* found you.' },
+        { k: 'kevjr', img: PHOTO_PET_KEVJR, won: '🍕 YOU WON KEVIN JR. Congratulations? You have more Kevin now.', fun: '🍕 A KEVIN SLICE ESCAPED. IT IS SMALL. IT IS STILL KEVIN.', hi: 'hi dad. wait you are not dad.' }];
     const PET_LIMIT = 4;   // pets on screen at once (the rest wait in the shop)
     const petShown = (k) => k === 'clippy' || store.get('painWheelPetsShown', {})[k] !== false;   // Clippy can't be hidden (someday: a favor)
     const activePets = () => Object.keys(PETS).filter(k => k !== 'clippy' && pets[k] && petShown(k)).slice(0, PET_LIMIT);   // Clippy doesn't count: he's less a pet, more a punishment
@@ -7332,7 +7368,7 @@
         document.querySelectorAll('.pet-walker').forEach(e => e.remove());
         activePets().filter(k => k !== 'clippy').slice(0, IS_PHONE() ? 2 : 99).forEach(k => {
             const w = document.createElement('div'); w.className = 'pet-walker'; w.id = 'pet-' + k; w._home = PET_HOME[k] || 'strip';
-            w.innerHTML = '<div class="pet-bubble hidden mb-1 px-2 py-1 rounded-lg bg-slate-900/95 border border-slate-600 text-slate-100 text-[11px] font-bold whitespace-nowrap shadow-lg" style="position:absolute;bottom:100%;left:50%;transform:translateX(-50%)"></div><div class="pet-flip" style="transition:transform .25s"><div class="pet-em" style="font-size:38px;line-height:1;animation:houseBob 1.1s ease-in-out infinite alternate">' + (k === 'murloc' ? `<span class="murloc-spr" style="background-image:url(${PHOTO_MURLOC_SHEET})"></span>` : k === 'chicken' ? `<img class="pet-spr chicken-spr" src="${PHOTO_CHICKEN}" alt="🐔">` : k === 'whelp' ? `<img class="pet-spr whelp-spr" src="${PHOTO_WHELP}" alt="🐉">` : k === 'accountant' ? `<img class="pet-spr giz-spr giz-tape" src="${PHOTO_GIZ_TAPE}" alt="🧮">` : k === 'volley' ? `<img class="pet-spr" src="${PHOTO_VOLLEY}" alt="🏐" style="width:40px;height:auto;animation:volleyBob 2.2s ease-in-out infinite">` : PETS[k].e) + '</div></div>';
+            w.innerHTML = '<div class="pet-bubble hidden mb-1 px-2 py-1 rounded-lg bg-slate-900/95 border border-slate-600 text-slate-100 text-[11px] font-bold whitespace-nowrap shadow-lg" style="position:absolute;bottom:100%;left:50%;transform:translateX(-50%)"></div><div class="pet-flip" style="transition:transform .25s"><div class="pet-em" style="font-size:38px;line-height:1;animation:houseBob 1.1s ease-in-out infinite alternate">' + (k === 'murloc' ? `<span class="murloc-spr" style="background-image:url(${PHOTO_MURLOC_SHEET})"></span>` : k === 'chicken' ? `<img class="pet-spr chicken-spr" src="${PHOTO_CHICKEN}" alt="🐔">` : k === 'whelp' ? `<img class="pet-spr whelp-spr" src="${PHOTO_WHELP}" alt="🐉">` : k === 'accountant' ? `<img class="pet-spr giz-spr giz-tape" src="${PHOTO_GIZ_TAPE}" alt="🧮">` : k === 'volley' ? `<img class="pet-spr" src="${PHOTO_VOLLEY}" alt="🏐" style="width:40px;height:auto;animation:volleyBob 2.2s ease-in-out infinite">` : PETS[k].img ? `<img class="pet-spr" src="${PETS[k].img}" alt="${PETS[k].e}" style="width:${PETS[k].w || 36}px;height:auto;${k === 'spinny' ? 'animation:spinnyRoll 1.6s linear infinite' : ''}">` : PETS[k].e) + '</div></div>';
             w.style.cssText = `position:${w._home === 'house' ? 'fixed' : 'absolute'};left:0;top:0;z-index:62;pointer-events:none;will-change:transform`;
             // Gizzlenut rides inside the sticky wheel column so he stays with the gold count; everyone else is planted on the page
             (w._home === 'gold' && $('wheelColumn') ? $('wheelColumn') : document.body).appendChild(w);
@@ -7645,7 +7681,7 @@
         em.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-25deg) translateY(-6px)' }, { transform: 'rotate(95deg) translateY(4px)' }], { duration: 450, easing: 'ease-in', fill: 'forwards' });
         playCrash();
         const sign = document.createElement('div'); sign.textContent = '🚧'; sign.style.cssText = `position:fixed;z-index:77;left:${r.right + 4}px;top:${r.bottom - 46}px;font-size:40px;line-height:1;pointer-events:none`; document.body.appendChild(sign);
-        const ow = { murloc: 'MRGLGL!! (my fin!)', accountant: 'I am billing the floor for this.', chicken: 'BAWK! (worker\'s comp)', whelp: '*sad little smoke puff*', volley: 'i am a ball. how did i trip.' }[k] || 'OW.';
+        const ow = { murloc: 'MRGLGL!! (my fin!)', accountant: 'I am billing the floor for this.', chicken: 'BAWK! (worker\'s comp)', whelp: '*sad little smoke puff*', volley: 'i am a ball. how did i trip.', spinny: 'i rolled. i am a wheel. that is just rolling.', gerald: 'my wheel threw me. betrayal.', needle: 'i fell. i am pointing at the floor now. guilty.', kevjr: 'i fell on my point. kevin sad.' }[k] || 'OW.';
         setTimeout(() => petSay(k, ow), 400);
         setTimeout(() => oshaSay(pick(['Wet floor, no sign. The sign showed up AFTER. Classic.', 'Pet-related slip-and-fall. Third one this week.', 'Floor is rated for zero (0) pets.']), r.left + r.width / 2, r.top - 40), 1300);
         setTimeout(() => { em.animate([{ transform: 'rotate(95deg) translateY(4px)' }, { transform: 'rotate(0)' }], { duration: 500, fill: 'forwards' }).onfinish = () => { em.getAnimations().forEach(a => a.cancel()); }; w._talking = false; }, 4200);
@@ -7745,7 +7781,12 @@
             setTimeout(() => { if (caught) return; caught = true; nickFetch(dir > 0 ? innerWidth - 120 : 120, pick(['It was heading for the chute AGAIN.', 'It crawls to the chute every night. I think it misses the ambulance.', 'Got it. It tried to bite me.']), () => setTimeout(() => back(), 700)); }, 9200);
         }
     }
-    setInterval(() => { if (!document.hidden && !isSpinning && Math.random() < 0.25) fingerChuteDrop(); }, 15 * 60 * 1000);   // now and then, a finger comes down the chute
+    setInterval(() => { if (!document.hidden && !isSpinning && Math.random() < 0.25) fingerChuteDrop(); }, 15 * 60 * 1000);
+    setInterval(() => {   // Gizzlenut checks the couch cushions
+        if (document.hidden || !pets.accountant || !petShown('accountant') || Math.random() > 0.3) return;
+        petSay('accountant', pick(['Found a casino token in the couch. Logging it as income.', 'Casino token. Under the desk. I am keeping 10%. Kidding. Mostly.', 'You dropped a token. I picked it up. That will be a fee.']));
+        setTimeout(() => giveTokens(1, false, '(Gizzlenut found it in the couch)'), 1500);
+    }, 20 * 60 * 1000);   // now and then, a finger comes down the chute
 
     // ---------- 🛡️ Taunting: nobody taunted the add, so it went for Reb's liver ----------
     function tauntFallout() {
@@ -7805,6 +7846,18 @@
             { transform: `translate(${(innerWidth + 240) * 0.75}px,-18px) rotate(780deg)`, offset: 0.75 }, { transform: `translate(${innerWidth + 240}px,0) rotate(1040deg)` }], { duration: dur, easing: 'linear' }).onfinish = () => t.remove();
         tumbleT = setTimeout(rollTumbleweed, 14000 + Math.random() * 14000);
     }
+    let foreverT = 0, foreverAt = 0;
+    const FOREVER_GHOSTS = ['🌵 Reb logged in. Reb logged out. Reb is in Forever.', '🌵 /who returned 0 results.', "🌵 Kevin: is anyone here? (he's been typing this for 4 minutes)", '🌵 Guild MOTD changed to: "brb forever"',
+        '🌵 Biblehumping left the guild message: "eh, see you in 6-8 years"', '🌵 ChAoTiC: "only here to write tickets. nobody to ticket. this is my villain origin story."', "🌵 The Wheel spun by itself. Nobody saw it. It landed on Kevin.",
+        '🌵 Gallywix has listed the yacht on the Forever auction house.', "🌵 A tumbleweed got guild rank. It's an officer now.", '🌵 Queue for Forever: 6,213. Estimated time: also forever.', '🌵 Squawkr has 0 posts in the last hour. Elan is in Forever too.'];
+    const CLIPPY_ALONE = ["It looks like you're alone. Would you like help being alone?", "Just you and me now. Like it was always meant to be.", "I didn't go to Forever. I don't have legs. Or a sub.", "Should I tell them you're still here? I'm not going to.", "We could start our own guild. I'll be the GM."];
+    function foreverTick() {
+        if (!document.body.classList.contains('ghost-town')) return;
+        funEvent(pick(FOREVER_GHOSTS), 3800);
+        if (pets.clippy && Math.random() < 0.5) setTimeout(() => petSay('clippy', pick(CLIPPY_ALONE)), 4500);
+        if (Date.now() - foreverAt > 3 * 60 * 1000) unlock('foreveralone');
+        foreverT = setTimeout(foreverTick, 25000 + Math.random() * 20000);
+    }
     const FOREVER_LINES = ['WoW Forever came out. Everyone left. The wheel spins alone now.', 'The guild has logged off. Forever. (Until the first patch.)', 'Population: you. And Clippy. Clippy never leaves.',
         'Kevin left too. That is the only good news.', 'Reb took the bottles with him.'];
     function toggleForever() {
@@ -7818,7 +7871,14 @@
             funEvent('🌵 ' + pick(FOREVER_LINES), 4500);
             setTimeout(() => { if (pets.clippy) petSay('clippy', "It looks like everyone left. I'm still here. I'm always here."); }, 3000);
             setTimeout(rollTumbleweed, 1200);
-        } else { funEvent('🏃 EVERYONE IS BACK. WoW Forever had a 6 hour queue.', 3500); chatBurst(['we are back', 'queue was 6 hours', 'forever lasted 20 minutes', 'miss me?'], 4, 1500); }
+            foreverAt = Date.now(); clearTimeout(foreverT); foreverT = setTimeout(foreverTick, 15000);
+            const v = $('chatViewers'); if (v) v.textContent = "🔴 1 viewer (it's Clippy)";
+            const sign = document.createElement('div'); sign.id = 'foreverSign';
+            sign.innerHTML = 'GONE TO FOREVER<br><span style="font-size:13px">back in 5 min</span><br><span style="font-size:11px;opacity:.7">(sign dated 2004)</span>';
+            sign.style.cssText = 'position:fixed;z-index:65;left:50%;bottom:120px;transform:translateX(-50%) rotate(-4deg);padding:10px 18px;background:#78350f;color:#fef3c7;border:4px solid #451a03;border-radius:6px;font:900 18px/1.25 ui-monospace,monospace;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.5);pointer-events:none';
+            document.body.appendChild(sign);
+        } else {
+            clearTimeout(foreverT); const sg = $('foreverSign'); if (sg) sg.remove(); funEvent('🏃 EVERYONE IS BACK. WoW Forever had a 6 hour queue.', 3500); chatBurst(['we are back', 'queue was 6 hours', 'forever lasted 20 minutes', 'miss me?'], 4, 1500); }
         $('foreverBtn').blur();
     }
     function floatBubble(text, x, y, ms, below) {   // a goblin speech bubble pinned to a screen point
@@ -9108,38 +9168,23 @@
         ]
     };
     const UPDATE_NOTES = {
-        id: '2026-11-06-day', title: 'The claw, the ball and the retirement home', date: 'November 6, 2026',
-        showAfter: Date.parse('2026-11-07T06:00:00Z'),   // midnight Central
+        id: '2026-11-07-fixed', title: 'The claw, the liver and the ghost town', date: 'November 6-7, 2026',
+        showAfter: Date.parse('2026-11-07T06:00:00Z'),   // re-issued Nov 7 with corrected notes, so it pops up again for everyone
         lines: [
-            ['🕹️', "Claw & Disorder: THE WHEEL™ claw machine at Little St. Jeff's Prize Island (Shop → Pets). 2,500g a play. The claw always lets go. Usually."],
-            ['🏐', 'Volley McBallface, the first claw-machine pet. He bobs next to your yacht and does not explain the handprint.'],
-            ['⚔️', 'Real pixel class sigils next to your name (and a tiny wheel for "I don\'t play WoW"). Reb\'s liver got its own pixel art too.'],
-            ['🩲', 'New slice: Forever Depends. You might, you might not. It just depends.'],
-            ['🖼️', 'New pictures and jokes for Somehow Even Lower DPS (Shady Oaks Retirement Guild), the 1950s Nuclear Family, and Dylan (the deer are safe. So are the drones).'],
-            ['⌨️', 'Lower DPS now gets a visit from Uwutek, Tech Support, to check if your keyboard is plugged in.'],
-            ['🎵', 'The Wrath Remix Waiting Room has its own waiting-room music.'],
-            ['🛥️', 'Bigger pixel yacht, and live closeups when it gets hit by a rocket, boarded by a murloc, or runs aground.'],
-            ['👓', 'Ret Paladin Vision got real horror art: every pet, house, toy, car, coin and class sigil turns cursed while the theme is on.'],
-            ['🐾', 'Pick which pets are out (up to 4) from Shop → Pets. Clippy does not count. Clippy is a consequence.'],
-            ['🛸', 'From the other night: the UFO abducts the chicken (it comes back changed), a police boat shows up after murloc raids, a real wreck sprite for the fender-bender, and pixel HEAT stars.'],
-            ['🫀', "Reb's liver is now a guild-wide boss. Every drink anyone takes hurts it. Buy it water, or take a double and hurt everyone. If it survives the week, everyone who didn't wreck it gets 50,000g."],
-            ['🚀', "OSHA landings can now go wrong: the rocket crashes, or the banker trips on the way out."],
-            ['🚲', "ChAoTiC now investigates who Stole Muh Bike. He has leads. They are bad leads."],
-            ['🚑', "More Biblehumping patrol lines, and sometimes the ambulance shows up rainbow."],
-            ['🩷', "Tsukaar's messages now come with typos and a few pink letters, in honor of his glasses."],
-            ['🎖️', "More Jody calls on Iraqi Freedom, plus Thanksgiving and Veterans Day lines on the seasonal slice."],
-            ['🥐', "Croissant 2: the new cut is in."],
-            ['📌', "Someone pinned a conspiracy board up. It's in Settings, if you want to look."],
-            ['🦺', 'Six new OSHA violations: a slice falls off the wheel, the ambulance or cop car just explodes, a pet trips, a top-bar button falls off (click it to bolt it back on), Clippy pokes his own eye out, and the shack catches fire. The OSHA slice has a proper sign now too.'],
-            ['🪩', "Party mode got real: Gallywix's Disco Ball drops in (with its loot card), and your pets line up to dance with the ambulance and the cop car on the ends."],
-            ['🧰', 'The toy box is an actual box now, with a slot and a label for every toy.'],
-            ['🛡️', "New slices: Taunting (Casimir would never; the untaunted add goes for Reb's liver) and Can't Park There (repair bill included). 185 slices."],
-            ['🎰', "The claw machine takes Chief Kick a Bitch casino tokens now, not gold. Land on the casino slice for 3 (Gambled on a Fart and 7/11 sometimes give one)."],
-            ['🔪', 'Sorry I\'m Busy Skinning is an event now: the SPIN button is busy for 5 seconds while somebody skins the last pack, and you get the leather.'],
-            ['🖐️', "Biblehumping's Finger sometimes flies off the SPIN button or tries to crawl away (click it to catch it). It also turns up in chutes. Nobody knows how."],
-            ['🌵', 'New Forever button: WoW Forever is out and everyone left. Tumbleweeds. Clippy stays. Clippy always stays.'],
-            ['🅿️', "Can't Park There is spreading: ads, guild news, Squawkr and chat."],
-            ['🎨', 'Art cleanup: pick your class from a grid of the real class sigils, the window headers use the new button art, and shop items with pixel art now show it instead of an emoji.']
+            ['🕹️', "Claw & Disorder at Little St. Jeff's Prize Island (Shop → Pets). It takes Chief Kick a Bitch casino tokens, not gold. 5 prizes, one at a time: Volley McBallface, Lil' Spinny, Gerald, The Needle and Kevin Jr."],
+            ['🎰', "Casino tokens: 3 from the casino slice, 1 for your first spin each day, every 25 spins, every achievement, sometimes from Gambled on a Fart, 7/11 and golden cookies, and Gizzlenut finds them in the couch. Or buy one at the cashier cage (2% of your gold)."],
+            ['🫀', "Reb's liver is becoming a guild-wide boss: every drink anyone takes hurts it. Buy it water, or take a double and hurt everyone. If it survives the week, everyone who didn't wreck it gets paid."],
+            ['🛡️', "New slices: Taunting (Casimir would never; the untaunted add goes for Reb's liver), Can't Park There (repair bill included) and Forever Depends. 185 slices."],
+            ['🦺', 'OSHA landings break things now: the rocket crashes, the banker trips, a slice falls off the wheel, a vehicle explodes, a pet trips, a top-bar button falls off (click it to bolt it back on), Clippy pokes his eye out, or the shack catches fire.'],
+            ['🌵', 'New Forever button: WoW Forever is out and everyone left. Tumbleweeds, a sign on the door, and Clippy. Clippy never leaves.'],
+            ['🪩', "Party mode: Gallywix's Disco Ball drops in, and your pets line up to dance with the ambulance and the cop car."],
+            ['🔪', 'Sorry I\'m Busy Skinning: the SPIN button is busy for 5 seconds while somebody skins the last pack. You get the leather.'],
+            ['🖐️', "Biblehumping's Finger sometimes flies off the SPIN button or crawls away (click it to catch it). It also keeps turning up in chutes."],
+            ['🖼️', 'New pictures and jokes for Lower DPS (plus Uwutek checking your keyboard), Nuclear Family, Dylan and OSHA; waiting music for the Wrath Remix; Croissant 2; more Iraqi Freedom and holiday lines; ChAoTiC on Stole Muh Bike; more Biblehumping (sometimes rainbow); Tsukaar\'s pink typos.'],
+            ['🎨', 'Art everywhere: class sigils (pick yours from a grid), new top-bar buttons and window icons, a bigger yacht with closeups, a real toy box, and Ret Vision horror art for almost everything (and a lot less blur, so you can actually see it).'],
+            ['🐾', 'Up to 4 pets out at once (Shop → Pets). Clippy does not count, and Clippy cannot be turned off.'],
+            ['📌', "Someone pinned up a conspiracy board. It's in Settings, if you want to look."],
+            ['🅿️', "Can't Park There is spreading: ads, guild news, Squawkr and chat."]
         ]
     };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
@@ -9463,6 +9508,7 @@
             const PET_ICON = { murloc: `<span style="display:inline-block;width:30px;height:27px;vertical-align:middle;background:url(${PHOTO_MURLOC_SHEET}) 0 0 / 600% 100% no-repeat"></span>`,
                 chicken: `<img src="${PHOTO_CHICKEN}" alt="" style="display:inline-block;height:28px;vertical-align:middle">`, whelp: `<img src="${PHOTO_WHELP}" alt="" style="display:inline-block;height:28px;vertical-align:middle">`,
                 accountant: `<img src="${PHOTO_GIZ_GRIN}" alt="" style="display:inline-block;height:34px;vertical-align:middle">`, volley: `<img src="${PHOTO_VOLLEY}" alt="" style="display:inline-block;height:28px;vertical-align:middle">` };
+            ['spinny', 'gerald', 'needle', 'kevjr'].forEach(k => { PET_ICON[k] = `<img src="${PETS[k].img}" alt="" style="display:inline-block;height:30px;vertical-align:middle;image-rendering:pixelated">`; });
             add(shopRow(`<img src="${PHOTO_CLAW}" alt="" style="display:inline-block;height:30px;vertical-align:middle">`, 'Claw & Disorder', 'THE WHEEL™ claw machine at Little St. Jeff\'s Prize Island. New pets live inside. Nobody gets what they came for. Usually.', `Play: 1 🎰 token (you have ${tokens})`, () => { closeShop(); openClaw(); }));
             { const n = document.createElement('div'); n.className = 'text-sm text-slate-300'; n.textContent = `Up to ${PET_LIMIT} pets can be out at once (${activePets().length}/${PET_LIMIT} now). Clippy doesn't count. Clippy is not a pet. Clippy is a consequence.`; add(n); }
             Object.entries(PETS).forEach(([k, p0]) => {
@@ -9794,6 +9840,8 @@
 
     const PARTY_LINES = { murloc: ['MRGL MRGL MRGL (dancing)', 'mrglglgl! 🕺', '*murloc shuffle*'], accountant: ['I bill for dancing too.', 'This is NOT in the budget.', '*reluctant two-step*'],
         chicken: ['BAWK BAWK BAWK (in rhythm)', '*does the chicken dance*', 'bok bok 🕺'], whelp: ['*hic* 🔥 *hic* 🔥 (on beat)', 'RAWR 🎶', '*breathes a little fire on the dance floor*'],
+        spinny: ['wheeeeeee (dancing is just spinning)', 'i was BORN for this'], gerald: ['this is just running but with music', 'overtime pay for dancing?'],
+        needle: ['*points at the dance floor*', '*points at Clippy* no.'], kevjr: ['kevin dance!!', 'dad would be so proud'],
         volley: ['*bobs to the beat*', 'I HAVE NOT DANCED SINCE THE ISLAND', 'the handprint is doing the robot'],
         clippy: ["It looks like you're trying to dance. Would you like help?", '*paperclip worm*', 'I have been waiting 31 years for this. My joints have not.'] };
     const PARTY_VEH_LINES = ['🚑 Biblehumping: Is this a party or a mass casualty event? Asking for work.', '🚓 ChAoTiC: Noise complaint. I am the noise complaint.', '🚑 Biblehumping: I am on call. This is how I am on call.',
@@ -9856,6 +9904,7 @@
         const gone = setTimeout(() => { c.style.opacity = '0'; setTimeout(() => c.remove(), 700); }, 12000);
         c.addEventListener('click', () => {
             clearTimeout(gone); fxPoofAt(c, 110); c.remove(); unlock('goldcookie');
+            if (!cursed && Math.random() < 0.25) setTimeout(() => giveTokens(1, false, '(there was a casino token baked into the cookie)'), 1800);
             if (cursed) {
                 garage.voodoo = true; store.set('painWheelGarage', garage); renderGarage(); unlock('voodoo'); playOw();
                 funEvent('🕯️ THE COOKIE WAS CURSED. YOU GOT THE KEVIN VOODOO DOLL.', 5000);
@@ -10805,10 +10854,13 @@
         if (s.type === 'LOWER_DPS') uwuKeyboardCheck();
         if (s.type === 'BIKE_SLICE') afterModal(bikeCop);
         if (s.type === 'TAUNTING') afterModal(tauntFallout);
+        if (document.body.classList.contains('ghost-town') && Math.random() < 0.4) afterModal(() => funEvent(pick(['🌵 Nobody saw that.', '🌵 The wheel landed. Nobody clapped.', '🌵 You spun. The echo spun back.', '🌵 Achievement unlocked: nobody cares (not a real achievement)']), 2800));
         if (s.type === 'BUSY_SKINNING') afterModal(skinEvent);
         if (s.type === 'CANT_PARK') afterModal(() => cantParkBill('you wiped the raid parking there'));
         if (s.type === 'CASINO_TOKENS') afterModal(() => giveTokens(3, true));
         if ((s.type === 'FART' && Math.random() < 0.5) || (s.type === 'SEVEN_ELEVEN' && Math.random() < 0.3)) afterModal(() => giveTokens(1));
+        { const today = new Date().toDateString(); if (store.get('painWheelTokenDay', '') !== today) { store.set('painWheelTokenDay', today); afterModal(() => giveTokens(1, false, "(Chief Kick a Bitch's daily comp. He knows you'll be back)")); } }
+        if (allTimeSpins % 25 === 0 && allTimeSpins > 0) afterModal(() => giveTokens(1, false, `(loyalty token: ${allTimeSpins} spins. The casino noticed)`));
         if (s.type === 'OSHA' && Math.random() < 0.75) afterModal(oshaEvent);
         if (s.type === 'KROM' && Math.random() < 0.25) setTimeout(() => { if (window.showAdById) window.showAdById('aotc-carry'); }, 6000);
         // set perks that pay out on landings
