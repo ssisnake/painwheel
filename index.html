@@ -820,7 +820,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="conspiracy.html" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:00 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:07 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -958,7 +958,7 @@
             </div>
         </div>
     </div>
-    <div id="retVisionFx" aria-hidden="true" style="display:none;position:fixed;inset:0;z-index:56;pointer-events:none;backdrop-filter:grayscale(.35) contrast(1.05);-webkit-backdrop-filter:grayscale(.35) contrast(1.05);box-shadow:inset 0 0 160px 40px rgba(0,0,0,.55)"></div>
+    <div id="retVisionFx" aria-hidden="true" style="display:none;position:fixed;inset:0;z-index:56;pointer-events:none;backdrop-filter:grayscale(.09);-webkit-backdrop-filter:grayscale(.09);box-shadow:inset 0 0 120px 10px rgba(0,0,0,.14)"></div>
     <div id="partyLights" aria-hidden="true"><div class="beam b1"></div><div class="beam b2"></div><div class="beam b3"></div><div class="beam b4"></div><div class="ball"><i class="chain"></i><img id="discoImg" alt=""></div></div>
     <div id="shackSpot" style="position:fixed;z-index:61;left:16px;bottom:12px"></div>
     <div id="rightStack" style="position:fixed;z-index:61;right:16px;bottom:12px;display:flex;flex-direction:column;align-items:flex-end;gap:8px;max-width:calc(100vw - 32px);pointer-events:none">
@@ -6250,7 +6250,7 @@
             setTimeout(() => { root.style.transform = ''; setTimeout(() => root.style.transition = '', 950); }, 10000);
         } else if (fx === 'retvision') {
             horrorMode(10000);
-            root.style.transition = 'filter 0.8s'; root.style.filter = 'blur(3px) grayscale(1) contrast(0.8)';
+            root.style.transition = 'filter 0.8s'; root.style.filter = 'blur(0.75px) grayscale(.25) contrast(.95)';
             setTimeout(() => { root.style.filter = ''; setTimeout(() => root.style.transition = '', 850); }, 10000);
         } else if (fx === 'rugpull') {
             const lost = gold; setGold(0);
