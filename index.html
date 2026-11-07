@@ -321,6 +321,7 @@
         @keyframes murWaddle { from { transform: rotate(-6deg) translateY(0); } to { transform: rotate(6deg) translateY(-4px); } }
         .pet-walker .pet-em:has(.murloc-spr), .pet-walker .pet-em:has(.pet-spr) { animation: none !important; }
         .pet-spr { display: block; transform-origin: 50% 100%; }
+        @keyframes volleyBob { 0%,100% { transform: translateY(0) rotate(-6deg); } 50% { transform: translateY(5px) rotate(5deg); } }
         .chicken-spr { width: 62px; height: auto; animation: chickIdle 3.2s ease-in-out infinite; }
         @keyframes chickIdle { 0%, 70%, 100% { transform: rotate(0); } 76% { transform: rotate(-16deg) translateY(3px); } 82% { transform: rotate(-4deg); } 88% { transform: rotate(-16deg) translateY(3px); } 94% { transform: rotate(0); } }
         .pet-moving .chicken-spr, #wildChicken .chicken-spr { animation: chickWalk .28s ease-in-out infinite alternate; }
@@ -741,7 +742,7 @@
             <div class="mt-5 pt-4 border-t border-slate-800">
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 2, 4:12 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 6, 9:20 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -1037,7 +1038,7 @@
                 </div>
                 <div id="knobNews" class="mt-2 text-[11px] text-slate-400 mono truncate">Market open. Reb is awake.</div>
                 <div class="mt-2 flex items-center gap-2 text-[11px]">
-                    <span class="text-slate-400 font-bold shrink-0">🫀 Reb's liver</span>
+                    <span class="text-slate-400 font-bold shrink-0"><img id="liverIcon" alt="" style="display:inline-block;height:20px;width:auto;vertical-align:-5px"> Reb's liver</span>
                     <div class="relative flex-1 h-3 rounded bg-black/60 border border-slate-700 overflow-hidden"><div id="liverFill" style="position:absolute;inset:0 auto 0 0;width:100%;background:#22c55e;transition:width .6s,background .6s"></div></div>
                     <span id="liverText" class="mono text-slate-300 shrink-0 w-24 text-right">100%</span>
                 </div>
@@ -1401,6 +1402,34 @@
     const PHOTO_CHICKEN = "media/photo_chicken.png?v=d6697602";
     const PHOTO_WHELP = "media/photo_whelp.png?v=e83a9376";
     const PHOTO_LOGO = "media/photo_logo.png?v=7e59cc27";
+    const PHOTO_RAID_SHADY = "media/photo_raid_shady.jpg?v=3dfce2f0";
+    const PHOTO_FAMILY_50S = "media/photo_family_50s.jpg?v=14e49b4c";
+    const PHOTO_DYLAN_ROAD = "media/photo_dylan_road.jpg?v=ec785aa5";
+    const PHOTO_DYLAN_DRONES = "media/photo_dylan_drones.jpg?v=7da22f8d";
+    const PHOTO_DEPENDS = "media/photo_depends.jpg?v=70acfece";
+    const PHOTO_VOLLEY = "media/photo_volley.png?v=906ddeb0";
+    const PHOTO_VOLLEY_ISLAND = "media/photo_volley_island.jpg?v=adabf069";
+    const PHOTO_CLAW = "media/photo_claw.png?v=236d0b31";
+    const PHOTO_CLAW_CAB = "media/photo_claw_cab.png?v=664f5ca5";
+    const PHOTO_Y_ROCKS = "media/photo_y_rocks.png?v=02f8e0c2";
+    const PHOTO_Y_ROCKET = "media/photo_y_rocket.png?v=67aca33d";
+    const PHOTO_Y_MURLOC = "media/photo_y_murloc.png?v=dc5f21cc";
+    const PHOTO_CLS_WARRIOR = "media/photo_cls_warrior.png?v=75d20266";
+    const PHOTO_CLS_PALADIN = "media/photo_cls_paladin.png?v=ebc35aac";
+    const PHOTO_CLS_HUNTER = "media/photo_cls_hunter.png?v=d052c44a";
+    const PHOTO_CLS_ROGUE = "media/photo_cls_rogue.png?v=06f6aee4";
+    const PHOTO_CLS_PRIEST = "media/photo_cls_priest.png?v=606c7d64";
+    const PHOTO_CLS_DK = "media/photo_cls_dk.png?v=0edc7338";
+    const PHOTO_CLS_SHAMAN = "media/photo_cls_shaman.png?v=acf2e8f8";
+    const PHOTO_CLS_MAGE = "media/photo_cls_mage.png?v=de56ff2c";
+    const PHOTO_CLS_WARLOCK = "media/photo_cls_warlock.png?v=dd2e595e";
+    const PHOTO_CLS_MONK = "media/photo_cls_monk.png?v=20267d39";
+    const PHOTO_CLS_DRUID = "media/photo_cls_druid.png?v=3d5c4d81";
+    const PHOTO_CLS_DH = "media/photo_cls_dh.png?v=8cfea317";
+    const PHOTO_CLS_EVOKER = "media/photo_cls_evoker.png?v=e8784d7f";
+    const PHOTO_CLS_NOWOW = "media/photo_cls_nowow.png?v=32e1e7a1";
+    const PHOTO_CLS_LIVER = "media/photo_cls_liver.png?v=55310fcc";
+    const AUDIO_WAITING = "media/audio_waiting.mp3?v=169956bf";   // Axa's own goofy waiting-room track (Wrath Remix slice)
     const PHOTO_UWU_KEYBOARD = "media/photo_uwu_keyboard.png?v=83788d62";   // Uwutek checking if your keyboard is plugged in
     const PHOTO_YACHT_BIG = "media/photo_yacht_big.png?v=9c00044b";   // the bigger pixel yacht (house level 6)
     const PHOTO_STAR_RED = "media/photo_star_red.png?v=f31b6145";
@@ -1419,7 +1448,7 @@
     const PHOTO_CEILINGCAT = "media/photo_ceilingcat.jpg?v=f9ecbd81";  // Carl slice
     const PHOTO_FBI_CARL = "media/photo_fbi_carl.png?v=a2fabb26";     // Carl, slides in from the left
 
-    const TOTAL_SLICES = 182; // change this to grow/shrink the wheel; KEVIN fills whatever is left
+    const TOTAL_SLICES = 183; // change this to grow/shrink the wheel; KEVIN fills whatever is left
     // ---------- the seasonal slice: one slice that turns into whatever holiday it is (by the date, whatever theme you picked) ----------
     const SEASON = (() => {
         const d = new Date(), md = (d.getMonth() + 1) * 100 + d.getDate(), between = (a, b) => md >= a && md <= b;
@@ -1496,7 +1525,12 @@
         { id: "DONUT", n: 2, label: "🍩 Glazed Donut 🍩", pill: "DONUT", bg: "#ec4899", text: "#ffffff", border: "#fde68a", fill: "donut", color: "text-pink-400", glow: "bg-pink-500", key: "o", rig: "DNT",
           win: { title: "🍩 THANKS TO OUR FIRST RESPONDERS, EXCEPT NICK 🍩", size: SIZE.small, extra: "drop-shadow-[0_0_14px_rgba(244,114,182,0.75)]", sub: (s, o) => `FRESH OUT OF THE BOX! Landed on a Donut slice (#${s} • ${o} odds)!` } },
         { id: "DYLAN", n: 2, label: "🦇 Dylan 🦇", pill: "DYLAN 🦇", bg: "#4c1d95", text: "#f5f3ff", border: "#c4b5fd", color: "text-violet-400", glow: "bg-violet-600", key: "y", rig: "DYL",
-          win: { size: SIZE.bigger, sub: (s, o) => `OUT OF THE CAVE! Landed on 🦇 Dylan 🦇 (Slice #${s} • ${o} odds)!` } },
+          win: { title: '🦇 DYLAN 🦇', size: SIZE.bigger, sub: (s, o) => pick([`OUT OF THE CAVE! Landed on 🦇 Dylan 🦇 (Slice #${s} • ${o} odds)!`,
+                 'Canadian welder. Can fuse two steel beams blindfolded. Cannot hit a deer at 20 yards with a scope, a rest, and the deer asleep.',
+                 'Dylan went hunting. The squirrel did not make it. The truck got it. His tag is still unpunched.', "Dylan isn't dumb. He's pretending. Nobody has been able to prove which part.",
+                 'Dylan vs. the delivery drones: a battle between the two worst shots in North America. 0 for 40. Both sides.', 'He welded his own deer stand. It is the only thing in those woods that has ever been hit.',
+                 'Dylan was here. The deer were not. They heard the welding torch from two counties over, eh.']),
+                 get media() { return Math.random() < 0.5 ? { src: PHOTO_DYLAN_ROAD, fallback: null, caption: '🦌 DYLAN WAS HERE • THE DEER WERE NOT' } : { src: PHOTO_DYLAN_DRONES, fallback: null, caption: '📦 DYLAN VS. THE DRONES • NOBODY HIT ANYTHING' }; } } },
         { id: "DEI_EXPRESS", n: 2, label: "🚂 DEI express to the top 🚀", pill: "DEI EXPRESS", bg: "#2563eb", text: "#ffffff", border: "#93c5fd", color: "text-blue-400", glow: "bg-blue-600", key: "e", rig: "DEI",
           win: { size: SIZE.small, sub: (s, o) => `ALL ABOARD! Landed on DEI Express to the Top (Slice #${s} • ${o} odds)!` } },
         { id: "BUZZ", n: 1, label: "🚀 Buzz Lightyear 🚀", pill: "BUZZ 🚀", bg: "#6d28d9", text: "#d9f99d", border: "#4ade80", color: "text-lime-300", glow: "bg-violet-600", key: "[", rig: "BUZ",
@@ -1545,7 +1579,14 @@
         { id: "AXAS_HEART", n: 1, label: "✝️✝️ Axa's Heart Implosion ✝️✝️", pill: "AXA'S HEART", bg: "#450a0a", text: "#fca5a5", border: "#ef4444", color: "text-red-400", glow: "bg-red-800", key: "a", rig: "AXA",
           win: { title: "✝️✝️ AXA'S HEART IMPLOSION ✝️✝️", size: SIZE.mid, sound: "ekg", defib: true, sub: () => pickFresh(axaHeartJokes) } },
         { id: "NUCLEAR_FAMILY", n: 1, label: "🏡 Typical 1950s Nuclear Family 🏡", pill: "NUCLEAR FAMILY", bg: "#0ea5e9", text: "#ffffff", border: "#bae6fd", color: "text-sky-300", glow: "bg-sky-500", key: "N", rig: "NUC",
-          win: { title: "SOMETHING YOULL NEVER ENJOY", size: SIZE.mid, sub: (s) => `🏡 Typical 1950s Nuclear Family (Slice #${s}) • Ouch.` } },
+          win: { title: "SOMETHING YOULL NEVER ENJOY", size: SIZE.mid, sub: () => pick(['Dad has one job, one house, one car and a pension. You have three side hustles and a wheel.',
+                 'Roast beef, a house on one income, and a TV with a cute raid boss on it. Duck and cover after dessert.', 'Mom made dinner from scratch. Dad was home by 5. Nobody had to raid at 7. You will never know this peace.',
+                 'The house cost $9,000. The kids say "yes sir." The TV has three channels and one of them is Uwutek.', '"Pass the peas, Margaret. The Russians have the bomb." "Yes, dear."']),
+                 media: { src: PHOTO_FAMILY_50S, fallback: null, caption: '🏡 TYPICAL 1950s NUCLEAR FAMILY • UWUTEK ON CHANNEL 3' } } },
+        { id: "FOREVER_DEPENDS", n: 1, label: "🩲 Forever Depends 🩲", pill: "FOREVER DEPENDS", bg: "#1e3a8a", text: "#dbeafe", border: "#60a5fa", color: "text-blue-300", glow: "bg-blue-700", key: "0", rig: "DEP",
+          win: { title: "🩲 MAXIMUM DEGENERACY 🩲", size: SIZE.mid, sub: () => pick(['You might shit, you might not. It just depends.', 'WoW Forever: absorbs 25x its weight in raid nights.',
+                 '28 underwear. One raid night. Do the math.', 'Kana+ members save 15% with code DEPENDS. You might need it. You might not.', 'Five-hour progression night? It just depends.']),
+                 media: { src: PHOTO_DEPENDS, fallback: null, caption: '🩲 YOU MIGHT SHIT, YOU MIGHT NOT • IT JUST DEPENDS' } } },
         { id: "TWO_TON_TONYA", n: 1, label: "🍔 2 Ton Tonya 🍔", pill: "2 TON TONYA", bg: "#be185d", text: "#fce7f3", border: "#f472b6", color: "text-pink-400", glow: "bg-pink-600", key: "T", rig: "TNY",
           win: { title: "🍔🚛 2 TON TONYA 🚛🍔", size: SIZE.big, sub: (s) => `HEAVY LOAD WARNING! Landed on 2 Ton Tonya (Slice #${s})!` } },
         { id: "CASINO_TOKENS", n: 1, label: "🎰 Chief Kick a Bitch Casino Tokens (Not Valid in VT)", pill: "CASINO TOKENS", bg: "#b91c1c", text: "#fde047", border: "#facc15", fill: "casino", whiteText: true, color: "text-yellow-300", glow: "bg-red-700", key: "C", rig: "CAS",
@@ -1568,7 +1609,9 @@
         { id: "EXXON_SLICE", n: 1, label: "⛽ This Slice Sponsored By Exxon ⛽", pill: "EXXON", bg: "#dc2626", text: "#ffffff", border: "#cbd5e1", color: "text-red-400", glow: "bg-red-600", key: "X", rig: "EXX",
           win: { title: "⛽ THIS SLICE SPONSORED BY EXXON ⛽", size: SIZE.mid, sound: "exxon", sub: (s) => `Fueled by Exxon-Hawkeyes corporate synergy (Slice #${s})!` } },
         { id: "LOWER_DPS", n: 1, label: "📉 Somehow Even Lower DPS 📉", pill: "LOWER DPS", bg: "#334155", text: "#94a3b8", border: "#64748b", color: "text-slate-400", glow: "bg-slate-600", key: "L", rig: "LOW",
-          win: { title: "📉 SOMEHOW EVEN LOWER DPS 📉", size: SIZE.mid, sub: (s) => `Below the tank AND the healer on Details! (Slice #${s}).` } },
+          win: { title: "📉 SOMEHOW EVEN LOWER DPS 📉", size: SIZE.mid, sub: (s) => pick([`Below the tank AND the healer on Details! (Slice #${s}).`, "Shady Oaks Retirement Guild, Heroic UwU'tek. 14 dead, 6 resting, one healer and his walker.",
+                 'Your walker parsed higher than you.', 'The skeleton on the floor out-parsed you. He has been dead since phase one.', "UwU'tek is at 66% and the raid is at nap time."]),
+                 media: { src: PHOTO_RAID_SHADY, fallback: null, caption: "🦽 SHADY OAKS RETIREMENT GUILD • UwU'tek <Ula'tek, but Kawaii>" } } },
         { id: "STALE_CHEETOS", n: 1, label: "🧀 A Stale Half Eaten Bag of Cheetos 🧀", pill: "STALE CHEETOS", bg: "#f97316", text: "#020617", border: "#fed7aa", fill: "cheeto", color: "text-orange-400", glow: "bg-orange-500", key: "H", rig: "CHT",
           win: { title: "🧀 A STALE HALF EATEN BAG OF CHEETOS 🧀", size: SIZE.small, sub: (s) => `Left open on the desk since Tuesday. Chewy AND dusty! (Slice #${s}).` } },
         { id: "DOUBLE_ENDER", n: 1, label: "🍆 Lovingly Used Double Ender 🍆", pill: "DOUBLE ENDER", bg: "#9333ea", text: "#fae8ff", border: "#e879f9", color: "text-fuchsia-400", glow: "bg-purple-600", key: "x", rig: "DBL",
@@ -1616,7 +1659,7 @@
         { id: "HELLCAT", n: 1, label: "🏎️ Recruitment Sign-On Bonus Hellcat 🏎️", pill: "HELLCAT", bg: "#111827", text: "#f87171", border: "#ef4444", color: "text-red-400", glow: "bg-red-700", key: "A", rig: "HCT",
           win: { title: "🏎️ RECRUITMENT SIGN-ON BONUS HELLCAT 🏎️", size: SIZE.smaller, sub: () => "That 400% APR is a mofo." } },
         { id: "WRATH_REMIX", n: 1, label: "💀 Wrath Remix Waiting Room 💀", pill: "WRATH REMIX", bg: "#0c4a6e", text: "#e0f2fe", border: "#38bdf8", color: "text-sky-300", glow: "bg-sky-600", key: "]", rig: "WRM",
-          win: { title: "💀 WRATH REMIX WAITING ROOM 💀", size: SIZE.smaller, my: "my-3",
+          win: { title: "💀 WRATH REMIX WAITING ROOM 💀", size: SIZE.smaller, my: "my-3", sound: "waiting",
                  media: { src: null, fallback: "skeletons", caption: "NOW SERVING: #0003 • YOUR NUMBER: #4,117" },
                  sub: () => "Your patience is appreciated. Please continue to hold." } },
         { id: "USELESS", n: 1, label: "No One Can Use You If You Are Useless", pill: "USELESS", bg: "#701a75", text: "#f5d0fe", border: "#e879f9", color: "text-fuchsia-300", glow: "bg-fuchsia-700", key: ".", rig: "USE",
@@ -3235,6 +3278,7 @@
         yank:    { play: () => playYankSound(),        cooldownMin: 0 },  // Stop Yanking Me (Leap of Faith)
         aotc:    { play: () => { playWinSound(); playHolySound(); }, cooldownMin: 0 },  // AOTC: fanfare + choir
         turtle:  { play: () => setTimeout(playTurtleToot, 250), cooldownMin: 0 },   // Whistlethy's whistle is the whole sound
+        waiting: { play: () => playClip('waiting', AUDIO_WAITING, () => {}), cooldownMin: 0 },   // Axa's waiting-room music
         mash:    { play: () => AUDIO_MASH ? playClip('mash', AUDIO_MASH, playChopperSound) : playChopperSound(), cooldownMin: 0 },  // M*A*S*H (clip slot)
         mephist: { play: () => AUDIO_MEPHIST ? playClip('mephist', AUDIO_MEPHIST, playMicBlast) : playMicBlast(), cooldownMin: 0 },  // Mephisto (clip slot)
         exxon:   { play: () => playClip('exxon', AUDIO_EXXON, playWinSound), cooldownMin: 0 },  // Exxon soundboard clip  // croissant videos carry their own audio
@@ -4363,6 +4407,7 @@
         { id: 'rui',        name: 'Raiding Under the Influence', desc: 'Get pulled over by ChAoTiC after one too many road beers.', secret: true },
         { id: 'queue',      name: 'Position 1',               desc: 'Sit through the entire fake login queue after a disconnect.', secret: true },
         { id: 'wheelception', name: 'The Wheel Inside The Wheel', desc: "Sit down at the lonely gaming PC in the yacht's VIP room and spin the wheel inside The Wheel.", secret: true },
+        { id: 'clawwin', name: 'Claw & Order', desc: "Rescue Volley McBallface from the claw machine on Little St. Jeff's Prize Island." },
         { id: 'wheelception5', name: 'Wheelception', desc: "Go 5 wheels deep on the WHEEL-2600 in the yacht's VIP room. We have to go deeper.", secret: true, secretName: true },
         { id: 'purpleheart', name: 'Purple Heart',            desc: 'Wounded in the line of duty: you survived the Fish Incident. (Land on God_Help_Us.)' },
         { id: 'cluck',      name: 'CLUCK!',                   desc: 'Complete the Westfall chicken\'s quest.' },
@@ -4514,8 +4559,9 @@
         const k = store.get('painWheelClass', ''), c = WOW_CLASSES.find(x => x[0] === k), el = $('classShow');
         if (!c) { el.textContent = '🪪'; el.title = ''; return; }
         el.title = c[1];
-        if (k === 'nowow') el.innerHTML = `<img src="${PHOTO_LOGO}" alt="" style="height:1.2em;width:auto;display:inline-block;vertical-align:-.2em">`;
-        else { el.textContent = c[2]; }
+        const ico = { warrior: PHOTO_CLS_WARRIOR, paladin: PHOTO_CLS_PALADIN, hunter: PHOTO_CLS_HUNTER, rogue: PHOTO_CLS_ROGUE, priest: PHOTO_CLS_PRIEST, shaman: PHOTO_CLS_SHAMAN, mage: PHOTO_CLS_MAGE,
+            warlock: PHOTO_CLS_WARLOCK, monk: PHOTO_CLS_MONK, druid: PHOTO_CLS_DRUID, dh: PHOTO_CLS_DH, dk: PHOTO_CLS_DK, evoker: PHOTO_CLS_EVOKER, nowow: PHOTO_CLS_NOWOW }[k];
+        el.innerHTML = `<img src="${ico}" alt="" style="height:1.5em;width:auto;display:inline-block;vertical-align:-.35em">`;
         $('playerShow').style.color = k === 'nowow' ? '' : c[3];
     }
     document.querySelectorAll('.class-pick').forEach(sel => {
@@ -6726,6 +6772,7 @@
     const bossDmgFor = (type, ash) => (BOSS_DMG[type] || 10) + (ash ? 1000 : 0);
     let bossState = null;
     $('bossIconImg').src = PHOTO_UWU_ICON; $('bossArtImg').src = PHOTO_UWU_ART; $('partyHatImg').src = PHOTO_PARTY_HAT;
+    $('liverIcon').src = PHOTO_CLS_LIVER;
     $('hearthIcon').src = PHOTO_TOY_HEARTH; $('toyIcon').src = PHOTO_TOYBOX;
     function uwuKeyboardCheck() {   // after the Lower DPS popup closes, Uwutek pops up in the boss card to check your keyboard
         const art = $('bossArt'), img = $('bossArtImg'); if (!art || !img) return;
@@ -6744,6 +6791,99 @@
             chat(pick(['is it plugged in tho', 'uwutek doing tech support', 'IT IS NOT PLUGGED IN', 'have you tried turning it off and on again']));
             setTimeout(() => { art.style.display = ''; art.style.width = ''; img.src = oldSrc; art.querySelector('b').textContent = oldB; art.querySelector('small').textContent = oldS; art.querySelector('small').style.fontSize = ''; }, 8000);
         })();
+    }
+    // ---------- 🕹️ Claw & Disorder: THE WHEEL™ claw machine (Little St. Jeff's Prize Island) ----------
+    const CLAW_COST = 2500;
+    const CLAW_SLOGANS = ['THE CLAW OF DISAPPOINTMENT', 'Prize list sealed by court order.', 'Cameras were down that day. Totally normal.', 'TERMINAL CLAW MACHINE: your odds are worse than your raid\'s survival rate.',
+        'The guard fell asleep. The claw did not.', 'Flight logs available upon request. Request denied.', 'Grab your dreams. Watch us drop them.', 'Where dreams go to die and idiots pay admission.'];
+    function openClaw() {
+        if ($('clawOv')) return;
+        const prizeOn = !pets.volley, ov = document.createElement('div'); ov.id = 'clawOv';
+        ov.style.cssText = 'position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;padding:12px;background:rgba(2,6,23,.82);overflow:auto';
+        ov.innerHTML = `<div style="position:relative;width:min(460px,100%,calc((100vh - 250px) * .65));text-align:center">
+            <button data-x class="panel-x" style="position:absolute;right:-6px;top:-6px;z-index:5;width:40px;height:40px;border-radius:50%;background:#1e293b;color:#fff;font-size:22px;border:2px solid #64748b;cursor:pointer">✕</button>
+            <div data-box style="position:relative;width:100%;aspect-ratio:460/708;background:url(${PHOTO_CLAW_CAB}) 0 0/100% 100% no-repeat;image-rendering:pixelated">
+              <div data-win style="position:absolute;left:10.5%;top:25%;width:79%;height:35.5%;overflow:hidden">
+                <div data-rope style="position:absolute;top:0;left:0;width:3px;height:6%;background:#57534e;transform:translateX(-50%)"></div>
+                <img data-claw src="${PHOTO_CLAW}" alt="" style="position:absolute;top:2%;left:0;width:19%;transform:translateX(-50%);transition:top 1.1s ease-in-out">
+                <img data-prize src="${PHOTO_VOLLEY}" alt="Volley McBallface" style="position:absolute;bottom:4%;left:0;width:15%;transform:translateX(-50%);transition:bottom 1.1s ease-in-out;${prizeOn ? '' : 'display:none'}">
+                <div data-sold style="position:absolute;inset:0;display:${prizeOn ? 'none' : 'flex'};align-items:center;justify-content:center;padding:10px;color:#fde68a;font:900 15px/1.3 ui-monospace,monospace;text-shadow:0 2px 0 #000">SOLD OUT<br>Volley McBallface was the only prize.<br>The rest are "missing."</div>
+              </div>
+            </div>
+            <div data-slogan style="margin-top:8px;color:#fde68a;font:800 16px/1.3 system-ui,sans-serif;min-height:42px"></div>
+            <div data-msg style="color:#e2e8f0;font:700 17px/1.35 system-ui,sans-serif;min-height:48px">${prizeOn ? `${fmt(CLAW_COST)} a play. Move the claw, then DROP.` : 'Nothing left to win. You can still lose gold though.'}</div>
+            <div style="display:flex;gap:10px;justify-content:center;margin-top:6px">
+              <button data-l style="font-size:22px;padding:10px 20px;border-radius:10px;background:#334155;color:#fff;border:none;cursor:pointer">◀</button>
+              <button data-d style="font-size:20px;font-weight:900;padding:10px 26px;border-radius:10px;background:#b91c1c;color:#fff;border:none;cursor:pointer">DROP (${fmt(CLAW_COST)})</button>
+              <button data-r style="font-size:22px;padding:10px 20px;border-radius:10px;background:#334155;color:#fff;border:none;cursor:pointer">▶</button>
+            </div>
+            <div style="margin-top:8px;color:#64748b;font-size:12px">THE WHEEL™ is not responsible for missing prizes, missing persons, or anything found during a federal investigation. © Exxon-Hawkeyes Wheel Division · All Rights Denied · No Refunds</div>
+          </div>`;
+        document.body.appendChild(ov);
+        const q = (a) => ov.querySelector(`[data-${a}]`), claw = q('claw'), rope = q('rope'), prize = q('prize'), msg = q('msg');
+        let x = 50, busy = false, px = 20 + Math.random() * 60, sl = 0;
+        prize.style.left = px + '%';
+        const place = () => { claw.style.left = x + '%'; rope.style.left = x + '%'; };
+        place();
+        const slogan = () => { q('slogan').textContent = CLAW_SLOGANS[sl++ % CLAW_SLOGANS.length]; };
+        slogan(); const st = setInterval(slogan, 3500);
+        const close = () => { clearInterval(st); removeEventListener('keydown', key, true); ov.remove(); };
+        const move = (d) => { if (busy) return; x = Math.max(8, Math.min(92, x + d)); place(); try { playTickSound(false); } catch (e) {} };
+        const key = (e) => { if (e.key === 'ArrowLeft') { move(-4); e.preventDefault(); e.stopPropagation(); } else if (e.key === 'ArrowRight') { move(4); e.preventDefault(); e.stopPropagation(); } else if (e.key === ' ' || e.key === 'Enter') { drop(); e.preventDefault(); e.stopPropagation(); } else if (e.key === 'Escape') close(); };
+        addEventListener('keydown', key, true);
+        q('x').onclick = close; ov.addEventListener('click', (e) => { if (e.target === ov) close(); });
+        let hold; const holdMove = (d) => { move(d); hold = setInterval(() => move(d), 90); };
+        [['l', -3], ['r', 3]].forEach(([b, d]) => { const el = q(b); el.onpointerdown = () => holdMove(d); el.onpointerup = el.onpointerleave = () => clearInterval(hold); });
+        q('d').onclick = drop;
+        function drop() {
+            if (busy) return;
+            if (!spend(CLAW_COST, 'the claw machine')) { msg.textContent = `You need ${fmt(CLAW_COST)}. Even the claw has standards.`; return; }
+            busy = true; const plays = store.get('painWheelClawPlays', 0) + 1; store.set('painWheelClawPlays', plays);
+            const near = prize.style.display !== 'none' && Math.abs(x - px) < 7;
+            const win = near && (Math.random() < 0.3 || plays % 12 === 0);   // aligned: 30%. Every 12th play is rigged in your favor (shh)
+            claw.style.top = '60%'; rope.style.transition = 'height 1.1s ease-in-out'; rope.style.height = '64%'; msg.textContent = '...';
+            setTimeout(() => {
+                claw.style.transform = 'translateX(-50%) scaleX(.82)';
+                if (near) { prize.style.transition = 'bottom 1.1s ease-in-out'; prize.style.left = x + '%'; prize.style.bottom = '58%'; }
+                claw.style.top = '2%'; rope.style.height = '6%';
+                setTimeout(() => {
+                    if (win) {   // straight to the chute
+                        msg.textContent = '🏐 YOU WON VOLLEY McBALLFACE. He is yours now. He does not explain the handprint.';
+                        prize.style.transition = 'left .9s ease-in-out, bottom .9s ease-in'; prize.style.left = '4%'; setTimeout(() => { prize.style.bottom = '-40%'; }, 900);
+                        pets.volley = true; store.set('painWheelPets', pets); renderPets(); unlock('clawwin');
+                        funEvent('🏐 VOLLEY McBALLFACE HAS BEEN RESCUED FROM THE CLAW', 4200);
+                        chatBurst(['HE WON THE CLAW', 'VOLLEY McBALLFACE', 'WILSONNNN', 'the claw actually worked??', 'rigged (in a good way)', 'that ball has seen things'], 6, 2500);
+                        setTimeout(() => { petSay('volley', 'IT IS SO NICE TO BE OUT OF THE CLAW'); showVolleyHome(); }, 2600);
+                        setTimeout(() => { q('sold').style.display = 'flex'; }, 2200);
+                    } else if (near) {   // the classic: grabs it, then lets go at the top
+                        msg.textContent = pick(['So close. The claw let go. The claw always lets go.', 'It had him. It CHOSE to let go.', 'The claw grip is set to 3%. By design.', 'He slipped. Volley McBallface remains a prisoner of the island.']);
+                        prize.style.transition = 'bottom .6s cubic-bezier(.5,0,1,.5)'; px = Math.max(12, Math.min(88, x + (Math.random() - 0.5) * 30)); prize.style.left = px + '%'; prize.style.bottom = '4%';
+                        chat(pick(['NOOOO', 'the claw is rigged', 'every single claw machine ever', 'so close KEKW']));
+                    } else msg.textContent = pick(['The claw grabbed air. Majestically.', 'Missed by a mile. The claw is not sorry.', 'You grabbed nothing. That is the most honest prize in here.', 'Nothing. Try lining up. Or don\'t. We keep the gold either way.']);
+                    claw.style.transform = 'translateX(-50%)';
+                    setTimeout(() => { busy = false; }, 700);
+                }, 1200);
+            }, 1200);
+        }
+    }
+    function showVolleyHome() {   // the win screen: the island where he was found
+        const o = document.createElement('div');
+        o.style.cssText = 'position:fixed;inset:0;z-index:96;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(2,6,23,.75)';
+        o.innerHTML = `<div style="width:min(440px,100%);background:#0f172a;border:2px solid #fde68a;border-radius:16px;padding:16px;text-align:center"><img src="${PHOTO_VOLLEY_ISLAND}" alt="Volley McBallface on the beach" style="width:100%;border-radius:10px;display:block">
+            <div style="margin-top:10px;font:900 22px system-ui,sans-serif;color:#fde68a">🏐 VOLLEY McBALLFACE</div><div style="margin-top:6px;font-size:17px;color:#e2e8f0">Found washed up on Little St. Jeff's Prize Island. He bobs next to your yacht now. Nobody asks about the handprint.</div>
+            <button style="margin-top:12px;padding:8px 22px;border-radius:9px;background:#334155;color:#fff;font-weight:800;border:none;cursor:pointer">Welcome aboard</button></div>`;
+        document.body.appendChild(o); o.querySelector('button').onclick = () => o.remove(); o.onclick = (e) => { if (e.target === o) o.remove(); };
+    }
+    // closeups of the yacht during disasters (angled pixel shots)
+    function yachtCloseup(src, caption) {
+        const house = $('houseEmoji'); if (!house || document.hidden) return;
+        const r = house.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return;
+        const c = document.createElement('div');
+        c.style.cssText = `position:fixed;z-index:82;left:${Math.round(Math.min(innerWidth - 240, Math.max(10, r.left + r.width / 2 - 115)))}px;top:${Math.round(Math.max(10, r.top - 230))}px;width:230px;padding:8px;border-radius:12px;background:#0f172a;border:2px solid #f59e0b;box-shadow:0 12px 30px rgba(0,0,0,.6);text-align:center;pointer-events:none;opacity:0;transform:scale(.8);transition:opacity .3s,transform .3s`;
+        c.innerHTML = `<img src="${src}" alt="" style="width:100%;display:block;image-rendering:pixelated"><div style="margin-top:4px;font:800 14px system-ui,sans-serif;color:#fde68a"></div>`;
+        c.lastChild.textContent = caption; document.body.appendChild(c);
+        requestAnimationFrame(() => requestAnimationFrame(() => { c.style.opacity = '1'; c.style.transform = 'none'; }));
+        setTimeout(() => { c.style.opacity = '0'; setTimeout(() => c.remove(), 400); }, 3800);
     }
     function renderBoss(b) {
         if (!b || typeof b !== 'object') return;
@@ -6977,12 +7117,15 @@
     let pets = store.get('painWheelPets', {});
     // Each pet has a home turf: the murloc paddles around your house/boat, the accountant hangs by your gold,
     // the chicken roams the whole page (never on top of a button), everyone else strolls the bottom of the screen.
-    const PET_HOME = { murloc: 'house', accountant: 'gold', chicken: 'roam' };
+    const PET_HOME = { murloc: 'house', accountant: 'gold', chicken: 'roam', volley: 'house' };
+    PETS.volley = { e: '🏐', name: 'Volley McBallface', cost: 0, claw: true, desc: 'Won from the claw machine. Bobs next to the yacht. Has a bloody handprint. Does not explain it.',
+        say: (t) => t === 'KEVIN' ? pick(['KEVIN. I REMEMBER YOU FROM THE ISLAND.', 'not kevin again. i will float away. i swear it.']) : pick(['I HAVE BEEN IN THE WATER FOR FOUR YEARS', 'the handprint is ketchup. probably.',
+            'WILSON? never heard of him.', '*bobs menacingly*', 'i was a prize. now i am free.', 'do not ask about the island.', 'IT IS SO NICE TO BE OUT OF THE CLAW', 'i can see the bottom of the ocean. it can see me.', 'blub. (that was not me. that was the murloc.)']) };
     function renderPets() {
         document.querySelectorAll('.pet-walker').forEach(e => e.remove());
         Object.keys(PETS).filter(k => pets[k] && k !== 'clippy').slice(0, IS_PHONE() ? 2 : 99).forEach(k => {
             const w = document.createElement('div'); w.className = 'pet-walker'; w.id = 'pet-' + k; w._home = PET_HOME[k] || 'strip';
-            w.innerHTML = '<div class="pet-bubble hidden mb-1 px-2 py-1 rounded-lg bg-slate-900/95 border border-slate-600 text-slate-100 text-[11px] font-bold whitespace-nowrap shadow-lg" style="position:absolute;bottom:100%;left:50%;transform:translateX(-50%)"></div><div class="pet-flip" style="transition:transform .25s"><div class="pet-em" style="font-size:38px;line-height:1;animation:houseBob 1.1s ease-in-out infinite alternate">' + (k === 'murloc' ? `<span class="murloc-spr" style="background-image:url(${PHOTO_MURLOC_SHEET})"></span>` : k === 'chicken' ? `<img class="pet-spr chicken-spr" src="${PHOTO_CHICKEN}" alt="🐔">` : k === 'whelp' ? `<img class="pet-spr whelp-spr" src="${PHOTO_WHELP}" alt="🐉">` : k === 'accountant' ? `<img class="pet-spr giz-spr giz-tape" src="${PHOTO_GIZ_TAPE}" alt="🧮">` : PETS[k].e) + '</div></div>';
+            w.innerHTML = '<div class="pet-bubble hidden mb-1 px-2 py-1 rounded-lg bg-slate-900/95 border border-slate-600 text-slate-100 text-[11px] font-bold whitespace-nowrap shadow-lg" style="position:absolute;bottom:100%;left:50%;transform:translateX(-50%)"></div><div class="pet-flip" style="transition:transform .25s"><div class="pet-em" style="font-size:38px;line-height:1;animation:houseBob 1.1s ease-in-out infinite alternate">' + (k === 'murloc' ? `<span class="murloc-spr" style="background-image:url(${PHOTO_MURLOC_SHEET})"></span>` : k === 'chicken' ? `<img class="pet-spr chicken-spr" src="${PHOTO_CHICKEN}" alt="🐔">` : k === 'whelp' ? `<img class="pet-spr whelp-spr" src="${PHOTO_WHELP}" alt="🐉">` : k === 'accountant' ? `<img class="pet-spr giz-spr giz-tape" src="${PHOTO_GIZ_TAPE}" alt="🧮">` : k === 'volley' ? `<img class="pet-spr" src="${PHOTO_VOLLEY}" alt="🏐" style="width:40px;height:auto;animation:volleyBob 2.2s ease-in-out infinite">` : PETS[k].e) + '</div></div>';
             w.style.cssText = `position:${w._home === 'house' ? 'fixed' : 'absolute'};left:0;top:0;z-index:62;pointer-events:none;will-change:transform`;
             // Gizzlenut rides inside the sticky wheel column so he stays with the gold count; everyone else is planted on the page
             (w._home === 'gold' && $('wheelColumn') ? $('wheelColumn') : document.body).appendChild(w);
@@ -7049,6 +7192,7 @@
         }, 1150);
         setTimeout(() => {
             const spr = w.querySelector('.murloc-spr'); if (spr) spr.style.animation = '';
+            yachtCloseup(PHOTO_Y_MURLOC, '🔥 LIVE: MURLOC ON DECK');
             moveToast(pick(["🐸 The murloc attacked the yacht. Gallywix's insurance covers murlocs. Barely.", '🐸 Mrgl gave up on the yacht. For now.', '🐸 The yacht survived the murloc raid. The paint did not.']));
             w._talking = false; const t = petTarget(w); petMove(w, t.x, t.y);
             if (Math.random() < 0.5) setTimeout(() => policeBoat(), 1200);
@@ -7389,6 +7533,8 @@
             chatBurst(['ICEBERG', 'IN THE DESERT??', 'the yacht is sinking', 'women and goblins first', 'not the swordfish', 'Gary is free', 'this ship is unsinkable they said'], 6, 3000);
             setTimeout(() => floatBubble(pick(["🥃 Reb: I'll never let go... of this bottle.", '🥃 Reb: Somebody save the Knob Creek!', "🥃 Reb: Iceberg? I'll take some for my drink."]), r.left + r.width / 2, r.top - 10, 3200), 1400);
             if (pets.murloc && $('pet-murloc')) setTimeout(() => petSay('murloc', 'MRGL!! (free ice!)'), 2600);
+            setTimeout(() => yachtCloseup(PHOTO_Y_ROCKS, '🧊 LIVE: THE YACHT HAS RUN AGROUND (IN THE DESERT)'), 900);
+            if (pets.volley && $('pet-volley')) setTimeout(() => petSay('volley', 'I HAVE SEEN THIS BEFORE. IT ENDS WITH AN ISLAND.'), 3600);
             setTimeout(() => floatBubble(pick(['🚓 ChAoTiC: Yacht vs. iceberg, in the desert. Situation is FUBAR.', '🚓 ChAoTiC: Writing this one up as FUBAR. Hooah.', '🚓 ChAoTiC: That is textbook FUBAR, sir.']), r.left + r.width / 2, r.top - 40, 3200), 4800);
             setTimeout(() => sqPost('yacht', pick(['update: we hit an iceberg. in Undermine. we are investigating how.', 'the captain has been fired. the captain was Kevin.', 'the band kept playing. the band is Reb with a kazoo.'])), 3000);
         }, 3100);
@@ -8019,6 +8165,7 @@
                 dur = rocketScene(innerWidth / 2, WHEEL_CRASH_LINES);
             } else {
                 const was = house.innerHTML; house.innerHTML = fireOver(was, 70);
+                yachtCloseup(PHOTO_Y_ROCKET, '🚀 LIVE: DIRECT HIT ON THE YACHT');
                 setTimeout(() => { house.textContent = '⚓'; }, 3200);
                 setTimeout(() => { house.innerHTML = was; moveToast("🛥️ The yacht has been repaired. Gallywix's insurance covered it. Somehow."); }, 11000);
                 funEvent("💥 THE ROCKET HIT GALLYWIX'S YACHT 💥", 4000);
@@ -8385,7 +8532,7 @@
 
     // ---------- 📰 What's new: one popup per big update ----------
     // To announce an update: change UPDATE_NOTES.id (any new string) and the lines. Everyone sees it once, next time they open the wheel.
-    const UPDATE_NOTES = {
+    const UPDATE_NOTES_NOV1 = {
         id: '2026-11-01-day', title: "Everything new today", date: 'November 1, 2026',
         showAfter: Date.parse('2026-11-02T06:00:00Z'),   // midnight Central: the whole day's changes go out together
         lines: [
@@ -8413,7 +8560,23 @@
             ['📜', 'Patch notes now keep a history. Scroll down here to read the past updates.']
         ]
     };
+    const UPDATE_NOTES = {
+        id: '2026-11-06-day', title: 'The claw, the ball and the retirement home', date: 'November 6, 2026',
+        showAfter: Date.parse('2026-11-07T06:00:00Z'),   // midnight Central
+        lines: [
+            ['🕹️', "Claw & Disorder: THE WHEEL™ claw machine at Little St. Jeff's Prize Island (Shop → Pets). 2,500g a play. The claw always lets go. Usually."],
+            ['🏐', 'Volley McBallface, the first claw-machine pet. He bobs next to your yacht and does not explain the handprint.'],
+            ['⚔️', 'Real pixel class sigils next to your name (and a tiny wheel for "I don\'t play WoW"). Reb\'s liver got its own pixel art too.'],
+            ['🩲', 'New slice: Forever Depends. You might, you might not. It just depends.'],
+            ['🖼️', 'New pictures and jokes for Somehow Even Lower DPS (Shady Oaks Retirement Guild), the 1950s Nuclear Family, and Dylan (the deer are safe. So are the drones).'],
+            ['⌨️', 'Lower DPS now gets a visit from Uwutek, Tech Support, to check if your keyboard is plugged in.'],
+            ['🎵', 'The Wrath Remix Waiting Room has its own waiting-room music.'],
+            ['🛥️', 'Bigger pixel yacht, and live closeups when it gets hit by a rocket, boarded by a murloc, or runs aground.'],
+            ['🛸', 'From the other night: the UFO abducts the chicken (it comes back changed), a police boat shows up after murloc raids, a real wreck sprite for the fender-bender, and pixel HEAT stars.']
+        ]
+    };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
+        UPDATE_NOTES_NOV1,
         { title: 'The yacht, the rocket, and the IRS', date: 'October 31, 2026', lines: [
             ['🛥️', 'Step inside the yacht, VIP room and all. Pixel-art cop car, ambulance and yacht, plus 5 new slices (180 total).'],
             ['🚀', 'SpaceZ rocket pad: launch rockets at things. They miss. A lot.'],
@@ -8731,10 +8894,12 @@
         } else if (shopTab === 'pets') {
             const PET_ICON = { murloc: `<span style="display:inline-block;width:30px;height:27px;vertical-align:middle;background:url(${PHOTO_MURLOC_SHEET}) 0 0 / 600% 100% no-repeat"></span>`,
                 chicken: `<img src="${PHOTO_CHICKEN}" alt="" style="display:inline-block;height:28px;vertical-align:middle">`, whelp: `<img src="${PHOTO_WHELP}" alt="" style="display:inline-block;height:28px;vertical-align:middle">`,
-                accountant: `<img src="${PHOTO_GIZ_GRIN}" alt="" style="display:inline-block;height:34px;vertical-align:middle">` };
+                accountant: `<img src="${PHOTO_GIZ_GRIN}" alt="" style="display:inline-block;height:34px;vertical-align:middle">`, volley: `<img src="${PHOTO_VOLLEY}" alt="" style="display:inline-block;height:28px;vertical-align:middle">` };
+            add(shopRow(`<img src="${PHOTO_CLAW}" alt="" style="display:inline-block;height:30px;vertical-align:middle">`, 'Claw & Disorder', 'THE WHEEL™ claw machine at Little St. Jeff\'s Prize Island. New pets live inside. Nobody gets what they came for. Usually.', 'Play: ' + fmt(CLAW_COST), () => { closeShop(); openClaw(); }));
             Object.entries(PETS).forEach(([k, p0]) => {
                 const p = PET_ICON[k] ? Object.assign({}, p0, { e: PET_ICON[k] }) : p0;
                 if (p.secret && !clippyUnlocked && !pets[k]) return;
+                if (p0.claw && !pets[k]) { add(shopRow(p.e, p.name, 'Only from the claw machine. Good luck. You will need it.', 'Claw only', null, 'owned')); return; }
                 if (k === 'chicken' && !pets[k]) { add(shopRow(p.e, p.name, 'Can\'t be bought. Find a Westfall chicken wandering around and type chicken while it\'s on screen...', cluckStage ? 'Quest: CLUCK!' : 'Quest only', null, 'owned')); return; }
                 add(shopRow(p.e, p.name, p.desc, pets[k] ? 'Owned ✓' : 'Adopt: ' + fmt(p.cost), () => {
                     if (!spend(p.cost, p.name)) return; pets[k] = true; store.set('painWheelPets', pets); renderPets();
@@ -9278,7 +9443,7 @@
         irs: ['Goblin IRS', '@GoblinIRS', '🧾', true], casimir: ['Casimir', '@Casimir_Rigs', '🔧', false], yacht: ["Gallywix's Yacht Club", '@GallywixYachtClub', '🛥️', true] };
     // vehicle sprites double as Squawkr profile pictures (cropped into the round avatar)
     const SQ_IMG = (src) => () => `<span style="display:grid;place-items:center;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b"><img src="${src}" alt="" style="width:30px;height:30px;object-fit:contain"></span>`;
-    const SQ_PIC = { shack: SQ_IMG(PHOTO_SHACK), yacht: SQ_IMG(GIF_YACHT), uwutek: SQ_IMG(PHOTO_UWU_ICON), chaotic: () => `<span style="display:block;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b;display:grid;place-items:center">${copSprite(false, 0.5)}</span>`,
+    const SQ_PIC = { reb: SQ_IMG(PHOTO_CLS_LIVER), shack: SQ_IMG(PHOTO_SHACK), yacht: SQ_IMG(GIF_YACHT), uwutek: SQ_IMG(PHOTO_UWU_ICON), chaotic: () => `<span style="display:block;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b;display:grid;place-items:center">${copSprite(false, 0.5)}</span>`,
         bible: () => `<span style="display:block;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b;display:grid;place-items:center">${ambSprite(false, 0.5)}</span>` };
     const SQ_AMBIENT = [
         ['kevin', 'just landed on myself again. this wheel is RIGGED. who do i report this to'], ['casimir', 'me'],
