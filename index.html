@@ -474,15 +474,16 @@
         #toyBox.toy-open { transform: none; opacity: 1; }
         #toyBox { flex-direction: column; align-items: stretch !important; gap: 8px !important; padding: 8px 10px 10px !important; border-radius: 6px !important;
             background: linear-gradient(#3a2414, #24160b) !important; border: 3px solid #8a5a2b !important; box-shadow: inset 0 0 0 2px #1a0f06, 0 10px 28px rgba(0,0,0,.6) !important; }
-        #toyBox .toy-head { display: flex; align-items: center; gap: 8px; color: #fde68a; font-family: 'Pixelify Sans', ui-monospace, monospace; font-size: 18px; letter-spacing: .04em; text-transform: uppercase; }
+        #toyBox .toy-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; color: #fde68a; font-family: 'Pixelify Sans', ui-monospace, monospace; font-size: 18px; letter-spacing: .04em; text-transform: uppercase; }
         #toyBox .toy-head img { height: 30px; width: auto; image-rendering: pixelated; }
         #toyBox .toy-head span { color: #d6b98c; font-size: 14px; flex: 1; }
         #toyBox .toy-head button { color: #d6b98c; font-weight: 800; font-size: 16px; padding: 0 4px; background: none; border: 0; cursor: pointer; }
-        #toyBox #garageDock { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 8px; width: min(360px, calc(100vw - 40px)); }
-        #garageDock > button { display: flex !important; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; min-height: 104px; padding: 8px 4px 6px !important;
+        #toyBox #garageDock { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(calc(104px * var(--ts, 1)), 100%), 1fr)); gap: 8px; width: min(calc(360px * var(--ts, 1)), calc(100vw - 40px)); }
+        #toyBox { max-width: calc(100vw - 24px); }
+        #garageDock > button { min-width: 0; overflow: hidden; display: flex !important; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; min-height: 104px; padding: 8px 4px 6px !important;
             background: radial-gradient(circle at 50% 40%, #3b3a44, #17161c) !important; border: 2px solid #5b4a36 !important; border-radius: 5px; }
         #garageDock > button:hover { border-color: #facc15 !important; }
-        #garageDock > button::after { content: attr(data-label); font-size: 13px; font-weight: 800; color: #f5e6c8; line-height: 1.15; text-align: center; }
+        #garageDock > button::after { content: attr(data-label); max-width: 100%; overflow-wrap: anywhere; hyphens: auto; font-size: 13px; font-weight: 800; color: #f5e6c8; line-height: 1.15; text-align: center; }
         html.light-mode #toyBox .toy-head, html.light-mode #garageDock > button::after { color: #1f2937; }
         #chatHead, #chatHead span { white-space: nowrap; } #chatHead { gap: 6px; } #chatViewers { overflow: hidden; text-overflow: ellipsis; }
         .is-min > .min-head { margin-bottom: 0 !important; border-bottom: 0 !important; }
@@ -610,7 +611,10 @@
         #wildChicken .bub { position: absolute; bottom: 52px; left: 50%; transform: translateX(-50%); white-space: nowrap; background: #fffbe6; color: #111; font-size: 12px; font-weight: 800; padding: 3px 8px; border-radius: 8px; border: 1.5px solid #111; }
         .quest-box { background: linear-gradient(180deg,#f5e6c4,#e6cf9c); color: #3b2512; border: 3px solid #7c5a2a; box-shadow: 0 10px 40px rgba(0,0,0,.7); font-family: Georgia, serif; }
         @media (prefers-reduced-motion: reduce) { #partyLights .beam, body.party-on #partyLights .ball, #partyLights .speck, .dance-slot > * { animation: none; } }
-    </style>
+      .s811-tap { position:absolute; width:4.5%; height:12%; border-radius:12px; background:transparent; border:3px solid transparent; cursor:pointer; }
+  .s811-tap:hover, .s811-tap:focus-visible { border-color:#fde68a; box-shadow:0 0 18px #fde68a; outline:none; }
+  @keyframes s811wob { 0%,100% { transform:rotate(0) } 25% { transform:rotate(-6deg) } 75% { transform:rotate(6deg) } }
+</style>
 </head>
 <body class="min-h-screen flex flex-col justify-between bg-slate-950 text-slate-100 select-none">
 
@@ -695,6 +699,27 @@
     </div>
 
     <!-- Hourly popup ad (rotates between several fake ads) -->
+    <div id="store811" class="fixed inset-0 z-[66] hidden items-center justify-center bg-black/75 p-3">
+      <div class="w-full rounded-xl overflow-hidden border-2 border-orange-500 shadow-2xl bg-slate-950" style="max-width:1100px">
+        <div id="s811Scene" class="relative w-full" style="aspect-ratio:2000/849;background-size:100% 100%">
+          <button class="s811-tap" data-f="Cherry" style="left:17.5%;top:41%" title="Cherry"></button>
+          <button class="s811-tap" data-f="Blue Raspberry" style="left:21%;top:41%" title="Blue Raspberry"></button>
+          <button class="s811-tap" data-f="Lime" style="left:24.25%;top:41%" title="Lime"></button>
+          <img id="s811Cup" alt="" class="hidden absolute" style="left:31%;top:44%;height:26%;image-rendering:pixelated;transition:transform .3s">
+          <div id="s811Say" class="hidden absolute left-1/2 -translate-x-1/2 top-[6%] px-4 py-2 rounded-lg bg-slate-950/90 border border-orange-400 text-orange-100 font-bold text-center" style="font-size:calc(18px * var(--ts, 1));max-width:80%"></div>
+        </div>
+        <div class="p-4 flex flex-col items-center gap-3 text-center">
+          <div class="font-black text-orange-300" style="font-size:calc(24px * var(--ts, 1))">🏪 Welcome to the 8/11. Pick a flavor.</div>
+          <div class="flex flex-wrap justify-center gap-2" id="s811Btns">
+            <button data-f="Cherry" class="px-4 py-2 rounded-lg font-bold text-white" style="background:#dc2626;font-size:calc(17px * var(--ts, 1))">🍒 Cherry</button>
+            <button data-f="Blue Raspberry" class="px-4 py-2 rounded-lg font-bold text-white" style="background:#0284c7;font-size:calc(17px * var(--ts, 1))">🫐 Blue Raspberry</button>
+            <button data-f="Lime" class="px-4 py-2 rounded-lg font-bold text-white" style="background:#16a34a;font-size:calc(17px * var(--ts, 1))">🍈 Lime</button>
+          </div>
+          <div id="s811Price" class="text-slate-300" style="font-size:calc(16px * var(--ts, 1))"></div>
+          <button id="s811Close" class="px-5 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white font-bold" style="font-size:calc(16px * var(--ts, 1))">Thank you, come again</button>
+        </div>
+      </div>
+    </div>
     <div id="lawAd" class="fixed inset-0 z-[64] hidden items-center justify-center bg-black/60 p-4">
         <div class="relative w-full max-w-lg" style="font-family: Arial, Helvetica, sans-serif;">
             <div id="adLabel" class="absolute -top-6 left-0 text-[10px] text-slate-400 uppercase tracking-wider">Advertisement</div>
@@ -795,7 +820,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="conspiracy.html" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 12:38 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:00 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -907,6 +932,10 @@
                 <div id="hpIncome" class="text-xs text-slate-300 mt-1 mono"></div>
             </div>
             <div class="mt-3 flex flex-col items-center gap-1">
+                <div id="hearthRow" class="hidden flex-col items-center gap-1">
+                    <button id="hearthBtn" title="Hearthstone: Gallywix's Yacht (10 sec cast)" class="plate-btn cursor-pointer"><img class="plate-img" data-plate="HEARTH" alt="Hearth"></button>
+                    <span class="text-xs text-slate-400">10 second cast. Kevin may pull. Or just click the yacht to board right away.</span>
+                </div>
                 <button id="hpUpgrade" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-black cursor-pointer"></button>
                 <div id="hpMsg" class="text-xs text-amber-300 font-bold min-h-[1rem] text-center"></div>
             </div>
@@ -916,10 +945,7 @@
                     <button id="hpShopBtn" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">🎟️ Scratch-offs</button>
                     <button id="hpBoard" style="display:none" title="No cast, no waiting" class="px-3 py-1.5 rounded bg-sky-700 hover:bg-sky-600 text-white text-xs font-bold cursor-pointer">⚓ Board the yacht now</button>
                 </div>
-                <div id="hearthRow" class="mt-2 hidden items-center gap-3 flex-wrap">
-                    <button id="hearthBtn" title="Hearthstone: Gallywix's Yacht (10 sec cast)" class="plate-btn cursor-pointer"><img class="plate-img" data-plate="HEARTH" alt="Hearth"></button>
-                    <span class="text-xs text-slate-400">10 second cast. Kevin may pull. Or just click the yacht to board right away.</span>
-                </div>
+
             </div>
             <div class="mt-3 pt-3 border-t border-emerald-900">
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">💸 Goblin debt</div>
@@ -1920,11 +1946,11 @@
                  sub: () => pick(["Even cheaper than aluminum. Tin foil hats sold separately.", "Soft, cheap and quick to rust. Like their roster.",
                      "Their loot council was made of tin. It bent the first time someone whispered.", "The conundrum: why did anyone stay this long?",
                      "Tin Man had no heart. This guild had no healers."]) } },
-        { id: "SEVEN_ELEVEN", n: 2, label: "🏪 7/11 🥤", pill: "7/11", bg: "#15803d", text: "#ffffff", border: "#f97316", color: "text-green-400", glow: "bg-orange-500", key: "{", rig: "711",
-          win: { title: "🏪 7/11 🥤", size: SIZE.big,
+        { id: "SEVEN_ELEVEN", n: 2, label: "🏪 8/11 🥤", pill: "8/11", bg: "#15803d", text: "#ffffff", border: "#f97316", color: "text-green-400", glow: "bg-orange-500", key: "{", rig: "711",
+          win: { title: "🏪 8/11 🥤", size: SIZE.big,
                  sub: () => pick(["Thank you, come again! (You got a Slurpee.)", "Brain freeze in 3... 2... (You got a Slurpee.)",
                      "Two hot dogs that have been rolling since 2019 and a Slurpee. Dinner is served.", "Reb bought the ice. You got a Slurpee.",
-                     "Open 24/7. Unlike Olive Garden. (You got a Slurpee.)"]) } },
+                     "Open 7 hours a day, 11 days a week. (You got a Slurpee.)"]) } },
         { id: "COMMUNISM", n: 1, label: "☭ Communism ☭", pill: "COMMUNISM", bg: "#7f1d1d", text: "#fde047", border: "#facc15", color: "text-yellow-300", glow: "bg-red-700", key: "|", rig: "CCP",
           win: { title: "☭ NO, IT'S OUR KEVIN! ☭", size: SIZE.big,
                  sub: () => pick(["From each according to his DPS, to each according to his Kevin.", "The Kevin belongs to the people now, comrade.",
@@ -6662,6 +6688,14 @@
     let gold = Math.min(1e300, Number(store.get('painWheelGold', 1000)) || 0), goblinDebt = store.get('painWheelDebt', 0);
     const GOLD_CAP = 1e300;   // the psychos stop here instead of breaking the game with Infinity
     function setGold(v) { v = Number(v); if (!isFinite(v) || v > GOLD_CAP) v = isNaN(v) ? gold : GOLD_CAP; const was = gold; gold = Math.max(0, Math.round(v)); store.set('painWheelGold', gold); renderGold(); if (typeof gizGoldReact === 'function') try { gizGoldReact(was, gold); } catch (e) {} }
+    // 💰 PRICES ARE A PERCENT OF YOUR GOLD (agreed Nov 7): everyone can afford things no matter how long they've played,
+    // and everything stays meaningful at 1e50. The minimum keeps things from being free at 0 gold.
+    const PCT = { slurpee: .01, mulligan: .01, flask: .01, bottle: .02, scratch: .0025, token: .05, title: .05, theme: .15, needle: .02, pack: .10,
+        pet: .10, toy: .10, rocket: .25, curse: .0025, shout: .0025, kana: .05, repel: .01, hex: .01, aotc: .10, tsuk: .10, rikers: .25, feed: .0025, mystery: .0777, winrar: .02999 };
+    const HOUSE_PCT = [0, .15, .20, .25, .30, .35, .40];            // house levels climb
+    const SOCIETY_PCT = [.15, .20, .25, .30, .35, .40];              // so do the secret societies
+    const priceOf = (pct, min) => Math.max(min == null ? 100 : min, Math.round(gold * pct));
+    const rewardOf = (pct, min) => Math.max(min == null ? 1000 : min, Math.round(gold * pct));
     function renderGold() {
         $('goldText').textContent = '🪙 ' + gold.toLocaleString() + 'g' + (goblinDebt ? `  (debt ${goblinDebt.toLocaleString()}g)` : '');
         $('bailoutBtn').classList.toggle('hidden', gold >= 10);
@@ -6778,8 +6812,8 @@
         'Linen Cloth (x3)': 'Vendor price: an insult.', 'Conjured Mana Bun': 'Tastes like a mage\'s disappointment.', 'Light Feather': 'For when you fall off Murder Row.',
         "Kevin's Spare Keyboard": 'Every key is bound to "stand in fire".', 'Six-Pack of Garage Beers': 'Best enjoyed at 10 AM.', 'Glazed Donut': 'Perfectly fine. Suspicious.',
         'Belt of Standing in Fire': '+10 Fire Resistance. -100 Awareness.', 'Slurpee (Blue Raspberry)': 'Turns your tongue blue for 3 raid nights.',
-        'Slurpee (Cherry)': 'Brain freeze on use. 30 second cooldown.', 'Slurpee (Coke)': 'The classic. Straight from the 7/11 by the guild hall.',
-        'Slurpee (Mystery Flavor)': 'Nobody knows. Not even 7/11.', "Slurpee (Dr Pepper)": '23 flavors, all of them frozen. Most requested in guild history.', "Slurpee (Mountain Dew Code Red)": 'Gamer fuel. +5% APM, -5% sleep.', "Slurpee (Wild Cherry Pepsi)": 'For when the 7/11 is out of Dr Pepper.', "Slurpee (Half & Half Mix)": 'Every flavor at once. The machine wept.', "Slurpee (Sugar Free, For Reb's Doctor)": 'Reb has never touched it.', 'Ret Paladin 6% Buff Coupon': 'Void where prohibited (everywhere).',
+        'Slurpee (Lime)': 'Green. Aggressively green. Pairs well with regret.', 'Slurpee (Cherry)': 'Brain freeze on use. 30 second cooldown.', 'Slurpee (Coke)': 'The classic. Straight from the 8/11 by the guild hall.',
+        'Slurpee (Mystery Flavor)': 'Nobody knows. Not even 8/11.', "Slurpee (Dr Pepper)": '23 flavors, all of them frozen. Most requested in guild history.', "Slurpee (Mountain Dew Code Red)": 'Gamer fuel. +5% APM, -5% sleep.', "Slurpee (Wild Cherry Pepsi)": 'For when the 8/11 is out of Dr Pepper.', "Slurpee (Half & Half Mix)": 'Every flavor at once. The machine wept.', "Slurpee (Sugar Free, For Reb's Doctor)": 'Reb has never touched it.', 'Ret Paladin 6% Buff Coupon': 'Void where prohibited (everywhere).',
         'Goblin Timeshare Brochure': 'Page 2 is just a bomb emoji.', "Platemage's Spare Plate": 'Not plate. Not a mage. A plate.',
         'Murder Row Teleport Scroll': 'Not a rat. Strategically elsewhere.', 'Road Beer (Still Cold)': 'Do not drink and fly a gryphon.',
         "Biblehumping's Holy Lasso": 'Yanks allies into danger with love.', "Axa's Defibrillator": 'CLEAR! (Batteries not included.)',
@@ -7037,7 +7071,7 @@
             <div data-slogan style="margin-top:8px;color:#fde68a;font:800 16px/1.3 system-ui,sans-serif;min-height:42px"></div>
             <div data-msg style="color:#e2e8f0;font:700 17px/1.35 system-ui,sans-serif;min-height:48px">${prizeOn ? `1 casino token a play. You have ${tokens}. Move the claw, then DROP.` : 'Nothing left to win. You can still lose tokens though.'}<br><span style="color:#94a3b8;font-size:14px">Prize ${prizeOn ? CLAW_PRIZES.indexOf(prize0) + 1 : CLAW_PRIZES.length} of ${CLAW_PRIZES.length}</span></div>
             <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:6px">
-              <button data-buy title="The cashier cage (2% of your gold)" style="white-space:nowrap;font-size:15px;font-weight:800;padding:10px 12px;border-radius:10px;background:#713f12;color:#fde68a;border:none;cursor:pointer">🎰 Buy token</button>
+              <button data-buy title="The cashier cage (5% of your gold)" style="white-space:nowrap;font-size:15px;font-weight:800;padding:10px 12px;border-radius:10px;background:#713f12;color:#fde68a;border:none;cursor:pointer">🎰 Buy token</button>
               <button data-l style="font-size:22px;padding:10px 20px;border-radius:10px;background:#334155;color:#fff;border:none;cursor:pointer">◀</button>
               <button data-d style="white-space:nowrap;font-size:20px;font-weight:900;padding:10px 18px;border-radius:10px;background:#b91c1c;color:#fff;border:none;cursor:pointer">DROP (1 🎰)</button>
               <button data-r style="font-size:22px;padding:10px 20px;border-radius:10px;background:#334155;color:#fff;border:none;cursor:pointer">▶</button>
@@ -7061,9 +7095,9 @@
         [['l', -3], ['r', 3]].forEach(([b, d]) => { const el = q(b); el.onpointerdown = () => holdMove(d); el.onpointerup = el.onpointerleave = () => clearInterval(hold); });
         q('d').onclick = drop;
         q('buy').onclick = () => {   // the cashier cage: a token costs 2% of whatever you have (min 2,500g), so it stings at any wealth
-            const c = Math.max(2500, Math.round(gold * 0.02));
+            const c = priceOf(PCT.token);
             if (!spend(c, 'a casino token')) { msg.textContent = `The cashier wants ${fmt(c)}. You do not have ${fmt(c)}.`; return; }
-            tokens++; store.set('painWheelTokens', tokens); msg.textContent = `🎰 Bought 1 token for ${fmt(c)} (2% of your gold). You have ${tokens}. The cashier bit it to check.`;
+            tokens++; store.set('painWheelTokens', tokens); msg.textContent = `🎰 Bought 1 token for ${fmt(c)} (5% of your gold). You have ${tokens}. The cashier bit it to check.`;
         };
         function drop() {
             if (busy) return;
@@ -7175,7 +7209,12 @@
             if ('announce' in d) showAnnouncement(d.announce);
             if (d.bounty && d.bounty.type) {
                 const label = TYPE[d.bounty.type] ? TYPE[d.bounty.type].pill : d.bounty.type;
-                $('bountyInfo').textContent = `🎯 Today's bounty: ${label}` + (d.bounty.by ? ` (claimed by ${d.bounty.by})` : ' (unclaimed)');
+                $('bountyInfo').textContent = `🎯 Today's bounty: ${label}` + (d.bounty.by ? ` (claimed by ${d.bounty.by})` : ' (unclaimed)') + ' · pays 15% of your gold';
+                const bkey = new Date().toDateString() + ':' + d.bounty.type;
+                if (d.bounty.by && playerName && d.bounty.by.toLowerCase() === playerName.toLowerCase() && store.get('painWheelBountyPaid', '') !== bkey) {
+                    store.set('painWheelBountyPaid', bkey); const rw = rewardOf(.15); setGold(gold + rw);
+                    funEvent(`🎯 YOU CLAIMED TODAY'S BOUNTY: +${fmt(rw)}`, 5000); chatBurst(['BOUNTY HUNTER', 'he got the bounty', 'PAYDAY', 'sniped it'], 4, 2000);
+                }
             }
             if (Array.isArray(d.recent)) {
                 $('feedCard').classList.remove('hidden');
@@ -7195,10 +7234,13 @@
                 if (k.at && k.at !== seenAt && (!seenAt || new Date(k.at) > new Date(seenAt))) {
                     store.set('painWheelBossRewardedAt', k.at);
                     if (me && Date.now() - new Date(k.at).getTime() < 24 * 3600 * 1000) {
-                        const base = 2500000 * (k.level || 1), rank = (k.top || []).findIndex(x => String(x[0]).toLowerCase() === playerName.toLowerCase());
-                        const bonusPct = [1, 0.75, 0.5, 0.35, 0.2][rank] || 0, pay = Math.round(base * (1 + bonusPct));
+                        // Uwutek kill: a big cut of your own gold by difficulty (with a huge floor so it's worth it for new players too), plus a damage-rank bonus
+                        const lv = k.level || 1, kPct = lv === 1 ? .10 : lv === 2 ? .20 : Math.min(.75, .35 + .05 * (lv - 3));
+                        const kFloor = lv === 1 ? 1e9 : lv === 2 ? 1e20 : Math.min(1e100, 1e40 * Math.pow(1e5, lv - 3));
+                        const rank = (k.top || []).findIndex(x => String(x[0]).toLowerCase() === playerName.toLowerCase());
+                        const bonusPct = [1, 0.75, 0.5, 0.35, 0.2][rank] || 0, pay = Math.round(rewardOf(kPct, kFloor) * (1 + bonusPct));
                         setGold(gold + pay);
-                        giveLoot(Math.random() < 0.2 ? 'legendary' : 'epic', `☠️ ${k.name} defeated! +${pay.toLocaleString()}g${rank >= 0 ? ` (#${rank + 1} damage bonus +${Math.round(bonusPct * 100)}%)` : ''} and`);
+                        giveLoot(Math.random() < 0.2 ? 'legendary' : 'epic', `☠️ ${k.name} defeated! +${fmt(pay)}${rank >= 0 ? ` (#${rank + 1} damage bonus +${Math.round(bonusPct * 100)}%)` : ''} and`);
                         chatBurst(['BOSS DOWN', 'GG GG GG', 'UWUTEK DOWN', 'loot loot loot', 'EZ Clap', 'PAYDAY'], 5);
                     }
                 }
@@ -7230,6 +7272,7 @@
     }
     store.set('painWheelShackSeparate', true);
     function houseInfo() { return HOUSE_LEVELS[houseLevel]; }
+    const rentNow = (h) => h.e === '🛥️' ? rewardOf(.10) : h.rent;   // the yacht pays 10% of your gold every 10 minutes
     const GIF_YACHT = "media/gif_yacht.gif?v=24983ac3";
     // the yacht gets its animated pixel sprite; the other houses are still emoji for now
     function houseHTML(h, px) { if (h.img) return `<img src="${h.img}" alt="${h.e}" width="${Math.round(px * 1.35)}" style="display:inline-block;height:auto;max-width:none;margin:-${Math.round(px * .22)}px -${Math.round(px * .1)}px -${Math.round(px * .12)}px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.5))">`;
@@ -7241,13 +7284,14 @@
     function renderHousePanel() {
         const h = houseInfo(), next = HOUSE_LEVELS[houseLevel + 1];
         $('hpEmoji').innerHTML = houseHTML(h, 150); $('hpEmoji').style.cursor = houseLevel >= 6 ? 'pointer' : ''; $('hpEmoji').title = houseLevel >= 6 ? 'Board the yacht now' : ''; $('hpName').textContent = h.name; $('hpDesc').textContent = h.desc;
-        $('hpIncome').textContent = h.rent < 0 ? (hasPerk('goblin') ? 'HOA fee: waived (Goblin Portfolio)' : `HOA fee: ${h.rent}g every 10 minutes`) : `Rent income: +${h.rent.toLocaleString()}g every 10 minutes`;
+        $('hpIncome').textContent = h.rent < 0 ? (hasPerk('goblin') ? 'HOA fee: waived (Goblin Portfolio)' : `HOA fee: ${h.rent}g every 10 minutes`) : (h.e === '🛥️' ? `Rent income: 10% of your gold every 10 minutes (+${fmt(rentNow(h))} right now)` : `Rent income: +${h.rent.toLocaleString()}g every 10 minutes`);
         const up = $('hpUpgrade');
         if (!store.get('painWheelTimeshare', false)) { up.textContent = 'Buy the timeshare (100g)'; up.disabled = false; }
-        else if (next) { up.textContent = `Upgrade to ${next.e} ${next.name}: ${next.cost.toLocaleString()}g`; up.disabled = false; }
+        else if (next) { up.textContent = `Upgrade to ${next.e} ${next.name}: ${fmt(next.cost)}`; up.disabled = false; }
         else { up.textContent = 'Fully upgraded. You are the goblin now.'; up.disabled = true; }
+        up.style.display = !next && houseLevel >= 6 ? 'none' : '';   // maxed out: the Hearth plate takes this spot
         $('hpBoard').style.display = houseLevel >= 6 ? '' : 'none'; renderHearth();
-        $('hpDebt').textContent = goblinDebt ? `You owe ${goblinDebt.toLocaleString()}g` : 'Debt free! 🎉';
+        $('hpDebt').textContent = (goblinDebt ? `You owe ${fmt(goblinDebt)}` : 'Debt free! 🎉') + (store.get('painWheelGoblinCard', false) ? ` · 💳 Goblin Express limit: ${fmt(cardLimit())} (${fmt(cardAvailable())} available)` : '');
         $('hpPay100').style.display = $('hpPayAll').style.display = goblinDebt ? '' : 'none';
     }
     $('hpUpgrade').addEventListener('click', () => {
@@ -7295,7 +7339,7 @@
     setInterval(() => {   // every 10 minutes: HOA fee on the timeshare, rent once you've upgraded
         if (!store.get('painWheelTimeshare', false) || document.hidden) return;
         const h = houseInfo();
-        if (h.rent > 0) { setGold(gold + h.rent); houseSay(`Rent collected: +${h.rent.toLocaleString()}g`); return; }
+        if (h.rent > 0) { const r = rentNow(h); setGold(gold + r); houseSay(`Rent collected: +${fmt(r)}`); return; }
         if (hasPerk('goblin')) { houseSay('HOA fee waived (Goblin Portfolio)'); return; }
         setGold(gold - 25); houseSay('HOA fee: -25g');
     }, 10 * 60 * 1000);
@@ -7316,8 +7360,7 @@
         launchConfetti(['🔨', '🛡️', '✨', '⚔️', '👑'], ['#ffd700', '#fde68a', '#fff7cc', '#F48CBA', '#ffffff'], 1.4, 0.6);
         chatBurst(['RET BUFF POG', 'BLIZZARD LISTENED', 'IT HAPPENED', 'The Light provides', 'CLIP IT', 'Axa crying rn'], 6, 4000);
         unlock('retascend');
-        setGold(gold + 1000);
-        setTimeout(() => giveLoot('legendary', '🔨 The Light rewards you: +1,000g and'), 2500);
+        { const rw = rewardOf(.10); setGold(gold + rw); setTimeout(() => giveLoot('legendary', `🔨 The Light rewards you: +${fmt(rw)} and`), 2500); }
         const sub = o.querySelector('#ascSub');
         setTimeout(() => { sub.textContent = '🔧 HOTFIX INCOMING...'; }, 6500);
         setTimeout(() => {
@@ -8181,7 +8224,7 @@
                 if (liverDown) return;
                 if (Date.now() - store.get('painWheelDoubleAt', 0) < 23 * 3600000) { $('knobNews').textContent = '🥃 One double a day. Even Reb has standards. Barely.'; return; }
                 if (!confirm("Pour Reb a double?\n\nYou get +25,000g right now.\nThe WHOLE GUILD'S liver takes -30%.\nEveryone sees that it was you.\n\nIf the liver survives the week, everyone who never poured a double gets 50,000g. You won't. If it dies, nobody does.")) return;
-                store.set('painWheelDoubleAt', Date.now()); setGold(gold + 25000); sendEvent({ k: 'liver', what: 'double' }); liver = Math.max(0, liver - 30); renderLiver();
+                store.set('painWheelDoubleAt', Date.now()); setGold(gold + rewardOf(.025)); sendEvent({ k: 'liver', what: 'double' }); liver = Math.max(0, liver - 30); renderLiver();
                 funEvent('🥃 YOU POURED REB A DOUBLE', 3500); chatBurst(['HE CHOSE VIOLENCE', 'reb noooo', 'that is a war crime', 'snitches get stitches but this guy gets 25k', 'greed'], 5, 2500);
             };
         }
@@ -8190,7 +8233,7 @@
         if (lw && lw.week && store.get('painWheelLiverClaim', '') !== lw.week && playerName) {   // last week's verdict, once
             store.set('painWheelLiverClaim', lw.week);
             const me = (lw.wreckers || []).some(w => w.toLowerCase() === playerName.toLowerCase());
-            if (lw.survived && !me) { setGold(gold + 50000); funEvent("🫀 REB'S LIVER SURVIVED THE WEEK: +50,000g", 5000); chatBurst(['REB LIVES', 'the liver made it', 'teamwork', 'water gang'], 4, 2500); }
+            if (lw.survived && !me) { const rw = rewardOf(.05); setGold(gold + rw); funEvent("🫀 REB'S LIVER SURVIVED THE WEEK: +" + fmt(rw), 5000); chatBurst(['REB LIVES', 'the liver made it', 'teamwork', 'water gang'], 4, 2500); }
             else if (lw.survived) moveToast("🫀 Reb's liver survived the week. Everyone got 50,000g. You poured a double, so you got a lecture.");
             else moveToast("💀 Reb's liver did not make it last week. Nobody got paid. Somebody poured one too many.");
         }
@@ -8327,7 +8370,8 @@
     // ---------- consumables ----------
     let flaskLoot = store.get('painWheelFlask', 0), mulligan = store.get('painWheelMulligan', 0), kanaUntil = store.get('painWheelKanaUntil', 0);
     let aotcCarryUnlocked = store.get('painWheelAotcCarry', false);
-    const REPELS = [[1, 50000, 'Kevin Repel'], [5, 200000, 'Kevin Repel ×5'], [25, 750000, 'Kevin Repel ×25 (Billionaire Pack)']];
+    const REPELS = [[1, 0, 'Kevin Repel', .01], [5, 0, 'Kevin Repel ×5', .03], [25, 0, 'Kevin Repel ×25 (Billionaire Pack)', .08]];
+    REPELS.forEach(r => Object.defineProperty(r, 1, { get: () => priceOf(r[3]) }));
 
     // ---------- garage ----------
     let garage = store.get('painWheelGarage', {});
@@ -9211,7 +9255,7 @@
         showAfter: Date.parse('2026-11-07T06:00:00Z'),   // re-issued Nov 7 with corrected notes, so it pops up again for everyone
         lines: [
             ['🕹️', "Claw & Disorder at Little St. Jeff's Prize Island (Shop → Pets). It takes Chief Kick a Bitch casino tokens, not gold. 5 prizes, one at a time: Volley McBallface, Lil' Spinny, Gerald, The Needle and Kevin Jr."],
-            ['🎰', "Casino tokens: 3 from the casino slice, 1 for your first spin each day, every 25 spins, every achievement, sometimes from Gambled on a Fart, 7/11 and golden cookies, and Gizzlenut finds them in the couch. Or buy one at the cashier cage (2% of your gold)."],
+            ['🎰', "Casino tokens: 3 from the casino slice, 1 for your first spin each day, every 25 spins, every achievement, sometimes from Gambled on a Fart, 8/11 and golden cookies, and Gizzlenut finds them in the couch. Or buy one at the cashier cage (2% of your gold)."],
             ['🫀', "Reb's liver is becoming a guild-wide boss: every drink anyone takes hurts it. Buy it water, or take a double and hurt everyone. If it survives the week, everyone who didn't wreck it gets paid."],
             ['🛡️', "New slices: Taunting (Casimir would never; the untaunted add goes for Reb's liver), Can't Park There (repair bill included) and Forever Depends. 185 slices."],
             ['🦺', 'OSHA landings break things now: the rocket crashes, the banker trips, a slice falls off the wheel, a vehicle explodes, a pet trips, a top-bar button falls off (click it to bolt it back on), Clippy pokes his eye out, or the shack catches fire.'],
@@ -9225,7 +9269,14 @@
             ['🔘', 'New Toys, Party and Forever buttons (with Ret Vision horror versions). The Hearthstone moved into Home: hearth with the cast, or click the yacht to board right away.'],
             ['🗡️', 'Stray glaives now stick in point first, and the golden cookie poofs the right way.'],
             ['📌', "Someone pinned up a conspiracy board. It's in Settings, if you want to look."],
-            ['🅿️', "Can't Park There is spreading: ads, guild news, Squawkr and chat."]
+            ['🅿️', "Can't Park There is spreading: ads, guild news, Squawkr and chat."],
+            ['💰', 'Prices and payouts now go by a percent of your gold, so everything stays worth it no matter how rich you get: mulligans and flasks 1%, Reb\'s bottle 2%, titles and casino tokens 5%, pets and toys 10%, themes 15%, houses 15% to 40%. Curses and shoutouts are 0.25%.'],
+            ['🎯', 'The daily bounty pays 15% of your gold. Killing Uwutek pays big and scales with the difficulty (Mythic is around 1e40 at least).'],
+            ['🛥️', 'The yacht pays 10% of your gold every 10 minutes. The Home window shows your Goblin Express credit limit next to the debt, and the Hearth button lives there once your house is maxed.'],
+            ['🪝', 'Hearthing is risky now: Biblehumping or Platemage might yank you mid-cast.'],
+            ['📌', 'The conspiracy board got a real board. Click the photos.'],
+            ['🏪', 'The 7/11 is now the 8/11 (open 7 hours a day, 11 days a week). Land on it to walk in and buy a Slurpee for 1%. Hold it carefully.'],
+            ['🧸', 'The toy box text no longer spills out when your text size is turned up.']
         ]
     };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
@@ -9242,7 +9293,7 @@
             ['🛒', 'The Shop: titles, themes, the garage, party mode, pets, and AIPAC. Tuesday tax is real. Kevin can take over.'],
             ['📈', 'The Degenerate Exchange, with stock splits. Reb\'s liver is now a stat.'],
             ['🧿', 'Curses, guild alerts, and a transfer link to move your save to another device.'],
-            ['🐢', 'New slices: Whistlethy, Communism, Tsussie, 7/11, and the Shack in the Desert (175 slices). Cop car and donut.'],
+            ['🐢', 'New slices: Whistlethy, Communism, Tsussie, 8/11, and the Shack in the Desert (175 slices). Cop car and donut.'],
             ['🎟️', 'Gallywix\'s Golden Ticket, the golden cookie, spin achievements up to 10,000, and the Ret Vision and Veterans Day themes.']] },
         { title: 'Uwutek arrives', date: 'October 29, 2026', lines: [
             ['👹', 'Uwutek the raid boss: every spin hits him. Stream chat, loot, betting, and $KNOB.'],
@@ -9494,27 +9545,27 @@
                 () => { if (!spend(c, t)) return; ownedTitles[t] = true; store.set('painWheelTitles', ownedTitles); unlock('drip'); equipTitle(t); },
                 () => equipTitle(t))));
             add(shopRow('📞', "Vince's 1980s Brick Phone", "A genuine 1983 car phone from Vince the stock broker. Four pounds. Twenty minutes of battery. It sits in the bottom-left corner. Click it and Vince calls with a stock tip (he's right about 60% of the time). Note: comes lightly dusted with a white powder Vince insists is \"just baby powder\" and an alarming amount of stripper glitter. Do not ask Vince about either.", garage.phone ? 'Owned ✓' : 'Buy: 3,995,000g', () => {
-                if (!spend(3995000, "Vince's brick phone")) return; garage.phone = true; store.set('painWheelGarage', garage); renderGarage(); unlock('brickphone'); renderShop(); closeShop(); vinceBusyUntil = 0; vinceCall();
+                if (!spend(priceOf(PCT.toy), "Vince's brick phone")) return; garage.phone = true; store.set('painWheelGarage', garage); renderGarage(); unlock('brickphone'); renderShop(); closeShop(); vinceBusyUntil = 0; vinceCall();
             }, garage.phone ? 'owned' : 'buy'));
         } else if (shopTab === 'consumables') {
-            add(shopRow('🧪', 'Flask of Loot', `Your next 10 spins all drop loot. (${flaskLoot} charges left)`, 'Buy: 250,000g', () => { if (!spend(250000, 'a Flask of Loot')) return; flaskLoot += 10; store.set('painWheelFlask', flaskLoot); shopMsg('Glug glug. Next 10 spins drop loot.'); renderShop(); }));
-            add(shopRow('📜', 'Mulligan Scroll', `If your next bet loses, you get it all back. (${mulligan} held)`, 'Buy: 150,000g', () => { if (!spend(150000, 'a Mulligan Scroll')) return; mulligan++; store.set('painWheelMulligan', mulligan); shopMsg('Scroll ready. Go lose a bet.'); renderShop(); }));
+            add(shopRow('🧪', 'Flask of Loot', `Your next 10 spins all drop loot. (${flaskLoot} charges left)`, 'Buy: ' + fmt(priceOf(PCT.flask)), () => { if (!spend(priceOf(PCT.flask), 'a Flask of Loot')) return; flaskLoot += 10; store.set('painWheelFlask', flaskLoot); shopMsg('Glug glug. Next 10 spins drop loot.'); renderShop(); }));
+            add(shopRow('📜', 'Mulligan Scroll', `If your next bet loses, you get it all back. (${mulligan} held)`, 'Buy: ' + fmt(priceOf(PCT.mulligan)), () => { if (!spend(priceOf(PCT.mulligan), 'a Mulligan Scroll')) return; mulligan++; store.set('painWheelMulligan', mulligan); shopMsg('Scroll ready. Go lose a bet.'); renderShop(); }));
             add(shopRow('🥃', 'Bottle for Reb', "Fully restores Reb's liver. Somehow.", 'Buy: 50,000g', () => {
                 if (liverDown) { shopMsg("Reb is in the hospital. They won't let you bring that in."); return; }
-                if (!spend(50000, 'a bottle for Reb')) return; liver = 100; store.set('painWheelLiver', liver); renderLiver(); shopMsg('Reb thanks you. His liver does not.'); chatBurst(['REB IS BACK', 'liver restored KEKW', 'enabler'], 2); }));
+                if (!spend(priceOf(PCT.bottle), 'a bottle for Reb')) return; liver = 100; store.set('painWheelLiver', liver); renderLiver(); shopMsg('Reb thanks you. His liver does not.'); chatBurst(['REB IS BACK', 'liver restored KEKW', 'enabler'], 2); }));
             if (store.get('painWheelWrongGame', false) || Math.max(stats.spins, allTimeSpins) >= 77) {   // ???? (unlocks the golden cookies; appears at 77 spins)
                 const owned = store.get('painWheelWrongGame', false);
                 add(shopRow('🍪', 'Wrong Game?', '????', owned ? 'Owned ✓' : 'Buy: 777,777g', () => {
                     if (store.get('painWheelWrongGame', false)) return;
-                    if (!spend(777777, '????')) return;
+                    if (!spend(priceOf(PCT.mystery), '????')) return;
                     store.set('painWheelWrongGame', true); shopMsg('🍪 ...somewhere, a grandma starts baking.'); renderShop();
                     chatBurst(['wrong game?', 'is that a cookie', 'cookie clicker DLC', 'what did you just buy', '????'], 3, 2000);
                     setTimeout(goldenCookie, 60000);   // the first one shows up about a minute later
                 }, owned ? 'owned' : 'buy'));
             }
             const kanaLeft = Math.max(0, Math.ceil((kanaUntil - Date.now()) / 60000));
-            add(shopRow('📺', 'Kana+ Premium (30 min)', kanaLeft ? `Ad-free for ${kanaLeft} more minutes.` : 'No popup ads for 30 minutes. Then Kana+ will ask you to renew.', 'Buy: 1,000,000g', () => {
-                if (!spend(1000000, 'Kana+ Premium')) return; kanaUntil = Math.max(Date.now(), kanaUntil) + 30 * 60000; store.set('painWheelKanaUntil', kanaUntil); shopMsg('Welcome to Kana+ Premium. Enjoy the brooding demon hunters, ad-free.'); renderShop(); }));
+            add(shopRow('📺', 'Kana+ Premium (30 min)', kanaLeft ? `Ad-free for ${kanaLeft} more minutes.` : 'No popup ads for 30 minutes. Then Kana+ will ask you to renew.', 'Buy: ' + fmt(priceOf(PCT.kana)), () => {
+                if (!spend(priceOf(PCT.kana), 'Kana+ Premium')) return; kanaUntil = Math.max(Date.now(), kanaUntil) + 30 * 60000; store.set('painWheelKanaUntil', kanaUntil); shopMsg('Welcome to Kana+ Premium. Enjoy the brooding demon hunters, ad-free.'); renderShop(); }));
             add(shopHead("🛡️ Kevin Repel (Kevin's lawyers are billionaires; priced accordingly)"));
             REPELS.forEach(([n, c, name]) => add(shopRow('🛡️', name, `The next ${n} spin${n > 1 ? 's' : ''} can't land on Kevin. Still counts as a fair spin. (Active: ${kevinShield})`, 'Buy: ' + fmt(c),
                 () => { if (!spend(c, name)) return; kevinShield += n; updateShieldBadge(); shopMsg(`Repel applied. ${kevinShield} Kevin-free spin${kevinShield > 1 ? 's' : ''} queued.`); renderShop(); })));
@@ -9527,18 +9578,18 @@
                 const txt = $('shoutText').value.trim();
                 if (!txt) { shopMsg('Type something first.'); return; }
                 if (!LEADERBOARD_URL || !playerName) { shopMsg('Shoutouts need the guild wheel and a player name.'); return; }
-                if (!spend(1000000, 'a shoutout')) return;
+                if (!spend(priceOf(PCT.shout), 'a shoutout')) return;
                 sendEvent({ k: 'shout', text: txt.slice(0, 140) }); $('shoutText').value = ''; shopMsg('Shoutout sent to Discord and every guildie\'s wheel. One million gold well spent. No refunds.'); showShoutout(`📣 ${playerName}: "${txt.slice(0, 140)}"`);
             });
             if (cluckStage === 1) add(shopRow('🌾', 'Special Chicken Feed (quest item)', 'For the CLUCK! quest. A Westfall chicken will come looking for it.', 'Buy: 5,000g', () => {
-                if (!spend(5000, 'Special Chicken Feed')) return; setCluck(2); closeShop();
+                if (!spend(priceOf(PCT.feed), 'Special Chicken Feed')) return; setCluck(2); closeShop();
                 moveToast('🌾 You got the Special Chicken Feed. A Westfall chicken is on its way... click it when it shows up!');
                 setTimeout(() => spawnChicken(true), 2500);
             }));
             if (aotcCarryUnlocked) {
                 add(shopHead('🏆 Black market'));
                 add(shopRow('🏆', "Krom's AOTC Carry", 'Pull a Krom: your next spin lands on AOTC. It is rigged, everyone will see it is rigged, and Discord will be told.', 'Buy: 25,000,000g', () => {
-                    if (!spend(25000000, 'an AOTC carry')) return;
+                    if (!spend(priceOf(PCT.aotc), 'an AOTC carry')) return;
                     setRigMode('AOTC'); unlock('boughtaotc'); sendEvent({ k: 'boughtaotc' });
                     shopMsg('Carry purchased. Spin to collect your "achievement". Shame has been sent to Discord.'); closeShop();
                     funEvent('💳 YOU PULLED A KROM. SPIN TO COLLECT YOUR SHAME.', 4000);
@@ -9576,25 +9627,25 @@
             });
             if (!clippyUnlocked) { const n = document.createElement('div'); n.className = 'text-[11px] text-slate-500'; n.textContent = '??? — one pet is hiding somewhere. It looks like it\'s waiting for you to click something.'; add(n); }
             add(shopRow('🖐️', "Biblehumping's Finger", "He lost it at work. He'd want you to have it. It gets laid to rest on the SPIN button with full honors. Some say the right kind of dark magic makes it move...", garage.finger ? 'Owned ✓' : 'Buy: 6,700,000g', () => {
-                if (!spend(6700000, "Biblehumping's Finger")) return; garage.finger = true; store.set('painWheelGarage', garage); renderShop(); closeShop();
+                if (!spend(priceOf(PCT.toy), "Biblehumping's Finger")) return; garage.finger = true; store.set('painWheelGarage', garage); renderShop(); closeShop();
                 playTapsSynth(); funEvent("🎺 LAYING BIBLEHUMPING'S FINGER TO REST", 5000);
                 setTimeout(() => { renderFinger(); unlock('finger'); moveToast("🖐️ Biblehumping's Finger now rests on the SPIN button. Gone, but never forgotten. (It's still pointing.)"); }, 1800);
                 chatBurst(['o7', 'F', 'press F for the finger', 'rest easy little guy', 'he would have wanted this', '🎺🎺🎺'], 6, 4000);
             }, garage.finger ? 'owned' : 'buy'));
         } else if (shopTab === 'garage') {
             add(shopRow(`<img src="${PHOTO_SHACK}" alt="" style="display:inline-block;height:30px;vertical-align:middle">`, 'Shack in the Desert', 'The one from the meme. Its own property (not a house upgrade). Sits in the corner, pays +40g every 10 minutes.', garage.shack ? 'Owned ✓' : 'Buy: 1,350g', () => {
-                if (!spend(1350, 'the Shack in the Desert')) return; garage.shack = true; store.set('painWheelGarage', garage); renderGarage(); renderShop();
+                if (!spend(priceOf(PCT.toy), 'the Shack in the Desert')) return; garage.shack = true; store.set('painWheelGarage', garage); renderGarage(); renderShop();
                 shopMsg('You bought a shack in the desert. Very peaceful. Nobody can find you.'); chatBurst(['SHACK IN THE DESERT', 'he moved to the desert', 'the meme lives', 'peaceful'], 3);
             }, garage.shack ? 'owned' : 'buy'));
-            add(shopRow(ambSprite(false, 0.55), "Biblehumping's Ambulance", 'Parks in the corner. Click it for lights and siren. Thank you to our first responders (except Biblehumping).', garage.ambulance ? 'Owned ✓' : 'Buy: 2,500,000g', () => {
-                if (!spend(2500000, 'the ambulance')) return; garage.ambulance = true; store.set('painWheelGarage', garage); renderGarage(); unlock('weewoo'); driveAmbulance(); renderShop();
+            add(shopRow(ambSprite(false, 0.55), "Biblehumping's Ambulance", 'Parks in the corner. Click it for lights and siren. Thank you to our first responders (except Biblehumping).', garage.ambulance ? 'Owned ✓' : 'Buy: ' + fmt(priceOf(PCT.toy)), () => {
+                if (!spend(priceOf(PCT.toy), 'the ambulance')) return; garage.ambulance = true; store.set('painWheelGarage', garage); renderGarage(); unlock('weewoo'); driveAmbulance(); renderShop();
             }, garage.ambulance ? 'owned' : 'buy'));
-            add(shopRow(copSprite(false, 0.55), "ChAoTiC's Cop Car", "Comes with ChAoTiC's Golden Chocolate Donut. Parks in the corner; click it: it rolls in, does the WHOOP WHOOP, and peels off. (Try it while the ambulance is out...)", garage.police ? 'Owned ✓' : 'Buy: 2,500,000g', () => {
-                if (!spend(2500000, 'the cop car')) return; garage.police = true; store.set('painWheelGarage', garage); renderGarage(); drivePolice(); renderShop();
+            add(shopRow(copSprite(false, 0.55), "ChAoTiC's Cop Car", "Comes with ChAoTiC's Golden Chocolate Donut. Parks in the corner; click it: it rolls in, does the WHOOP WHOOP, and peels off. (Try it while the ambulance is out...)", garage.police ? 'Owned ✓' : 'Buy: ' + fmt(priceOf(PCT.toy)), () => {
+                if (!spend(priceOf(PCT.toy), 'the cop car')) return; garage.police = true; store.set('painWheelGarage', garage); renderGarage(); drivePolice(); renderShop();
                 setTimeout(() => giveLoot('legendary', '🍩 ChAoTiC left this in the cruiser', 'Golden Chocolate Donut'), 1500);
             }, garage.police ? 'owned' : 'buy'));
-            add(shopRow(`<img src="${PHOTO_ROCKET}" alt="" style="display:inline-block;height:30px;vertical-align:middle">`, 'SpaceZ Rocket', 'For when you\'ve made it (10 billion gold). Launches on purchase and every time you click it.', garage.rocket ? 'Owned ✓' : 'Buy: 10,000,000,000g', () => {
-                if (!spend(10000000000, 'the rocket')) return; garage.rocket = true; store.set('painWheelGarage', garage); renderGarage(); unlock('rocket'); closeShop(); launchRocket(); sendEvent({ k: 'rocket' }); renderShop();
+            add(shopRow(`<img src="${PHOTO_ROCKET}" alt="" style="display:inline-block;height:30px;vertical-align:middle">`, 'SpaceZ Rocket', 'For when you\'ve made it (a quarter of everything you own). Launches on purchase and every time you click it.', garage.rocket ? 'Owned ✓' : 'Buy: ' + fmt(priceOf(PCT.rocket)), () => {
+                if (!spend(priceOf(PCT.rocket), 'the rocket')) return; garage.rocket = true; store.set('painWheelGarage', garage); renderGarage(); unlock('rocket'); closeShop(); launchRocket(); sendEvent({ k: 'rocket' }); renderShop();
             }, garage.rocket ? 'owned' : 'buy'));
         } else if (shopTab === 'society') {
             const intro = document.createElement('div'); intro.className = 'text-xs text-slate-300';
@@ -9674,7 +9725,7 @@
                 const w = document.createElement('div'); w.className = 'flex items-center gap-2'; w.innerHTML = '<span class="text-xs font-bold text-slate-400">Victim:</span>'; w.appendChild(sel); add(w);
                 const fast = store.get('painWheelHexFast', false);
                 add(shopRow('⏱️', "Warlock's Hex Accelerator", fast ? 'Owned: your curse cooldown is 10 seconds.' : 'Permanently drops your curse cooldown from 30 seconds to 10.', fast ? 'Owned ✓' : 'Buy: 1,000,000g', () => {
-                    if (!spend(1000000, "the Hex Accelerator")) return; store.set('painWheelHexFast', true); renderShop.lastCurse = 0;
+                    if (!spend(priceOf(PCT.hex), "the Hex Accelerator")) return; store.set('painWheelHexFast', true); renderShop.lastCurse = 0;
                     shopMsg('⏱️ Hex Accelerator installed. Cooldown is now 10 seconds. Go wild.'); chatBurst(['warlock speedrun', 'curse spam incoming', 'monkaS', 'nobody is safe'], 3); renderShop();
                 }, fast ? 'owned' : 'buy'));
                 Object.entries(CURSES).filter(([id, c]) => !c.adminOnly || isAdmin()).forEach(([id, c]) => add(shopRow(c.e, c.name, c.desc, c.adminOnly ? 'ABUSE (free)' : 'Curse: ' + fmt(c.cost), () => {
@@ -9975,6 +10026,19 @@
     // ---------- Hearthstone: 10 second cast to the yacht (interruptible, like the real thing) ----------
     let hearthCast = null;
     function renderHearth() { const on = store.get('painWheelHouseLevel', 0) >= 6; $('hearthRow').classList.toggle('hidden', !on); $('hearthRow').classList.toggle('flex', on); }
+    const YANKS = [   // Biblehumping (until Nick picks his new name) and Platemage do NOT let you leave
+        ['🚑 Biblehumping', "Leap of Faith'd you right back to the raid.", ["Nope. We are NOT done, eh.", "You don't get to hearth. I don't get to hearth. Nobody hearths.", "I have one finger and it is pointing at the boss."]],
+        ['🛡️ Platemage', 'grabbed you by the collar mid-cast and dragged you back.', ["Nobody hearths on my watch.", "Plate is for mages now. So is yanking.", "The yacht will be there. The loot will not."]]];
+    function hearthYank() {
+        const [who, did, says] = pick(YANKS);
+        hearthCancel(`${who} ${did}`);
+        const cb = $('castBar').getBoundingClientRect();
+        document.body.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-26px)' }, { transform: 'translateX(10px)' }, { transform: 'translateX(0)' }], { duration: 420, easing: 'ease-out' });
+        funEvent('🪝 YOINK! ' + who.replace(/^\S+ /, '').toUpperCase() + ' PULLED YOU BACK', 2600);
+        setTimeout(() => floatBubble(`${who}: ${pick(says)}`, innerWidth / 2, Math.max(140, cb.top || innerHeight * 0.6) - 20, 3600), 500);
+        chatBurst(['YOINKED', 'get back here', 'no hearth for you', 'LMAO he got pulled', 'denied'], 3, 1500);
+        if (Math.random() < 0.5) setTimeout(() => sqPost(who.includes('Bible') ? 'bible' : 'chaotic', who.includes('Bible') ? 'someone tried to hearth mid-raid. i leaped them. you are welcome, eh' : 'witnessed Platemage yank a hearther. allowing it. it was legal'), 3500);
+    }
     function hearthCancel(why) {
         if (!hearthCast) return;
         clearInterval(hearthCast.iv); hearthCast.stop(); hearthCast = null;
@@ -10003,12 +10067,14 @@
         if (isSpinning) { moveToast("🪨 Can't do that while the wheel is spinning. (You're moving.)"); return; }
         const t0 = performance.now(), DUR = 10000;
         const kevinAt = Math.random() < 0.12 ? 2500 + Math.random() * 6000 : Infinity;   // sometimes Kevin pulls the boss mid-cast
+        const yankAt = kevinAt === Infinity && Math.random() < 0.15 ? 4000 + Math.random() * 5500 : Infinity;   // ...or a guildie yanks you back to the raid
         { const hp = $('housePanel'); hp.classList.add('hidden'); hp.classList.remove('flex'); }   // close Home so you can watch the cast
         $('castBar').style.display = 'block'; $('castName').textContent = "Hearthstone: Gallywix's Yacht";
         $('castFill').style.background = 'linear-gradient(#fde68a,#f59e0b 55%,#b45309)';
         hearthCast = { stop: hearthHum(), iv: setInterval(() => {
             const el = performance.now() - t0;
             if (el >= kevinAt) { hearthCancel('🤡 Kevin pulled the boss. Your Hearthstone got interrupted.'); chatBurst(['KEVIN PULLED', 'no hearth for you', 'classic Kevin'], 2); return; }
+            if (el >= yankAt) { hearthYank(); return; }
             $('castFill').style.width = Math.min(100, el / DUR * 100) + '%'; $('castTime').textContent = (Math.min(el, DUR) / 1000).toFixed(1) + ' / 10.0';
             if (el >= DUR) {
                 clearInterval(hearthCast.iv); hearthCast.stop(); hearthCast = null;
@@ -10382,7 +10448,7 @@
         n.querySelector('[data-buy]').addEventListener('click', () => {
             const body = n.querySelector('div:nth-child(2)');
             if (store.get('painWheelWinrar', null)) { body.innerHTML = 'You already own WinRAR. You are the only person on Earth who does.'; setTimeout(() => n.remove(), 2200); return; }
-            if (!spend(29990, 'a WinRAR license')) { body.innerHTML = 'You need 29,990g. Keep being a winrar for free.'; return; }
+            if (!spend(priceOf(PCT.winrar), 'a WinRAR license')) { body.innerHTML = `You need ${fmt(priceOf(PCT.winrar))}. Keep being a winrar for free.`; return; }
             const seg = () => Math.random().toString(36).slice(2, 6).toUpperCase();
             const lic = { no: `WR-${seg()}-${seg()}-${seg()}`, at: new Date().toISOString() }; store.set('painWheelWinrar', lic); renderWinrarBadge();
             body.innerHTML = `Nobody has ever clicked this before. Thank you?<br><br>License: <b>${lic.no}</b>`;
@@ -10435,7 +10501,7 @@
         CONUNDRUM_TIN: ['TIN KEKW', 'cheaper than aluminum', 'old guild flashbacks', 'tin foil hat time', 'F'],
         WHISTLETHY: ['WHISTLETHY', 'toot toot', '🐢🐢🐢', 'protect Whistlethy at all costs', 'guild mascot', 'best turtle'],
         COMMUNISM: ['OUR KEVIN', 'comrade', 'the Kevin belongs to the people', '☭☭☭', 'seize the means of spinning'],
-        SEVEN_ELEVEN: ['SLURPEE', 'brain freeze', 'thank you come again', 'get me a big gulp', '7/11 run']
+        SEVEN_ELEVEN: ['SLURPEE', 'brain freeze', 'thank you come again', 'get me a big gulp', '8/11 run', 'open 11 days a week??']
     });
     const PHOTO_TSUSSIE = "media/photo_tsussie.jpg?v=0a598549";
     const PHOTO_WHISTLETHY = "media/photo_whistlethy.jpg?v=9a0b537a";
@@ -10453,6 +10519,52 @@
             });
         } catch (e) {}
     }
+    const PHOTO_STORE811 = "media/photo_store811.jpg?v=a82807f6";
+    const PHOTO_CUP_BLUE = "media/photo_cup_blue.png?v=e7b9a3d2";
+    const PHOTO_CUP_RED = "media/photo_cup_red.png?v=203e1287";
+    const PHOTO_CUP_GREEN = "media/photo_cup_green.png?v=483597f9";
+    const PHOTO_SPILL = "media/photo_spill.png?v=72be668f";
+    const PHOTO_CUP_LID = "media/photo_cup_lid.png?v=2d248609";
+    const PHOTO_CUP_EMPTY = "media/photo_cup_empty.png?v=e00fcbb8";
+    const S811_CUP = { 'Cherry': () => PHOTO_CUP_RED, 'Blue Raspberry': () => PHOTO_CUP_BLUE, 'Lime': () => PHOTO_CUP_GREEN };
+    const S811_LINES = { 'Cherry': ['Cherry. A classic. Like Kevin pulling.', 'Red. Like the raid frames.'], 'Blue Raspberry': ["Blue raspberry. Raspberries aren't blue. Don't think about it.", 'Your tongue is blue for three raid nights.'],
+        'Lime': ['Lime. Bold choice. Wrong, but bold.', 'Green, like the pull timer Kevin ignored.'] };
+    const S811_SPILL = ['Clean up on aisle 8. Your gold is gone. So is your Slurpee.', 'Dropped it. The 8/11 has a no-refund policy. And no floor mop.', 'Kevin bumped you. Kevin says he did not bump you.', 'It hit the floor before the lid did. Gravity: 1, you: 0.'];
+    let s811Busy = false;
+    function s811Say(t, ms) { const d = $('s811Say'); d.textContent = t; d.classList.remove('hidden'); clearTimeout(s811Say.t); s811Say.t = setTimeout(() => d.classList.add('hidden'), ms || 3200); }
+    function open811() {
+        const m = $('store811'); $('s811Scene').style.background = `url(${PHOTO_STORE811}) 0 0 / 100% 100% no-repeat`;
+        $('s811Price').textContent = `Every Slurpee costs ${fmt(priceOf(PCT.slurpee))} gold (1% of what you have). Pocket change.`;
+        $('s811Cup').classList.add('hidden'); m.classList.remove('hidden'); m.classList.add('flex');
+        s811Say(pick(['Open 7 hours a day, 11 days a week.', "We're open. Don't ask which days.", 'The hot dogs have been rolling since 2019. The Slurpees are fresh. Probably.']));
+    }
+    function close811() { const m = $('store811'); m.classList.add('hidden'); m.classList.remove('flex'); }
+    function buy811(f) {
+        if (s811Busy) return; const cost = priceOf(PCT.slurpee);
+        if (gold < cost) return s811Say("You can't afford pocket change. That's a new low.");
+        s811Busy = true; setGold(gold - cost);
+        const cup = $('s811Cup'), taps = { 'Cherry': 19.75, 'Blue Raspberry': 23.25, 'Lime': 26.5 };
+        cup.style.left = (taps[f] - 3) + '%'; cup.style.top = '46%'; cup.style.height = '22%'; cup.style.animation = ''; cup.src = PHOTO_CUP_EMPTY; cup.classList.remove('hidden');
+        s811Say('*machine noises*', 1200);
+        setTimeout(() => { cup.src = S811_CUP[f](); cup.style.animation = 's811wob .4s 2'; }, 1200);
+        setTimeout(() => {
+            if (Math.random() < .12) {
+                cup.src = PHOTO_SPILL; cup.style.height = '18%'; cup.style.top = '54%'; cup.style.animation = '';
+                s811Say(pick(S811_SPILL), 3800); chat(pick(['CLEAN UP AISLE 8', 'he dropped the slurpee KEKW', 'RIP slurpee', 'F']));
+            } else {
+                if (f === 'Cherry') cup.src = PHOTO_CUP_LID; cup.style.animation = '';
+                giveLoot('uncommon', '🥤 8/11', 'Slurpee (' + f + ')'); s811Say(pick(S811_LINES[f]));
+                const fr = document.createElement('div');   // brain freeze
+                fr.style.cssText = 'position:fixed;inset:0;z-index:67;pointer-events:none;background:radial-gradient(circle,transparent 40%,rgba(56,189,248,.45));opacity:1;transition:opacity 2.5s';
+                document.body.appendChild(fr); setTimeout(() => fr.style.opacity = '0', 900); setTimeout(() => fr.remove(), 3600);
+                if (Math.random() < .15) setTimeout(() => s811Say('🧠❄️ BRAIN FREEZE. You forgot your rotation.', 2600), 1500);
+            }
+            $('s811Price').textContent = `Every Slurpee costs ${fmt(priceOf(PCT.slurpee))} gold (1% of what you have). Pocket change.`;
+            s811Busy = false;
+        }, 2300);
+    }
+    document.querySelectorAll('#store811 [data-f]').forEach(b => b.onclick = () => buy811(b.dataset.f));
+    $('s811Close').onclick = close811; $('store811').onclick = (e) => { if (e.target.id === 'store811') close811(); };
     function newSliceFx(type) {
         const ws = $('whistlethyScene');
         if (ws) { ws.classList.toggle('hidden', type !== 'WHISTLETHY'); ws.classList.toggle('flex', type === 'WHISTLETHY'); }
@@ -10461,6 +10573,7 @@
         if (type === 'TSUSSIE' && !$('tsussieImg').src) $('tsussieImg').src = PHOTO_TSUSSIE;
         if (ts) { ts.classList.toggle('hidden', type !== 'TSUSSIE'); ts.classList.toggle('flex', type === 'TSUSSIE'); }
         if (type === 'SEVEN_ELEVEN') {
+            afterModal(open811);
             setTimeout(() => giveLoot('uncommon', '🥤 Thank you, come again', pick(['Slurpee (Blue Raspberry)', 'Slurpee (Cherry)', 'Slurpee (Coke)', 'Slurpee (Mystery Flavor)', "Slurpee (Dr Pepper)", "Slurpee (Mountain Dew Code Red)", "Slurpee (Wild Cherry Pepsi)", "Slurpee (Half & Half Mix)", "Slurpee (Sugar Free, For Reb's Doctor)", "Slurpee (Dr Pepper)"])), 1200);
             const f = document.createElement('div');   // brain freeze: a soft blue frost that fades
             f.style.cssText = 'position:fixed;inset:0;z-index:58;pointer-events:none;background:radial-gradient(circle,transparent 40%,rgba(56,189,248,.45));opacity:1;transition:opacity 2.5s';
@@ -10470,7 +10583,7 @@
         if (sc) { sc.classList.toggle('hidden', type !== 'SMOKES'); sc.classList.toggle('flex', type === 'SMOKES'); }
         if (type === 'SMOKES' && SMOKES_IMG && !$('smokesImg').src) { $('smokesImg').src = SMOKES_IMG; $('smokesImg').classList.remove('hidden'); $('smokesEmoji').classList.add('hidden'); }
         if (type === 'SUSAN_EXPRESS') susanSpam();
-        else if (type === 'WINRAR') { setTimeout(winrarNag, 1600); setGold(gold + 40); const m = $('betMsg'); m.textContent = (m.textContent ? m.textContent + ' · ' : '') + '+40g winrar bonus'; }
+        else if (type === 'WINRAR') { setTimeout(winrarNag, 1600); const rw = rewardOf(.05, 40); setGold(gold + rw); const m = $('betMsg'); m.textContent = (m.textContent ? m.textContent + ' · ' : '') + `+${fmt(rw)} winrar bonus`; }
         else if (type === 'FLASHBANG') flashbang();
     }
 
@@ -10736,6 +10849,21 @@
         liver:     { e: '🥃', name: "Curse of Reb's Liver", cost: 50000, desc: "Reb's liver takes a 50% hit on their wheel." },
         admin:     { e: '👑', name: 'ADMIN ABUSE', cost: 0, adminOnly: true, desc: 'Upside down + Ret Vision + $KNOB crash, all at once. Free. Because you can.' }
     };
+    // 💰 wire every price table to the agreed percentages (free things stay free)
+    (function wirePrices() {
+        const live = (o, pct) => { if (o && o.cost) Object.defineProperty(o, 'cost', { get: () => priceOf(typeof pct === 'function' ? pct() : pct), configurable: true }); };
+        Object.values(NEEDLES).forEach(n => live(n, PCT.needle));
+        Object.values(TICK_PACKS).forEach(n => live(n, PCT.pack));
+        Object.values(PETS).forEach(n => { if (!n.claw) live(n, PCT.pet); });
+        Object.values(CURSES).forEach(n => live(n, PCT.curse));
+        THEMES.forEach(t => live(t, PCT.theme));
+        TITLES.forEach(t => { if (t[1]) Object.defineProperty(t, 1, { get: () => priceOf(PCT.title), configurable: true }); });
+        HOUSE_LEVELS.forEach((h, i) => live(h, HOUSE_PCT[i] || .4));
+        SOCIETY.forEach((r, i) => live(r, SOCIETY_PCT[i] || .4));
+        live(TSUK.premium, PCT.tsuk); live(TSUK.rikers, PCT.rikers);
+        const ratio = { quick: .1, gold: 1, six: 4, scritchy: 10, plat: 50 };   // scratch-offs keep their old ladder around the 0.25% base ticket
+        SCRATCHERS.forEach(t => live(t, t.id === 'golden' ? .25 : PCT.scratch * (ratio[t.id] || 1)));
+    })();
     const isAdmin = () => String(playerName || '').toLowerCase() === 'axazon';
     function curseTake(kind) {   // spends one charge of a pending spin curse
         const c = store.get('painWheelCursed', {}); if (!(c[kind] > 0)) return false;
@@ -10908,10 +11036,10 @@
         if (s.type === 'KROM' && Math.random() < 0.25) setTimeout(() => { if (window.showAdById) window.showAdById('aotc-carry'); }, 6000);
         // set perks that pay out on landings
         let bonus = 0;
-        if (hasPerk('bar') && ['KNOB_CREEK', 'ROAD_BEERS', 'GARAGE_BEERS'].includes(s.type)) bonus += 1000;
-        if (hasPerk('kevin') && s.type === 'KEVIN') bonus += 50;
-        if (hasPerk('ret') && s.type === 'RET_PALADIN') bonus += 500;
-        if (bonus) { setGold(gold + bonus); const m = $('betMsg'); m.textContent = (m.textContent ? m.textContent + ' · ' : '') + `+${bonus}g set bonus`; }
+        if (hasPerk('bar') && ['KNOB_CREEK', 'ROAD_BEERS', 'GARAGE_BEERS'].includes(s.type)) bonus += rewardOf(.05);   // uncommon slices: 5%
+        if (hasPerk('kevin') && s.type === 'KEVIN') bonus += rewardOf(.005, 50);                                           // Kevin is everywhere: tiny on purpose
+        if (hasPerk('ret') && s.type === 'RET_PALADIN') bonus += rewardOf(.10);                                            // one slice: 10%
+        if (bonus) { setGold(gold + bonus); const m = $('betMsg'); m.textContent = (m.textContent ? m.textContent + ' · ' : '') + `+${fmt(bonus)} set bonus`; }
         if (fair && LEADERBOARD_URL && playerName && bossState) bossHitFloat(bossDmgFor(s.type, ash));
         petsReact(s.type, { bet: betDelta, lootQ: null });
     }
