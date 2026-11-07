@@ -580,6 +580,8 @@
             background: rgba(6,10,32,.95); border: 2px solid #9ca3af; box-shadow: 0 0 0 1px #000, 0 12px 30px rgba(0,0,0,.6); color: #fff; font-size: 17px; line-height: 1.35; pointer-events: none; transition: opacity .6s; }
         .loot-card .nm { color: #b048f8; font-weight: 800; font-size: 20px; } .loot-card .g { color: #1eff00; } .loot-card .fl { color: #ffd100; font-style: italic; }
         .loot-card .row { display: flex; justify-content: space-between; } .loot-card .ic { float: right; height: 52px; width: auto; image-rendering: pixelated; margin: -2px 0 4px 8px; border: 2px solid #b048f8; border-radius: 4px; background: #111; }
+        body.ghost-town .pet-walker, body.ghost-town #toyBox, body.ghost-town #shackSpot, body.ghost-town #nickFinger, body.ghost-town #squawkWin, body.ghost-town #sqFab, body.ghost-town #timeshareHouse { visibility: hidden !important; }
+        body.ghost-town main { filter: sepia(.35) saturate(.7); }
         .dance-line { position: fixed; z-index: 63; left: 50%; bottom: 10px; transform: translateX(-50%); transform-origin: 50% 100%; display: flex; align-items: flex-end; gap: 22px; pointer-events: none; }
         .dance-slot { position: relative; }
         .dance-slot > :not(.pet-bubble) { animation: petDance .45s ease-in-out infinite alternate; animation-delay: inherit; }
@@ -641,6 +643,7 @@
             <button id="hearthBtn" title="Hearthstone: Gallywix's Yacht (10 sec cast)" style="display:none" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-sky-700 text-sky-200 font-bold cursor-pointer items-center gap-1.5"><img id="hearthIcon" alt="" style="height:1.5em;width:auto;margin:-.25em 0"><span>Hearth</span></button>
             <button id="toyBtn" title="Show / hide your toys (bottom-right corner)" style="display:none" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold cursor-pointer items-center gap-1.5"><img id="toyIcon" alt="" style="height:1.5em;width:auto;margin:-.25em 0"><span id="toyLbl">Toys</span></button>
             <button id="partyBtn" class="px-2.5 py-1 rounded-md bg-fuchsia-800 hover:bg-fuchsia-700 border border-fuchsia-500 text-white font-bold cursor-pointer inline-flex items-center gap-1.5"><img id="partyHatImg" alt="" style="height:1.5em;width:auto;margin:-.25em 0"><span>Party</span></button>
+            <button id="foreverBtn" title="WoW Forever is out" class="px-2.5 py-1 rounded-md bg-amber-900 hover:bg-amber-800 border border-amber-600 text-amber-100 font-bold cursor-pointer inline-flex items-center gap-1.5"><img id="foreverIcon" alt="" style="height:1.5em;width:auto;margin:-.25em 0;image-rendering:pixelated"><span>Forever</span></button>
         </div>
     </header>
     <div id="bossBar" class="hidden w-full px-4 py-2 border-b border-slate-800/80" style="background: linear-gradient(90deg,#1a0b2e,#3b0764 50%,#1a0b2e);">
@@ -783,7 +786,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="conspiracy.html" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 6, 10:15 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 6, 11:15 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -1519,6 +1522,7 @@
     const PHOTO_FAMILY_50S = "media/photo_family_50s.jpg?v=14e49b4c";
     const PHOTO_DYLAN_ROAD = "media/photo_dylan_road.jpg?v=ec785aa5";
     const PHOTO_DYLAN_DRONES = "media/photo_dylan_drones.jpg?v=7da22f8d";
+    const PHOTO_TUMBLEWEED = "media/photo_tumbleweed.png?v=ba8212ac";
     const PHOTO_OSHA = "media/photo_osha.jpg?v=69fa9bf1";
     const PHOTO_DISCO = "media/photo_disco.png?v=97e27dbb";
     const PHOTO_DEPENDS = "media/photo_depends.jpg?v=70acfece";
@@ -1573,7 +1577,7 @@
     const PHOTO_CEILINGCAT = "media/photo_ceilingcat.jpg?v=f9ecbd81";  // Carl slice
     const PHOTO_FBI_CARL = "media/photo_fbi_carl.png?v=a2fabb26";     // Carl, slides in from the left
 
-    const TOTAL_SLICES = 183; // change this to grow/shrink the wheel; KEVIN fills whatever is left
+    const TOTAL_SLICES = 185; // change this to grow/shrink the wheel; KEVIN fills whatever is left
     // ---------- the seasonal slice: one slice that turns into whatever holiday it is (by the date, whatever theme you picked) ----------
     const SEASON = (() => {
         const d = new Date(), md = (d.getMonth() + 1) * 100 + d.getDate(), between = (a, b) => md >= a && md <= b;
@@ -1714,6 +1718,11 @@
                  'Roast beef, a house on one income, and a TV with a cute raid boss on it. Duck and cover after dessert.', 'Mom made dinner from scratch. Dad was home by 5. Nobody had to raid at 7. You will never know this peace.',
                  'The house cost $9,000. The kids say "yes sir." The TV has three channels and one of them is Uwutek.', '"Pass the peas, Margaret. The Russians have the bomb." "Yes, dear."']),
                  media: { src: PHOTO_FAMILY_50S, fallback: null, caption: '🏡 TYPICAL 1950s NUCLEAR FAMILY • UWUTEK ON CHANNEL 3' } } },
+        { id: "TAUNTING", n: 1, label: "🛡️ Taunting 🛡️", pill: "TAUNTING", bg: "#475569", text: "#f1f5f9", border: "#cbd5e1", color: "text-slate-300", glow: "bg-slate-600", key: "_", rig: "TNT",
+          win: { title: "🛡️ TAUNTING 🛡️", size: SIZE.mid, sub: () => pick(["Casimir would never. Not once. Not even when he was a Protection Paladin, when it was literally his job.", "Casimir doesn't taunt. He lets the boss make its own decisions.",
+                 "The add has been taunted. By the warlock's imp. Casimir is very proud of him.", "Taunt was on Casimir's bars. Taunt was never pressed. Taunt is still on cooldown from 2019.", "Casimir prefers to tank with positive reinforcement."]) } },
+        { id: "CANT_PARK", n: 1, label: "🅿️ Can't Park There 🅿️", pill: "CAN'T PARK", bg: "#1d4ed8", text: "#ffffff", border: "#facc15", color: "text-blue-300", glow: "bg-blue-700", key: "", rig: "CPT",
+          win: { title: "🅿️ CAN'T PARK THERE 🅿️", size: SIZE.mid, sub: () => pick(CANT_PARK_LINES) + " (A repair bill for the wipe is in your bills.)" } },
         { id: "FOREVER_DEPENDS", n: 1, label: "🩲 Forever Depends 🩲", pill: "FOREVER DEPENDS", bg: "#1e3a8a", text: "#dbeafe", border: "#60a5fa", color: "text-blue-300", glow: "bg-blue-700", key: "0", rig: "DEP",
           win: { title: "🩲 MAXIMUM DEGENERACY 🩲", size: SIZE.mid, sub: () => pick(['You might shit, you might not. It just depends.', 'WoW Forever: absorbs 25x its weight in raid nights.',
                  '28 underwear. One raid night. Do the math.', 'Kana+ members save 15% with code DEPENDS. You might need it. You might not.', 'Five-hour progression night? It just depends.']),
@@ -2121,6 +2130,8 @@
     ];
 
     const twoAmAds = [
+        "🅿️ CAN'T PARK THERE™ DRIVING SCHOOL — WE TEACH YOU WHERE NOT TO STAND. (THE FIRE. IT'S THE FIRE.)",
+        "🅿️ CAN'T PARK THERE™ VALET — WE PARK YOUR RAID IN THE VOID ZONE SO YOU DON'T HAVE TO!",
         "📞 ARE YOU A RET PALADIN? YOU MAY BE ENTITLED TO FINANCIAL COMPENSATION. CALL 1-800-NERFED-NOW",
         "🔪 THE GLAIVE-O-MATIC 3000! IT SLICES! IT DICES! IT STILL DOES LESS DAMAGE THAN KEVIN! 4 EASY PAYMENTS OF $19.99",
         "🧽 SHAM-WOWZERS! SOAKS UP 20X ITS WEIGHT IN DISCORD TEARS",
@@ -2293,6 +2304,10 @@
     ];
 
     const guildNews = [
+        "TRAFFIC: BIBLEHUMPING'S AMBULANCE TOWED FROM THE MIDDLE OF THE BOSS ROOM. OFFICIALS: 'CAN'T PARK THERE.'",
+        "LOCAL: CHAOTIC WRITES HIMSELF A PARKING TICKET FOR THE CRUISER. APPEALS IT. LOSES THE APPEAL TO HIMSELF.",
+        "MARITIME: GALLYWIX'S YACHT FOUND PARKED IN THE DESERT AGAIN. HARBOR PATROL: 'CAN'T PARK THERE.'",
+        "OBITUARIES: RAIDER STOOD IN THE FIRE FOR 11 SECONDS. FAMILY STATEMENT: 'CAN'T PARK THERE.'",
         "BREAKING: GUILD BANK DOWN 4,000 GOLD; KEVIN 'HAS NO IDEA HOW THAT HAPPENED'",
         "WEATHER: 100% CHANCE OF VOID ZONES WITH SCATTERED KEVIN",
         "SPORTS: BIBLEHUMPING FINISHES #1 ON DAMAGE METERS; ENTIRE RAID DEAD",
@@ -4294,6 +4309,7 @@
     }
     function triggerSpin(power) {
         if (isSpinning) return;
+        if (Date.now() < (window.__skinUntil || 0)) { moveToast('🔪 Hold on, still skinning...'); return; }
         if (typeof power !== 'number') power = 0.35 + Math.random() * 0.55; // hub button / Spin Again: random strength
         power = Math.min(1, Math.max(0.05, power));
         isSpinning = true; document.body.classList.add('is-spinning');
@@ -6053,7 +6069,8 @@
     GEMINI_ADS.push(
         { id: 'rugpull', theme: 'spam', effect: 'rugpull', header: '🚀 $KEVCOIN PRESALE: 10,000× GUARANTEED 🚀', body: "Kevin is launching a coin. The dev is doxxed (it's Kevin). Liquidity is locked (the lock is also Kevin). Put in ALL your gold before it moons!", primary: '💎 APE IN (ALL MY GOLD)', reply: 'Transaction confirmed... wait, where did the website go?', close: "I've met Kevin" },
         { id: 'aotc-carry', theme: 'gold', effect: 'aotccarry', header: "🏆 KROM'S AOTC CARRY SERVICE 🏆", body: "Why earn it like a guild when you can BUY it like a GM? Krom did it, and he only lost every single raider. Now you can too. Everyone will know. Everyone.", primary: '💳 DO A KROM (UNLOCK IN SHOP)', reply: "Krom's AOTC Carry is now in the Shop (Consumables → Black market). Discord will be told when you buy it. :)", close: 'I have dignity (unlike Krom)' },
-        { id: 'kanarenew', theme: 'vip', header: '📺 YOUR KANA+ PREMIUM HAS EXPIRED', body: 'We noticed you have been enjoying ad-free spinning. That was a mistake on our part. Renew now and the brooding demon hunters return, ad-free!', primary: 'RENEW (1,000,000g IN THE SHOP)', reply: 'Renewal is in the Shop → Consumables. We will be waiting. Right here. In this ad.', close: 'I like ads now' }
+        { id: 'kanarenew', theme: 'vip', header: '📺 YOUR KANA+ PREMIUM HAS EXPIRED', body: 'We noticed you have been enjoying ad-free spinning. That was a mistake on our part. Renew now and the brooding demon hunters return, ad-free!', primary: 'RENEW (1,000,000g IN THE SHOP)', reply: 'Renewal is in the Shop → Consumables. We will be waiting. Right here. In this ad.', close: 'I like ads now' },
+        { id: 'cantpark', theme: 'warning', header: "🅿️ CAN'T PARK THERE™ PARKING ENFORCEMENT", body: "Our records show you parked in: the fire, the boss's spot, the healer's spot, and Reb's bar tab. Can't park there. Can't park ANY of there. A ticket has been issued to your raid team.", primary: 'PAY THE TICKET', reply: "Ticket paid. You still can't park there.", close: "I'm only stopping for a second" }
     );
     GEMINI_ADS.push(
         { id: 'lemonade', theme: 'food', effect: 'invest:lemonade', header: "🍋 KEVIN'S LEMONADE STAND: SEED ROUND NOW OPEN", body: 'Kevin is raising money for a lemonade stand. He has no lemons, no stand, and no plan. Minimum investment: 10% of your gold. Returns: "trust me".', primary: 'INVEST 10% 🍋', close: 'I have eyes', reply: 'Thank you for your investment! Kevin has already spent it.' },
@@ -6441,7 +6458,7 @@
     };
     const chatLog = $('chatLog');
     function chat(msg, who) {
-        if (!chatLog) return;
+        if (!chatLog || document.body.classList.contains('ghost-town')) return;
         const n = who ? CHAT_NAMES.find(x => x[0] === who) || [who, '#e2e8f0'] : pick(CHAT_NAMES);
         if (Date.now() < (window.__murlocUntil || 0)) msg = pick(['Mrglglgl!', 'mrgl mrgl', 'MRGLGLGLGL', 'Aaaaaughibbrgubugbugrguburgle!', 'mrrrgl?', 'blub blub']);
         if (!who && Math.random() < 0.22 && !/\p{Extended_Pictographic}/u.test(msg)) msg += ' ' + pick(CHAT_EMOJI);   // chat loves emojis
@@ -6954,7 +6971,24 @@
         })();
     }
     // ---------- 🕹️ Claw & Disorder: THE WHEEL™ claw machine (Little St. Jeff's Prize Island) ----------
-    const CLAW_COST = 2500;
+    const CLAW_COST = 2500;   // (old gold price; the claw takes casino tokens now)
+    // 🎰 Chief Kick a Bitch casino tokens: the claw machine's currency (gold is worth nothing to people at 1e50)
+    let tokens = store.get('painWheelTokens', 0);
+    const tokenWord = (n) => `${n} casino token${n === 1 ? '' : 's'}`;
+    function giveTokens(n, intro) {
+        tokens += n; store.set('painWheelTokens', tokens);
+        if (intro && !store.get('painWheelTokenIntro', false)) {
+            store.set('painWheelTokenIntro', true);
+            const o = document.createElement('div');
+            o.style.cssText = 'position:fixed;inset:0;z-index:96;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(2,6,23,.78)';
+            o.innerHTML = `<div style="width:min(440px,100%);background:#450a0a;border:3px solid #facc15;border-radius:16px;padding:18px;text-align:center;color:#fef9c3">
+                <div style="font:900 24px system-ui,sans-serif;color:#fde047">🎰 YOU RECEIVED 3 WEIRD TOKENS</div>
+                <div style="margin-top:10px;font-size:18px;line-height:1.45">They're from Chief Kick a Bitch's Casino. They're sticky. One of them has a bite mark. None of them are valid in Vermont.</div>
+                <div style="margin-top:10px;font-size:17px;line-height:1.45;color:#fde68a">The claw machine at Little St. Jeff's Prize Island takes these now (Shop → Pets). <b>1 token = 1 play.</b> Land on the casino slice for more.</div>
+                <button style="margin-top:14px;padding:10px 30px;border-radius:10px;background:#facc15;color:#000;font-weight:900;font-size:18px;border:none;cursor:pointer">OK</button></div>`;
+            document.body.appendChild(o); o.querySelector('button').onclick = () => o.remove();
+        } else moveToast(`🎰 +${tokenWord(n)} from Chief Kick a Bitch's Casino. You have ${tokens}. (Claw machine: Shop → Pets)`);
+    }
     const CLAW_SLOGANS = ['THE CLAW OF DISAPPOINTMENT', 'Prize list sealed by court order.', 'Cameras were down that day. Totally normal.', 'TERMINAL CLAW MACHINE: your odds are worse than your raid\'s survival rate.',
         'The guard fell asleep. The claw did not.', 'Flight logs available upon request. Request denied.', 'Grab your dreams. Watch us drop them.', 'Where dreams go to die and idiots pay admission.'];
     function openClaw() {
@@ -6972,10 +7006,10 @@
               </div>
             </div>
             <div data-slogan style="margin-top:8px;color:#fde68a;font:800 16px/1.3 system-ui,sans-serif;min-height:42px"></div>
-            <div data-msg style="color:#e2e8f0;font:700 17px/1.35 system-ui,sans-serif;min-height:48px">${prizeOn ? `${fmt(CLAW_COST)} a play. Move the claw, then DROP.` : 'Nothing left to win. You can still lose gold though.'}</div>
+            <div data-msg style="color:#e2e8f0;font:700 17px/1.35 system-ui,sans-serif;min-height:48px">${prizeOn ? `1 casino token a play. You have ${tokens}. Move the claw, then DROP.` : 'Nothing left to win. You can still lose tokens though.'}</div>
             <div style="display:flex;gap:10px;justify-content:center;margin-top:6px">
               <button data-l style="font-size:22px;padding:10px 20px;border-radius:10px;background:#334155;color:#fff;border:none;cursor:pointer">◀</button>
-              <button data-d style="font-size:20px;font-weight:900;padding:10px 26px;border-radius:10px;background:#b91c1c;color:#fff;border:none;cursor:pointer">DROP (${fmt(CLAW_COST)})</button>
+              <button data-d style="font-size:20px;font-weight:900;padding:10px 26px;border-radius:10px;background:#b91c1c;color:#fff;border:none;cursor:pointer">DROP (1 🎰)</button>
               <button data-r style="font-size:22px;padding:10px 20px;border-radius:10px;background:#334155;color:#fff;border:none;cursor:pointer">▶</button>
             </div>
             <div style="margin-top:8px;color:#64748b;font-size:12px">THE WHEEL™ is not responsible for missing prizes, missing persons, or anything found during a federal investigation. © Exxon-Hawkeyes Wheel Division · All Rights Denied · No Refunds</div>
@@ -6998,7 +7032,8 @@
         q('d').onclick = drop;
         function drop() {
             if (busy) return;
-            if (!spend(CLAW_COST, 'the claw machine')) { msg.textContent = `You need ${fmt(CLAW_COST)}. Even the claw has standards.`; return; }
+            if (tokens < 1) { msg.textContent = "No casino tokens. Land on Chief Kick a Bitch's Casino Tokens to get some. Gold is no good here."; return; }
+            tokens--; store.set('painWheelTokens', tokens);
             busy = true; const plays = store.get('painWheelClawPlays', 0) + 1; store.set('painWheelClawPlays', plays);
             const near = prize.style.display !== 'none' && Math.abs(x - px) < 7;
             const win = near && (Math.random() < 0.3 || plays % 12 === 0);   // aligned: 30%. Every 12th play is rigged in your favor (shh)
@@ -7020,7 +7055,14 @@
                         msg.textContent = pick(['So close. The claw let go. The claw always lets go.', 'It had him. It CHOSE to let go.', 'The claw grip is set to 3%. By design.', 'He slipped. Volley McBallface remains a prisoner of the island.']);
                         prize.style.transition = 'bottom .6s cubic-bezier(.5,0,1,.5)'; px = Math.max(12, Math.min(88, x + (Math.random() - 0.5) * 30)); prize.style.left = px + '%'; prize.style.bottom = '4%';
                         chat(pick(['NOOOO', 'the claw is rigged', 'every single claw machine ever', 'so close KEKW']));
-                    } else msg.textContent = pick(['The claw grabbed air. Majestically.', 'Missed by a mile. The claw is not sorry.', 'You grabbed nothing. That is the most honest prize in here.', 'Nothing. Try lining up. Or don\'t. We keep the gold either way.']);
+                    } else if (Math.random() < 0.04) {   // the prize chute clunks... it's the finger
+                        msg.textContent = "CLUNK. Something came out of the prize chute. It's Biblehumping's finger.";
+                        const box = q('box').getBoundingClientRect(), f = document.createElement('img'); f.src = PHOTO_FINGER; f.alt = '';
+                        f.style.cssText = `position:fixed;z-index:97;left:${box.left + box.width * 0.12}px;top:${box.top + box.height * 0.78}px;height:56px;width:auto;pointer-events:none`;
+                        document.body.appendChild(f); f.animate([{ transform: 'translateY(-30px) rotate(-40deg)', opacity: 0 }, { transform: 'translateY(0) rotate(10deg)', opacity: 1 }], { duration: 500, fill: 'forwards' });
+                        setTimeout(() => floatBubble('🚑 Biblehumping: ' + CHUTE_LINE, box.left + box.width * 0.2, box.top + box.height * 0.74, 3600), 500);
+                        setTimeout(() => f.remove(), 4300); chat(pick(['THE FINGER', 'that is not a prize', 'nick check your hand', 'free finger']));
+                    } else msg.textContent = pick(['The claw grabbed air. Majestically.', 'Missed by a mile. The claw is not sorry.', 'You grabbed nothing. That is the most honest prize in here.', 'Nothing. Try lining up. Or don\'t. We keep the token either way.']);
                     claw.style.transform = 'translateX(-50%)';
                     setTimeout(() => { busy = false; }, 700);
                 }, 1200);
@@ -7284,7 +7326,7 @@
         say: (t) => t === 'KEVIN' ? pick(['KEVIN. I REMEMBER YOU FROM THE ISLAND.', 'not kevin again. i will float away. i swear it.']) : pick(['I HAVE BEEN IN THE WATER FOR FOUR YEARS', 'the handprint is ketchup. probably.',
             'WILSON? never heard of him.', '*bobs menacingly*', 'i was a prize. now i am free.', 'do not ask about the island.', 'IT IS SO NICE TO BE OUT OF THE CLAW', 'i can see the bottom of the ocean. it can see me.', 'blub. (that was not me. that was the murloc.)']) };
     const PET_LIMIT = 4;   // pets on screen at once (the rest wait in the shop)
-    const petShown = (k) => store.get('painWheelPetsShown', {})[k] !== false;
+    const petShown = (k) => k === 'clippy' || store.get('painWheelPetsShown', {})[k] !== false;   // Clippy can't be hidden (someday: a favor)
     const activePets = () => Object.keys(PETS).filter(k => k !== 'clippy' && pets[k] && petShown(k)).slice(0, PET_LIMIT);   // Clippy doesn't count: he's less a pet, more a punishment
     function renderPets() {
         document.querySelectorAll('.pet-walker').forEach(e => e.remove());
@@ -7654,6 +7696,130 @@
         const all = [['rocket', oshaRocket], ['trip', oshaTrip], ['slice', oshaSliceFall], ['boom', oshaVehicleBoom], ['pet', oshaPetTrip], ['button', oshaButtonFall], ['clippy', oshaClippyEye], ['shack', oshaShackFire]];
         const opts = all.filter(([k]) => k !== oshaLast).sort(() => Math.random() - 0.5);
         for (const [k, fn] of opts) { if (fn() !== false) { oshaLast = k; return; } }
+    }
+    // ---------- 🚑 Biblehumping comes to collect things (his finger, mostly) ----------
+    function nickFetch(x, line, after) {   // the ambulance drives in to screen x, says its line, drives off
+        const amb = document.createElement('div');
+        amb.style.cssText = `position:fixed;z-index:79;bottom:${VEH_Y}px;left:0;pointer-events:none;transform:translateX(${innerWidth + 40}px);transition:transform 1.8s cubic-bezier(.2,.8,.3,1)`;
+        amb.innerHTML = `<div class="gb" style="display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:6px;width:max-content;max-width:min(440px,70vw);background:#fffbe6;color:#000;font-size:21px;font-weight:800;line-height:1.3;padding:8px 14px;border-radius:9px;border:2px solid #111;white-space:normal"></div>${ambSprite(false, 2)}`;
+        document.body.appendChild(amb); const stop = playSiren(1.6);
+        const tx = Math.max(20, Math.min(innerWidth - 260, x - 110));
+        requestAnimationFrame(() => requestAnimationFrame(() => { amb.style.transform = `translateX(${tx}px)`; }));
+        setTimeout(() => { amb.firstChild.style.display = 'block'; amb.firstChild.textContent = '🚑 Biblehumping: ' + line; after && after(); }, 1900);
+        setTimeout(() => { amb.firstChild.style.display = 'none'; stop(); amb.style.transition = 'transform 2.2s ease-in'; amb.style.transform = 'translateX(-280px)'; }, 6200);
+        setTimeout(() => amb.remove(), 8600);
+    }
+    const CHUTE_LINE = 'How the hell did that get in the chute again?';
+    function fingerChuteDrop() {   // a finger comes down the chute from the top of the screen
+        if (document.hidden) return false;
+        const x = innerWidth * (0.2 + Math.random() * 0.6), f = document.createElement('img'); f.src = PHOTO_FINGER; f.alt = '';
+        f.style.cssText = `position:fixed;z-index:80;left:${x}px;top:-80px;height:64px;width:auto;pointer-events:none`;
+        document.body.appendChild(f);
+        const floor = innerHeight - 70;
+        f.animate([{ transform: 'translateY(0) rotate(0)' }, { transform: `translateY(${floor + 80 - 64}px) rotate(380deg)`, offset: 0.7 }, { transform: `translateY(${floor + 40 - 64}px) rotate(420deg)`, offset: 0.82 }, { transform: `translateY(${floor + 80 - 64}px) rotate(450deg)` }], { duration: 1500, easing: 'ease-in', fill: 'forwards' });
+        setTimeout(() => { playTickSound(false); chat(pick(['is that a FINGER', 'nick dropped something', 'not the finger again', 'finger delivery'])); }, 1100);
+        setTimeout(() => nickFetch(x, CHUTE_LINE, () => setTimeout(() => f.remove(), 900)), 1700);
+        return true;
+    }
+    function fingerEscape() {   // the finger on the SPIN button goes flying when you spin, or tries to crawl away
+        const home = $('nickFinger'); if (!home || home.style.display === 'none' || home.style.visibility === 'hidden') return;
+        const r = home.getBoundingClientRect(); if (!r.width) return;
+        const f = document.createElement('img'); f.src = $('nickFingerImg').getAttribute('src') || PHOTO_FINGER; f.alt = 'Biblehumping\'s Finger';
+        f.style.cssText = `position:fixed;z-index:80;left:${r.left}px;top:${r.top}px;height:${r.height}px;width:auto`;
+        home.style.visibility = 'hidden'; document.body.appendChild(f);
+        const back = (msg) => { f.remove(); home.style.visibility = ''; if (msg) moveToast(msg); };
+        if (Math.random() < 0.5) {   // FLY
+            const dx = (Math.random() < 0.5 ? -1 : 1) * (200 + Math.random() * 300), floor = innerHeight - r.top - r.height - 10;
+            f.style.pointerEvents = 'none';
+            f.animate([{ transform: 'translate(0,0) rotate(0)' }, { transform: `translate(${dx * 0.5}px,-240px) rotate(540deg)`, offset: 0.4 }, { transform: `translate(${dx}px,${floor}px) rotate(1080deg)` }], { duration: 1600, easing: 'ease-out', fill: 'forwards' });
+            chatBurst(['THE FINGER', 'it launched the finger', 'FINGER OVERBOARD', 'nick is going to be so mad'], 3, 900);
+            setTimeout(() => nickFetch(r.left + dx, pick(['Every. Single. Spin. Stop spinning so hard, eh.', 'Got it. That is the third time today. Fourth if you count the chute.', 'You could put a lid on the button. Just saying.']), () => setTimeout(() => back(), 700)), 1700);
+        } else {   // CRAWL: inchworm toward the edge of the screen. Click it to catch it
+            f.style.cursor = 'pointer'; f.title = 'Catch it!';
+            const dir = r.left > innerWidth / 2 ? 1 : -1, dist = dir > 0 ? innerWidth - r.right + 60 : r.left + 60;
+            const a = f.animate([{ transform: 'translateX(0) scaleX(1)' }, { transform: `translateX(${dir * dist * 0.5}px) scaleX(.7)`, offset: 0.5 }, { transform: `translateX(${dir * dist}px) scaleX(1)` }], { duration: 9000, easing: 'steps(18, end)', fill: 'forwards' });
+            floatBubble('🖐️ *the finger is trying to leave*', r.left + r.width / 2, r.top - 10, 2600);
+            chatBurst(['the finger is MOVING', 'catch it', 'it is crawling away', 'FINGER ESCAPE', 'monkaS'], 3, 1200);
+            let caught = false;
+            f.onclick = () => { if (caught) return; caught = true; a.cancel(); back("🖐️ You caught Biblehumping's Finger and put it back on the button. It's twitching."); };
+            setTimeout(() => { if (caught) return; caught = true; nickFetch(dir > 0 ? innerWidth - 120 : 120, pick(['It was heading for the chute AGAIN.', 'It crawls to the chute every night. I think it misses the ambulance.', 'Got it. It tried to bite me.']), () => setTimeout(() => back(), 700)); }, 9200);
+        }
+    }
+    setInterval(() => { if (!document.hidden && !isSpinning && Math.random() < 0.25) fingerChuteDrop(); }, 15 * 60 * 1000);   // now and then, a finger comes down the chute
+
+    // ---------- 🛡️ Taunting: nobody taunted the add, so it went for Reb's liver ----------
+    function tauntFallout() {
+        hurtLiver(20, 'Nobody taunted the add. It went for Reb');
+        funEvent("🛡️ NOBODY TAUNTED. THE ADD WENT FOR REB'S LIVER.", 3200);
+        chatBurst(['WHO IS TANKING', 'casimir hit taunt? no?', 'the add is on reb', 'reb is tanking with his liver', 'TAUNT IT', 'that was the healer\'s fault somehow'], 4, 1800);
+    }
+
+    // ---------- 🔪 sorry im busy skinning ----------
+    window.__skinUntil = 0;
+    const SKIN_LEATHER = ['Suspiciously Fresh Leather', 'Pristine Hide (Still Warm)', 'Boss Pelt (The Boss Was Not Dead)', 'Leather Scraps of Questionable Origin', "Kevin's Hide (He Wants It Back)"];
+    function skinEvent() {
+        const sb = $('spinBtn'); if (!sb || document.hidden) return;
+        const r = sb.getBoundingClientRect(), sk = document.createElement('div');
+        sk.style.cssText = `position:fixed;z-index:78;left:${r.left - 70}px;top:${r.top - 40}px;pointer-events:none;display:flex;align-items:flex-end`;
+        sk.innerHTML = `<img src="${PHOTO_GIZ_DESK}" alt="" style="height:96px;width:auto"><span style="font-size:34px;margin-left:-20px;display:inline-block;animation:petDance .25s ease-in-out infinite alternate">🔪</span>`;
+        document.body.appendChild(sk);
+        window.__skinUntil = Date.now() + 5200;
+        const cover = document.createElement('div'); cover.textContent = '🔪 BUSY SKINNING...';
+        cover.style.cssText = 'position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;background:#134e4a;color:#ccfbf1;font-weight:900;letter-spacing:.06em;border-radius:inherit';
+        sb.disabled = true; sb.appendChild(cover);
+        floatBubble('🔪 HOLD ON TANK. Skinning the last pack. Two seconds.', r.left + 40, r.top - 50, 3600);
+        chatBurst(['we are pulling without you', 'he is skinning the BOSS', 'skinning > raiding', 'TANK IS PULLING', 'two seconds he says', 'classic'], 4, 1500);
+        setTimeout(() => {
+            sb.disabled = false; cover.remove(); sk.remove(); window.__skinUntil = 0;
+            const name = pick(SKIN_LEATHER); giveLoot('common', '🔪 Busy Skinning', name);
+            moveToast(`🔪 Done skinning. You got: ${name}. The raid wiped while you were busy.`);
+        }, 5200);
+    }
+
+    // ---------- 🅿️ CAN'T PARK THERE (the guild's "you died / you messed up" meme) ----------
+    const CANT_PARK_LINES = ["Can't park there, mate.", "Oi. Can't park there.", "You can't park there. You parked there. Now you're dead.", "That's a fire lane. You're on fire. Can't park there.",
+        "Can't park there. That's the boss's spot. The boss is very upset.", "Mate. Mate. MATE. Can't park there."];
+    function cantParkBill(why) {
+        const amt = Math.max(5000, Math.round(gold * 0.03));
+        debts.repair = (debts.repair || 0) + amt; saveDebts();
+        moveToast(`🅿️ CAN'T PARK THERE. Repair bill: ${fmt(amt)} (${why}). It's in your bills.`);
+    }
+    function cantParkSay(x, y) { floatBubble('🅿️ ' + pick(CANT_PARK_LINES), x, y, 3200); }
+    const CANT_PARK_SQ = [['chaotic', "tried to park the cruiser at the crime scene. can't park there. wrote myself a ticket"], ['bible', "parked the ambulance in the boss room. can't park there apparently. the boss had a lot to say"],
+        ['yacht', "gallywix parked the yacht in the desert again. can't park there. he says the desert is 'international waters'"], ['chaotic', "biblehumping died in the fire. can't park there, buddy"],
+        ['bible', "ChAoTiC parked in the handicap spot. can't park there. he says the cop car identifies as an ambulance"]];
+    setInterval(() => {   // now and then somebody can't park there
+        if (document.hidden || Math.random() > 0.35) return;
+        const [w, t] = pick(CANT_PARK_SQ); sqPost(w, t); setTimeout(() => chat(pick(["can't park there", "CAN'T PARK THERE", "can't park there mate", 'cant park there KEKW'])), 2500);
+    }, 11 * 60 * 1000);
+
+    // ---------- 🌵 FOREVER: WoW Forever is out and everybody left ----------
+    let tumbleT = 0;
+    function rollTumbleweed() {
+        if (!document.body.classList.contains('ghost-town')) return;
+        const t = document.createElement('img'); t.src = PHOTO_TUMBLEWEED; t.alt = '';
+        const h = 54 + Math.random() * 30, dur = 7000 + Math.random() * 4000;
+        t.style.cssText = `position:fixed;z-index:64;left:-120px;bottom:${8 + Math.random() * 30}px;height:${h}px;width:auto;pointer-events:none;image-rendering:pixelated`;
+        document.body.appendChild(t);
+        t.animate([{ transform: 'translate(0,0) rotate(0)' }, { transform: `translate(${(innerWidth + 240) * 0.25}px,-26px) rotate(260deg)`, offset: 0.25 }, { transform: `translate(${(innerWidth + 240) * 0.5}px,0) rotate(520deg)`, offset: 0.5 },
+            { transform: `translate(${(innerWidth + 240) * 0.75}px,-18px) rotate(780deg)`, offset: 0.75 }, { transform: `translate(${innerWidth + 240}px,0) rotate(1040deg)` }], { duration: dur, easing: 'linear' }).onfinish = () => t.remove();
+        tumbleT = setTimeout(rollTumbleweed, 14000 + Math.random() * 14000);
+    }
+    const FOREVER_LINES = ['WoW Forever came out. Everyone left. The wheel spins alone now.', 'The guild has logged off. Forever. (Until the first patch.)', 'Population: you. And Clippy. Clippy never leaves.',
+        'Kevin left too. That is the only good news.', 'Reb took the bottles with him.'];
+    function toggleForever() {
+        const on = !document.body.classList.contains('ghost-town');
+        document.body.classList.toggle('ghost-town', on);
+        $('foreverBtn').querySelector('span').textContent = on ? 'Come back?' : 'Forever';
+        clearTimeout(tumbleT);
+        if (on) {
+            if (document.body.classList.contains('party-on')) $('partyBtn').click();
+            chatLog && (chatLog.innerHTML = '<div style="color:#64748b;font-style:italic">*crickets*</div>');
+            funEvent('🌵 ' + pick(FOREVER_LINES), 4500);
+            setTimeout(() => { if (pets.clippy) petSay('clippy', "It looks like everyone left. I'm still here. I'm always here."); }, 3000);
+            setTimeout(rollTumbleweed, 1200);
+        } else { funEvent('🏃 EVERYONE IS BACK. WoW Forever had a 6 hour queue.', 3500); chatBurst(['we are back', 'queue was 6 hours', 'forever lasted 20 minutes', 'miss me?'], 4, 1500); }
+        $('foreverBtn').blur();
     }
     function floatBubble(text, x, y, ms, below) {   // a goblin speech bubble pinned to a screen point
         const b = document.createElement('div'); b.className = 'gb' + (below ? ' gb-up' : '');
@@ -8967,6 +9133,12 @@
             ['🦺', 'Six new OSHA violations: a slice falls off the wheel, the ambulance or cop car just explodes, a pet trips, a top-bar button falls off (click it to bolt it back on), Clippy pokes his own eye out, and the shack catches fire. The OSHA slice has a proper sign now too.'],
             ['🪩', "Party mode got real: Gallywix's Disco Ball drops in (with its loot card), and your pets line up to dance with the ambulance and the cop car on the ends."],
             ['🧰', 'The toy box is an actual box now, with a slot and a label for every toy.'],
+            ['🛡️', "New slices: Taunting (Casimir would never; the untaunted add goes for Reb's liver) and Can't Park There (repair bill included). 185 slices."],
+            ['🎰', "The claw machine takes Chief Kick a Bitch casino tokens now, not gold. Land on the casino slice for 3 (Gambled on a Fart and 7/11 sometimes give one)."],
+            ['🔪', 'Sorry I\'m Busy Skinning is an event now: the SPIN button is busy for 5 seconds while somebody skins the last pack, and you get the leather.'],
+            ['🖐️', "Biblehumping's Finger sometimes flies off the SPIN button or tries to crawl away (click it to catch it). It also turns up in chutes. Nobody knows how."],
+            ['🌵', 'New Forever button: WoW Forever is out and everyone left. Tumbleweeds. Clippy stays. Clippy always stays.'],
+            ['🅿️', "Can't Park There is spreading: ads, guild news, Squawkr and chat."],
             ['🎨', 'Art cleanup: pick your class from a grid of the real class sigils, the window headers use the new button art, and shop items with pixel art now show it instead of an emoji.']
         ]
     };
@@ -9291,13 +9463,14 @@
             const PET_ICON = { murloc: `<span style="display:inline-block;width:30px;height:27px;vertical-align:middle;background:url(${PHOTO_MURLOC_SHEET}) 0 0 / 600% 100% no-repeat"></span>`,
                 chicken: `<img src="${PHOTO_CHICKEN}" alt="" style="display:inline-block;height:28px;vertical-align:middle">`, whelp: `<img src="${PHOTO_WHELP}" alt="" style="display:inline-block;height:28px;vertical-align:middle">`,
                 accountant: `<img src="${PHOTO_GIZ_GRIN}" alt="" style="display:inline-block;height:34px;vertical-align:middle">`, volley: `<img src="${PHOTO_VOLLEY}" alt="" style="display:inline-block;height:28px;vertical-align:middle">` };
-            add(shopRow(`<img src="${PHOTO_CLAW}" alt="" style="display:inline-block;height:30px;vertical-align:middle">`, 'Claw & Disorder', 'THE WHEEL™ claw machine at Little St. Jeff\'s Prize Island. New pets live inside. Nobody gets what they came for. Usually.', 'Play: ' + fmt(CLAW_COST), () => { closeShop(); openClaw(); }));
+            add(shopRow(`<img src="${PHOTO_CLAW}" alt="" style="display:inline-block;height:30px;vertical-align:middle">`, 'Claw & Disorder', 'THE WHEEL™ claw machine at Little St. Jeff\'s Prize Island. New pets live inside. Nobody gets what they came for. Usually.', `Play: 1 🎰 token (you have ${tokens})`, () => { closeShop(); openClaw(); }));
             { const n = document.createElement('div'); n.className = 'text-sm text-slate-300'; n.textContent = `Up to ${PET_LIMIT} pets can be out at once (${activePets().length}/${PET_LIMIT} now). Clippy doesn't count. Clippy is not a pet. Clippy is a consequence.`; add(n); }
             Object.entries(PETS).forEach(([k, p0]) => {
                 const p = PET_ICON[k] ? Object.assign({}, p0, { e: PET_ICON[k] }) : p0;
                 if (p.secret && !clippyUnlocked && !pets[k]) return;
                 if (p0.claw && !pets[k]) { add(shopRow(p.e, p.name, 'Only from the claw machine. Good luck. You will need it.', 'Claw only', null, 'owned')); return; }
                 if (k === 'chicken' && !pets[k]) { add(shopRow(p.e, p.name, 'Can\'t be bought. Find a Westfall chicken wandering around and type chicken while it\'s on screen...', cluckStage ? 'Quest: CLUCK!' : 'Quest only', null, 'owned')); return; }
+                if (k === 'clippy' && pets[k]) { add(shopRow(p.e, p.name, "Clippy can't be turned off. Clippy is forever. (Maybe a favor will do it someday.)", '📎 Always on', null, 'owned')); return; }
                 if (pets[k]) {   // owned: the button shows/hides the pet (max PET_LIMIT on screen)
                     const on = petShown(k);
                     add(shopRow(p.e, p.name, p.desc, on ? '👁 Showing' : '🙈 Hidden', () => {
@@ -9578,6 +9751,7 @@
     })();
 
     // ---------- party mode: slow sweeping club lights, no strobe ----------
+    $('foreverIcon').src = PHOTO_TUMBLEWEED; $('foreverBtn').addEventListener('click', toggleForever);
     $('partyBtn').addEventListener('click', () => {
         const on = !document.body.classList.contains('party-on');
         document.body.classList.toggle('party-on', on);
@@ -9757,7 +9931,7 @@
 
     // ---------- 💸 bills & debts: the IRS, the Cartel, and the court ----------
     const TAX_GRACE = 48 * 3600 * 1000;
-    const debts = Object.assign({ tax: null, cartel: 0, court: 0 }, store.get('painWheelBills', {}));
+    const debts = Object.assign({ tax: null, cartel: 0, court: 0, repair: 0 }, store.get('painWheelBills', {}));
     function saveDebts() { store.set('painWheelBills', debts); renderBills(); }
     const totalAssets = () => gold + vaultGold();
     function takeAssets(frac, vaultFloor) {   // takes a fraction of the wallet and the vault (the vault keeps its FDIC-insured part)
@@ -9771,6 +9945,7 @@
             rows.push(['tax', '🧾 Goblin IRS tax bill', debts.tax.amt, `Due in ${h}h ${m}m, or they seize 80% of everything`]); }
         if (debts.cartel) rows.push(['cartel', '🌵 You owe the Cartel', debts.cartel, '+10% every hour until paid off']);
         if (debts.court) rows.push(['court', '🚔 RUI court fine', debts.court, '400% interest (+1% every 10 min)']);
+        if (debts.repair) rows.push(['repair', "🅿️ Repair bill (can't park there)", debts.repair, 'No interest. Just shame.']);
         if (!rows.length) { box.style.display = 'none'; return; }
         box.style.display = 'block';
         box.innerHTML = '<div style="background:rgba(69,10,10,.95);border:2px solid #f87171;border-radius:12px;padding:8px 10px;box-shadow:0 10px 30px rgba(0,0,0,.6);font-size:12px;color:#fee2e2"><div style="font-weight:900;font-size:10px;letter-spacing:.14em;color:#fca5a5">💸 BILLS YOU OWE</div></div>';
@@ -9793,7 +9968,7 @@
             if (debts.tax.amt <= 0) { debts.tax = null; unlock('taxman'); funEvent('🧾 TAXES PAID. The Goblin IRS grudgingly leaves.', 3500); chatBurst(['TAXES PAID', 'law abiding citizen', 'boring but W'], 2); }
         } else {
             debts[k] -= amt;
-            if (debts[k] <= 0) { debts[k] = 0; moveToast(k === 'cartel' ? '🌵 The Cartel says you are free to go. For now.' : '🚔 Fine paid. Your record is clean. (It is not clean.)'); }
+            if (debts[k] <= 0) { debts[k] = 0; moveToast(k === 'repair' ? "🅿️ Repair bill paid. Park somewhere else next time." : k === 'cartel' ? '🌵 The Cartel says you are free to go. For now.' : '🚔 Fine paid. Your record is clean. (It is not clean.)'); }
         }
         saveDebts(); renderGold();
     }
@@ -10607,6 +10782,7 @@
     // ---------- spin hooks ----------
     function onSpinStartFun(rigged) {
         lockBet(rigged);
+        if (garage.finger && Math.random() < 0.05) setTimeout(fingerEscape, 300);   // the finger does not like being spun
         chatBurst(CHAT_START, 2, 1200);
     }
     function afterSpinFun(s, fair, ash) {
@@ -10628,6 +10804,11 @@
         if (s.type === 'AOTC' && fair) unlock('aotclegit');   // only a natural landing counts
         if (s.type === 'LOWER_DPS') uwuKeyboardCheck();
         if (s.type === 'BIKE_SLICE') afterModal(bikeCop);
+        if (s.type === 'TAUNTING') afterModal(tauntFallout);
+        if (s.type === 'BUSY_SKINNING') afterModal(skinEvent);
+        if (s.type === 'CANT_PARK') afterModal(() => cantParkBill('you wiped the raid parking there'));
+        if (s.type === 'CASINO_TOKENS') afterModal(() => giveTokens(3, true));
+        if ((s.type === 'FART' && Math.random() < 0.5) || (s.type === 'SEVEN_ELEVEN' && Math.random() < 0.3)) afterModal(() => giveTokens(1));
         if (s.type === 'OSHA' && Math.random() < 0.75) afterModal(oshaEvent);
         if (s.type === 'KROM' && Math.random() < 0.25) setTimeout(() => { if (window.showAdById) window.showAdById('aotc-carry'); }, 6000);
         // set perks that pay out on landings
