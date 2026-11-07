@@ -820,7 +820,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="conspiracy.html" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:36 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:37 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -3352,7 +3352,9 @@
     }
 
     // Olive Garden: real trombone "wah wah wah waaah" with a sagging slide and wobbly last note
-    function playSadTromboneSound() {
+    const AUDIO_SAD_TROMBONE = "media/audio_sad_trombone.mp3?v=11e02a9b";
+    function playSadTromboneSound() { if (soundOn()) playClip('trombone', AUDIO_SAD_TROMBONE, playSadTromboneSampled); }
+    function playSadTromboneSampled() {
         withSamples(() => {
             const out = brassBus(0.5, 6);
             const tb = (cents, at, dur, extra) => playSample('trombone_Bb3', Object.assign({ at, dur, cents, gain: 0.55, out, release: 0.15, slide: -25 }, extra));
@@ -9343,7 +9345,7 @@
             ['👓', 'Ret Vision turned way down. You can actually see now.'],
             ['💥', 'Rockets explode for real now: new explosion sounds for the OSHA crash, missed launches, the yacht and the shack.'],
             ['🎡', 'The wheel sounds like a real prize wheel now: the Classic click is 24 real recorded clicks, never the same one twice in a row.'],
-            ['🏆', 'New achievement unlocked sound, and four new real victory fanfares in the rotation.']
+            ['🏆', 'New achievement unlocked sound, four new real victory fanfares, and a real sad trombone.']
         ]
     };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
