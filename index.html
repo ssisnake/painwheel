@@ -431,6 +431,11 @@
         .card-float { position: fixed !important; z-index: 63; left: 0; top: 0; width: min(380px, calc(100vw - 24px)); height: 300px !important; box-shadow: 0 14px 40px rgba(0,0,0,.55); }
         .card-float .pop-head { cursor: grab; touch-action: none; user-select: none; }
         .is-min { height: auto !important; }
+        .plate-btn { background: none; border: 0; padding: 0; line-height: 0; border-radius: 8px; transition: transform .12s, filter .12s; }
+        .plate-btn:hover { transform: translateY(-1px); filter: brightness(1.15); } .plate-btn:active { transform: translateY(1px); }
+        .plate-btn:focus-visible { outline: 2px solid #facc15; outline-offset: 2px; }
+        .plate-img { height: 58px; width: auto; image-rendering: pixelated; }
+        @media (max-width: 640px) { .plate-img { height: 34px; } }
         /* GTA-style heat: how close ChAoTiC is to pulling you over */
         #heatMeter { display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: 6px; background: #0b0b0b; border: 1px solid #3f3f46; cursor: help; }
         #heatMeter.hidden { display: none; }
@@ -593,11 +598,11 @@
             <button id="playerTag" title="Change your name in ⚙️ Settings" class="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-700 text-slate-200 font-bold cursor-pointer flex items-center gap-1.5">
                 <span id="classShow">🪪</span><span id="playerShow"></span><span id="titleShow" class="text-amber-300 italic"></span>
             </button>
-            <button id="statsBtn" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold cursor-pointer">📊 My Stats</button>
-            <button id="settingsBtn" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold cursor-pointer">⚙️ Settings</button>
-            <button id="bagBtn" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold cursor-pointer">🎒 Bag</button>
-            <button id="homeBtn" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold cursor-pointer">🏠 Home</button>
-            <button id="shopBtn" class="px-2.5 py-1 rounded-md bg-amber-600 hover:bg-amber-500 border border-amber-400 text-black font-black cursor-pointer">🛒 Shop</button>
+            <button id="statsBtn" class="plate-btn cursor-pointer" title="My Stats" aria-label="My Stats"><img class="plate-img" data-plate="STATS" alt="My Stats"></button>
+            <button id="settingsBtn" class="plate-btn cursor-pointer" title="Settings" aria-label="Settings"><img class="plate-img" data-plate="SETTINGS" alt="Settings"></button>
+            <button id="bagBtn" class="plate-btn cursor-pointer" title="Bag" aria-label="Bag"><img class="plate-img" data-plate="BAG" alt="Bag"></button>
+            <button id="homeBtn" class="plate-btn cursor-pointer" title="Home" aria-label="Home"><img class="plate-img" data-plate="HOME" alt="Home"></button>
+            <button id="shopBtn" class="plate-btn cursor-pointer" title="Shop" aria-label="Shop"><img class="plate-img" data-plate="SHOP" alt="Shop"></button>
             <button id="hearthBtn" title="Hearthstone: Gallywix's Yacht (10 sec cast)" style="display:none" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-sky-700 text-sky-200 font-bold cursor-pointer items-center gap-1.5"><img id="hearthIcon" alt="" style="height:1.5em;width:auto;margin:-.25em 0"><span>Hearth</span></button>
             <button id="toyBtn" title="Show / hide your toys (bottom-right corner)" style="display:none" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold cursor-pointer items-center gap-1.5"><img id="toyIcon" alt="" style="height:1.5em;width:auto;margin:-.25em 0"><span id="toyLbl">Toys</span></button>
             <button id="partyBtn" class="px-2.5 py-1 rounded-md bg-fuchsia-800 hover:bg-fuchsia-700 border border-fuchsia-500 text-white font-bold cursor-pointer inline-flex items-center gap-1.5"><img id="partyHatImg" alt="" style="height:1.5em;width:auto;margin:-.25em 0"><span>Party</span></button>
@@ -742,7 +747,7 @@
             <div class="mt-5 pt-4 border-t border-slate-800">
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 6, 9:37 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 6, 9:45 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -1402,6 +1407,16 @@
     const PHOTO_CHICKEN = "media/photo_chicken.png?v=d6697602";
     const PHOTO_WHELP = "media/photo_whelp.png?v=e83a9376";
     const PHOTO_LOGO = "media/photo_logo.png?v=7e59cc27";
+    const PHOTO_BTN_BAG = "media/photo_btn_bag.png?v=083dadee";
+    const PHOTO_BTN_HOME = "media/photo_btn_home.png?v=468931f0";
+    const PHOTO_BTN_SETTINGS = "media/photo_btn_settings.png?v=0e38c684";
+    const PHOTO_BTN_SHOP = "media/photo_btn_shop.png?v=9f628034";
+    const PHOTO_BTN_STATS = "media/photo_btn_stats.png?v=b8190efc";
+    const PHOTO_H_BTN_BAG = "media/photo_h_btn_bag.png?v=2a8e1d06";
+    const PHOTO_H_BTN_HOME = "media/photo_h_btn_home.png?v=74b497c8";
+    const PHOTO_H_BTN_SETTINGS = "media/photo_h_btn_settings.png?v=126252ac";
+    const PHOTO_H_BTN_SHOP = "media/photo_h_btn_shop.png?v=835196c0";
+    const PHOTO_H_BTN_STATS = "media/photo_h_btn_stats.png?v=38abde31";
     const PHOTO_H_AMB = "media/photo_h_amb.png?v=24b53579";
     const PHOTO_H_CHICKEN = "media/photo_h_chicken.png?v=3d82741e";
     const PHOTO_H_CLS_DH = "media/photo_h_cls_dh.png?v=5d030062";
@@ -6834,6 +6849,7 @@
     let bossState = null;
     $('bossIconImg').src = PHOTO_UWU_ICON; $('bossArtImg').src = PHOTO_UWU_ART; $('partyHatImg').src = PHOTO_PARTY_HAT;
     $('liverIcon').src = PHOTO_CLS_LIVER;
+    document.querySelectorAll('.plate-img').forEach(im => { im.src = { STATS: PHOTO_BTN_STATS, SETTINGS: PHOTO_BTN_SETTINGS, BAG: PHOTO_BTN_BAG, HOME: PHOTO_BTN_HOME, SHOP: PHOTO_BTN_SHOP }[im.dataset.plate]; });
     $('hearthIcon').src = PHOTO_TOY_HEARTH; $('toyIcon').src = PHOTO_TOYBOX;
     function uwuKeyboardCheck() {   // after the Lower DPS popup closes, Uwutek pops up in the boss card to check your keyboard
         const art = $('bossArt'), img = $('bossArtImg'); if (!art || !img) return;
@@ -9268,7 +9284,7 @@
     const HORROR = { murloc: '🧟', accountant: '💀', chicken: '🦴', whelp: '👹', clippy: '🔪', shack: '🏚️', ambulance: '⚰️', police: '🩸', rocket: '☄️' };
     const HORROR_LINES = { murloc: ['mrrrgl... (it is behind you)', '*wet gurgling*'], accountant: ['Your account balance... is... DEAD.', 'I have audited your soul. It is overdrawn.'],
         chicken: ['b a w k', '*the chicken stares into your soul*'], whelp: ['*hic* 🩸', 'the Light cannot save you'], clippy: ['It looks like you are about to die. Would you like help?', 'I see you. I always see you.'] };
-    const HORROR_SWAP = new Map([[AMB_SPRITE, PHOTO_H_AMB], [PHOTO_CHICKEN, PHOTO_H_CHICKEN], [PHOTO_CLS_DH, PHOTO_H_CLS_DH], [PHOTO_CLS_DK, PHOTO_H_CLS_DK], [PHOTO_CLS_DRUID, PHOTO_H_CLS_DRUID], [PHOTO_CLS_EVOKER, PHOTO_H_CLS_EVOKER], [PHOTO_CLS_HUNTER, PHOTO_H_CLS_HUNTER], [PHOTO_CLS_LIVER, PHOTO_H_CLS_LIVER], [PHOTO_CLS_MAGE, PHOTO_H_CLS_MAGE], [PHOTO_CLS_MONK, PHOTO_H_CLS_MONK], [PHOTO_CLS_NOWOW, PHOTO_H_CLS_NOWOW], [PHOTO_CLS_PALADIN, PHOTO_H_CLS_PALADIN], [PHOTO_CLS_PRIEST, PHOTO_H_CLS_PRIEST], [PHOTO_CLS_ROGUE, PHOTO_H_CLS_ROGUE], [PHOTO_CLS_SHAMAN, PHOTO_H_CLS_SHAMAN], [PHOTO_CLS_WARLOCK, PHOTO_H_CLS_WARLOCK], [PHOTO_CLS_WARRIOR, PHOTO_H_CLS_WARRIOR], [PHOTO_COIN_1, PHOTO_H_COIN_1], [PHOTO_COIN_2, PHOTO_H_COIN_2], [PHOTO_COIN_3, PHOTO_H_COIN_3], [PHOTO_COIN_4, PHOTO_H_COIN_4], [PHOTO_COMBINE, PHOTO_H_COMBINE], [PHOTO_COOKIE_CURSED, PHOTO_H_COOKIE_CURSED], [PHOTO_COOKIE_GOLD, PHOTO_H_COOKIE_GOLD], [COPCAR_SPRITE, PHOTO_H_COP], [PHOTO_DRIFT_FLAGUC, PHOTO_H_DRIFT_FLAGUC], [PHOTO_DRIFT_HELMET, PHOTO_H_DRIFT_HELMET], [PHOTO_DRIFT_JET, PHOTO_H_DRIFT_JET], [PHOTO_DRIFT_LEAF, PHOTO_H_DRIFT_LEAF], [PHOTO_DRIFT_MEDAL, PHOTO_H_DRIFT_MEDAL], [PHOTO_DRIFT_PIE, PHOTO_H_DRIFT_PIE], [PHOTO_DRIFT_PILGRIM, PHOTO_H_DRIFT_PILGRIM], [PHOTO_DRIFT_PUMPKIN, PHOTO_H_DRIFT_PUMPKIN], [PHOTO_DRIFT_TANK, PHOTO_H_DRIFT_TANK], [PHOTO_DRIFT_TURKEY, PHOTO_H_DRIFT_TURKEY], [PHOTO_FINGER, PHOTO_H_FINGER], [PHOTO_GIZ_DESK, PHOTO_H_GIZ_DESK], [PHOTO_GIZ_GRIN, PHOTO_H_GIZ_GRIN], [PHOTO_GIZ_TAPE, PHOTO_H_GIZ_TAPE], [PHOTO_HOUSE_0, PHOTO_H_HOUSE_0], [PHOTO_HOUSE_1, PHOTO_H_HOUSE_1], [PHOTO_HOUSE_2, PHOTO_H_HOUSE_2], [PHOTO_HOUSE_3, PHOTO_H_HOUSE_3], [PHOTO_HOUSE_4, PHOTO_H_HOUSE_4], [PHOTO_HOUSE_5, PHOTO_H_HOUSE_5], [PHOTO_MURLOC_SHEET, PHOTO_H_MURLOC], [PHOTO_PARTY_HAT, PHOTO_H_PARTY_HAT], [PHOTO_ROCKET, PHOTO_H_ROCKET], [PHOTO_ROCKET_FLY, PHOTO_H_ROCKET], [PHOTO_SHACK, PHOTO_H_SHACK], [PHOTO_STAR_BLUE, PHOTO_H_STAR_BLUE], [PHOTO_STAR_EMPTY, PHOTO_H_STAR_EMPTY], [PHOTO_STAR_HALF, PHOTO_H_STAR_HALF], [PHOTO_STAR_RED, PHOTO_H_STAR_RED], [PHOTO_TOYBOX, PHOTO_H_TOYBOX], [PHOTO_TOY_DOLL, PHOTO_H_TOY_DOLL], [PHOTO_TOY_DONUT, PHOTO_H_TOY_DONUT], [PHOTO_TOY_HEARTH, PHOTO_H_TOY_HEARTH], [PHOTO_TOY_PHONE, PHOTO_H_TOY_PHONE], [PHOTO_UWU_ART, PHOTO_H_UWU_ART], [PHOTO_UWU_ICON, PHOTO_H_UWU_ICON], [PHOTO_WHELP, PHOTO_H_WHELP]]);   // Ret Vision: every sprite has a cursed twin
+    const HORROR_SWAP = new Map([[PHOTO_BTN_STATS, PHOTO_H_BTN_STATS], [PHOTO_BTN_SETTINGS, PHOTO_H_BTN_SETTINGS], [PHOTO_BTN_BAG, PHOTO_H_BTN_BAG], [PHOTO_BTN_HOME, PHOTO_H_BTN_HOME], [PHOTO_BTN_SHOP, PHOTO_H_BTN_SHOP], [AMB_SPRITE, PHOTO_H_AMB], [PHOTO_CHICKEN, PHOTO_H_CHICKEN], [PHOTO_CLS_DH, PHOTO_H_CLS_DH], [PHOTO_CLS_DK, PHOTO_H_CLS_DK], [PHOTO_CLS_DRUID, PHOTO_H_CLS_DRUID], [PHOTO_CLS_EVOKER, PHOTO_H_CLS_EVOKER], [PHOTO_CLS_HUNTER, PHOTO_H_CLS_HUNTER], [PHOTO_CLS_LIVER, PHOTO_H_CLS_LIVER], [PHOTO_CLS_MAGE, PHOTO_H_CLS_MAGE], [PHOTO_CLS_MONK, PHOTO_H_CLS_MONK], [PHOTO_CLS_NOWOW, PHOTO_H_CLS_NOWOW], [PHOTO_CLS_PALADIN, PHOTO_H_CLS_PALADIN], [PHOTO_CLS_PRIEST, PHOTO_H_CLS_PRIEST], [PHOTO_CLS_ROGUE, PHOTO_H_CLS_ROGUE], [PHOTO_CLS_SHAMAN, PHOTO_H_CLS_SHAMAN], [PHOTO_CLS_WARLOCK, PHOTO_H_CLS_WARLOCK], [PHOTO_CLS_WARRIOR, PHOTO_H_CLS_WARRIOR], [PHOTO_COIN_1, PHOTO_H_COIN_1], [PHOTO_COIN_2, PHOTO_H_COIN_2], [PHOTO_COIN_3, PHOTO_H_COIN_3], [PHOTO_COIN_4, PHOTO_H_COIN_4], [PHOTO_COMBINE, PHOTO_H_COMBINE], [PHOTO_COOKIE_CURSED, PHOTO_H_COOKIE_CURSED], [PHOTO_COOKIE_GOLD, PHOTO_H_COOKIE_GOLD], [COPCAR_SPRITE, PHOTO_H_COP], [PHOTO_DRIFT_FLAGUC, PHOTO_H_DRIFT_FLAGUC], [PHOTO_DRIFT_HELMET, PHOTO_H_DRIFT_HELMET], [PHOTO_DRIFT_JET, PHOTO_H_DRIFT_JET], [PHOTO_DRIFT_LEAF, PHOTO_H_DRIFT_LEAF], [PHOTO_DRIFT_MEDAL, PHOTO_H_DRIFT_MEDAL], [PHOTO_DRIFT_PIE, PHOTO_H_DRIFT_PIE], [PHOTO_DRIFT_PILGRIM, PHOTO_H_DRIFT_PILGRIM], [PHOTO_DRIFT_PUMPKIN, PHOTO_H_DRIFT_PUMPKIN], [PHOTO_DRIFT_TANK, PHOTO_H_DRIFT_TANK], [PHOTO_DRIFT_TURKEY, PHOTO_H_DRIFT_TURKEY], [PHOTO_FINGER, PHOTO_H_FINGER], [PHOTO_GIZ_DESK, PHOTO_H_GIZ_DESK], [PHOTO_GIZ_GRIN, PHOTO_H_GIZ_GRIN], [PHOTO_GIZ_TAPE, PHOTO_H_GIZ_TAPE], [PHOTO_HOUSE_0, PHOTO_H_HOUSE_0], [PHOTO_HOUSE_1, PHOTO_H_HOUSE_1], [PHOTO_HOUSE_2, PHOTO_H_HOUSE_2], [PHOTO_HOUSE_3, PHOTO_H_HOUSE_3], [PHOTO_HOUSE_4, PHOTO_H_HOUSE_4], [PHOTO_HOUSE_5, PHOTO_H_HOUSE_5], [PHOTO_MURLOC_SHEET, PHOTO_H_MURLOC], [PHOTO_PARTY_HAT, PHOTO_H_PARTY_HAT], [PHOTO_ROCKET, PHOTO_H_ROCKET], [PHOTO_ROCKET_FLY, PHOTO_H_ROCKET], [PHOTO_SHACK, PHOTO_H_SHACK], [PHOTO_STAR_BLUE, PHOTO_H_STAR_BLUE], [PHOTO_STAR_EMPTY, PHOTO_H_STAR_EMPTY], [PHOTO_STAR_HALF, PHOTO_H_STAR_HALF], [PHOTO_STAR_RED, PHOTO_H_STAR_RED], [PHOTO_TOYBOX, PHOTO_H_TOYBOX], [PHOTO_TOY_DOLL, PHOTO_H_TOY_DOLL], [PHOTO_TOY_DONUT, PHOTO_H_TOY_DONUT], [PHOTO_TOY_HEARTH, PHOTO_H_TOY_HEARTH], [PHOTO_TOY_PHONE, PHOTO_H_TOY_PHONE], [PHOTO_UWU_ART, PHOTO_H_UWU_ART], [PHOTO_UWU_ICON, PHOTO_H_UWU_ICON], [PHOTO_WHELP, PHOTO_H_WHELP]]);   // Ret Vision: every sprite has a cursed twin
     let horrorOn = false, horrorLive = false, horrorObs = null;
     function horrorize(root, on) {   // swap sprites to (or back from) their horror versions, for <img> and background-image sprites
         if (!root || root.nodeType !== 1) return;
