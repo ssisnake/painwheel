@@ -820,7 +820,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="conspiracy.html" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:45 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:47 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -3652,8 +3652,25 @@
         } catch (e) {}
     }
     // Fire roar + crackle for N seconds (Discord leak)
-    function playFireCrackle(seconds) {
+    const AUDIO_FIRE = "media/audio_fire.mp3?v=05006d9d";
+    let fireBuf = null, fireLoading = false;
+    function playFireCrackle(seconds) {   // a real crackling fire (looped, random start), synth until it decodes
         if (!soundOn()) return;
+        ensureAudio();
+        if (!fireBuf && !fireLoading) { fireLoading = true; loadBytes(AUDIO_FIRE).then(ab => new Promise((res, rej) => audioCtx.decodeAudioData(ab, res, rej))).then(b => { fireBuf = b; }).catch(() => {}); }
+        if (fireBuf) {
+            try {
+                const t = audioCtx.currentTime, src = audioCtx.createBufferSource(), g = audioCtx.createGain();
+                src.buffer = fireBuf; src.loop = true;
+                g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.9, t + 0.5);
+                g.gain.setValueAtTime(0.9, t + Math.max(0.6, seconds - 1)); g.gain.linearRampToValueAtTime(0.0001, t + seconds);
+                src.connect(g); g.connect(masterGain); src.start(t, Math.random() * Math.max(0, fireBuf.duration - 2)); src.stop(t + seconds + 0.1);
+            } catch (e) {}
+            return;
+        }
+        playFireCrackleSynth(seconds);
+    }
+    function playFireCrackleSynth(seconds) {
         try {
             ensureAudio();
             const t = audioCtx.currentTime + 0.02;
@@ -7092,8 +7109,10 @@
     // 🎰 Chief Kick a Bitch casino tokens: the claw machine's currency (gold is worth nothing to people at 1e50)
     let tokens = store.get('painWheelTokens', 0);
     const tokenWord = (n) => `${n} casino token${n === 1 ? '' : 's'}`;
+    const AUDIO_TOKEN = "media/audio_token.mp3?v=0ea18771";
     function giveTokens(n, intro, why) {
         tokens += n; store.set('painWheelTokens', tokens);
+        if (soundOn()) playClip('token', AUDIO_TOKEN);   // clink: a token drops out of the machine
         if (intro && !store.get('painWheelTokenIntro', false)) {
             store.set('painWheelTokenIntro', true);
             const o = document.createElement('div');
@@ -9377,7 +9396,8 @@
             ['🚨', 'Real sirens: Biblehumping\'s ambulance and ChAoTiC\'s cop car each have their own now.'],
             ['🚗', 'Real crash sound for the fender-benders, the combine, roadkill, exploding vehicles and the iceberg, plus two real crash-and-thud sounds for everything OSHA breaks.'],
             ['🐦', 'Squawkr has a real notification sound (the speaker button in Squawkr still turns it off).'],
-            ['🛸', 'The UFO sounds like a UFO now, tractor beam and all. Vince\'s brick phone has a real 80s ring.']
+            ['🛸', 'The UFO sounds like a UFO now, tractor beam and all. Vince\'s brick phone has a real 80s ring.'],
+            ['🔥', 'Real fire crackle when things burn, and casino tokens clink out of the machine when you get one.']
         ]
     };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
