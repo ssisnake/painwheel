@@ -834,7 +834,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="conspiracy.html" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 2:01 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 2:02 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -853,6 +853,12 @@
                 <button id="volTest" class="text-[11px] px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold shrink-0 cursor-pointer">Test</button>
             </div>
                 <p class="text-[11px] text-slate-500 mt-1">Click the speaker to mute or unmute.</p>
+                <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mt-3 mb-2">Sound style</div>
+                <div id="sfxPicks" class="flex flex-wrap gap-2">
+                    <button type="button" data-sfx="new" class="px-3 py-1.5 rounded border text-sm font-bold cursor-pointer">🎙️ New (recorded)</button>
+                    <button type="button" data-sfx="classic" class="px-3 py-1.5 rounded border text-sm font-bold cursor-pointer">🕹️ Classic (the old beeps)</button>
+                </div>
+                <p class="text-[11px] text-slate-500 mt-1">Classic brings back the original wheel click, crashes, fanfares and the rest of the old sounds.</p>
             </div>
             <div id="deviceSection" class="mt-5 pt-4 border-t border-slate-800 text-sm">
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">📱 Play on another device</div>
@@ -3058,6 +3064,7 @@
        Bright "tak" (resonances near 2.4k and 4.1k), a small body knock, and a
        tiny second bounce of the flapper a few ms later. Built once, then reused. */
     let wofClickBuffer = null;
+    let sfxStyle = (() => { try { return JSON.parse(localStorage.getItem('painWheelSfx')) || 'new'; } catch (e) { return 'new'; } })();   // 'classic' = the original synth sounds
     const AUDIO_TICKBANK = "media/audio_tickbank.wav?v=68eaddbe";
     let realTicks = null, realTicksLoading = false, lastRealTick = -1;   // 24 clicks sampled from real prize-wheel recordings (60ms slots)
     function loadRealTicks() {
@@ -3098,8 +3105,8 @@
             ensureAudio();
             const now = audioCtx.currentTime;
             const src = audioCtx.createBufferSource();
-            loadRealTicks();
-            if (realTicks) { let i; do { i = Math.floor(Math.random() * realTicks.length); } while (i === lastRealTick && realTicks.length > 1); lastRealTick = i; src.buffer = realTicks[i]; }
+            if (sfxStyle !== 'classic') loadRealTicks();
+            if (realTicks && sfxStyle !== 'classic') { let i; do { i = Math.floor(Math.random() * realTicks.length); } while (i === lastRealTick && realTicks.length > 1); lastRealTick = i; src.buffer = realTicks[i]; }
             else src.buffer = getWofClick();   // synth click until the real ones decode
             src.playbackRate.setValueAtTime(0.96 + Math.random() * 0.08, now);
             const hp = audioCtx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 350;
@@ -3314,7 +3321,7 @@
         const now = Date.now(), quick = now - lastFanfareAt < 10000;   // spinning fast: keep it short
         lastFanfareAt = now;
         if (type === 'KEVIN') return KEVIN_SOUNDS[pickFromBag('kevin', Object.keys(KEVIN_SOUNDS))]();
-        const names = Object.keys(FANFARES).filter(k => !quick || FANFARES[k].short);
+        const names = Object.keys(FANFARES).filter(k => (!quick || FANFARES[k].short) && !(sfxStyle === 'classic' && /^real/.test(k)));
         FANFARES[pickFromBag(quick ? 'quick' : 'all', names)].play();
     }
     function playWinSynth() {
@@ -3672,7 +3679,7 @@
         if (!soundOn()) return;
         ensureAudio();
         if (!fireBuf && !fireLoading) { fireLoading = true; loadBytes(AUDIO_FIRE).then(ab => new Promise((res, rej) => audioCtx.decodeAudioData(ab, res, rej))).then(b => { fireBuf = b; }).catch(() => {}); }
-        if (fireBuf) {
+        if (fireBuf && sfxStyle !== 'classic') {
             try {
                 const t = audioCtx.currentTime, src = audioCtx.createBufferSource(), g = audioCtx.createGain();
                 src.buffer = fireBuf; src.loop = true;
@@ -3793,8 +3800,11 @@
 
     // Plays an embedded mp3 clip through the master volume (decoded once, then cached).
     const clipBuffers = {}, clipSources = {};
+    // Sound style: 'classic' skips the new recorded sounds and uses the original synth ones
+    const NEW_CLIPS = /^(rocketboom|achieve|fanfare|trombone|vcrash|crash|sqchirp|ufo|ufobeam|brickring|heli|doorchime|yachthorn|token)/;
     function playClip(name, dataUrl, fallback) {
         if (!soundOn()) return;
+        if (sfxStyle === 'classic' && NEW_CLIPS.test(name)) { if (fallback) fallback(); return; }
         ensureAudio();
         const start = (buf) => {
             try { if (clipSources[name]) clipSources[name].stop(); } catch (e) {}
@@ -3965,7 +3975,7 @@
     function playHonkSound() {
         if (!soundOn()) return;
         ensureAudio(); loadHonks();
-        if (honkBufs.length) { playRealHonk(0, 1, 0, 0.8); playRealHonk(0.45, 1.05, 0, 0.8); return; }   // HONK HONK
+        if (honkBufs.length && sfxStyle !== 'classic') { playRealHonk(0, 1, 0, 0.8); playRealHonk(0.45, 1.05, 0, 0.8); return; }   // HONK HONK
         try {
             const now = audioCtx.currentTime;
             [0, 0.28, 0.75].forEach((t, i) => {
@@ -5717,6 +5727,9 @@
         slider.addEventListener('input', () => apply(slider.value / 100, true));
         icon.addEventListener('click', () => apply(currentVolume > 0 ? 0 : lastNonZero, true));
         $('volTest').addEventListener('click', () => playWinSound());
+        const renderSfx = () => document.querySelectorAll('#sfxPicks [data-sfx]').forEach(b => { const on = b.dataset.sfx === sfxStyle; b.className = 'px-3 py-1.5 rounded border text-sm font-bold cursor-pointer ' + (on ? 'bg-amber-500 text-black border-amber-400' : 'bg-slate-800 text-slate-200 border-slate-600'); });
+        document.querySelectorAll('#sfxPicks [data-sfx]').forEach(b => b.addEventListener('click', () => { sfxStyle = b.dataset.sfx; store.set('painWheelSfx', sfxStyle); renderSfx(); playTickSound(true); setTimeout(() => playTickSound(false), 140); }));
+        renderSfx();
         // keep Space-to-spin working after clicking the slider
         slider.addEventListener('keydown', (e) => { if (e.code === 'Space') e.preventDefault(); });
         slider.addEventListener('pointerup', () => slider.blur());
@@ -7147,7 +7160,7 @@
     const AUDIO_CLAW_MOTOR = "media/audio_claw_motor.mp3?v=523b8fc5";
     let clawBuf = null, clawBufLoading = false;
     function clawMotor(dur, rate) {   // a slice of the real claw motor; returns a stop function (dur 0 = keep running until stopped)
-        if (!soundOn()) return () => {};
+        if (!soundOn() || sfxStyle === 'classic') return () => {};
         ensureAudio();
         if (!clawBuf) { if (!clawBufLoading) { clawBufLoading = true; loadBytes(AUDIO_CLAW_MOTOR).then(ab => new Promise((res, rej) => audioCtx.decodeAudioData(ab, res, rej))).then(b => { clawBuf = b; }).catch(() => {}); } return () => {}; }
         try {
@@ -8482,7 +8495,7 @@
     }
     function playPackTick(isSpecial) {
         ensureAudio();
-        if (tickPack === 'honk') { loadHonks();
+        if (tickPack === 'honk' && sfxStyle !== 'classic') { loadHonks();
             if (honkBufs.length) {   // real honks, sped up and clipped short; at most one every 90ms so a fast spin stays a honk-storm, not a wall
                 if (performance.now() - lastHonkAt < 90) return; lastHonkAt = performance.now();
                 return playRealHonk(0, 1.25 + Math.random() * 0.4, 0.16, isSpecial ? 0.45 : 0.35);
@@ -8521,7 +8534,7 @@
         if (!soundOn()) return () => {};
         try {
             ensureAudio(); loadSirens();
-            const k = kind === 'cop' ? 'cop' : kind === 'amb' ? 'amb' : (Math.random() < 0.5 ? 'cop' : 'amb'), bufs = sirenBufs[k];
+            const k = kind === 'cop' ? 'cop' : kind === 'amb' ? 'amb' : (Math.random() < 0.5 ? 'cop' : 'amb'), bufs = sfxStyle === 'classic' ? [] : sirenBufs[k];
             if (bufs.length) {
                 const b = pick(bufs), t = audioCtx.currentTime, src = audioCtx.createBufferSource(), g = audioCtx.createGain();
                 const off = Math.random() * Math.max(0, b.duration - secs - 0.3);
@@ -9459,7 +9472,7 @@
             ['🤡', 'The Clown Honks spin sound uses real honks now. The 8/11 door chimes when you walk in.'],
             ['🕹️', 'The claw machine has a real motor now: moving, dropping, grabbing, and the prize clunking down the chute.'],
             ['📯', 'The yacht blows its distress horn when the iceberg, a rocket or the murloc hits it.'],
-            ['⚙️', 'Buy it in the Shop, switch it in Settings: themes, needles, spin sounds and titles all have picture pickers in ⚙️ Settings now.']
+            ['⚙️', 'Buy it in the Shop, switch it in Settings: themes, needles, spin sounds and titles all have picture pickers in ⚙️ Settings now. Don\'t like the new recorded sounds? Settings → Sound style → Classic brings the old ones back.']
         ]
     };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
