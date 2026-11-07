@@ -747,7 +747,8 @@
             <div class="mt-5 pt-4 border-t border-slate-800">
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 6, 9:45 PM CT</span>
+                <a href="conspiracy.html" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 6, 9:56 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -1043,7 +1044,7 @@
                 </div>
                 <div id="knobNews" class="mt-2 text-[11px] text-slate-400 mono truncate">Market open. Reb is awake.</div>
                 <div class="mt-2 flex items-center gap-2 text-[11px]">
-                    <span class="text-slate-400 font-bold shrink-0"><img id="liverIcon" alt="" style="display:inline-block;height:20px;width:auto;vertical-align:-5px"> Reb's liver</span>
+                    <span class="text-slate-400 font-bold shrink-0"><img id="liverIcon" alt="" style="display:inline-block;height:20px;width:auto;vertical-align:-5px"> <span id="liverLabel">Reb's liver</span></span>
                     <div class="relative flex-1 h-3 rounded bg-black/60 border border-slate-700 overflow-hidden"><div id="liverFill" style="position:absolute;inset:0 auto 0 0;width:100%;background:#22c55e;transition:width .6s,background .6s"></div></div>
                     <span id="liverText" class="mono text-slate-300 shrink-0 w-24 text-right">100%</span>
                 </div>
@@ -1386,7 +1387,7 @@
 
     /* Croissant videos (made by Axazon & Platemage). Slice 1 plays the first, slice 2 the sequel. */
     const VIDEO_CROISSANT_1 = "media/video_croissant_1.mp4?v=aeedc8b1";
-    const VIDEO_CROISSANT_2 = "media/video_croissant_2.mp4?v=2ae421c4";
+    const VIDEO_CROISSANT_2 = "media/video_croissant_2.mp4?v=6c1b6cb9";
 
     const VIDEO_ASMON = "media/video_asmon.mp4?v=78682d89";
     const GIF_LOST = "media/gif_lost.gif?v=0694f342";      // Enron Ethics Handbook
@@ -1533,8 +1534,11 @@
             em = Math.floor((h + l - 7 * m + 114) / 31), ed = ((h + l - 7 * m + 114) % 31) + 1, easter = new Date(y, em - 1, ed), eDiff = (new Date(y, d.getMonth(), d.getDate()) - easter) / 86400000;
         const S = {
             halloween: { label: '🎃 Trick or Kevin 🎃', bg: '#c2410c', text: '#fff7ed', border: '#fdba74', lines: ["You knocked. Kevin answered. He's dressed as himself.", 'Trick: it\'s Kevin. Treat: also Kevin.', "Full-size candy bars are a myth. So is Kevin's DPS.", 'You got a rock. Charlie Brown sends his regards.'] },
-            veterans: { label: '🎖️ Salute 🎖️', bg: '#1e3a8a', text: '#dbeafe', border: '#93c5fd', lines: ['This spin is for the veterans in Degenerate Rejects. Thank you for your service.', 'The whole guild salutes you. Kevin tried to salute too. He is okay.', 'Free battle rez for every vet in the guild. Everyone else gets a repair bill.', 'Thank you to everyone who served. Raid can wait.'] },
-            thanksgiving: { label: '🦃 Stuffed to Explosion 🦃', bg: '#9a3412', text: '#ffedd5', border: '#fb923c', lines: ["Third plate. Fourth plate. The turkey wasn't the only thing that exploded.", 'You ate until you hit the enrage timer.', "Grandma said there's always room for pie. Grandma lied.", 'Unbuckled the belt. Unbuckled the pants. Logged off for the night.', 'The turkey was deep-fried. So was the garage.'] },
+            veterans: { label: '🎖️ Salute 🎖️', bg: '#1e3a8a', text: '#dbeafe', border: '#93c5fd', lines: ['Free Applebee\'s for every vet in the guild. Kevin is pretending he served. He did not.',
+                'Thank a vet today. Then buy him a beer. Then buy Reb a water.', 'Ten-percent military discount on wheel spins. The wheel is still free. The discount is symbolic.', 'This spin is for the veterans in Degenerate Rejects. Thank you for your service.', 'The whole guild salutes you. Kevin tried to salute too. He is okay.', 'Free battle rez for every vet in the guild. Everyone else gets a repair bill.', 'Thank you to everyone who served. Raid can wait.'] },
+            thanksgiving: { label: '🦃 Stuffed to Explosion 🦃', bg: '#9a3412', text: '#ffedd5', border: '#fb923c', lines: ['Unbuttoned the pants. Then the shirt. Then the belt gave up on its own.',
+                'Dad carved the turkey with a chainsaw. Biblehumping is on standby.', 'Uncle Kevin brought store-bought rolls and a political opinion. Both were cold.', 'Food coma: like a wipe, but you get pie after.',
+                'Four kinds of pie. You had five slices. Math is optional on Thanksgiving.', 'The turkey was dry. The gravy was a lake. Reb brought Knob Creek for the gravy.', "Third plate. Fourth plate. The turkey wasn't the only thing that exploded.", 'You ate until you hit the enrage timer.', "Grandma said there's always room for pie. Grandma lied.", 'Unbuckled the belt. Unbuckled the pants. Logged off for the night.', 'The turkey was deep-fried. So was the garage.'] },
             christmas: { label: '🧦 Lump of Coal 🧦', bg: '#166534', text: '#dcfce7', border: '#f87171', lines: ["Santa checked the list twice. You're on the one with Kevin.", 'A lump of coal. It still does more damage than Kevin.', 'You asked for a Ret buff. You got socks.', 'Secret Santa drew your name. Secret Santa was Kevin. You got a gray item.'] },
             newyear: { label: '🥂 New Year, Same Kevin 🥂', bg: '#1e1b4b', text: '#fde68a', border: '#facc15', lines: ["New Year's resolution: stop landing on Kevin. Failed in three seconds.", 'Midnight kiss? No. Midnight wipe.', 'The ball dropped. So did the raid.', 'New year, new you. Same Kevin.'] },
             valentines: { label: "💘 Kevin's Valentine 💘", bg: '#be185d', text: '#fdf2f8', border: '#f9a8d4', lines: ['Kevin made you a card. It is a picture of him standing in fire.', 'Roses are red, the boss is enraged, Kevin stood in fire, the healers are paged.', 'Be mine? Kevin asked the whole guild. Everyone said no.', 'A box of chocolates. Reb already ate the ones with liquor in them.'] },
@@ -1632,11 +1636,14 @@
         { id: "VIETNAM", n: 1, label: "🌴 Vietnam 🌴", pill: "VIETNAM", bg: "#14532d", text: "#bbf7d0", border: "#4ade80", color: "text-green-400", glow: "bg-emerald-600", key: "t", rig: "VNM",
           win: { vietnam: true, sub: (s) => `Landed on Vietnam (Slice #${s}) • The trees are speaking...` } },
         { id: "IRAQI_FREEDOM", n: 1, label: "Iraqi Freedom", pill: "IRAQI FREEDOM", bg: "#d6b370", text: "#020617", border: "#fef08a", color: "text-yellow-500", glow: "bg-yellow-700", key: "i", rig: "IRQ",
-          win: { title: "MY OLD LADY LEFT ME AFTER SLEEPING WITH AN MP", size: SIZE.smaller, sub: (s) => `Operation Iraqi Freedom Verdict (Slice #${s}) • Jody strikes again.` } },
+          win: { title: "MY OLD LADY LEFT ME AFTER SLEEPING WITH AN MP", size: SIZE.smaller, sub: (s) => pick([`Operation Iraqi Freedom Verdict (Slice #${s}) • Jody strikes again.`,
+                 'Came home from deployment. Wife, truck, dog: gone. Jody even took the PlayStation.', 'Fifteen months in the sandbox. Came home to a Dear John letter and a $40,000 credit card bill.',
+                 'Combat Action Badge: earned. Marriage: missing in action.', "Jody's been driving your truck since '04. He put a lift kit on it.", 'Deployment pay went to a new bass boat. You do not fish. Jody does.',
+                 'The "Welcome Home" banner was signed by the whole unit. Including the MP.', 'MREs for a year. Came home and she had finally learned to cook. For Jody.']) } },
         { id: "KEY_BRICKED", n: 1, label: "🧱💔 Key Bricked Harder Than Reb's Heart 💔🧱", pill: "KEY BRICKED", bg: "#881337", text: "#ffffff", border: "#fbbf24", fill: "brick", color: "text-rose-400", glow: "bg-rose-700", key: "k", rig: "KEY",
           win: { size: SIZE.small, sub: (s) => `DEPLETED! (Slice #${s}) — Key bricked harder than Reb's heart.` } },
         { id: "BIKE_SLICE", n: 1, label: "🚲 Stole Muh Bike 🚲", pill: "BIKE", bg: "#dc2626", text: "#ffffff", border: "#93c5fd", fill: "bike", color: "text-blue-400", glow: "bg-blue-600", key: "b", rig: "BIK",
-          win: { size: SIZE.med, sub: (s) => `RED & BLUE RADIAL JACKPOT! Landed on Slice #${s}!` } },
+          win: { size: SIZE.med, sub: (s) => pick([`RED & BLUE RADIAL JACKPOT! Landed on Slice #${s}!`, 'Somebody stole muh bike. ChAoTiC is on the case. The case is going badly.']) } },
         { id: "LIL_D", n: 1, label: "😭😭 Lil'D 😭😭", pill: "LIL'D 😭", bg: "#0284c7", text: "#ffffff", border: "#bae6fd", color: "text-sky-400", glow: "bg-sky-500", key: "l", rig: "LLD",
           win: { size: SIZE.big, sub: (s) => `POUR ONE OUT! Landed on 😭😭 Lil'D 😭😭 (Slice #${s})!` } },
         { id: "PARDNER", n: 1, label: "🤠 Pardner 🤠", pill: "PARDNER", bg: "#92400e", text: "#fef3c7", border: "#fbbf24", color: "text-amber-400", glow: "bg-amber-600", key: "w", rig: "PRD",
@@ -5387,6 +5394,7 @@
             playAshbringer(null, true);
             return;
         }
+        if (typedBuffer.endsWith("truth")) { typedBuffer = ""; location.href = 'conspiracy.html'; return; }   // it's all connected
         if (typedBuffer.endsWith("axazongold")) {   // dev gold for testing: the leaderboard never sees it
             typedBuffer = ""; setRigMode("FAIR");
             const grant = 1e15; store.set('painWheelDevGold', store.get('painWheelDevGold', 0) + grant); setGold(gold + grant);
@@ -6068,11 +6076,17 @@
         if (CONTENT_ADS.has(id)) return wl[id] !== false;   // Premium lets game-content ads out unless you uncheck them
         return mode === 'free' ? Math.random() < 0.5 : false;
     }
+    const TSUK_TYPOS = [[/\bblocked\b/i, 'blcoked'], [/\bTsukBlock\b/, 'TsukBlcok'], [/\bads\b/, 'adds'], [/\bPremium\b/, 'Premuim'], [/\btanking\b/, 'takning'], [/\bpurchasing\b/i, 'puchrasing'], [/\bprotecting\b/, 'portecting'], [/\byou\b/, 'yuo']];
+    function tsukify(text) {   // a couple of Tsukaar typos, and the tricky letters go pink
+        let t = String(text); TSUK_TYPOS.filter(() => Math.random() < 0.45).forEach(([re, to]) => { t = t.replace(re, to); });
+        return t.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]).replace(/[bdpqmwBDPQ]/g, ch => Math.random() < 0.4 ? `<span style="color:#f472b6">${ch}</span>` : ch);
+    }
     function tsukBlocked(id) {
         const n = store.get('painWheelTsukCount', 0) + 1; store.set('painWheelTsukCount', n);
         const mode = store.get('painWheelTsukMode', 'off');
         moveToast(mode === 'free' && Math.random() < 0.35 ? `🛡️ TsukBlock Free blocked an ad! Upgrade to TsukBlock Premium to block even more ads (like this one).`
             : `🛡️ Tsukaar taunted an ad and is tanking it for you. (${n.toLocaleString()} ads blocked${mode === 'rikers' ? ', 0 escaped' : ''})`);
+        $('moveToast').innerHTML = tsukify($('moveToast').textContent);
     }
     function runAdEffect(fx) {
         const root = document.documentElement;
@@ -6166,11 +6180,12 @@
                 const tier = tsukOwned.rikers ? 'rikers' : tsukOwned.premium ? 'premium' : 'free';
                 slot.innerHTML = `<div style="padding:28px 22px;text-align:center;background:linear-gradient(160deg,#1e1b4b,#0f172a);border:3px solid #a78bfa;border-radius:14px;color:#ede9fe">
                     <div style="font-size:56px;line-height:1">🛡️</div>
-                    <div style="font:900 26px/1.15 system-ui,sans-serif;margin-top:10px;color:#facc15">THANK YOU FOR PURCHASING TSUKBLOCK™</div>
+                    <div style="font:900 26px/1.15 system-ui,sans-serif;margin-top:10px;color:#facc15">${tsukify('THANK YOU FOR PURCHASING TSUKBLOCK™')}</div>
                     <div style="font-size:18px;margin-top:10px"></div>
                     <div style="font-size:14px;margin-top:12px;color:#c4b5fd">Tsukaar has returned to tanking. This message will close itself.</div></div>`;
-                slot.querySelector('div > div:nth-child(3)').textContent = { free: "You're on TsukBlock Free. That's fine. Tsukaar respects the hustle. (Premium is right there though.)",
+                const tbody = slot.querySelector('div > div:nth-child(3)'); tbody.textContent = { free: "You're on TsukBlock Free. That's fine. Tsukaar respects the hustle. (Premium is right there though.)",
                     premium: 'TsukBlock Premium is protecting you. Tsussie is in full glam and tanking your pop-ups.', rikers: 'Maximum Security: Rikers Island Edition is active. No ads. No visitors. No parole.' }[tier];
+                tbody.innerHTML = tsukify(tbody.textContent);
                 x.classList.add('hidden'); cd.classList.add('hidden'); $('adLabel').textContent = 'A message from TsukBlock';
                 ad.classList.remove('hidden'); ad.classList.add('flex');
                 setTimeout(() => { if (currentAdId === 'tsukblock') { ad.classList.add('hidden'); ad.classList.remove('flex'); } }, 3500);   // no countdown, no timer reset: it just goes away
@@ -7003,6 +7018,7 @@
             if (Array.isArray(d.myCurses)) d.myCurses.forEach(applyCurse);
             if (Array.isArray(d.events)) guildAlerts(d.events);
             if (d.boss) { $('bossBar').classList.remove('hidden'); renderBoss(d.boss); }
+            if (d.liver) setGuildLiver(d.liver);
             if ('announce' in d) showAnnouncement(d.announce);
             if (d.bounty && d.bounty.type) {
                 const label = TYPE[d.bounty.type] ? TYPE[d.bounty.type].pill : d.bounty.type;
@@ -7362,7 +7378,11 @@
 
     // ---------- 🚑🚓 Biblehumping and ChAoTiC patrol the screen now and then ----------
     const PATROL_LINES = {
-        bible: ['Any farmers around? Asking for a friend.', 'Just out for a drive. Totally not looking for combines.', 'Wellness check on Reb.', "If you hear sirens, it's probably fine.",
+        bible: ['Twelve hours healing real people, then I log on to heal you guys standing in fire. Same energy, eh.', "IRL patients at least say thank you. Raid just types 'heals?'",
+            "Paramedic tip: if you stand in the fire in real life, I also can't fix that.", "Splinted a guy's arm today and he said 'heals?' It was Kevin.", 'Healing is easy. Healing Kevin is a second job.',
+            'Wish Axazon would show up to raid dressed like a farmer. Overalls. A piece of straw. Just once.', "If Casimir wore a straw hat I'd heal him first. That's just policy.",
+            'Dylan is halfway to a farmer already. He just needs to hit a deer for once.', "Reb would make a great farmer. He's already fermenting.", 'Heal priority: tank, farmers, me, everyone else, Kevin.',
+            'Any farmers around? Asking for a friend.', 'Just out for a drive. Totally not looking for combines.', 'Wellness check on Reb.', "If you hear sirens, it's probably fine.",
             'Lost a finger, gained a passion for driving fast.', 'Does anyone here need CPR? No? Are you sure? I could practice.',
             "Just checking on my finger. It's on the SPIN button, living its best life. Still pointing.", "My finger has spun the wheel more times than Kevin. I'm so proud of it.",
             'If anyone finds a finger on the wheel, that is mine. Please do not press it. (Press it.)',
@@ -7388,16 +7408,75 @@
         const ltr = Math.random() < 0.5, lanes = [70, Math.round(innerHeight * 0.45), innerHeight - 150], lane = pick(lanes), below = lane < 150;   // top lane: the bubble hangs below the car so it isn't cut off
         const el = document.createElement('div');
         el.style.cssText = `position:fixed;z-index:63;top:${lane}px;left:0;font-size:44px;line-height:1;pointer-events:none;transform:translateX(${ltr ? -120 : innerWidth + 40}px);transition:transform 18s linear`;
-        el.innerHTML = `<div class="gb${below ? ' gb-up' : ''}" style="display:none;position:absolute;${below ? 'top:100%;margin-top:6px' : 'bottom:100%;margin-bottom:4px'};left:50%;transform:translateX(-50%);width:max-content;max-width:min(460px,80vw);background:#fffbe6;color:#000;font-size:22px;font-weight:800;line-height:1.3;padding:8px 14px;border-radius:9px;border:2px solid #111;white-space:normal"></div><div class="siren-glow" style="font-size:18px;text-align:center">${cop ? '' : '🍁'}</div>${cop ? copSprite(ltr) : ambSprite(ltr)}`;
+        const rainbow = !cop && Math.random() < 1 / 8;   // sometimes the ambulance has a rainbow behind it. Nobody knows why.
+        el.innerHTML = (rainbow ? '<div style="position:absolute;left:50%;bottom:10px;transform:translateX(-50%);font-size:120px;line-height:1;z-index:-1;opacity:.95">🌈</div>' : '') + `<div class="gb${below ? ' gb-up' : ''}" style="display:none;position:absolute;${below ? 'top:100%;margin-top:6px' : 'bottom:100%;margin-bottom:4px'};left:50%;transform:translateX(-50%);width:max-content;max-width:min(460px,80vw);background:#fffbe6;color:#000;font-size:22px;font-weight:800;line-height:1.3;padding:8px 14px;border-radius:9px;border:2px solid #111;white-space:normal"></div><div class="siren-glow" style="font-size:18px;text-align:center">${cop ? '' : '🍁'}</div>${cop ? copSprite(ltr) : ambSprite(ltr)}`;
         document.body.appendChild(el);
         requestAnimationFrame(() => requestAnimationFrame(() => { el.style.transform = `translateX(${ltr ? innerWidth + 40 : -120}px)`; }));
-        setTimeout(() => { const b = el.firstChild; b.style.display = 'block'; b.textContent = (cop ? '🚓 ChAoTiC: ' : '🚑 Biblehumping: ') + (!cop && garage.finger && Math.random() < 0.5 ? pick(PATROL_LINES.bible.filter(l => /finger/i.test(l) && !/^Lost/.test(l))) : pick(PATROL_LINES[cop ? 'cop' : 'bible'].filter(l => cop || garage.finger || !/my finger|SPIN button/i.test(l)))); setTimeout(() => { b.style.display = 'none'; }, 6500); }, 3500);
+        setTimeout(() => { const b = el.querySelector('.gb'); b.style.display = 'block'; if (rainbow) { b.textContent = '🚑 Biblehumping: ' + pick(["Don't ask about the rainbow, eh.", 'The rainbow follows me. I have stopped questioning it.', 'It came with the ambulance. Canada is a beautiful place.']); return; } b.textContent = (cop ? '🚓 ChAoTiC: ' : '🚑 Biblehumping: ') + (!cop && garage.finger && Math.random() < 0.5 ? pick(PATROL_LINES.bible.filter(l => /finger/i.test(l) && !/^Lost/.test(l))) : pick(PATROL_LINES[cop ? 'cop' : 'bible'].filter(l => cop || garage.finger || !/my finger|SPIN button/i.test(l)))); setTimeout(() => { b.style.display = 'none'; }, 6500); }, 3500);
         setTimeout(() => { el.remove(); patrolOn = false; }, 18500);
     }
     setInterval(() => { if (Math.random() < 1 / 4) patrol(); }, 60000);   // roughly every 4 minutes
 
 
     // ======================= 🗡️ stray glaive · 🐔 roadkill · 🧊 iceberg =======================
+    function afterModal(fn) {   // run something once the slice popup is out of the way
+        let tries = 0; (function w() { if (!winnerModal.classList.contains('hidden') && tries++ < 60) return setTimeout(w, 500); setTimeout(fn, 600); })();
+    }
+    const BIKE_LINES = ["Took a report. Description of the bike: 'a bike.' We're on it.", 'BOLO for one bicycle. Two wheels. Last seen being a bike.', "Checked the pawn shop. Found your bike. Also found Kevin's dignity. We kept the dignity.",
+        "Putting out an APB: Average Pedal Bandit.", 'Suspect fled on foot. On YOUR bike. So not on foot.', "I ran the serial number. It's registered to Kevin. Did you buy a stolen bike from Kevin?",
+        "We found it. It's in Dylan's truck. He says he thought it was a deer.", 'Good news: we found the bike. Bad news: we found it under the ambulance.'];
+    function bikeCop() {   // ChAoTiC pulls up, says something unhelpful, drives off
+        if (document.hidden || patrolOn) return;
+        const el = document.createElement('div'), stop = Math.round(innerWidth * 0.42);
+        el.style.cssText = `position:fixed;z-index:78;bottom:${VEH_Y}px;left:0;pointer-events:none;transform:translateX(-200px);transition:transform 2.2s cubic-bezier(.2,.8,.3,1)`;
+        el.innerHTML = `<div class="gb" style="display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:6px;width:max-content;max-width:min(440px,70vw);background:#fffbe6;color:#000;font-size:21px;font-weight:800;line-height:1.3;padding:8px 14px;border-radius:9px;border:2px solid #111;white-space:normal"></div>${copSprite(true, 2)}`;
+        document.body.appendChild(el); const stopSiren = playSiren(2);
+        requestAnimationFrame(() => requestAnimationFrame(() => { el.style.transform = `translateX(${stop}px)`; }));
+        setTimeout(() => { const b = el.firstChild; b.style.display = 'block'; b.textContent = '🚓 ChAoTiC: ' + pickFresh(BIKE_LINES); }, 2300);
+        setTimeout(() => { el.firstChild.style.display = 'none'; stopSiren(); el.style.transition = 'transform 2.6s ease-in'; el.style.transform = `translateX(${innerWidth + 60}px)`; }, 8300);
+        setTimeout(() => el.remove(), 11200);
+    }
+    // ---------- ⚠️ OSHA follow-ups: the rocket crashes into the workplace, or the goblin banker trips on a hazard ----------
+    const OSHA_ROCKET_LINES = [['ChAoTiC', 'Rocket versus workplace. The workplace lost. Writing it up as an OSHA violation. The rocket gets a warning.'], ['Biblehumping', 'Everybody okay? Count your fingers. Trust me on this one.'],
+        ['ChAoTiC', 'Who stores rocket fuel next to the break room?'], ['Biblehumping', 'That is the fourth workplace fire this week, eh. I have a punch card now.'], ['ChAoTiC', 'Hard hats were "optional." They are now mandatory. Retroactively.'],
+        ['Biblehumping', 'Third-degree burns. On the wheel. The wheel will live.']];
+    function oshaRocket() {
+        if (document.hidden) return;
+        const cv = $('wheelCanvas'); if (!cv) return; const w = cv.getBoundingClientRect(); if (w.bottom < 0 || w.top > innerHeight) return;
+        const o = padOrigin(), tx = w.left + w.width * (0.3 + Math.random() * 0.4), ty = w.top + w.height * (0.3 + Math.random() * 0.4);
+        const r = document.createElement('div'); r.style.cssText = 'position:fixed;z-index:80;pointer-events:none'; r.innerHTML = rocketImg(64); document.body.appendChild(r);
+        funEvent('🚀⚠️ UNSCHEDULED LAUNCH (WORKPLACE INCIDENT)', 2200); chatBurst(['WHO PRESSED THE BUTTON', 'that is not up to code', 'OSHA IS HERE', 'hard hats ON'], 3, 1200);
+        rocketArc(r, o.x, o.y - 70, () => ({ x: tx, y: ty }), 3000);
+        setTimeout(() => {
+            r.remove(); playCrash(); fxAt('boom', tx, ty, 150, 800); setTimeout(() => fxAt('fire', tx, ty, 110, 4200), 300);
+            document.body.animate([{ transform: 'translate(0,0)' }, { transform: 'translate(-7px,4px)' }, { transform: 'translate(6px,-4px)' }, { transform: 'translate(0,0)' }], { duration: 420 });
+            setTimeout(() => rocketScene(tx, OSHA_ROCKET_LINES), 900);
+        }, 3050);
+    }
+    const OSHA_TRIP_LINES = ['Workplace injury, eh. He tripped over the wet floor sign. The sign was there to warn him about the sign.', 'Got him. Strapping him in. He keeps asking if the ambulance accepts Goblin Express.',
+        "Sir, you don't get worker's comp. You're a goblin. ...Fine, I'll fill out the form.", "He's fine. He's billing me for the ride. I'm the ambulance."];
+    function oshaTrip() {   // the goblin banker eats it on a wet floor sign, Biblehumping carts him off
+        if (document.hidden) return;
+        const y = VEH_Y + 4, x0 = Math.round(innerWidth * 0.35);
+        const sign = document.createElement('div'); sign.textContent = '🚧';
+        sign.style.cssText = `position:fixed;z-index:77;bottom:${y}px;left:${x0 + 120}px;font-size:46px;line-height:1;pointer-events:none`;
+        const gob = document.createElement('img'); gob.src = PHOTO_GIZ_TAPE; gob.alt = '';
+        gob.style.cssText = `position:fixed;z-index:78;bottom:${y}px;left:0;height:84px;width:auto;pointer-events:none;transform:translateX(-120px);transition:transform 2.6s linear;transform-origin:50% 100%`;
+        document.body.append(sign, gob);
+        requestAnimationFrame(() => requestAnimationFrame(() => { gob.style.transform = `translateX(${x0 + 70}px)`; }));
+        setTimeout(() => { gob.style.transition = 'transform .35s cubic-bezier(.5,0,1,.5)'; gob.style.transform = `translateX(${x0 + 120}px) rotate(95deg)`; playCrash && playCrash(); floatBubble('💸 Goblin banker: MY KNEE! I WILL SUE! I AM THE BANK! I WILL SUE MYSELF!', x0 + 140, innerHeight - y - 110, 3200); chat(pick(['he ate it', 'OSHA VIOLATION', 'wet floor sign claims another', 'the bank is down'])); }, 2650);
+        setTimeout(() => {   // Biblehumping arrives
+            const amb = document.createElement('div');
+            amb.style.cssText = `position:fixed;z-index:79;bottom:${VEH_Y}px;left:0;pointer-events:none;transform:translateX(${innerWidth + 40}px);transition:transform 2s cubic-bezier(.2,.8,.3,1)`;
+            amb.innerHTML = `<div class="gb" style="display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:6px;width:max-content;max-width:min(440px,70vw);background:#fffbe6;color:#000;font-size:21px;font-weight:800;line-height:1.3;padding:8px 14px;border-radius:9px;border:2px solid #111;white-space:normal"></div>${ambSprite(false, 2)}`;
+            document.body.appendChild(amb); const stopSiren = playSiren(2);
+            requestAnimationFrame(() => requestAnimationFrame(() => { amb.style.transform = `translateX(${x0 + 160}px)`; }));
+            setTimeout(() => { amb.firstChild.style.display = 'block'; amb.firstChild.textContent = '🚑 Biblehumping: ' + pick(OSHA_TRIP_LINES); }, 2100);
+            setTimeout(() => { gob.style.transition = 'opacity .4s'; gob.style.opacity = '0'; }, 6200);   // loaded up
+            setTimeout(() => { amb.firstChild.style.display = 'none'; stopSiren(); amb.style.transition = 'transform 2.4s ease-in'; amb.style.transform = `translateX(-260px)`; }, 7200);
+            setTimeout(() => { amb.remove(); gob.remove(); sign.remove(); }, 9800);
+        }, 3600);
+    }
     function floatBubble(text, x, y, ms, below) {   // a goblin speech bubble pinned to a screen point
         const b = document.createElement('div'); b.className = 'gb' + (below ? ' gb-up' : '');
         b.style.cssText = `position:fixed;z-index:82;left:${Math.round(Math.min(innerWidth - 120, Math.max(120, x)))}px;top:${Math.round(y)}px;transform:translate(-50%,${below ? '0' : '-100%'});width:max-content;max-width:min(420px,80vw);background:#fffbe6;color:#000;font-size:20px;font-weight:800;line-height:1.3;padding:8px 14px;border-radius:9px;border:2px solid #111;pointer-events:none`;
@@ -7637,7 +7716,42 @@
     window.strayGlaive = strayGlaive; window.chickenRoadkill = chickenRoadkill; window.yachtIceberg = yachtIceberg; window.chickenAbduct = chickenAbduct; window.policeBoat = policeBoat;
 
     // ---------- Reb's liver: beer and bourbon slices hurt it; it slowly heals ----------
-    let liver = store.get('painWheelLiver', 100), liverDown = false;
+    let liver = store.get('painWheelLiver', 100), liverDown = false, guildLiver = null;
+    // when the Sheet knows about the liver, everyone shares ONE liver: drinks hurt it for the whole guild, water heals it,
+    // and if it survives the week everybody who didn't pour Reb a double gets paid
+    function setGuildLiver(L) {
+        if (!L || typeof L.hp !== 'number') return;
+        guildLiver = L; liver = L.hp; liverDown = !!L.down; renderLiver();
+        $('liverLabel').textContent = "Reb's liver (whole guild)";
+        let row = $('liverBtns');
+        if (!row) {
+            row = document.createElement('div'); row.id = 'liverBtns'; row.className = 'mt-1.5 flex flex-wrap items-center gap-2 text-xs';
+            row.innerHTML = '<button data-w class="px-2 py-1 rounded bg-sky-800 hover:bg-sky-700 text-white font-bold cursor-pointer">💧 Give Reb water (+3%)</button><button data-d class="px-2 py-1 rounded bg-amber-800 hover:bg-amber-700 text-white font-bold cursor-pointer">🥃 Pour Reb a double</button><span data-s class="text-slate-400"></span>';
+            $('liverFill').closest('.mt-2').after(row);
+            row.querySelector('[data-w]').onclick = () => {
+                if (liverDown) { $('knobNews').textContent = '🏥 Reb is in the hospital. Visiting hours are over.'; return; }
+                if (Date.now() - store.get('painWheelWaterAt', 0) < 55 * 60000) { $('knobNews').textContent = '💧 You already gave Reb water this hour. He poured it in a plant.'; return; }
+                store.set('painWheelWaterAt', Date.now()); sendEvent({ k: 'liver', what: 'water' }); liver = Math.min(100, liver + 3); renderLiver();
+                $('knobNews').textContent = pick(['💧 Reb drank the water. He looked betrayed.', '💧 +3% liver. Reb asked if it was vodka. It was not.', "💧 Hydration delivered. Reb's liver sends its thanks."]);
+            };
+            row.querySelector('[data-d]').onclick = () => {
+                if (liverDown) return;
+                if (Date.now() - store.get('painWheelDoubleAt', 0) < 23 * 3600000) { $('knobNews').textContent = '🥃 One double a day. Even Reb has standards. Barely.'; return; }
+                if (!confirm("Pour Reb a double?\n\nYou get +25,000g right now.\nThe WHOLE GUILD'S liver takes -30%.\nEveryone sees that it was you.\n\nIf the liver survives the week, everyone who never poured a double gets 50,000g. You won't. If it dies, nobody does.")) return;
+                store.set('painWheelDoubleAt', Date.now()); setGold(gold + 25000); sendEvent({ k: 'liver', what: 'double' }); liver = Math.max(0, liver - 30); renderLiver();
+                funEvent('🥃 YOU POURED REB A DOUBLE', 3500); chatBurst(['HE CHOSE VIOLENCE', 'reb noooo', 'that is a war crime', 'snitches get stitches but this guy gets 25k', 'greed'], 5, 2500);
+            };
+        }
+        row.querySelector('[data-s]').textContent = L.down ? '🚑 In the hospital (back soon)' : L.died ? "💀 Died once this week. No reward this week." : `Survive until Monday: 50,000g each${L.wreckers && L.wreckers.length ? ` · doubles poured by ${L.wreckers.join(', ')}` : ''}`;
+        const lw = L.lastWeek;
+        if (lw && lw.week && store.get('painWheelLiverClaim', '') !== lw.week && playerName) {   // last week's verdict, once
+            store.set('painWheelLiverClaim', lw.week);
+            const me = (lw.wreckers || []).some(w => w.toLowerCase() === playerName.toLowerCase());
+            if (lw.survived && !me) { setGold(gold + 50000); funEvent("🫀 REB'S LIVER SURVIVED THE WEEK: +50,000g", 5000); chatBurst(['REB LIVES', 'the liver made it', 'teamwork', 'water gang'], 4, 2500); }
+            else if (lw.survived) moveToast("🫀 Reb's liver survived the week. Everyone got 50,000g. You poured a double, so you got a lecture.");
+            else moveToast("💀 Reb's liver did not make it last week. Nobody got paid. Somebody poured one too many.");
+        }
+    }
     function renderLiver() {
         const f = $('liverFill'), t = $('liverText'); if (!f) return;
         f.style.width = Math.max(0, liver) + '%';
@@ -7646,6 +7760,10 @@
     }
     function hurtLiver(n, why) {
         if (liverDown) return;
+        if (guildLiver) {   // the shared liver: the Sheet does the math (and the hospital trip)
+            sendEvent({ k: 'liver', what: 'drink', d: Math.round(n / 3) }); liver = Math.max(0, liver - Math.round(n / 3)); renderLiver();
+            $('knobNews').textContent = `🫀 ${why}: the guild's liver -${Math.round(n / 3)}%`; return;
+        }
         liver = Math.max(0, liver - n); store.set('painWheelLiver', liver); renderLiver();
         $('knobNews').textContent = `🫀 ${why}: Reb's liver -${n}%`;
         if (liver <= 0) {
@@ -7660,7 +7778,7 @@
             }, 90000);
         }
     }
-    setInterval(() => { if (!document.hidden && !liverDown && liver < 100) { liver = Math.min(100, liver + 1); store.set('painWheelLiver', liver); renderLiver(); } }, 60000);
+    setInterval(() => { if (!guildLiver && !document.hidden && !liverDown && liver < 100) { liver = Math.min(100, liver + 1); store.set('painWheelLiver', liver); renderLiver(); } }, 60000);
     renderLiver();
 
     // =====================================================================
@@ -10277,6 +10395,8 @@
         newSliceFx(s.type); exOnLand(s.type);
         if (s.type === 'AOTC' && fair) unlock('aotclegit');   // only a natural landing counts
         if (s.type === 'LOWER_DPS') uwuKeyboardCheck();
+        if (s.type === 'BIKE_SLICE') afterModal(bikeCop);
+        if (s.type === 'OSHA' && Math.random() < 0.6) afterModal(() => (Math.random() < 0.5 ? oshaRocket : oshaTrip)());
         if (s.type === 'KROM' && Math.random() < 0.25) setTimeout(() => { if (window.showAdById) window.showAdById('aotc-carry'); }, 6000);
         // set perks that pay out on landings
         let bonus = 0;

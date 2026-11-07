@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Board · The Wheel</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Permanent+Marker&display=swap">
+<style>
+  :root { --cork: #9a6a3c; --cork2: #8a5c31; --frame: #3b2412; --ink: #1c1917; --string: #c81e1e; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; background: #120d08; color: #f5efe6; font-family: 'Special Elite', 'Courier New', monospace; }
+  header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 18px; }
+  h1 { margin: 0; font-family: 'Permanent Marker', cursive; font-size: clamp(28px, 4vw, 44px); color: #fde68a; letter-spacing: .02em; text-shadow: 3px 3px 0 #7f1d1d; }
+  .sub { font-size: 17px; color: #d6c3a5; }
+  a.back { color: #fde68a; font-size: 18px; text-decoration: none; border: 2px solid #fde68a; padding: 6px 14px; border-radius: 8px; }
+  .board { position: relative; margin: 0 auto 30px; width: min(1400px, calc(100% - 24px)); min-height: 1060px; border: 18px solid var(--frame); border-radius: 6px;
+    background: radial-gradient(circle at 20% 30%, rgba(0,0,0,.12) 0 2px, transparent 3px) 0 0/23px 19px, radial-gradient(circle at 70% 60%, rgba(255,255,255,.07) 0 1px, transparent 2px) 0 0/17px 13px,
+      linear-gradient(135deg, var(--cork), var(--cork2)); box-shadow: inset 0 0 60px rgba(0,0,0,.55), 0 20px 50px rgba(0,0,0,.6); }
+  svg.strings { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+  svg.strings line { stroke: var(--string); stroke-width: 3; filter: drop-shadow(1px 2px 1px rgba(0,0,0,.5)); }
+  .pin { position: absolute; z-index: 2; width: 230px; padding: 12px 12px 14px; color: var(--ink); cursor: pointer; transition: transform .15s; border: 0; text-align: left; font: inherit; }
+  .pin:hover, .pin:focus-visible { transform: rotate(0deg) scale(1.05) !important; z-index: 5; outline: none; }
+  .pin::before { content: ""; position: absolute; top: -9px; left: 50%; width: 18px; height: 18px; margin-left: -9px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fca5a5, #b91c1c 60%, #450a0a); box-shadow: 0 3px 4px rgba(0,0,0,.5); }
+  .card { background: #fdf6e3; box-shadow: 0 6px 14px rgba(0,0,0,.45); }
+  .photo { background: #fff; padding: 10px 10px 34px; box-shadow: 0 6px 14px rgba(0,0,0,.45); }
+  .photo img { display: block; width: 100%; height: 150px; object-fit: contain; background: #1c1917; image-rendering: pixelated; }
+  .pin h2 { margin: 6px 0 4px; font-family: 'Permanent Marker', cursive; font-size: 21px; line-height: 1.1; color: #7f1d1d; }
+  .pin p { margin: 0; font-size: 16px; line-height: 1.3; }
+  .stamp { display: inline-block; margin-top: 8px; padding: 2px 8px; border: 3px solid #b91c1c; color: #b91c1c; font-family: 'Permanent Marker', cursive; font-size: 15px; transform: rotate(-6deg); }
+  .stamp.locked { border-color: #1c1917; color: #1c1917; }
+  dialog { max-width: min(620px, 92vw); border: 0; border-radius: 4px; padding: 26px; background: #fdf6e3; color: var(--ink); font-family: 'Special Elite', monospace; font-size: 18px; line-height: 1.45; box-shadow: 0 20px 60px rgba(0,0,0,.7); }
+  dialog::backdrop { background: rgba(0,0,0,.7); }
+  dialog h3 { margin: 0 0 6px; font-family: 'Permanent Marker', cursive; font-size: 28px; color: #7f1d1d; }
+  dialog .file { font-size: 14px; color: #78716c; letter-spacing: .1em; }
+  dialog ul { padding-left: 20px; } dialog button { margin-top: 12px; font: inherit; font-size: 17px; padding: 8px 18px; background: #1c1917; color: #fde68a; border: 0; border-radius: 6px; cursor: pointer; }
+  .redact { background: #1c1917; color: #1c1917; border-radius: 2px; padding: 0 4px; }
+  @media (max-width: 760px) { .board { min-height: 0; display: grid; gap: 26px; padding: 26px 14px; } .pin { position: relative; left: auto !important; top: auto !important; width: 100%; } svg.strings { display: none; } }
+</style></head><body>
+<header><div><h1>📌 THE BOARD</h1><div class="sub">It's all connected. Click a pin. Don't tell Kevin.</div></div><a class="back" href="./">← Back to the wheel</a></header>
+<div class="board" id="board"><svg class="strings" id="strings"></svg></div>
+<dialog id="dlg"><div class="file" id="dFile"></div><h3 id="dTitle"></h3><div id="dBody"></div><button onclick="dlg.close()">Close the file</button></dialog>
+<script>
+const PINS = [
+  { id: 'susan', x: 6, y: 6, rot: -4, kind: 'card', title: 'SUSAN EXPRESS', stamp: 'UNSOLVED',
+    body: 'Who is Susan? Why does Blizzard deny the Express exists? Why does every ticket queue end with her?',
+    file: '<p>Witnesses describe a train. Blizzard describes "a server issue."</p><ul><li>First seen: the patch notes. Then deleted.</li><li>Every GM who mentions her is "reassigned."</li><li>John Blizzard\'s calendar has a recurring meeting: <span class="redact">SUSAN SUSAN</span>.</li></ul><p><b>Status:</b> the Express is still running. Nobody has a ticket.</p>' },
+  { id: 'john', x: 36, y: 4, rot: 3, kind: 'card', title: 'JOHN BLIZZARD', stamp: 'PERSON OF INTEREST',
+    body: 'Nerfed Guardian Druid again. Buys and sells $KNOB the morning before every crash.',
+    file: '<ul><li>Guardian Druid nerfs this year: <b>11</b>. Apologies: <b>0</b>.</li><li>Seen at the Exchange at 4:59 AM every Tuesday.</li><li>Known associate of Susan. Denies it. Too quickly.</li></ul>' },
+  { id: 'knob', x: 66, y: 7, rot: -2, kind: 'card', title: '$KNOB', stamp: 'RIGGED',
+    body: 'The stock only goes up until the exact moment you buy it.',
+    file: '<p>The chart is shaped like a Knob Creek bottle. Coincidence? The analysts say yes. The analysts are Reb.</p><ul><li>Biggest seller: John Blizzard.</li><li>Biggest buyer: you, right before the crash.</li></ul>' },
+  { id: 'reb', x: 79, y: 36, rot: 4, kind: 'photo', img: 'media/photo_cls_liver.png', title: "REB'S LIVER", stamp: 'CRITICAL',
+    body: 'Owned by the whole guild now. Somebody keeps pouring doubles.',
+    file: '<p>The liver has filed three restraining orders. All against Knob Creek.</p><ul><li>Who poured the doubles? Check the guild alerts.</li><li>Who gave it water? Nobody remembers. Suspicious.</li></ul>' },
+  { id: 'island', x: 48, y: 36, rot: -3, kind: 'photo', img: 'media/photo_claw_cab.png', title: "LITTLE ST. JEFF'S PRIZE ISLAND", stamp: 'SEALED',
+    body: 'Prize list sealed by court order. Cameras were down that day. Totally normal.',
+    file: '<ul><li>The claw machine has a prize list. The prize list has a court order.</li><li>The guard fell asleep. The claw did not.</li><li>Flight logs: <span class="redact">REDACTED REDACTED</span>. Available on request. Request denied.</li><li>Volley McBallface was found on the beach. He will not discuss it.</li></ul><p><b>Status:</b> didn\'t claw himself.</p>' },
+  { id: 'caller', x: 14, y: 44, rot: 5, kind: 'card', title: 'THE SCRITCHY CALLER', stamp: 'UNSOLVED',
+    body: 'Calls right after the first Scritchy Scratcher. Knows about the ticket. Not Vince.',
+    file: '<p>The red phone rings. The voice knows your gold. The voice knows you are "one ticket away."</p><ul><li>Vince says it wasn\'t him. Vince\'s phone weighs four pounds.</li><li>The calls trace back to <span class="redact">THE BASEMENT</span>.</li></ul>' },
+  { id: 'bike', x: 4, y: 76, rot: -5, kind: 'card', title: 'WHO STOLE MUH BIKE', stamp: 'COLD CASE',
+    body: 'Suspects: Kevin (the bike is registered to him). Dylan (thought it was a deer).',
+    file: '<ul><li>ChAoTiC\'s report describes the bike as "a bike."</li><li>Last seen: being a bike.</li><li>The case is open. The bike is not coming back.</li></ul>' },
+  { id: 'chicken', x: 30, y: 72, rot: 3, kind: 'photo', img: 'media/photo_ufo_beam.png', title: 'THE CHICKEN WAS TAKEN', stamp: 'CLASSIFIED',
+    body: 'It came back. It knows things. It will not stop staring at the wheel.',
+    file: '<p>The chicken has been hit by an ambulance, a glaive and a UFO. It is the most durable chicken in Westfall.</p><ul><li>After the abduction it said "they have a wheel up there too."</li><li>The aliens are also rigged against Kevin.</li></ul>' },
+  { id: 'basement', x: 62, y: 72, rot: -2, kind: 'card', title: "UNCLE TOUCHY'S PUZZLE BASEMENT", stamp: 'LOCKED', locked: true,
+    body: 'The door is locked. For now. Everything on this board ends here.',
+    file: '<p>The managers are not taking visitors.</p><p>Bring lotion. It\'s for carpal tunnel.</p><p><b>Status:</b> <span class="redact">COMING SOON COMING</span></p>' }
+];
+const STRINGS = [['susan', 'john'], ['john', 'knob'], ['knob', 'reb'], ['island', 'basement'], ['caller', 'basement'], ['susan', 'chicken'], ['bike', 'chicken'], ['john', 'island'], ['caller', 'susan'], ['reb', 'basement']];
+const board = document.getElementById('board'), svg = document.getElementById('strings'), dlg = document.getElementById('dlg');
+PINS.forEach(p => {
+  const b = document.createElement('button'); b.className = 'pin ' + p.kind; b.id = 'pin-' + p.id; b.style.left = p.x + '%'; b.style.top = p.y + '%'; b.style.transform = `rotate(${p.rot}deg)`;
+  b.innerHTML = (p.img ? `<img src="${p.img}" alt="">` : '') + `<h2></h2><p></p><span class="stamp${p.locked ? ' locked' : ''}"></span>`;
+  b.querySelector('h2').textContent = p.title; b.querySelector('p').textContent = p.body; b.querySelector('.stamp').textContent = p.stamp;
+  b.onclick = () => { document.getElementById('dFile').textContent = 'CASE FILE #' + (PINS.indexOf(p) + 1).toString().padStart(3, '0'); document.getElementById('dTitle').textContent = p.title; document.getElementById('dBody').innerHTML = p.file; dlg.showModal(); };
+  board.appendChild(b);
+});
+function drawStrings() {
+  const br = board.getBoundingClientRect(); svg.innerHTML = '';
+  STRINGS.forEach(([a, b]) => {
+    const A = document.getElementById('pin-' + a).getBoundingClientRect(), B = document.getElementById('pin-' + b).getBoundingClientRect();
+    const l = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    l.setAttribute('x1', A.left - br.left + A.width / 2); l.setAttribute('y1', A.top - br.top + 4); l.setAttribute('x2', B.left - br.left + B.width / 2); l.setAttribute('y2', B.top - br.top + 4);
+    svg.appendChild(l);
+  });
+}
+addEventListener('load', drawStrings); addEventListener('resize', drawStrings); setTimeout(drawStrings, 400);
+</script></body></html>
