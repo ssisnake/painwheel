@@ -820,7 +820,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="conspiracy.html" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:35 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:36 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -3239,6 +3239,10 @@
         g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(gain, t + 0.005); g.gain.setValueAtTime(gain, t + dur * 0.7); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
         o.connect(g); g.connect(masterGain); o.start(t); o.stop(t + dur + 0.02);
     }
+    const AUDIO_FANFARE_1 = "media/audio_fanfare_1.mp3?v=13abce20";
+    const AUDIO_FANFARE_2 = "media/audio_fanfare_2.mp3?v=fcbec683";
+    const AUDIO_FANFARE_3 = "media/audio_fanfare_3.mp3?v=db8671b7";
+    const AUDIO_FANFARE_4 = "media/audio_fanfare_4.mp3?v=4d59c7d0";
     const FANFARES = {
         // ta... DA!
         tada: { short: true, play: () => withSamples(() => {
@@ -3271,7 +3275,12 @@
             ['french_horn_C4', 'french_horn_G4'].forEach(n => playSample(n, { at: 0, dur: 0.3, gain: 0.3, out, release: 0.7 }));
             playSample('trombone_Bb3', { at: 0, dur: 0.3, gain: 0.3, out, release: 0.6, cents: 200 }); playSample('timpani_C2', { at: 0, dur: 1, gain: 0.8, out, release: 0.8 });
         }, playWinSynth) },
-        grand: { short: false, play: () => playWinSound() }
+        grand: { short: false, play: () => playWinSound() },
+        // real recorded fanfares (the long ones; quick back-to-back spins still get the short synth stingers)
+        real1: { short: false, play: () => playClip('fanfare', AUDIO_FANFARE_1, playWinSynth) },
+        real2: { short: false, play: () => playClip('fanfare', AUDIO_FANFARE_2, playWinSynth) },
+        real3: { short: false, play: () => playClip('fanfare', AUDIO_FANFARE_3, playWinSynth) },
+        real4: { short: false, play: () => playClip('fanfare', AUDIO_FANFARE_4, playWinSynth) }
     };
     // Kevin is a third of the wheel, so Kevin gets short, unimpressed sounds
     const KEVIN_SOUNDS = {
@@ -9334,7 +9343,7 @@
             ['👓', 'Ret Vision turned way down. You can actually see now.'],
             ['💥', 'Rockets explode for real now: new explosion sounds for the OSHA crash, missed launches, the yacht and the shack.'],
             ['🎡', 'The wheel sounds like a real prize wheel now: the Classic click is 24 real recorded clicks, never the same one twice in a row.'],
-            ['🏆', 'New achievement unlocked sound.']
+            ['🏆', 'New achievement unlocked sound, and four new real victory fanfares in the rotation.']
         ]
     };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
