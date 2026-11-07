@@ -434,6 +434,12 @@
         .plate-btn { background: none; border: 0; padding: 0; line-height: 0; border-radius: 8px; transition: transform .12s, filter .12s; }
         .plate-btn:hover { transform: translateY(-1px); filter: brightness(1.15); } .plate-btn:active { transform: translateY(1px); }
         .plate-btn:focus-visible { outline: 2px solid #facc15; outline-offset: 2px; }
+        .plate-btn { position: relative; }
+        .plate-btn.plate-on { filter: brightness(1.15) drop-shadow(0 0 8px rgba(250,204,21,.85)); }
+        .plate-count { position: absolute; left: 72.5%; top: 50%; transform: translateY(-52%); font: 900 19px/1 'Arial Black', Impact, system-ui, sans-serif; color: #e2e8f0; text-shadow: 0 2px 0 #0f172a, 1px 0 0 #0f172a, -1px 0 0 #0f172a, 0 -1px 0 #0f172a; pointer-events: none; letter-spacing: -.02em; }
+        .plate-tag:empty { display: none; }
+        .plate-tag { position: absolute; left: 50%; bottom: -10px; transform: translateX(-50%); white-space: nowrap; padding: 1px 7px; border-radius: 6px; background: #451a03; border: 1px solid #f59e0b; color: #fde68a; font: 800 12px/1.3 system-ui, sans-serif; pointer-events: none; }
+        @media (max-width: 640px) { .plate-count { font-size: 11px; } .plate-tag { font-size: 10px; bottom: -8px; } }
         .plate-img { height: 58px; width: auto; image-rendering: pixelated; }
         .hdr-ico { display: inline-block; height: 1.9em; width: auto; vertical-align: middle; margin: -.3em .25em -.2em 0; image-rendering: pixelated; }
         .spr-ico { display: inline-block; width: auto; vertical-align: middle; image-rendering: pixelated; }
@@ -503,6 +509,9 @@
         .fx-sheet { display: inline-block; vertical-align: middle; width: 1.3em; height: 1.3em; background-repeat: no-repeat; background-size: 400% 100%; animation: fxRun .6s steps(3, jump-none) forwards; }
         .fx-fire { width: .75em; height: 1em; }
         .fx-loop { animation: fxRun .5s steps(3, jump-none) infinite; }
+        .fx-poof { animation: fxPoof .55s steps(2, jump-none) forwards, fxPoofGrow .55s ease-out forwards; }   /* a poof bursts out big, then thins away (skips the small 'gathering' frame) */
+        @keyframes fxPoof { from { background-position: 33.333% 0; } to { background-position: 100% 0; } }
+        @keyframes fxPoofGrow { from { transform: scale(.85); } to { transform: scale(1.15); } }
         @keyframes fxRun { from { background-position: 0 0; } to { background-position: 100% 0; } }
         /* rocket pad: a drawer that slides out from the right edge */
         #launchPad.lp-drawer { position: fixed; right: 0; top: 58%; z-index: 63; width: min(600px, calc(100vw - 56px)); max-width: none; margin: 0; transform: translate(100%, -50%); transition: transform .35s cubic-bezier(.3,.8,.3,1); }
@@ -641,10 +650,9 @@
             <button id="bagBtn" class="plate-btn cursor-pointer" title="Bag" aria-label="Bag"><img class="plate-img" data-plate="BAG" alt="Bag"></button>
             <button id="homeBtn" class="plate-btn cursor-pointer" title="Home" aria-label="Home"><img class="plate-img" data-plate="HOME" alt="Home"></button>
             <button id="shopBtn" class="plate-btn cursor-pointer" title="Shop" aria-label="Shop"><img class="plate-img" data-plate="SHOP" alt="Shop"></button>
-            <button id="hearthBtn" title="Hearthstone: Gallywix's Yacht (10 sec cast)" style="display:none" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-sky-700 text-sky-200 font-bold cursor-pointer items-center gap-1.5"><img id="hearthIcon" alt="" style="height:1.5em;width:auto;margin:-.25em 0"><span>Hearth</span></button>
-            <button id="toyBtn" title="Show / hide your toys (bottom-right corner)" style="display:none" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-bold cursor-pointer items-center gap-1.5"><img id="toyIcon" alt="" style="height:1.5em;width:auto;margin:-.25em 0"><span id="toyLbl">Toys</span></button>
-            <button id="partyBtn" class="px-2.5 py-1 rounded-md bg-fuchsia-800 hover:bg-fuchsia-700 border border-fuchsia-500 text-white font-bold cursor-pointer inline-flex items-center gap-1.5"><img id="partyHatImg" alt="" style="height:1.5em;width:auto;margin:-.25em 0"><span>Party</span></button>
-            <button id="foreverBtn" title="WoW Forever is out" class="px-2.5 py-1 rounded-md bg-amber-900 hover:bg-amber-800 border border-amber-600 text-amber-100 font-bold cursor-pointer inline-flex items-center gap-1.5"><img id="foreverIcon" alt="" style="height:1.5em;width:auto;margin:-.25em 0;image-rendering:pixelated"><span>Forever</span></button>
+            <button id="toyBtn" title="Show / hide your toys (bottom-right corner)" style="display:none" class="plate-btn cursor-pointer"><img class="plate-img" data-plate="TOYS" alt="Toys"><span id="toyLbl" class="plate-count"></span></button>
+            <button id="partyBtn" title="Party mode" class="plate-btn cursor-pointer"><img class="plate-img" data-plate="PARTY" alt="Party"><img id="partyHatImg" alt="" hidden></button>
+            <button id="foreverBtn" title="WoW Forever is out" class="plate-btn cursor-pointer"><img class="plate-img" data-plate="FOREVER" alt="Forever"><span class="plate-tag"></span></button>
         </div>
     </header>
     <div id="bossBar" class="hidden w-full px-4 py-2 border-b border-slate-800/80" style="background: linear-gradient(90deg,#1a0b2e,#3b0764 50%,#1a0b2e);">
@@ -787,7 +795,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="conspiracy.html" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 12:26 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 12:38 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -906,7 +914,11 @@
                 <div class="flex gap-2 flex-wrap">
                     <button id="hpPetBtn" class="px-3 py-1.5 rounded bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold cursor-pointer"><img class="hdr-ico" data-ico="PET" alt="" style="height:1.4em"> Pet shop</button>
                     <button id="hpShopBtn" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">🎟️ Scratch-offs</button>
-                    <button id="hpBoard" style="display:none" class="px-3 py-1.5 rounded bg-sky-700 hover:bg-sky-600 text-white text-xs font-bold cursor-pointer">⚓ Go aboard the yacht</button>
+                    <button id="hpBoard" style="display:none" title="No cast, no waiting" class="px-3 py-1.5 rounded bg-sky-700 hover:bg-sky-600 text-white text-xs font-bold cursor-pointer">⚓ Board the yacht now</button>
+                </div>
+                <div id="hearthRow" class="mt-2 hidden items-center gap-3 flex-wrap">
+                    <button id="hearthBtn" title="Hearthstone: Gallywix's Yacht (10 sec cast)" class="plate-btn cursor-pointer"><img class="plate-img" data-plate="HEARTH" alt="Hearth"></button>
+                    <span class="text-xs text-slate-400">10 second cast. Kevin may pull. Or just click the yacht to board right away.</span>
                 </div>
             </div>
             <div class="mt-3 pt-3 border-t border-emerald-900">
@@ -1527,6 +1539,15 @@
     const PHOTO_PET_GERALD = "media/photo_pet_gerald.png?v=3d65edb9";
     const PHOTO_PET_NEEDLE = "media/photo_pet_needle.png?v=a6485c9b";
     const PHOTO_PET_KEVJR = "media/photo_pet_kevjr.png?v=91e218a5";
+    const PHOTO_BTN_HEARTH = "media/photo_btn_hearth.png?v=ef63b87f";
+    const PHOTO_H_BTN_HEARTH = "media/photo_h_btn_hearth.png?v=29a5446c";
+    const PHOTO_BTN_TOYS = "media/photo_btn_toys.png?v=eceb0f6d";
+    const PHOTO_H_BTN_TOYS = "media/photo_h_btn_toys.png?v=1805938a";
+    const PHOTO_BTN_PARTY = "media/photo_btn_party.png?v=416c7ebd";
+    const PHOTO_H_BTN_PARTY = "media/photo_h_btn_party.png?v=3088a16b";
+    const PHOTO_BTN_FOREVER = "media/photo_btn_forever.png?v=49859fb1";
+    const PHOTO_H_BTN_FOREVER = "media/photo_h_btn_forever.png?v=72f7406b";
+    const PHOTO_BTN_FOREVER_CRACKED = "media/photo_btn_forever_cracked.png?v=fa282eb3";
     const PHOTO_TUMBLEWEED = "media/photo_tumbleweed.png?v=ba8212ac";
     const PHOTO_OSHA = "media/photo_osha.jpg?v=69fa9bf1";
     const PHOTO_DISCO = "media/photo_disco.png?v=97e27dbb";
@@ -3937,7 +3958,7 @@
     const COINS = ['C1', 'C2', 'C3', 'C4', 'C1', 'C4'];   // spread into confetti lists: the crown coin and the stack show up most
     // one-shot / looping sprite-sheet effects (4 frames each): explosion, smoke puff, fire
     const FX_SHEETS = { boom: PHOTO_FX_BOOM, poof: PHOTO_FX_SMOKE, fire: PHOTO_FX_FIRE };
-    const fxHTML = (kind, loop) => `<i class="fx-sheet${kind === 'fire' ? ' fx-fire' : ''}${loop ? ' fx-loop' : ''}" style="background-image:url(${FX_SHEETS[kind]})"></i>`;
+    const fxHTML = (kind, loop) => `<i class="fx-sheet${kind === 'fire' ? ' fx-fire' : ''}${kind === 'poof' && !loop ? ' fx-poof' : ''}${loop ? ' fx-loop' : ''}" style="background-image:url(${FX_SHEETS[kind]})"></i>`;
     function boomEl() { const d = document.createElement('div'); d.innerHTML = fxHTML('boom'); return d; }   // drop-in for the old 💥 divs (they set font-size; the sprite is sized in em)
     function fxAt(kind, x, y, px, ms) {   // play an effect centered on a screen point
         const d = document.createElement('div');
@@ -6958,8 +6979,8 @@
     $('bossIconImg').src = PHOTO_UWU_ICON; $('bossArtImg').src = PHOTO_UWU_ART; $('partyHatImg').src = PHOTO_PARTY_HAT;
     $('liverIcon').src = PHOTO_CLS_LIVER;
     document.querySelectorAll('.hdr-ico').forEach(im => { im.src = { PET: PHOTO_CHICKEN, STATS: PHOTO_ICO_STATS, SETTINGS: PHOTO_ICO_SETTINGS, BAG: PHOTO_ICO_BAG, HOME: PHOTO_ICO_HOME, SHOP: PHOTO_ICO_SHOP }[im.dataset.ico]; });
-    document.querySelectorAll('.plate-img').forEach(im => { im.src = { STATS: PHOTO_BTN_STATS, SETTINGS: PHOTO_BTN_SETTINGS, BAG: PHOTO_BTN_BAG, HOME: PHOTO_BTN_HOME, SHOP: PHOTO_BTN_SHOP }[im.dataset.plate]; });
-    $('hearthIcon').src = PHOTO_TOY_HEARTH; $('toyIcon').src = PHOTO_TOYBOX;
+    document.querySelectorAll('.plate-img').forEach(im => { im.src = { STATS: PHOTO_BTN_STATS, SETTINGS: PHOTO_BTN_SETTINGS, BAG: PHOTO_BTN_BAG, HOME: PHOTO_BTN_HOME, SHOP: PHOTO_BTN_SHOP, TOYS: PHOTO_BTN_TOYS, PARTY: PHOTO_BTN_PARTY, FOREVER: PHOTO_BTN_FOREVER, HEARTH: PHOTO_BTN_HEARTH }[im.dataset.plate]; });
+
     function uwuKeyboardCheck() {   // after the Lower DPS popup closes, Uwutek pops up in the boss card to check your keyboard
         const art = $('bossArt'), img = $('bossArtImg'); if (!art || !img) return;
         const k = store.get('painWheelClass', ''), c = (typeof WOW_CLASSES !== 'undefined' && WOW_CLASSES.find(x => x[0] === k)) || null;
@@ -7219,7 +7240,7 @@
     }
     function renderHousePanel() {
         const h = houseInfo(), next = HOUSE_LEVELS[houseLevel + 1];
-        $('hpEmoji').innerHTML = houseHTML(h, 150); $('hpName').textContent = h.name; $('hpDesc').textContent = h.desc;
+        $('hpEmoji').innerHTML = houseHTML(h, 150); $('hpEmoji').style.cursor = houseLevel >= 6 ? 'pointer' : ''; $('hpEmoji').title = houseLevel >= 6 ? 'Board the yacht now' : ''; $('hpName').textContent = h.name; $('hpDesc').textContent = h.desc;
         $('hpIncome').textContent = h.rent < 0 ? (hasPerk('goblin') ? 'HOA fee: waived (Goblin Portfolio)' : `HOA fee: ${h.rent}g every 10 minutes`) : `Rent income: +${h.rent.toLocaleString()}g every 10 minutes`;
         const up = $('hpUpgrade');
         if (!store.get('painWheelTimeshare', false)) { up.textContent = 'Buy the timeshare (100g)'; up.disabled = false; }
@@ -7255,6 +7276,7 @@
     }
     $('hpPay100').addEventListener('click', () => payDebt(100));
     $('hpBoard').addEventListener('click', () => { location.href = YACHT_URL; });
+    $('hpEmoji').addEventListener('click', () => { if (houseLevel >= 6) location.href = YACHT_URL; });   // click the yacht itself to board right away
     $('hpPayAll').addEventListener('click', () => payDebt(goblinDebt));
     setInterval(() => { if (goblinDebt && !document.hidden) { goblinDebt = Math.ceil(goblinDebt * 1.01); store.set('painWheelDebt', goblinDebt); renderGold(); } }, 10 * 60 * 1000);
     function openHousePanel() { renderHousePanel(); $('hpMsg').textContent = ''; const p = $('housePanel'); p.classList.remove('hidden'); p.classList.add('flex'); }
@@ -7689,13 +7711,14 @@
         return true;
     }
     function oshaButtonFall() {   // one of the top bar plates comes loose and falls to the floor; click it (or wait) to bolt it back on
-        const bs = [...document.querySelectorAll('.plate-btn')].filter(b => onView(b.getBoundingClientRect()) && b.style.visibility !== 'hidden'); if (!bs.length) return false;
-        const btn = pick(bs), r = btn.getBoundingClientRect(), img = btn.querySelector('img');
+        const bs = [...document.querySelectorAll('header .plate-btn, #foreverBtn')].filter(b => b.offsetParent && onView(b.getBoundingClientRect()) && b.style.visibility !== 'hidden'); if (!bs.length) return false;
+        const fb = $('foreverBtn'), btn = bs.includes(fb) && Math.random() < 0.75 ? fb : pick(bs), r = btn.getBoundingClientRect(), img = btn.querySelector('img');
         const f = img.cloneNode(); f.className = 'plate-img'; f.title = 'Click to bolt it back on';
         f.style.cssText = `position:fixed;z-index:80;left:${r.left}px;top:${r.top}px;height:${r.height}px;cursor:pointer;pointer-events:auto`;
         btn.style.visibility = 'hidden'; document.body.appendChild(f);
         const floor = innerHeight - r.height - 14 - r.top, dx = (Math.random() - 0.5) * 160, rot = (Math.random() < 0.5 ? -1 : 1) * (8 + Math.random() * 14);
         f.animate([{ transform: 'translate(0,0) rotate(0)' }, { transform: 'translate(0,6px) rotate(-6deg)', offset: 0.12 }, { transform: `translate(${dx}px,${floor}px) rotate(${rot}deg)`, offset: 0.75 }, { transform: `translate(${dx}px,${floor - 22}px) rotate(${rot * 0.6}deg)`, offset: 0.87 }, { transform: `translate(${dx}px,${floor}px) rotate(${rot}deg)` }], { duration: 1500, easing: 'ease-in', fill: 'forwards' });
+        setTimeout(() => { if (btn === $('foreverBtn')) { f.src = PHOTO_BTN_FOREVER_CRACKED; f.dataset.ho = ''; } }, 1120);   // Forever lands cracked
         setTimeout(() => { playCrash(); chat(pick(['the button fell off', 'THE UI IS FALLING APART', 'who installed that', 'OSHA VIOLATION', 'just like my real house'])); }, 1100);
         setTimeout(() => oshaSay(pick(['That button was mounted with a single thumbtack. Who signed off on this?', 'Loose fixture in the top bar. Everyone stay away from the Settings.', 'Falling-button hazard. Hard hats are now required to click things.']), r.left + r.width / 2 + dx, innerHeight - r.height - 40), 1600);
         let done = false; const fix = () => { if (done) return; done = true; f.remove(); btn.style.visibility = ''; btn.animate([{ transform: 'translateY(-10px)' }, { transform: 'translateY(0)' }], { duration: 300, easing: 'ease-out' }); };
@@ -7863,7 +7886,7 @@
     function toggleForever() {
         const on = !document.body.classList.contains('ghost-town');
         document.body.classList.toggle('ghost-town', on);
-        $('foreverBtn').querySelector('span').textContent = on ? 'Come back?' : 'Forever';
+        $('foreverBtn').querySelector('.plate-tag').textContent = on ? 'come back?' : ''; $('foreverBtn').classList.toggle('plate-on', on);
         clearTimeout(tumbleT);
         if (on) {
             if (document.body.classList.contains('party-on')) $('partyBtn').click();
@@ -7918,7 +7941,7 @@
         const el = { chicken: $('pet-chicken'), wheel: $('wheelCanvas'), house: $('houseEmoji'), squawk: $('squawkWin'), logo: $('logoImg') }[kind];
         const r = el.getBoundingClientRect();
         let tx = r.left + r.width / 2, ty = r.top + r.height / 2;
-        if (kind === 'wheel') { const a = -Math.PI * (0.15 + Math.random() * 0.7), rad = r.width * 0.43; tx += Math.cos(a) * rad; ty += Math.sin(a) * rad; }
+        if (kind === 'wheel') { const a = -Math.PI * (0.15 + Math.random() * 0.7), wg = wheelGeom(), rad = wg.r * (r.width / wg.w) * 0.93; tx += Math.cos(a) * rad; ty += Math.sin(a) * rad; }   // a point on the actual rim
         if (kind === 'squawk') { tx = r.left + 40 + Math.random() * (r.width - 80); ty = r.top + 14; }
         floatBubble(`🗣️ ${pick(GLAIVE_WARN)}: KEVIN LOOK OUT IT'S A GLAIVE!`, tx, ty - 60, 1500);
         const fromLeft = tx > innerWidth / 2 ? false : true, sx = fromLeft ? -120 : innerWidth + 120, sy = Math.max(60, ty - 220 + Math.random() * 140);
@@ -7932,9 +7955,25 @@
             g.style.transform = `translate(${x - 42}px,${y - 42}px)`;
             if (u < 1) return requestAnimationFrame(fly);
             playSlashSound();   // THUNK
-            const img = g.firstChild; img.style.animation = 'none'; img.style.transform = `rotate(${fromLeft ? 35 : -35}deg)`;
-            // stuck: page-anchored things keep the glaive in place when you scroll
-            if (kind !== 'squawk') { g.style.position = 'absolute'; g.style.transform = `translate(${tx - 42 + scrollX}px,${ty - 42 + scrollY}px)`; }
+            // STUCK, POINT FIRST: one blade tip goes into the target and the buried part is hidden (masked at the surface)
+            const img = g.firstChild; img.style.animation = 'none';
+            let dx, dy;
+            if (kind === 'wheel') { dx = (r.left + r.width / 2) - tx; dy = (r.top + r.height / 2) - ty; }   // into the wheel, toward its center
+            else if (kind === 'squawk') { dx = fromLeft ? 0.35 : -0.35; dy = 1; }                              // down into the top edge
+            else { dx = tx - sx; dy = (ty - sy) + 160; }                                                      // along the throw, angled down
+            const dl = Math.hypot(dx, dy) || 1; dx /= dl; dy /= dl;
+            const depth = kind === 'chicken' ? 10 : kind === 'wheel' ? 20 : 15;
+            const rot = Math.atan2(dy, dx) * 180 / Math.PI - 135;            // the sprite's lower-left tip sits at 135°
+            const TIP = { x: 84 * 0.1, y: 84 * 0.9 }, B = 260, C = B / 2;   // the lower-left tip inside the 84px sprite; a bigger box so the rotated blade fits
+            g.style.width = g.style.height = B + 'px';
+            Object.assign(img.style, { position: 'absolute', width: '84px', height: '84px', left: (C - TIP.x) + 'px', top: (C - TIP.y) + 'px', transformOrigin: '10% 90%', transform: `rotate(${rot}deg)` });   // the tip sits at the box center
+            const ox = tx + dx * depth - C, oy = ty + dy * depth - C;   // tip goes 'depth' px past the surface
+            const ang = Math.atan2(dx, -dy) * 180 / Math.PI, L = B * (Math.abs(dx) + Math.abs(dy)), cut = L / 2 - depth;   // hide everything past the surface
+            g.style.webkitMaskImage = g.style.maskImage = `linear-gradient(${ang}deg, #000 ${cut}px, transparent ${cut}px)`;
+            g.style.transform = `translate(${ox}px,${oy}px)`;
+            if (kind !== 'squawk') { g.style.position = 'absolute'; g.style.transform = `translate(${ox + scrollX}px,${oy + scrollY}px)`; }   // page-anchored things keep it in place when you scroll
+            img.animate([{ transform: `rotate(${rot}deg)` }, { transform: `rotate(${rot + 7}deg)` }, { transform: `rotate(${rot - 5}deg)` }, { transform: `rotate(${rot + 3}deg)` }, { transform: `rotate(${rot - 1}deg)` }, { transform: `rotate(${rot}deg)` }], { duration: 520, easing: 'ease-out' });   // twang
+            fxAt('poof', tx, ty, 34, 450);
             el.animate([{ transform: 'translate(0,0)' }, { transform: 'translate(-5px,3px)' }, { transform: 'translate(4px,-3px)' }, { transform: 'translate(0,0)' }], { duration: 300, composite: 'add' });
             setTimeout(() => floatBubble(pick(['🤡 Kevin: I am not even ON the screen', "🤡 Kevin: why is it always me they're yelling at", '🤡 Kevin: what is a glai—', '🤡 Kevin: ...was that me?']), tx, ty - 50, 2800), 1000);
             const lines = {
@@ -7956,7 +7995,7 @@
             const iv = setInterval(() => {   // it stays until the wheel spins (it flies off) or a while passes
                 if (isSpinning || Date.now() > stuckUntil) {
                     clearInterval(iv); strayStuck = null;
-                    if (isSpinning && kind === 'wheel') { g.style.transition = 'transform .8s ease-in, opacity .8s'; g.style.transform += ` translate(${fromLeft ? 600 : -600}px,-500px) rotate(720deg)`; g.style.opacity = '0'; setTimeout(() => g.remove(), 850); chat('the glaive flew off LMAO'); }
+                    if (isSpinning && kind === 'wheel') { g.style.webkitMaskImage = g.style.maskImage = 'none'; g.style.transition = 'transform .8s ease-in, opacity .8s'; g.style.transform += ` translate(${fromLeft ? 600 : -600}px,-500px) rotate(720deg)`; g.style.opacity = '0'; setTimeout(() => g.remove(), 850); chat('the glaive flew off LMAO'); }
                     else { g.style.transition = 'opacity .6s'; g.style.opacity = '0'; setTimeout(() => g.remove(), 650); }
                 }
             }, 250);
@@ -8840,7 +8879,7 @@
         $('toyBtn').style.display = n ? 'inline-flex' : 'none';   // the button has to be showing before the box can measure where to hang
         placeToyBox(); box.style.display = n ? 'flex' : 'none'; box.classList.toggle('toy-open', !!(n && toyOpen));
         requestAnimationFrame(placeToyBox);
-        $('toyLbl').textContent = toyOpen ? 'Hide toys' : `Toys (${n})`;
+        $('toyLbl').textContent = `(${n})`; $('toyBtn').classList.toggle('plate-on', !!toyOpen); $('toyBtn').title = toyOpen ? 'Hide your toys' : 'Show your toys';
     }
     function placeToyBox() {   // the toy box hangs under its button in the top bar (page coordinates, so it scrolls with the header)
         const box = $('toyBox'), b = $('toyBtn'); if (!box || !b) return;
@@ -9183,6 +9222,8 @@
             ['🖼️', 'New pictures and jokes for Lower DPS (plus Uwutek checking your keyboard), Nuclear Family, Dylan and OSHA; waiting music for the Wrath Remix; Croissant 2; more Iraqi Freedom and holiday lines; ChAoTiC on Stole Muh Bike; more Biblehumping (sometimes rainbow); Tsukaar\'s pink typos.'],
             ['🎨', 'Art everywhere: class sigils (pick yours from a grid), new top-bar buttons and window icons, a bigger yacht with closeups, a real toy box, and Ret Vision horror art for almost everything (and a lot less blur, so you can actually see it).'],
             ['🐾', 'Up to 4 pets out at once (Shop → Pets). Clippy does not count, and Clippy cannot be turned off.'],
+            ['🔘', 'New Toys, Party and Forever buttons (with Ret Vision horror versions). The Hearthstone moved into Home: hearth with the cast, or click the yacht to board right away.'],
+            ['🗡️', 'Stray glaives now stick in point first, and the golden cookie poofs the right way.'],
             ['📌', "Someone pinned up a conspiracy board. It's in Settings, if you want to look."],
             ['🅿️', "Can't Park There is spreading: ads, guild news, Squawkr and chat."]
         ]
@@ -9797,12 +9838,13 @@
     })();
 
     // ---------- party mode: slow sweeping club lights, no strobe ----------
-    $('foreverIcon').src = PHOTO_TUMBLEWEED; $('foreverBtn').addEventListener('click', toggleForever);
+    $('foreverBtn').addEventListener('click', toggleForever);
     $('partyBtn').addEventListener('click', () => {
         const on = !document.body.classList.contains('party-on');
         document.body.classList.toggle('party-on', on);
         $('partyBtn').querySelector('span').textContent = on ? 'Stop' : 'Party';
         if (on) chatBurst(['PARTY', 'club the wheel', 'untz untz untz', 'DJ Kevin in the house', '🕺💃'], 4, 2500);
+        $('partyBtn').classList.toggle('plate-on', on);
         if (on) { partyStart(); partyPets(); } else partyStop();
         $('partyBtn').blur();
     });
@@ -9856,7 +9898,7 @@
     const HORROR = { murloc: '🧟', accountant: '💀', chicken: '🦴', whelp: '👹', clippy: '🔪', shack: '🏚️', ambulance: '⚰️', police: '🩸', rocket: '☄️' };
     const HORROR_LINES = { murloc: ['mrrrgl... (it is behind you)', '*wet gurgling*'], accountant: ['Your account balance... is... DEAD.', 'I have audited your soul. It is overdrawn.'],
         chicken: ['b a w k', '*the chicken stares into your soul*'], whelp: ['*hic* 🩸', 'the Light cannot save you'], clippy: ['It looks like you are about to die. Would you like help?', 'I see you. I always see you.'] };
-    const HORROR_SWAP = new Map([[PHOTO_ICO_STATS, PHOTO_H_ICO_STATS], [PHOTO_ICO_SETTINGS, PHOTO_H_ICO_SETTINGS], [PHOTO_ICO_BAG, PHOTO_H_ICO_BAG], [PHOTO_ICO_HOME, PHOTO_H_ICO_HOME], [PHOTO_ICO_SHOP, PHOTO_H_ICO_SHOP], [PHOTO_BTN_STATS, PHOTO_H_BTN_STATS], [PHOTO_BTN_SETTINGS, PHOTO_H_BTN_SETTINGS], [PHOTO_BTN_BAG, PHOTO_H_BTN_BAG], [PHOTO_BTN_HOME, PHOTO_H_BTN_HOME], [PHOTO_BTN_SHOP, PHOTO_H_BTN_SHOP], [AMB_SPRITE, PHOTO_H_AMB], [PHOTO_CHICKEN, PHOTO_H_CHICKEN], [PHOTO_CLS_DH, PHOTO_H_CLS_DH], [PHOTO_CLS_DK, PHOTO_H_CLS_DK], [PHOTO_CLS_DRUID, PHOTO_H_CLS_DRUID], [PHOTO_CLS_EVOKER, PHOTO_H_CLS_EVOKER], [PHOTO_CLS_HUNTER, PHOTO_H_CLS_HUNTER], [PHOTO_CLS_LIVER, PHOTO_H_CLS_LIVER], [PHOTO_CLS_MAGE, PHOTO_H_CLS_MAGE], [PHOTO_CLS_MONK, PHOTO_H_CLS_MONK], [PHOTO_CLS_NOWOW, PHOTO_H_CLS_NOWOW], [PHOTO_CLS_PALADIN, PHOTO_H_CLS_PALADIN], [PHOTO_CLS_PRIEST, PHOTO_H_CLS_PRIEST], [PHOTO_CLS_ROGUE, PHOTO_H_CLS_ROGUE], [PHOTO_CLS_SHAMAN, PHOTO_H_CLS_SHAMAN], [PHOTO_CLS_WARLOCK, PHOTO_H_CLS_WARLOCK], [PHOTO_CLS_WARRIOR, PHOTO_H_CLS_WARRIOR], [PHOTO_COIN_1, PHOTO_H_COIN_1], [PHOTO_COIN_2, PHOTO_H_COIN_2], [PHOTO_COIN_3, PHOTO_H_COIN_3], [PHOTO_COIN_4, PHOTO_H_COIN_4], [PHOTO_COMBINE, PHOTO_H_COMBINE], [PHOTO_COOKIE_CURSED, PHOTO_H_COOKIE_CURSED], [PHOTO_COOKIE_GOLD, PHOTO_H_COOKIE_GOLD], [COPCAR_SPRITE, PHOTO_H_COP], [PHOTO_DRIFT_FLAGUC, PHOTO_H_DRIFT_FLAGUC], [PHOTO_DRIFT_HELMET, PHOTO_H_DRIFT_HELMET], [PHOTO_DRIFT_JET, PHOTO_H_DRIFT_JET], [PHOTO_DRIFT_LEAF, PHOTO_H_DRIFT_LEAF], [PHOTO_DRIFT_MEDAL, PHOTO_H_DRIFT_MEDAL], [PHOTO_DRIFT_PIE, PHOTO_H_DRIFT_PIE], [PHOTO_DRIFT_PILGRIM, PHOTO_H_DRIFT_PILGRIM], [PHOTO_DRIFT_PUMPKIN, PHOTO_H_DRIFT_PUMPKIN], [PHOTO_DRIFT_TANK, PHOTO_H_DRIFT_TANK], [PHOTO_DRIFT_TURKEY, PHOTO_H_DRIFT_TURKEY], [PHOTO_FINGER, PHOTO_H_FINGER], [PHOTO_GIZ_DESK, PHOTO_H_GIZ_DESK], [PHOTO_GIZ_GRIN, PHOTO_H_GIZ_GRIN], [PHOTO_GIZ_TAPE, PHOTO_H_GIZ_TAPE], [PHOTO_HOUSE_0, PHOTO_H_HOUSE_0], [PHOTO_HOUSE_1, PHOTO_H_HOUSE_1], [PHOTO_HOUSE_2, PHOTO_H_HOUSE_2], [PHOTO_HOUSE_3, PHOTO_H_HOUSE_3], [PHOTO_HOUSE_4, PHOTO_H_HOUSE_4], [PHOTO_HOUSE_5, PHOTO_H_HOUSE_5], [PHOTO_MURLOC_SHEET, PHOTO_H_MURLOC], [PHOTO_PARTY_HAT, PHOTO_H_PARTY_HAT], [PHOTO_ROCKET, PHOTO_H_ROCKET], [PHOTO_ROCKET_FLY, PHOTO_H_ROCKET], [PHOTO_SHACK, PHOTO_H_SHACK], [PHOTO_STAR_BLUE, PHOTO_H_STAR_BLUE], [PHOTO_STAR_EMPTY, PHOTO_H_STAR_EMPTY], [PHOTO_STAR_HALF, PHOTO_H_STAR_HALF], [PHOTO_STAR_RED, PHOTO_H_STAR_RED], [PHOTO_TOYBOX, PHOTO_H_TOYBOX], [PHOTO_TOY_DOLL, PHOTO_H_TOY_DOLL], [PHOTO_TOY_DONUT, PHOTO_H_TOY_DONUT], [PHOTO_TOY_HEARTH, PHOTO_H_TOY_HEARTH], [PHOTO_TOY_PHONE, PHOTO_H_TOY_PHONE], [PHOTO_UWU_ART, PHOTO_H_UWU_ART], [PHOTO_UWU_ICON, PHOTO_H_UWU_ICON], [PHOTO_WHELP, PHOTO_H_WHELP]]);   // Ret Vision: every sprite has a cursed twin
+    const HORROR_SWAP = new Map([[PHOTO_BTN_HEARTH, PHOTO_H_BTN_HEARTH], [PHOTO_BTN_TOYS, PHOTO_H_BTN_TOYS], [PHOTO_BTN_PARTY, PHOTO_H_BTN_PARTY], [PHOTO_BTN_FOREVER, PHOTO_H_BTN_FOREVER], [PHOTO_ICO_STATS, PHOTO_H_ICO_STATS], [PHOTO_ICO_SETTINGS, PHOTO_H_ICO_SETTINGS], [PHOTO_ICO_BAG, PHOTO_H_ICO_BAG], [PHOTO_ICO_HOME, PHOTO_H_ICO_HOME], [PHOTO_ICO_SHOP, PHOTO_H_ICO_SHOP], [PHOTO_BTN_STATS, PHOTO_H_BTN_STATS], [PHOTO_BTN_SETTINGS, PHOTO_H_BTN_SETTINGS], [PHOTO_BTN_BAG, PHOTO_H_BTN_BAG], [PHOTO_BTN_HOME, PHOTO_H_BTN_HOME], [PHOTO_BTN_SHOP, PHOTO_H_BTN_SHOP], [AMB_SPRITE, PHOTO_H_AMB], [PHOTO_CHICKEN, PHOTO_H_CHICKEN], [PHOTO_CLS_DH, PHOTO_H_CLS_DH], [PHOTO_CLS_DK, PHOTO_H_CLS_DK], [PHOTO_CLS_DRUID, PHOTO_H_CLS_DRUID], [PHOTO_CLS_EVOKER, PHOTO_H_CLS_EVOKER], [PHOTO_CLS_HUNTER, PHOTO_H_CLS_HUNTER], [PHOTO_CLS_LIVER, PHOTO_H_CLS_LIVER], [PHOTO_CLS_MAGE, PHOTO_H_CLS_MAGE], [PHOTO_CLS_MONK, PHOTO_H_CLS_MONK], [PHOTO_CLS_NOWOW, PHOTO_H_CLS_NOWOW], [PHOTO_CLS_PALADIN, PHOTO_H_CLS_PALADIN], [PHOTO_CLS_PRIEST, PHOTO_H_CLS_PRIEST], [PHOTO_CLS_ROGUE, PHOTO_H_CLS_ROGUE], [PHOTO_CLS_SHAMAN, PHOTO_H_CLS_SHAMAN], [PHOTO_CLS_WARLOCK, PHOTO_H_CLS_WARLOCK], [PHOTO_CLS_WARRIOR, PHOTO_H_CLS_WARRIOR], [PHOTO_COIN_1, PHOTO_H_COIN_1], [PHOTO_COIN_2, PHOTO_H_COIN_2], [PHOTO_COIN_3, PHOTO_H_COIN_3], [PHOTO_COIN_4, PHOTO_H_COIN_4], [PHOTO_COMBINE, PHOTO_H_COMBINE], [PHOTO_COOKIE_CURSED, PHOTO_H_COOKIE_CURSED], [PHOTO_COOKIE_GOLD, PHOTO_H_COOKIE_GOLD], [COPCAR_SPRITE, PHOTO_H_COP], [PHOTO_DRIFT_FLAGUC, PHOTO_H_DRIFT_FLAGUC], [PHOTO_DRIFT_HELMET, PHOTO_H_DRIFT_HELMET], [PHOTO_DRIFT_JET, PHOTO_H_DRIFT_JET], [PHOTO_DRIFT_LEAF, PHOTO_H_DRIFT_LEAF], [PHOTO_DRIFT_MEDAL, PHOTO_H_DRIFT_MEDAL], [PHOTO_DRIFT_PIE, PHOTO_H_DRIFT_PIE], [PHOTO_DRIFT_PILGRIM, PHOTO_H_DRIFT_PILGRIM], [PHOTO_DRIFT_PUMPKIN, PHOTO_H_DRIFT_PUMPKIN], [PHOTO_DRIFT_TANK, PHOTO_H_DRIFT_TANK], [PHOTO_DRIFT_TURKEY, PHOTO_H_DRIFT_TURKEY], [PHOTO_FINGER, PHOTO_H_FINGER], [PHOTO_GIZ_DESK, PHOTO_H_GIZ_DESK], [PHOTO_GIZ_GRIN, PHOTO_H_GIZ_GRIN], [PHOTO_GIZ_TAPE, PHOTO_H_GIZ_TAPE], [PHOTO_HOUSE_0, PHOTO_H_HOUSE_0], [PHOTO_HOUSE_1, PHOTO_H_HOUSE_1], [PHOTO_HOUSE_2, PHOTO_H_HOUSE_2], [PHOTO_HOUSE_3, PHOTO_H_HOUSE_3], [PHOTO_HOUSE_4, PHOTO_H_HOUSE_4], [PHOTO_HOUSE_5, PHOTO_H_HOUSE_5], [PHOTO_MURLOC_SHEET, PHOTO_H_MURLOC], [PHOTO_PARTY_HAT, PHOTO_H_PARTY_HAT], [PHOTO_ROCKET, PHOTO_H_ROCKET], [PHOTO_ROCKET_FLY, PHOTO_H_ROCKET], [PHOTO_SHACK, PHOTO_H_SHACK], [PHOTO_STAR_BLUE, PHOTO_H_STAR_BLUE], [PHOTO_STAR_EMPTY, PHOTO_H_STAR_EMPTY], [PHOTO_STAR_HALF, PHOTO_H_STAR_HALF], [PHOTO_STAR_RED, PHOTO_H_STAR_RED], [PHOTO_TOYBOX, PHOTO_H_TOYBOX], [PHOTO_TOY_DOLL, PHOTO_H_TOY_DOLL], [PHOTO_TOY_DONUT, PHOTO_H_TOY_DONUT], [PHOTO_TOY_HEARTH, PHOTO_H_TOY_HEARTH], [PHOTO_TOY_PHONE, PHOTO_H_TOY_PHONE], [PHOTO_UWU_ART, PHOTO_H_UWU_ART], [PHOTO_UWU_ICON, PHOTO_H_UWU_ICON], [PHOTO_WHELP, PHOTO_H_WHELP]]);   // Ret Vision: every sprite has a cursed twin
     let horrorOn = false, horrorLive = false, horrorObs = null;
     function horrorize(root, on) {   // swap sprites to (or back from) their horror versions, for <img> and background-image sprites
         if (!root || root.nodeType !== 1) return;
@@ -9932,7 +9974,7 @@
 
     // ---------- Hearthstone: 10 second cast to the yacht (interruptible, like the real thing) ----------
     let hearthCast = null;
-    function renderHearth() { const on = store.get('painWheelHouseLevel', 0) >= 6; $('hearthBtn').style.display = on ? 'inline-flex' : 'none'; }
+    function renderHearth() { const on = store.get('painWheelHouseLevel', 0) >= 6; $('hearthRow').classList.toggle('hidden', !on); $('hearthRow').classList.toggle('flex', on); }
     function hearthCancel(why) {
         if (!hearthCast) return;
         clearInterval(hearthCast.iv); hearthCast.stop(); hearthCast = null;
@@ -9961,6 +10003,7 @@
         if (isSpinning) { moveToast("🪨 Can't do that while the wheel is spinning. (You're moving.)"); return; }
         const t0 = performance.now(), DUR = 10000;
         const kevinAt = Math.random() < 0.12 ? 2500 + Math.random() * 6000 : Infinity;   // sometimes Kevin pulls the boss mid-cast
+        { const hp = $('housePanel'); hp.classList.add('hidden'); hp.classList.remove('flex'); }   // close Home so you can watch the cast
         $('castBar').style.display = 'block'; $('castName').textContent = "Hearthstone: Gallywix's Yacht";
         $('castFill').style.background = 'linear-gradient(#fde68a,#f59e0b 55%,#b45309)';
         hearthCast = { stop: hearthHum(), iv: setInterval(() => {
