@@ -820,7 +820,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="conspiracy.html" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:29 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:31 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -3044,6 +3044,16 @@
        Bright "tak" (resonances near 2.4k and 4.1k), a small body knock, and a
        tiny second bounce of the flapper a few ms later. Built once, then reused. */
     let wofClickBuffer = null;
+    const AUDIO_TICKBANK = "media/audio_tickbank.wav?v=68eaddbe";
+    let realTicks = null, realTicksLoading = false, lastRealTick = -1;   // 24 clicks sampled from real prize-wheel recordings (60ms slots)
+    function loadRealTicks() {
+        if (realTicks || realTicksLoading || !audioCtx) return; realTicksLoading = true;
+        loadBytes(AUDIO_TICKBANK).then(ab => new Promise((res, rej) => audioCtx.decodeAudioData(ab, res, rej))).then(buf => {
+            const slot = Math.round(buf.sampleRate * 0.06), n = Math.floor(buf.length / slot), src = buf.getChannelData(0), out = [];
+            for (let i = 0; i < n; i++) { const b = audioCtx.createBuffer(1, slot, buf.sampleRate); b.getChannelData(0).set(src.subarray(i * slot, (i + 1) * slot)); out.push(b); }
+            realTicks = out;
+        }).catch(() => { realTicksLoading = false; });
+    }
     function getWofClick() {
         if (wofClickBuffer) return wofClickBuffer;
         const sr = audioCtx.sampleRate, len = Math.floor(sr * 0.06);
@@ -3074,10 +3084,12 @@
             ensureAudio();
             const now = audioCtx.currentTime;
             const src = audioCtx.createBufferSource();
-            src.buffer = getWofClick();
+            loadRealTicks();
+            if (realTicks) { let i; do { i = Math.floor(Math.random() * realTicks.length); } while (i === lastRealTick && realTicks.length > 1); lastRealTick = i; src.buffer = realTicks[i]; }
+            else src.buffer = getWofClick();   // synth click until the real ones decode
             src.playbackRate.setValueAtTime(0.96 + Math.random() * 0.08, now);
             const hp = audioCtx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 350;
-            const g = audioCtx.createGain(); g.gain.setValueAtTime(isSpecial ? 0.52 : 0.46, now);
+            const g = audioCtx.createGain(); g.gain.setValueAtTime((isSpecial ? 0.52 : 0.46) * (realTicks ? 0.7 : 1), now);
             src.connect(hp); hp.connect(g); g.connect(masterGain);
             src.start(now);
         } catch (e) {}
@@ -9318,7 +9330,8 @@
             ['📺', 'BREAKING NEWS: every Kevin landing now goes live on the news, with the Kevin joke running on the ticker.'],
             ['🐦', 'Squawkr profile pictures for Elan, Vince, Uwutek, Kevin, Grandma and ChAoTiC\'s alt. Shop themes show their class sigils and art.'],
             ['👓', 'Ret Vision turned way down. You can actually see now.'],
-            ['💥', 'Rockets explode for real now: new explosion sounds for the OSHA crash, missed launches, the yacht and the shack.']
+            ['💥', 'Rockets explode for real now: new explosion sounds for the OSHA crash, missed launches, the yacht and the shack.'],
+            ['🎡', 'The wheel sounds like a real prize wheel now: the Classic click is 24 real recorded clicks, never the same one twice in a row.']
         ]
     };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
