@@ -820,7 +820,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="conspiracy.html" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:37 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:40 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -3051,7 +3051,7 @@
         loadBytes(AUDIO_TICKBANK).then(ab => new Promise((res, rej) => audioCtx.decodeAudioData(ab, res, rej))).then(buf => {
             const slot = Math.round(buf.sampleRate * 0.06), n = Math.floor(buf.length / slot), src = buf.getChannelData(0), out = [];
             for (let i = 0; i < n; i++) { const b = audioCtx.createBuffer(1, slot, buf.sampleRate); b.getChannelData(0).set(src.subarray(i * slot, (i + 1) * slot)); out.push(b); }
-            realTicks = out;
+            realTicks = out; loadSirens();
         }).catch(() => { realTicksLoading = false; });
     }
     function getWofClick() {
@@ -7577,7 +7577,7 @@
         b.style.cssText = `position:fixed;z-index:63;left:0;top:${Math.round(r.bottom - 92)}px;width:190px;pointer-events:none;transform:translateX(-220px);transition:transform 3s cubic-bezier(.2,.7,.3,1)`;
         b.innerHTML = `<div class="gb" style="display:none;position:absolute;bottom:100%;margin-bottom:4px;left:50%;transform:translateX(-50%);width:max-content;max-width:min(380px,70vw);background:#fffbe6;color:#000;font-size:18px;font-weight:800;line-height:1.3;padding:7px 12px;border-radius:9px;border:2px solid #111;white-space:normal"></div><img src="${PHOTO_POLICE_BOAT}" alt="" style="display:block;width:190px;animation:boatBob 1.6s ease-in-out infinite">`;
         document.body.appendChild(b);
-        const stopSiren = playSiren(2.5);
+        const stopSiren = playSiren(2.5, 'cop');
         requestAnimationFrame(() => requestAnimationFrame(() => { b.style.transform = `translateX(${stopAt}px)`; }));
         const lines = [pickFresh(BOAT_LINES)]; let l2; do { l2 = pickFresh(BOAT_LINES); } while (l2[0] === lines[0][0]); lines.push(l2);
         const bub = b.firstChild, show = ([who, t]) => { bub.textContent = (who === 'ChAoTiC' ? '🚓 ' : '🚑 ') + who + ': ' + t; bub.style.display = 'block'; };
@@ -7696,7 +7696,7 @@
         const el = document.createElement('div'), stop = Math.round(innerWidth * 0.42);
         el.style.cssText = `position:fixed;z-index:78;bottom:${VEH_Y}px;left:0;pointer-events:none;transform:translateX(-200px);transition:transform 2.2s cubic-bezier(.2,.8,.3,1)`;
         el.innerHTML = `<div class="gb" style="display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:6px;width:max-content;max-width:min(440px,70vw);background:#fffbe6;color:#000;font-size:21px;font-weight:800;line-height:1.3;padding:8px 14px;border-radius:9px;border:2px solid #111;white-space:normal"></div>${copSprite(true, 2)}`;
-        document.body.appendChild(el); const stopSiren = playSiren(2);
+        document.body.appendChild(el); const stopSiren = playSiren(2, 'cop');
         requestAnimationFrame(() => requestAnimationFrame(() => { el.style.transform = `translateX(${stop}px)`; }));
         setTimeout(() => { const b = el.firstChild; b.style.display = 'block'; b.textContent = '🚓 ChAoTiC: ' + pickFresh(BIKE_LINES); }, 2300);
         setTimeout(() => { el.firstChild.style.display = 'none'; stopSiren(); el.style.transition = 'transform 2.6s ease-in'; el.style.transform = `translateX(${innerWidth + 60}px)`; }, 8300);
@@ -7735,7 +7735,7 @@
             const amb = document.createElement('div');
             amb.style.cssText = `position:fixed;z-index:79;bottom:${VEH_Y}px;left:0;pointer-events:none;transform:translateX(${innerWidth + 40}px);transition:transform 2s cubic-bezier(.2,.8,.3,1)`;
             amb.innerHTML = `<div class="gb" style="display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:6px;width:max-content;max-width:min(440px,70vw);background:#fffbe6;color:#000;font-size:21px;font-weight:800;line-height:1.3;padding:8px 14px;border-radius:9px;border:2px solid #111;white-space:normal"></div>${ambSprite(false, 2)}`;
-            document.body.appendChild(amb); const stopSiren = playSiren(2);
+            document.body.appendChild(amb); const stopSiren = playSiren(2, 'amb');
             requestAnimationFrame(() => requestAnimationFrame(() => { amb.style.transform = `translateX(${x0 + 160}px)`; }));
             setTimeout(() => { amb.firstChild.style.display = 'block'; amb.firstChild.textContent = '🚑 Biblehumping: ' + pick(OSHA_TRIP_LINES); }, 2100);
             setTimeout(() => { gob.style.transition = 'opacity .4s'; gob.style.opacity = '0'; }, 6200);   // loaded up
@@ -7858,7 +7858,7 @@
         const amb = document.createElement('div');
         amb.style.cssText = `position:fixed;z-index:79;bottom:${VEH_Y}px;left:0;pointer-events:none;transform:translateX(${innerWidth + 40}px);transition:transform 1.8s cubic-bezier(.2,.8,.3,1)`;
         amb.innerHTML = `<div class="gb" style="display:none;position:absolute;bottom:100%;left:50%;transform:translateX(-50%);margin-bottom:6px;width:max-content;max-width:min(440px,70vw);background:#fffbe6;color:#000;font-size:21px;font-weight:800;line-height:1.3;padding:8px 14px;border-radius:9px;border:2px solid #111;white-space:normal"></div>${ambSprite(false, 2)}`;
-        document.body.appendChild(amb); const stop = playSiren(1.6);
+        document.body.appendChild(amb); const stop = playSiren(1.6, 'amb');
         const tx = Math.max(20, Math.min(innerWidth - 260, x - 110));
         requestAnimationFrame(() => requestAnimationFrame(() => { amb.style.transform = `translateX(${tx}px)`; }));
         setTimeout(() => { amb.firstChild.style.display = 'block'; amb.firstChild.textContent = '🚑 Biblehumping: ' + line; after && after(); }, 1900);
@@ -8429,10 +8429,29 @@
 
     // ---------- garage ----------
     let garage = store.get('painWheelGarage', {});
-    function playSiren(secs) {
+    const AUDIO_SIREN_AMB1 = "media/audio_siren_amb1.mp3?v=28ca2d39";
+    const AUDIO_SIREN_AMB2 = "media/audio_siren_amb2.mp3?v=572f7b6e";
+    const AUDIO_SIREN_COP1 = "media/audio_siren_cop1.mp3?v=570f1e2e";
+    const AUDIO_SIREN_COP2 = "media/audio_siren_cop2.mp3?v=82d4f2e5";
+    const sirenBufs = { amb: [], cop: [] }; let sirensLoading = false;
+    function loadSirens() {   // real recorded sirens (two ambulance, two police); synth wee-woo until they decode
+        if (sirensLoading || !audioCtx) return; sirensLoading = true;
+        [['amb', AUDIO_SIREN_AMB1], ['amb', AUDIO_SIREN_AMB2], ['cop', AUDIO_SIREN_COP1], ['cop', AUDIO_SIREN_COP2]].forEach(([k, u]) =>
+            loadBytes(u).then(ab => new Promise((res, rej) => audioCtx.decodeAudioData(ab, res, rej))).then(b => sirenBufs[k].push(b)).catch(() => {}));
+    }
+    function playSiren(secs, kind) {   // kind: 'amb' (Biblehumping) or 'cop' (ChAoTiC); a random stretch of a real siren, faded in and out
         if (!soundOn()) return () => {};
         try {
-            ensureAudio();
+            ensureAudio(); loadSirens();
+            const k = kind === 'cop' ? 'cop' : kind === 'amb' ? 'amb' : (Math.random() < 0.5 ? 'cop' : 'amb'), bufs = sirenBufs[k];
+            if (bufs.length) {
+                const b = pick(bufs), t = audioCtx.currentTime, src = audioCtx.createBufferSource(), g = audioCtx.createGain();
+                const off = Math.random() * Math.max(0, b.duration - secs - 0.3);
+                src.buffer = b; g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.7, t + 0.15);
+                g.gain.setValueAtTime(0.7, t + Math.max(0.2, secs - 0.5)); g.gain.linearRampToValueAtTime(0.0001, t + secs);
+                src.connect(g); g.connect(outGain); src.start(t, off); src.stop(t + secs + 0.05);
+                return () => { try { g.gain.cancelScheduledValues(audioCtx.currentTime); g.gain.setValueAtTime(0.0001, audioCtx.currentTime); src.stop(); } catch (e) {} };
+            }
             const t = audioCtx.currentTime, o = audioCtx.createOscillator(), lp = audioCtx.createBiquadFilter(), g = audioCtx.createGain();
             o.type = 'sawtooth'; lp.type = 'lowpass'; lp.frequency.value = 2200;
             for (let i = 0; i < secs / 0.5; i++) o.frequency.setValueAtTime(i % 2 ? 770 : 960, t + i * 0.5);   // wee-woo
@@ -8492,7 +8511,7 @@
     let ambClicks = 0, combineEvery = 2 + Math.floor(Math.random() * 2);
     function driveAmbulance() {
         if (vehicles.amb) return;
-        const v = vehicles.amb = { el: vehicleEl('<div style="font-size:22px">🍁</div>' + ambSprite(false)), x: innerWidth + 20, vx: -(innerWidth + 180) / 3.6, stop: playSiren(3.5) };
+        const v = vehicles.amb = { el: vehicleEl('<div style="font-size:22px">🍁</div>' + ambSprite(false)), x: innerWidth + 20, vx: -(innerWidth + 180) / 3.6, stop: playSiren(3.5, 'amb') };
         if (!vehicles.cop && ++ambClicks >= combineEvery) {   // every 2nd or 3rd run there's a combine harvester parked in the lane...
             ambClicks = 0; combineEvery = 2 + Math.floor(Math.random() * 2);
             v.combineX = Math.round(innerWidth * (0.22 + Math.random() * 0.2));
@@ -9345,7 +9364,8 @@
             ['👓', 'Ret Vision turned way down. You can actually see now.'],
             ['💥', 'Rockets explode for real now: new explosion sounds for the OSHA crash, missed launches, the yacht and the shack.'],
             ['🎡', 'The wheel sounds like a real prize wheel now: the Classic click is 24 real recorded clicks, never the same one twice in a row.'],
-            ['🏆', 'New achievement unlocked sound, four new real victory fanfares, and a real sad trombone.']
+            ['🏆', 'New achievement unlocked sound, four new real victory fanfares, and a real sad trombone.'],
+            ['🚨', 'Real sirens: Biblehumping\'s ambulance and ChAoTiC\'s cop car each have their own now.']
         ]
     };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
