@@ -9043,7 +9043,9 @@
         "I'm calling you from my Lamborghini. It's in the shop. I'm calling from the shop.", "Never trust a stock that ends in -FRMR. Unless Biblehumping is driving.",
         "Buy low, sell high, and never, EVER let ChAoTiC touch your portfolio. He'll make it an alt.", "Hold on, my other brick is ringing."];
     let vinceBusyUntil = 0;
-    function playBrickRing() {   // the old two-tone ring, twice
+    const AUDIO_BRICK_RING = "media/audio_brick_ring.mp3?v=258033db";
+    function playBrickRing() { if (soundOn()) playClip('brickring', AUDIO_BRICK_RING, playBrickRingSynth); }   // a real 80s car phone
+    function playBrickRingSynth() {   // the old two-tone ring, twice
         if (!soundOn()) return;
         try { ensureAudio(); const t = audioCtx.currentTime;
             [0, 0.6].forEach(st => [440, 480].forEach(f => { const o = audioCtx.createOscillator(), g = audioCtx.createGain(); o.type = 'sine'; o.frequency.value = f;
@@ -9375,7 +9377,7 @@
             ['🚨', 'Real sirens: Biblehumping\'s ambulance and ChAoTiC\'s cop car each have their own now.'],
             ['🚗', 'Real crash sound for the fender-benders, the combine, roadkill, exploding vehicles and the iceberg, plus two real crash-and-thud sounds for everything OSHA breaks.'],
             ['🐦', 'Squawkr has a real notification sound (the speaker button in Squawkr still turns it off).'],
-            ['🛸', 'The UFO sounds like a UFO now, tractor beam and all.']
+            ['🛸', 'The UFO sounds like a UFO now, tractor beam and all. Vince\'s brick phone has a real 80s ring.']
         ]
     };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
