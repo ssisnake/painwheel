@@ -813,14 +813,28 @@
                 </div>
                 <p class="text-[11px] text-slate-500 mt-1">Dark is the normal look. Light flips everything to white.</p>
             </div>
-            <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🎨 Theme</div>
-            <select id="themePicker" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-base text-slate-200 cursor-pointer"></select>
-            <p class="text-[11px] text-slate-500 mt-1">Auto switches to the holiday themes by itself. Themes you buy in the 🛒 Shop show up in this list.</p>
+            <div id="looksSection" class="mt-5 pt-4 border-t border-slate-800">
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
+                    <div class="text-sm font-black uppercase tracking-wider text-amber-300">🎨 Your look &amp; sound</div>
+                    <button type="button" id="looksShop" class="px-3 py-1 rounded bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold cursor-pointer">🛒 Buy more in the Shop</button>
+                </div>
+                <p class="text-[11px] text-slate-500 mb-2">Everything you buy in the Shop (themes, needles, spin sounds, titles) gets switched here.</p>
+                <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Theme</div>
+                <select id="themePicker" class="hidden"></select>
+                <div id="themeGrid" class="cls-grid"></div>
+                <p class="text-[11px] text-slate-500 mt-1">Auto switches to the holiday themes by itself.</p>
+                <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mt-4 mb-2">Needle</div>
+                <div id="needleGrid" class="cls-grid"></div>
+                <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mt-4 mb-2">Spin sound</div>
+                <div id="packGrid" class="cls-grid"></div>
+                <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mt-4 mb-2">Title <span class="normal-case font-normal text-slate-500">(on the guild leaderboard)</span></div>
+                <div id="titleGrid" class="cls-grid"></div>
+            </div>
             <div class="mt-5 pt-4 border-t border-slate-800">
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="conspiracy.html" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:53 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:58 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -9444,7 +9458,8 @@
             ['🚁', 'The M*A*S*H chopper actually takes off now.'],
             ['🤡', 'The Clown Honks spin sound uses real honks now. The 8/11 door chimes when you walk in.'],
             ['🕹️', 'The claw machine has a real motor now: moving, dropping, grabbing, and the prize clunking down the chute.'],
-            ['📯', 'The yacht blows its distress horn when the iceberg, a rocket or the murloc hits it.']
+            ['📯', 'The yacht blows its distress horn when the iceberg, a rocket or the murloc hits it.'],
+            ['⚙️', 'Buy it in the Shop, switch it in Settings: themes, needles, spin sounds and titles all have picture pickers in ⚙️ Settings now.']
         ]
     };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
@@ -9690,21 +9705,24 @@
         const add = (el) => body.appendChild(el);
         if (shopTab === 'themes') {
             const tip = document.createElement('div'); tip.className = 'rounded-lg border border-amber-500/60 bg-amber-950/40 px-3 py-2 text-sm text-amber-200 font-bold flex flex-wrap items-center justify-between gap-2';
-            tip.innerHTML = '<span>🎨 Bought a theme? Switch themes any time in ⚙️ Settings → Theme.</span>';
+            tip.innerHTML = '<span>🎨 Buy it here, switch it in ⚙️ Settings (themes, needles, spin sounds and titles).</span>';
             const go = document.createElement('button'); go.className = 'px-3 py-1 rounded bg-amber-600 hover:bg-amber-500 text-black text-xs font-black cursor-pointer'; go.textContent = 'Open Settings';
-            go.addEventListener('click', () => { closeShop(); $('settingsBtn').click(); }); tip.appendChild(go); add(tip);
+            go.addEventListener('click', openLooks); tip.appendChild(go); add(tip);
             add(shopHead('Joke themes · 15% of your gold'));
             THEMES.filter(t => t.group === 'joke').forEach(t => add(themeRow(t)));
             add(shopHead('Class themes · 15% of your gold'));
             THEMES.filter(t => t.group === 'class').forEach(t => add(themeRow(t)));
             const n = document.createElement('div'); n.className = 'text-[11px] text-slate-500'; n.textContent = 'Owned themes show up in ⚙️ Settings → Theme. Holiday themes still come for free.'; add(n);
         } else if (shopTab === 'cosmetics') {
+            { const tip = document.createElement('div'); tip.className = 'rounded-lg border border-amber-500/60 bg-amber-950/40 px-3 py-2 text-sm text-amber-200 font-bold flex flex-wrap items-center justify-between gap-2';
+              tip.innerHTML = '<span>🎨 Buy it here, switch it in ⚙️ Settings.</span>'; const go = document.createElement('button'); go.className = 'px-3 py-1 rounded bg-amber-600 hover:bg-amber-500 text-black text-xs font-black cursor-pointer'; go.textContent = 'Open Settings';
+              go.addEventListener('click', openLooks); tip.appendChild(go); add(tip); }
             add(shopHead('📍 Needle transmogs'));
-            Object.entries(NEEDLES).forEach(([k, n]) => add(ownRow('📍', n.name, n.emoji ? 'Points at Kevin. Accusingly.' : 'A new paint job for the needle.', n.cost, ownedNeedles[k], needleChoice === k,
+            Object.entries(NEEDLES).forEach(([k, n]) => add(ownRow(needleIcon(n, 28), n.name, n.emoji ? 'Points at Kevin. Accusingly.' : 'A new paint job for the needle.', n.cost, ownedNeedles[k], needleChoice === k,
                 () => { if (!spend(n.cost, n.name)) return; ownedNeedles[k] = true; store.set('painWheelNeedles', ownedNeedles); unlock('drip'); equipNeedle(k); },
                 () => equipNeedle(k))));
             add(shopHead('🔊 Spin sound packs'));
-            Object.entries(TICK_PACKS).forEach(([k, p]) => add(ownRow('🔊', p.name, 'What the wheel sounds like while it spins.', p.cost, ownedPacks[k], tickPack === k,
+            Object.entries(TICK_PACKS).forEach(([k, p]) => add(ownRow(String(PACK_ICON()[k]).startsWith('data:') || /^media\//.test(PACK_ICON()[k]) ? sprImg(PACK_ICON()[k], 28) : PACK_ICON()[k], p.name, 'What the wheel sounds like while it spins.', p.cost, ownedPacks[k], tickPack === k,
                 () => { if (!spend(p.cost, p.name)) return; ownedPacks[k] = true; store.set('painWheelPacks', ownedPacks); unlock('drip'); equipPack(k); },
                 () => equipPack(k))));
             add(shopHead('🏷️ Titles (shown on the guild leaderboard)'));
@@ -10001,13 +10019,48 @@
     }
     function ownRow(icon, name, desc, cost, owned, equipped, buy, equip) {
         if (equipped) return shopRow(icon, name, desc, 'Equipped', null, 'equipped');
-        if (owned) return shopRow(icon, name, desc, 'Equip', equip, 'equip');
+        if (owned) return shopRow(icon, name, desc, 'Owned · switch in ⚙️ Settings', openLooks, 'equip');
         return shopRow(icon, name, desc, cost ? 'Buy: ' + fmt(cost) : 'Free', buy, 'buy');
     }
-    function equipTheme(id) { themeChoice = id; try { localStorage.setItem('painWheelTheme', id); } catch (e) {} $('themePicker').value = id; applyTheme(); renderShop(); }
-    function equipNeedle(k) { needleChoice = k; store.set('painWheelNeedle', k); applyNeedle(); renderShop(); }
-    function equipPack(k) { tickPack = k; store.set('painWheelTickPack', k); renderShop(); playTickSound(true); }
-    function equipTitle(t) { titleChoice = t; store.set('painWheelTitle', t); renderTitle(); renderShop(); sendEvent({ k: 'title' }); }
+    function equipTheme(id) { themeChoice = id; try { localStorage.setItem('painWheelTheme', id); } catch (e) {} $('themePicker').value = id; applyTheme(); renderShop(); renderLooks(); try { syncRetVisionHorror(); } catch (e) {} }
+    function equipNeedle(k) { needleChoice = k; store.set('painWheelNeedle', k); applyNeedle(); renderShop(); renderLooks(); }
+    function equipPack(k) { tickPack = k; store.set('painWheelTickPack', k); renderShop(); renderLooks(); playTickSound(true); }
+    function equipTitle(t) { titleChoice = t; store.set('painWheelTitle', t); renderTitle(); renderShop(); renderLooks(); sendEvent({ k: 'title' }); }
+    // ---------- Settings: switch what you bought (themes, needles, spin sounds, titles) ----------
+    const HOLIDAY_SPR = () => ({ halloween: PHOTO_DRIFT_PUMPKIN, veterans: PHOTO_DRIFT_MEDAL, thanksgiving: PHOTO_DRIFT_TURKEY });
+    function lookTile(grid, on, label, icon, onPick, title) {
+        const t = document.createElement('button'); t.type = 'button'; t.className = 'cls-tile bg-slate-950 border border-slate-700 rounded-lg' + (on ? ' on' : '');
+        t.title = title || label;
+        const ic = String(icon || '')[0] === '<' ? icon : (icon && String(icon).startsWith('data:') || /^media\//.test(icon || '')) ? `<img src="${icon}" alt="">` : `<span style="font-size:30px;line-height:40px">${icon || '❔'}</span>`;
+        t.innerHTML = ic + '<span></span>'; t.lastChild.textContent = label;
+        t.addEventListener('click', onPick); grid.appendChild(t);
+    }
+    function needleIcon(n, h) {
+        if (n.emoji) return `<img src="${PHOTO_FINGER}" alt="" style="transform:rotate(180deg)${h ? `;height:${h}px;width:auto;vertical-align:middle` : ''}">`;
+        return `<svg viewBox="0 0 46 54" width="${Math.round((h || 40) * 46 / 54)}" height="${h || 40}" style="display:inline-block;vertical-align:middle"><defs><linearGradient id="ndlRbS" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ef4444"/><stop offset=".33" stop-color="#facc15"/><stop offset=".66" stop-color="#22c55e"/><stop offset="1" stop-color="#3b82f6"/></linearGradient></defs>
+            <circle cx="23" cy="14" r="10" fill="#1E293B" stroke="#F8FAFC" stroke-width="3"/><path d="M13 18L23 50L33 18H13Z" fill="${String(n.fill).startsWith('url') ? 'url(#ndlRbS)' : n.fill}" stroke="${n.stroke}" stroke-width="2" stroke-linejoin="round"/><circle cx="23" cy="14" r="4" fill="${String(n.fill).startsWith('url') ? '#facc15' : n.fill}"/></svg>`;
+    }
+    const PACK_ICON = () => ({ classic: PHOTO_PET_SPINNY, murloc: '🐸', coins: PHOTO_COIN_1, bubbles: '🫧', chip: PHOTO_CLAW_CAB, honk: '🤡' });
+    function renderLooks() {
+        const tg = $('themeGrid'); if (!tg) return; tg.innerHTML = '';
+        const auto = autoTheme();
+        lookTile(tg, themeChoice === 'auto', 'Auto' + (auto ? ` (${auto.name.replace(/[^\w' ]/g, '').trim()})` : ''), PHOTO_LOGO, () => equipTheme('auto'));
+        lookTile(tg, themeChoice === 'none', 'Normal', PHOTO_PET_SPINNY, () => equipTheme('none'));
+        THEMES.filter(themeAllowed).forEach(t => {
+            const icon = t.shop ? themeIcon(t) : (HOLIDAY_SPR()[t.id] || t.badge[0].trim() || '🎨');
+            lookTile(tg, themeChoice === t.id, t.name.replace(/\s*[\u{1F000}-\u{1FFFF}\u2600-\u27BF\uFE0F]+/gu, '').trim(), icon, () => equipTheme(t.id));
+        });
+        const ng = $('needleGrid'); ng.innerHTML = '';
+        Object.entries(NEEDLES).filter(([k]) => ownedNeedles[k]).forEach(([k, n]) => lookTile(ng, needleChoice === k, n.name.replace(/\s*👇/, ''), needleIcon(n), () => equipNeedle(k)));
+        const pg = $('packGrid'); pg.innerHTML = '';
+        Object.entries(TICK_PACKS).filter(([k]) => ownedPacks[k]).forEach(([k, p]) => lookTile(pg, tickPack === k, p.name, PACK_ICON()[k], () => equipPack(k), p.name + ' (click to hear it)'));
+        const tl = $('titleGrid'); tl.innerHTML = '';
+        lookTile(tl, !titleChoice, 'No title', '🚫', () => equipTitle(''));
+        TITLES.filter(([t]) => ownedTitles[t]).forEach(([t]) => lookTile(tl, titleChoice === t, t, '🏷️', () => equipTitle(t)));
+    }
+    function openLooks() { closeShop(); $('settingsBtn').click(); setTimeout(() => { const el = $('looksSection'); if (el) el.scrollIntoView({ block: 'start', behavior: 'smooth' }); }, 60); }
+    $('looksShop').addEventListener('click', () => { const p = $('settingsPanel'); p.classList.add('hidden'); p.classList.remove('flex'); openShop('cosmetics'); });
+    $('settingsBtn').addEventListener('click', renderLooks);
     function rebuildThemePicker() {
         const el = $('themePicker'), v = el.value; el.innerHTML = '';
         [['auto', 'Auto'], ['none', 'Normal']].concat(THEMES.filter(themeAllowed).map(t => [t.id, t.name]))
