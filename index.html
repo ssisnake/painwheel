@@ -820,7 +820,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="conspiracy.html" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:12 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:20 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -1306,6 +1306,12 @@
                 <div id="smokesEmoji" class="text-7xl leading-none select-none">🚬🚗💨</div>
             </div>
 
+            <div id="kevinNews" class="hidden my-3" style="position:relative;width:100%;container-type:inline-size">
+                <video id="kevinNewsVid" muted loop playsinline preload="none" style="display:block;width:100%;border-radius:14px;border:2px solid #475569"></video>
+                <div style="position:absolute;left:13.6%;right:0;top:89.2%;height:6.7%;overflow:hidden;display:flex;align-items:center">
+                    <span id="kevinTicker" style="white-space:nowrap;font-weight:900;color:#0f172a;font-size:3.6cqw;letter-spacing:.02em;will-change:transform"></span>
+                </div>
+            </div>
             <div id="modalVideoWrap" class="hidden flex-col items-center justify-center my-3">
                 <div class="relative">
                     <video id="modalVideo" playsinline preload="auto" class="max-h-[46vh] max-w-full w-auto rounded-2xl border-2 border-slate-600 shadow-xl"></video>
@@ -4755,10 +4761,14 @@
     }
     // ---------- one art style everywhere: emoji that have a real sprite get the sprite ----------
     const sprImg = (src, h) => `<img src="${src}" alt="" class="spr-ico" style="height:${h || 24}px">`;
+    const PHOTO_COP_ICON = "media/photo_cop_icon.png?v=b6d61402";
+    const PHOTO_AMB_ICON = "media/photo_amb_icon.png?v=a8913e25";
     const SPRITE_OF = { '📞': PHOTO_TOY_PHONE, '🖐️': PHOTO_FINGER, '🍪': PHOTO_COOKIE_GOLD, '🍩': PHOTO_TOY_DONUT, '🧸': PHOTO_TOYBOX, '🚀': PHOTO_ROCKET,
         '🏐': PHOTO_VOLLEY, '🐔': PHOTO_CHICKEN, '🛸': PHOTO_UFO, '🧮': PHOTO_GIZ_GRIN, '🪙': PHOTO_COIN_1, '🫀': PHOTO_CLS_LIVER, '🥳': PHOTO_PARTY_HAT,
         '🛒': PHOTO_ICO_SHOP, '⚙️': PHOTO_ICO_SETTINGS, '📊': PHOTO_ICO_STATS, '🎒': PHOTO_ICO_BAG, '🏚️': PHOTO_HOUSE_0, '🛖': PHOTO_HOUSE_1, '🏠': PHOTO_HOUSE_2,
-        '🏡': PHOTO_HOUSE_3, '🏘️': PHOTO_HOUSE_4, '🏰': PHOTO_HOUSE_5, '🛥️': PHOTO_YACHT_BIG, '🐾': PHOTO_CHICKEN, '🧿': PHOTO_TOY_DOLL, '🌾': PHOTO_CHICKEN };
+        '🏡': PHOTO_HOUSE_3, '🏘️': PHOTO_HOUSE_4, '🏰': PHOTO_HOUSE_5, '🛥️': PHOTO_YACHT_BIG, '🐾': PHOTO_CHICKEN, '🧿': PHOTO_TOY_DOLL, '🌾': PHOTO_CHICKEN,
+        '🚗': PHOTO_COP_ICON, '🚓': PHOTO_COP_ICON, '🚑': PHOTO_AMB_ICON, '🐉': PHOTO_WHELP, '📎': PHOTO_CLIPPY, '👹': PHOTO_UWU_ICON, '🪩': PHOTO_DISCO, '🧊': PHOTO_ICEBERG,
+        '🚜': PHOTO_COMBINE, '🏜️': PHOTO_SHACK, '🔷': PHOTO_TOY_HEARTH, '🎡': PHOTO_PET_SPINNY, '🐹': PHOTO_PET_GERALD, '🌵': PHOTO_TUMBLEWEED };
     const spriteFor = (e, h) => SPRITE_OF[e] ? sprImg(SPRITE_OF[e], h) : null;
     // ---------- ⚔️ favorite class (shows next to your name) ----------
     const WOW_CLASSES = [['warrior', 'Warrior', '⚔️', '#C69B6D'], ['paladin', 'Paladin', '🔨', '#F48CBA'], ['hunter', 'Hunter', '🏹', '#AAD372'], ['rogue', 'Rogue', '🗡️', '#FFF468'],
@@ -5081,7 +5091,25 @@
             n.connect(f); f.connect(g); g.connect(masterGain); n.start(t);
         } catch (e) {}
     }
+    const VIDEO_KEVIN_NEWS = "media/video_kevin_news.mp4?v=409c3baa";
+    function kevinNewsShow(on) {   // Kevin slices: breaking news, with the joke running on the ticker
+        const box = $('kevinNews'), v = $('kevinNewsVid'), tk = $('kevinTicker');
+        modalSubtext.style.display = on ? 'none' : '';
+        modalCard.style.maxWidth = on ? '42rem' : '';   // wider card so the ticker text stays big
+        box.classList.toggle('hidden', !on);
+        if (tk.anim) { tk.anim.cancel(); tk.anim = null; }
+        if (!on) { try { v.pause(); } catch (e) {} return; }
+        tk.textContent = 'BREAKING: ' + modalSubtext.textContent.toUpperCase() + '   •   ';
+        if (!v.src) v.src = VIDEO_KEVIN_NEWS;
+        try { v.currentTime = 0; } catch (e) {} v.play().catch(() => {});
+        requestAnimationFrame(() => {   // slow enough to read: about 110px a second, starting once the bar slides in
+            const lane = tk.parentElement.clientWidth || 300, dist = lane + tk.scrollWidth;
+            tk.anim = tk.animate([{ transform: `translateX(${lane}px)` }, { transform: `translateX(${-tk.scrollWidth}px)` }],
+                { duration: Math.max(6000, dist / 110 * 1000), delay: 700, iterations: Infinity });
+        });
+    }
     function stopModalVideo() {
+        kevinNewsShow(false);
         try { modalVideo.pause(); } catch (e) {}
         modalVideoWrap.classList.add('hidden'); modalVideoWrap.classList.remove('flex');
     }
@@ -5127,6 +5155,7 @@
         setTitle((w.title || s.label).toUpperCase(), w.size || SIZE.big, t.color, w.extra, w.my, w.anim);
         setGlow(t.glow, w.glowOpacity);
         modalSubtext.textContent = w.sub ? w.sub(num, odds) : `Landed on Slice #${num} (${odds} odds)!`;
+        kevinNewsShow(s.type === 'KEVIN');
         if (w.perSlice) {
             const ord = indicesOf[s.type].indexOf(s.index);
             const line = w.perSlice[ord % w.perSlice.length];
@@ -9276,7 +9305,10 @@
             ['🪝', 'Hearthing is risky now: Biblehumping or Platemage might yank you mid-cast.'],
             ['📌', 'The conspiracy board got a real board. Click the photos.'],
             ['🏪', 'The 7/11 is now the 8/11 (open 7 hours a day, 11 days a week). Land on it to walk in and buy a Slurpee for 1%. Hold it carefully.'],
-            ['🧸', 'The toy box text no longer spills out when your text size is turned up.']
+            ['🧸', 'The toy box text no longer spills out when your text size is turned up.'],
+            ['📺', 'BREAKING NEWS: every Kevin landing now goes live on the news, with the Kevin joke running on the ticker.'],
+            ['🐦', 'Squawkr profile pictures for Elan, Vince, Uwutek, Kevin, Grandma and ChAoTiC\'s alt. Shop themes show their class sigils and art.'],
+            ['👓', 'Ret Vision turned way down. You can actually see now.']
         ]
     };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
@@ -10226,7 +10258,10 @@
         irs: ['Goblin IRS', '@GoblinIRS', '🧾', true], casimir: ['Casimir', '@Casimir_Rigs', '🔧', false], yacht: ["Gallywix's Yacht Club", '@GallywixYachtClub', '🛥️', true] };
     // vehicle sprites double as Squawkr profile pictures (cropped into the round avatar)
     const SQ_IMG = (src) => () => `<span style="display:grid;place-items:center;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b"><img src="${src}" alt="" style="width:30px;height:30px;object-fit:contain"></span>`;
-    const SQ_PIC = { reb: SQ_IMG(PHOTO_CLS_LIVER), shack: SQ_IMG(PHOTO_SHACK), yacht: SQ_IMG(GIF_YACHT), uwutek: SQ_IMG(PHOTO_UWU_ICON), chaotic: () => `<span style="display:block;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b;display:grid;place-items:center">${copSprite(false, 0.5)}</span>`,
+    const SQ_PIC = { elan: SQ_IMG(PHOTO_ROCKET), vince: SQ_IMG(PHOTO_TOY_PHONE),
+        kevin: SQ_IMG(PHOTO_PET_KEVJR), grandma: SQ_IMG(PHOTO_COOKIE_GOLD),   // temp until real Kevin + Grandma art
+        alt: () => `<span style="display:grid;place-items:center;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b"><img src="${PHOTO_COP_ICON}" alt="" style="width:30px;height:30px;object-fit:contain;filter:hue-rotate(150deg) saturate(1.4)"></span>`,
+        reb: SQ_IMG(PHOTO_CLS_LIVER), shack: SQ_IMG(PHOTO_SHACK), yacht: SQ_IMG(GIF_YACHT), uwutek: SQ_IMG(PHOTO_UWU_ICON), chaotic: () => `<span style="display:block;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b;display:grid;place-items:center">${copSprite(false, 0.5)}</span>`,
         bible: () => `<span style="display:block;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b;display:grid;place-items:center">${ambSprite(false, 0.5)}</span>` };
     const SQ_AMBIENT = [
         ['kevin', 'just landed on myself again. this wheel is RIGGED. who do i report this to'], ['casimir', 'me'],
