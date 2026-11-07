@@ -820,7 +820,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="conspiracy.html" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:20 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:29 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -7689,7 +7689,7 @@
         funEvent('🚀⚠️ UNSCHEDULED LAUNCH (WORKPLACE INCIDENT)', 2200); chatBurst(['WHO PRESSED THE BUTTON', 'that is not up to code', 'OSHA IS HERE', 'hard hats ON'], 3, 1200);
         rocketArc(r, o.x, o.y - 70, () => ({ x: tx, y: ty }), 3000);
         setTimeout(() => {
-            r.remove(); playCrash(); fxAt('boom', tx, ty, 150, 800); setTimeout(() => fxAt('fire', tx, ty, 110, 4200), 300);
+            r.remove(); playRocketBoom(1); fxAt('boom', tx, ty, 150, 800); setTimeout(() => fxAt('fire', tx, ty, 110, 4200), 300);
             document.body.animate([{ transform: 'translate(0,0)' }, { transform: 'translate(-7px,4px)' }, { transform: 'translate(6px,-4px)' }, { transform: 'translate(0,0)' }], { duration: 420 });
             setTimeout(() => rocketScene(tx, OSHA_ROCKET_LINES), 900);
         }, 3050);
@@ -8433,6 +8433,15 @@
             return () => { try { o.stop(); } catch (e) {} };
         } catch (e) { return () => {}; }
     }
+    const AUDIO_ROCKET_BOOM_1 = "media/audio_rocket_boom_1.mp3?v=1288159e";
+    const AUDIO_ROCKET_BOOM_2 = "media/audio_rocket_boom_2.mp3?v=756c913b";
+    const AUDIO_ROCKET_BOOM_3 = "media/audio_rocket_boom_3.mp3?v=3af56102";
+    const AUDIO_ROCKET_BOOM_4 = "media/audio_rocket_boom_4.mp3?v=a32887bf";
+    function playRocketBoom(k) {   // real rocket explosions: 1 OSHA crash, 2 a miss, 3 the yacht, 4 the shack (a miss can use any of them)
+        const all = [AUDIO_ROCKET_BOOM_1, AUDIO_ROCKET_BOOM_2, AUDIO_ROCKET_BOOM_3, AUDIO_ROCKET_BOOM_4];
+        const i = k === 2 ? Math.floor(Math.random() * 4) : k - 1;
+        playClip('rocketboom' + i, all[i], playCrash);
+    }
     function playCrash() {
         if (!soundOn()) return;
         try {
@@ -8719,7 +8728,7 @@
                 knob: ['IT IS HEADING FOR THE STOCKS', 'NOT MY PORTFOLIO', 'sell sell sell', 'reb hide the bottles'] }[kind], 3, 1200);
         }, 1800);
         setTimeout(() => {
-            clearInterval(smoke); r.remove(); playCrash();
+            clearInterval(smoke); r.remove(); playRocketBoom(2);
             const boom = boomEl();
             boom.style.cssText = `position:fixed;z-index:80;left:${tx}px;top:${ty}px;font-size:34px;pointer-events:none;transform:translate(-50%,-50%) scale(.4);transition:transform .35s ease-out,opacity .8s .8s`;
             document.body.appendChild(boom); requestAnimationFrame(() => { boom.style.transform = 'translate(-50%,-50%) scale(3.2)'; });
@@ -8864,7 +8873,7 @@
             chatBurst(toWheel ? ['uh oh', 'IT IS HEADING FOR THE WHEEL', 'NOT THE WHEEL', 'who aimed this'] : ['wrong way', 'THAT IS NOT THE SHACK', 'NOT THE YACHT', 'gps recalculating'], 3, 1200);
         }, 1800);
         setTimeout(() => {
-            clearInterval(smoke); r.remove(); playCrash();
+            clearInterval(smoke); r.remove(); playRocketBoom(3);
             const boom = boomEl();
             boom.style.cssText = `position:fixed;z-index:80;left:${tx}px;top:${ty}px;font-size:34px;pointer-events:none;transform:translate(-50%,-50%) scale(.4);transition:transform .35s ease-out,opacity .8s .8s`;
             document.body.appendChild(boom); requestAnimationFrame(() => { boom.style.transform = `translate(-50%,-50%) scale(${toWheel ? 6 : 3.6})`; });
@@ -8903,7 +8912,7 @@
         funEvent('🚀 LIFTOFF FROM THE SHACK IN THE DESERT!', 2200);
         rocketArc(r, o.x, o.y, () => ({ x: sx, y: sy - 10 }), 3050);   // ...what goes up
         setTimeout(() => {
-            clearInterval(smoke); r.remove(); playCrash();
+            clearInterval(smoke); r.remove(); playRocketBoom(4);
             const boom = boomEl();
             boom.style.cssText = `position:fixed;z-index:78;left:${sx}px;top:${sy - 30}px;font-size:30px;pointer-events:none;transform:translate(-50%,0) scale(.4);transition:transform .35s ease-out,opacity .8s .8s`;
             document.body.appendChild(boom); requestAnimationFrame(() => { boom.style.transform = 'translate(-50%,-30%) scale(3.4)'; });
@@ -9308,7 +9317,8 @@
             ['🧸', 'The toy box text no longer spills out when your text size is turned up.'],
             ['📺', 'BREAKING NEWS: every Kevin landing now goes live on the news, with the Kevin joke running on the ticker.'],
             ['🐦', 'Squawkr profile pictures for Elan, Vince, Uwutek, Kevin, Grandma and ChAoTiC\'s alt. Shop themes show their class sigils and art.'],
-            ['👓', 'Ret Vision turned way down. You can actually see now.']
+            ['👓', 'Ret Vision turned way down. You can actually see now.'],
+            ['💥', 'Rockets explode for real now: new explosion sounds for the OSHA crash, missed launches, the yacht and the shack.']
         ]
     };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
