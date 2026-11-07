@@ -820,7 +820,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="conspiracy.html" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:41 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 1:42 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -8488,7 +8488,10 @@
     }
     const AUDIO_VEHICLE_CRASH = "media/audio_vehicle_crash.mp3?v=79b8f34b";
     function playVehicleCrash() { if (soundOn()) playClip('vcrash', AUDIO_VEHICLE_CRASH, playCrash); }   // wrecks, roadkill, the combine, the iceberg
-    function playCrash() {
+    const AUDIO_CRASH_1 = "media/audio_crash_1.mp3?v=34188f4d";
+    const AUDIO_CRASH_2 = "media/audio_crash_2.mp3?v=03397379";
+    function playCrash() { if (!soundOn()) return; const i = Math.random() < 0.5 ? 1 : 2; playClip('crash' + i, i === 1 ? AUDIO_CRASH_1 : AUDIO_CRASH_2, playCrashSynth); }   // OSHA breaks, falling buttons and slices
+    function playCrashSynth() {
         if (!soundOn()) return;
         try {
             ensureAudio();
@@ -9368,7 +9371,8 @@
             ['🎡', 'The wheel sounds like a real prize wheel now: the Classic click is 24 real recorded clicks, never the same one twice in a row.'],
             ['🏆', 'New achievement unlocked sound, four new real victory fanfares, and a real sad trombone.'],
             ['🚨', 'Real sirens: Biblehumping\'s ambulance and ChAoTiC\'s cop car each have their own now.'],
-            ['🚗', 'Real crash sound for the fender-benders, the combine, roadkill, exploding vehicles and the iceberg.']
+            ['🚗', 'Real crash sound for the fender-benders, the combine, roadkill, exploding vehicles and the iceberg, plus two real crash-and-thud sounds for everything OSHA breaks.'],
+            ['🐦', 'Squawkr has a real notification sound (the speaker button in Squawkr still turns it off).']
         ]
     };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
@@ -10437,10 +10441,14 @@
     function sqRender() { const b = $('sqBody'); b.textContent = ''; sqFeed.slice(0, 30).forEach(p => b.appendChild(sqPostEl(p))); }
     // a little two-note tweet for posts that matter (the ambient chatter stays quiet); 🔊 in the Squawkr header mutes it
     let sqMuted = store.get('painWheelSqMute', false), sqLastChirp = 0;
+    const AUDIO_SQ_CHIRP = "media/audio_sq_chirp.mp3?v=d73e19ad";
     function sqChirp() {
         if (sqMuted || !soundOn() || document.hidden || Date.now() - sqLastChirp < 4000) return;
+        sqLastChirp = Date.now(); playClip('sqchirp', AUDIO_SQ_CHIRP, sqChirpSynth);
+    }
+    function sqChirpSynth() {
         try {
-            ensureAudio(); sqLastChirp = Date.now();
+            ensureAudio();
             const t = audioCtx.currentTime;
             [[2300, 0], [3100, 0.09]].forEach(([f, dt]) => {
                 const o = audioCtx.createOscillator(), g = audioCtx.createGain();
