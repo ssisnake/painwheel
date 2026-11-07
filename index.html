@@ -742,7 +742,7 @@
             <div class="mt-5 pt-4 border-t border-slate-800">
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 6, 9:27 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 6, 9:36 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -1402,6 +1402,67 @@
     const PHOTO_CHICKEN = "media/photo_chicken.png?v=d6697602";
     const PHOTO_WHELP = "media/photo_whelp.png?v=e83a9376";
     const PHOTO_LOGO = "media/photo_logo.png?v=7e59cc27";
+    const PHOTO_H_AMB = "media/photo_h_amb.png?v=24b53579";
+    const PHOTO_H_CHICKEN = "media/photo_h_chicken.png?v=3d82741e";
+    const PHOTO_H_CLS_DH = "media/photo_h_cls_dh.png?v=5d030062";
+    const PHOTO_H_CLS_DK = "media/photo_h_cls_dk.png?v=0d734c64";
+    const PHOTO_H_CLS_DRUID = "media/photo_h_cls_druid.png?v=0a8575e0";
+    const PHOTO_H_CLS_EVOKER = "media/photo_h_cls_evoker.png?v=22a56772";
+    const PHOTO_H_CLS_HUNTER = "media/photo_h_cls_hunter.png?v=77c08efc";
+    const PHOTO_H_CLS_LIVER = "media/photo_h_cls_liver.png?v=89987e14";
+    const PHOTO_H_CLS_MAGE = "media/photo_h_cls_mage.png?v=d2e77567";
+    const PHOTO_H_CLS_MONK = "media/photo_h_cls_monk.png?v=f4cb8ded";
+    const PHOTO_H_CLS_NOWOW = "media/photo_h_cls_nowow.png?v=8ae6802f";
+    const PHOTO_H_CLS_PALADIN = "media/photo_h_cls_paladin.png?v=df853539";
+    const PHOTO_H_CLS_PRIEST = "media/photo_h_cls_priest.png?v=3f454c20";
+    const PHOTO_H_CLS_ROGUE = "media/photo_h_cls_rogue.png?v=4ece21be";
+    const PHOTO_H_CLS_SHAMAN = "media/photo_h_cls_shaman.png?v=9a9c433d";
+    const PHOTO_H_CLS_WARLOCK = "media/photo_h_cls_warlock.png?v=b5c8c897";
+    const PHOTO_H_CLS_WARRIOR = "media/photo_h_cls_warrior.png?v=ad787527";
+    const PHOTO_H_COIN_1 = "media/photo_h_coin_1.png?v=c32ff466";
+    const PHOTO_H_COIN_2 = "media/photo_h_coin_2.png?v=e1b38d31";
+    const PHOTO_H_COIN_3 = "media/photo_h_coin_3.png?v=0948905c";
+    const PHOTO_H_COIN_4 = "media/photo_h_coin_4.png?v=a895004b";
+    const PHOTO_H_COMBINE = "media/photo_h_combine.png?v=fcd59b59";
+    const PHOTO_H_COOKIE_CURSED = "media/photo_h_cookie_cursed.png?v=baee9137";
+    const PHOTO_H_COOKIE_GOLD = "media/photo_h_cookie_gold.png?v=98d66b1c";
+    const PHOTO_H_COP = "media/photo_h_cop.png?v=dba87aa2";
+    const PHOTO_H_DRIFT_FLAGUC = "media/photo_h_drift_flaguc.png?v=93443901";
+    const PHOTO_H_DRIFT_HELMET = "media/photo_h_drift_helmet.png?v=faf05b3e";
+    const PHOTO_H_DRIFT_JET = "media/photo_h_drift_jet.png?v=038cb7a6";
+    const PHOTO_H_DRIFT_LEAF = "media/photo_h_drift_leaf.png?v=e96be960";
+    const PHOTO_H_DRIFT_MEDAL = "media/photo_h_drift_medal.png?v=b9184da2";
+    const PHOTO_H_DRIFT_PIE = "media/photo_h_drift_pie.png?v=10b94289";
+    const PHOTO_H_DRIFT_PILGRIM = "media/photo_h_drift_pilgrim.png?v=972b7781";
+    const PHOTO_H_DRIFT_PUMPKIN = "media/photo_h_drift_pumpkin.png?v=6dd9dfa4";
+    const PHOTO_H_DRIFT_TANK = "media/photo_h_drift_tank.png?v=73447f8d";
+    const PHOTO_H_DRIFT_TURKEY = "media/photo_h_drift_turkey.png?v=ebb0d71c";
+    const PHOTO_H_FINGER = "media/photo_h_finger.png?v=2398a1a1";
+    const PHOTO_H_GIZ_DESK = "media/photo_h_giz_desk.png?v=1d03d7b1";
+    const PHOTO_H_GIZ_GRIN = "media/photo_h_giz_grin.png?v=675412b4";
+    const PHOTO_H_GIZ_TAPE = "media/photo_h_giz_tape.png?v=008d06ac";
+    const PHOTO_H_HOUSE_0 = "media/photo_h_house_0.png?v=df46a7e2";
+    const PHOTO_H_HOUSE_1 = "media/photo_h_house_1.png?v=5b91c681";
+    const PHOTO_H_HOUSE_2 = "media/photo_h_house_2.png?v=4904beb3";
+    const PHOTO_H_HOUSE_3 = "media/photo_h_house_3.png?v=5bc07295";
+    const PHOTO_H_HOUSE_4 = "media/photo_h_house_4.png?v=3061f973";
+    const PHOTO_H_HOUSE_5 = "media/photo_h_house_5.png?v=4012dd3a";
+    const PHOTO_H_MURLOC = "media/photo_h_murloc.png?v=9614937a";
+    const PHOTO_H_PARTY_HAT = "media/photo_h_party_hat.png?v=2da1e7b5";
+    const PHOTO_H_ROCKET = "media/photo_h_rocket.png?v=c64ddc03";
+    const PHOTO_H_SHACK = "media/photo_h_shack.png?v=0caf121c";
+    const PHOTO_H_STAR_BLUE = "media/photo_h_star_blue.png?v=0ed461f3";
+    const PHOTO_H_STAR_EMPTY = "media/photo_h_star_empty.png?v=8d6861ab";
+    const PHOTO_H_STAR_HALF = "media/photo_h_star_half.png?v=615a6e0c";
+    const PHOTO_H_STAR_RED = "media/photo_h_star_red.png?v=171d6e53";
+    const PHOTO_H_TOYBOX = "media/photo_h_toybox.png?v=2f152625";
+    const PHOTO_H_TOY_DOLL = "media/photo_h_toy_doll.png?v=6c4f3758";
+    const PHOTO_H_TOY_DONUT = "media/photo_h_toy_donut.png?v=2746d803";
+    const PHOTO_H_TOY_HEARTH = "media/photo_h_toy_hearth.png?v=4ae7a5aa";
+    const PHOTO_H_TOY_PHONE = "media/photo_h_toy_phone.png?v=d31daaae";
+    const PHOTO_H_UWU_ART = "media/photo_h_uwu_art.png?v=fd083da5";
+    const PHOTO_H_UWU_ICON = "media/photo_h_uwu_icon.png?v=bd74a948";
+    const PHOTO_H_WHELP = "media/photo_h_whelp.png?v=dcd756cc";
     const PHOTO_RAID_SHADY = "media/photo_raid_shady.jpg?v=3dfce2f0";
     const PHOTO_FAMILY_50S = "media/photo_family_50s.jpg?v=14e49b4c";
     const PHOTO_DYLAN_ROAD = "media/photo_dylan_road.jpg?v=ec785aa5";
@@ -8322,7 +8383,7 @@
         const next = store.get('painWheelStrangerNext', 0);
         if (!next) { store.set('painWheelStrangerNext', Date.now() + (3 + Math.random() * 5) * 60000); return; }
         if (Date.now() < next) return;
-        store.set('painWheelStrangerNext', Date.now() + (20 + Math.random() * 25) * 60000);
+        store.set('painWheelStrangerNext', Date.now() + (60 + Math.random() * 60) * 60000);   // once every 1-2 hours
         strangerRing();
     }, 30000);
     function chickenFingerHeist() {
@@ -9205,38 +9266,38 @@
     const HORROR = { murloc: '🧟', accountant: '💀', chicken: '🦴', whelp: '👹', clippy: '🔪', shack: '🏚️', ambulance: '⚰️', police: '🩸', rocket: '☄️' };
     const HORROR_LINES = { murloc: ['mrrrgl... (it is behind you)', '*wet gurgling*'], accountant: ['Your account balance... is... DEAD.', 'I have audited your soul. It is overdrawn.'],
         chicken: ['b a w k', '*the chicken stares into your soul*'], whelp: ['*hic* 🩸', 'the Light cannot save you'], clippy: ['It looks like you are about to die. Would you like help?', 'I see you. I always see you.'] };
-    let horrorOn = false;
-    // the permanent Ret Paladin Vision theme keeps everything in horror mode
-    function applyHorrorIcons() {
-        Object.keys(HORROR).forEach(k => {
-            const dock = $('pet-' + k);
-            if (dock && k !== 'clippy' && dock.lastElementChild) dock.lastElementChild.textContent = HORROR[k];
-            if (k === 'clippy' && dock) { const tn = [...dock.childNodes].find(n => n.nodeType === 3); if (tn) tn.textContent = HORROR.clippy; }
-            const g = document.querySelector(`#garageDock [data-k="${k}"], #shackSpot [data-k="${k}"]`); if (g) g.textContent = HORROR[k];
-        });
+    const HORROR_SWAP = new Map([[AMB_SPRITE, PHOTO_H_AMB], [PHOTO_CHICKEN, PHOTO_H_CHICKEN], [PHOTO_CLS_DH, PHOTO_H_CLS_DH], [PHOTO_CLS_DK, PHOTO_H_CLS_DK], [PHOTO_CLS_DRUID, PHOTO_H_CLS_DRUID], [PHOTO_CLS_EVOKER, PHOTO_H_CLS_EVOKER], [PHOTO_CLS_HUNTER, PHOTO_H_CLS_HUNTER], [PHOTO_CLS_LIVER, PHOTO_H_CLS_LIVER], [PHOTO_CLS_MAGE, PHOTO_H_CLS_MAGE], [PHOTO_CLS_MONK, PHOTO_H_CLS_MONK], [PHOTO_CLS_NOWOW, PHOTO_H_CLS_NOWOW], [PHOTO_CLS_PALADIN, PHOTO_H_CLS_PALADIN], [PHOTO_CLS_PRIEST, PHOTO_H_CLS_PRIEST], [PHOTO_CLS_ROGUE, PHOTO_H_CLS_ROGUE], [PHOTO_CLS_SHAMAN, PHOTO_H_CLS_SHAMAN], [PHOTO_CLS_WARLOCK, PHOTO_H_CLS_WARLOCK], [PHOTO_CLS_WARRIOR, PHOTO_H_CLS_WARRIOR], [PHOTO_COIN_1, PHOTO_H_COIN_1], [PHOTO_COIN_2, PHOTO_H_COIN_2], [PHOTO_COIN_3, PHOTO_H_COIN_3], [PHOTO_COIN_4, PHOTO_H_COIN_4], [PHOTO_COMBINE, PHOTO_H_COMBINE], [PHOTO_COOKIE_CURSED, PHOTO_H_COOKIE_CURSED], [PHOTO_COOKIE_GOLD, PHOTO_H_COOKIE_GOLD], [COPCAR_SPRITE, PHOTO_H_COP], [PHOTO_DRIFT_FLAGUC, PHOTO_H_DRIFT_FLAGUC], [PHOTO_DRIFT_HELMET, PHOTO_H_DRIFT_HELMET], [PHOTO_DRIFT_JET, PHOTO_H_DRIFT_JET], [PHOTO_DRIFT_LEAF, PHOTO_H_DRIFT_LEAF], [PHOTO_DRIFT_MEDAL, PHOTO_H_DRIFT_MEDAL], [PHOTO_DRIFT_PIE, PHOTO_H_DRIFT_PIE], [PHOTO_DRIFT_PILGRIM, PHOTO_H_DRIFT_PILGRIM], [PHOTO_DRIFT_PUMPKIN, PHOTO_H_DRIFT_PUMPKIN], [PHOTO_DRIFT_TANK, PHOTO_H_DRIFT_TANK], [PHOTO_DRIFT_TURKEY, PHOTO_H_DRIFT_TURKEY], [PHOTO_FINGER, PHOTO_H_FINGER], [PHOTO_GIZ_DESK, PHOTO_H_GIZ_DESK], [PHOTO_GIZ_GRIN, PHOTO_H_GIZ_GRIN], [PHOTO_GIZ_TAPE, PHOTO_H_GIZ_TAPE], [PHOTO_HOUSE_0, PHOTO_H_HOUSE_0], [PHOTO_HOUSE_1, PHOTO_H_HOUSE_1], [PHOTO_HOUSE_2, PHOTO_H_HOUSE_2], [PHOTO_HOUSE_3, PHOTO_H_HOUSE_3], [PHOTO_HOUSE_4, PHOTO_H_HOUSE_4], [PHOTO_HOUSE_5, PHOTO_H_HOUSE_5], [PHOTO_MURLOC_SHEET, PHOTO_H_MURLOC], [PHOTO_PARTY_HAT, PHOTO_H_PARTY_HAT], [PHOTO_ROCKET, PHOTO_H_ROCKET], [PHOTO_ROCKET_FLY, PHOTO_H_ROCKET], [PHOTO_SHACK, PHOTO_H_SHACK], [PHOTO_STAR_BLUE, PHOTO_H_STAR_BLUE], [PHOTO_STAR_EMPTY, PHOTO_H_STAR_EMPTY], [PHOTO_STAR_HALF, PHOTO_H_STAR_HALF], [PHOTO_STAR_RED, PHOTO_H_STAR_RED], [PHOTO_TOYBOX, PHOTO_H_TOYBOX], [PHOTO_TOY_DOLL, PHOTO_H_TOY_DOLL], [PHOTO_TOY_DONUT, PHOTO_H_TOY_DONUT], [PHOTO_TOY_HEARTH, PHOTO_H_TOY_HEARTH], [PHOTO_TOY_PHONE, PHOTO_H_TOY_PHONE], [PHOTO_UWU_ART, PHOTO_H_UWU_ART], [PHOTO_UWU_ICON, PHOTO_H_UWU_ICON], [PHOTO_WHELP, PHOTO_H_WHELP]]);   // Ret Vision: every sprite has a cursed twin
+    let horrorOn = false, horrorLive = false, horrorObs = null;
+    function horrorize(root, on) {   // swap sprites to (or back from) their horror versions, for <img> and background-image sprites
+        if (!root || root.nodeType !== 1) return;
+        const sel = 'img, [style*="background-image"]';
+        const list = root.matches(sel) ? [root, ...root.querySelectorAll(sel)] : root.querySelectorAll(sel);
+        for (const el of list) {
+            if (el.tagName === 'IMG') {
+                if (on) { const src = el.getAttribute('src'), h = HORROR_SWAP.get(src); if (h) { el.dataset.ho = src; el.setAttribute('src', h); } }
+                else if (el.dataset.ho) { el.setAttribute('src', el.dataset.ho); delete el.dataset.ho; }
+            } else if (on) {
+                const m = /url\(["']?([^"')]+)["']?\)/.exec(el.style.backgroundImage || ''), h = m && HORROR_SWAP.get(m[1]);
+                if (h) { el.dataset.hbg = el.style.cssText; el.style.backgroundImage = `url("${h}")`; el.style.backgroundSize = 'contain'; el.style.backgroundPosition = 'center bottom'; el.style.animation = 'none'; }
+            } else if (el.dataset.hbg !== undefined) { el.style.cssText = el.dataset.hbg; delete el.dataset.hbg; }
+        }
     }
-    let retVisionWasOn = false;
-    window.syncRetVisionHorror = () => {
-        const on = activeThemeId === 'retvision';
-        if (on) applyHorrorIcons();
-        else if (retVisionWasOn && !horrorOn) { renderPets(); renderGarage(); }
-        retVisionWasOn = on;
-    };
-    setInterval(() => { if (activeThemeId === 'retvision' && !horrorOn) applyHorrorIcons(); }, 3000);   // keeps new pets/cars cursed too
+    function setHorror(on) {
+        if (on === horrorLive) return; horrorLive = on;
+        if (on) {
+            horrorize(document.body, true);
+            horrorObs = new MutationObserver(ms => ms.forEach(m => { if (m.type === 'childList') m.addedNodes.forEach(n => horrorize(n, true)); else horrorize(m.target, true); }));
+            horrorObs.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['src', 'style'] });
+        } else { if (horrorObs) horrorObs.disconnect(); horrorObs = null; horrorize(document.body, false); }
+    }
+    window.syncRetVisionHorror = () => setHorror(activeThemeId === 'retvision' || horrorOn);
+    setTimeout(() => window.syncRetVisionHorror(), 0);   // the theme may already be on from last time
     function horrorMode(ms) {
         if (horrorOn) return; horrorOn = true;
-        const undo = [];
-        const swap = (el, txt) => { if (!el) return; const old = el.innerHTML; el.textContent = txt; undo.push(() => { el.innerHTML = old; }); };
-        Object.keys(HORROR).forEach(k => {
-            const dock = $('pet-' + k);
-            if (dock && k !== 'clippy') swap(dock.lastElementChild, HORROR[k]);
-            if (k === 'clippy' && dock) { const tn = [...dock.childNodes].find(n => n.nodeType === 3); if (tn) { const old = tn.textContent; tn.textContent = HORROR.clippy; undo.push(() => { tn.textContent = old; }); } }
-            swap(document.querySelector(`#garageDock [data-k="${k}"], #shackSpot [data-k="${k}"]`), HORROR[k]);
-        });
-        if (!$('timeshareHouse').classList.contains('hidden')) swap($('houseEmoji'), '👻');
+        setHorror(true);
         Object.keys(HORROR_LINES).filter(k => pets[k]).forEach((k, i) => setTimeout(() => petSay(k, pick(HORROR_LINES[k])), 1200 + i * 1100));
         chatBurst(['WHY IS EVERYTHING CURSED', 'the Light did this??', 'holy my ass', 'monkaS', 'ret vision is a horror game'], 3, 3000);
-        setTimeout(() => { undo.forEach(f => f()); horrorOn = false; renderGarage(); }, ms);   // redraw the garage fresh in case something changed mid-horror
+        setTimeout(() => { horrorOn = false; window.syncRetVisionHorror(); }, ms);   // redraw the garage fresh in case something changed mid-horror
     }
 
     // ---------- 🍪 golden cookie (a Cookie Clicker nod): after 200 spins one sometimes floats by ----------
