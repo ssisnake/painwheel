@@ -82,8 +82,8 @@ const LOOT = {
         common: ['Linen Cloth (x3)', 'Conjured Mana Bun', 'Light Feather', "Kevin's Spare Keyboard", 'Six-Pack of Garage Beers', 'Glazed Donut', "Kevin's ROG Ally Battery"],
         uncommon: ['Slurpee (Blue Raspberry)', 'Slurpee (Cherry)', 'Slurpee (Coke)', 'Slurpee (Mystery Flavor)', "Slurpee (Dr Pepper)", "Slurpee (Mountain Dew Code Red)", "Slurpee (Wild Cherry Pepsi)", "Slurpee (Half & Half Mix)", "Slurpee (Sugar Free, For Reb's Doctor)", 'Belt of Standing in Fire', 'Ret Paladin 6% Buff Coupon', 'Goblin Timeshare Brochure', "Platemage's Spare Plate",
             'Murder Row Teleport Scroll', 'Road Beer (Still Cold)', "Axazon's Empty Heart Pill Bottle"],
-        rare: ["Biblehumping's Holy Lasso", "Axa's Defibrillator", 'Knob Creek Single Barrel', "ChAoTiC's Blown-Out Headset", 'M*A*S*H Medevac Voucher', "ChAoTiC's Last Nerve"],
-        epic: ['Shield of Kevin Avoidance', "Gammon's Saving Grace", "Clussy's Clown Nose of Doom", 'The Undermine Deed', "Uwutek's Pocket Lint", "Rubber Replica of Biblehumping's Finger"],
+        rare: ["Bibledaddy's Holy Lasso", "Axa's Defibrillator", 'Knob Creek Single Barrel', "ChAoTiC's Blown-Out Headset", 'M*A*S*H Medevac Voucher', "ChAoTiC's Last Nerve"],
+        epic: ['Shield of Kevin Avoidance', "Gammon's Saving Grace", "Clussy's Clown Nose of Doom", 'The Undermine Deed', "Uwutek's Pocket Lint", "Rubber Replica of Bibledaddy's Finger"],
         legendary: ['Ashbringer (Plastic Replica)', "Reb's Liver (Mint Condition)", "Uwutek's Fuzzy Ears", "The Wheel's Rigging Manual", 'Golden Chocolate Donut', "Corrinne's Platinum Achievement"]
     };
 const ITEM_DESC = {
@@ -98,7 +98,7 @@ const ITEM_DESC = {
         'Slurpee (Mystery Flavor)': 'Nobody knows. Not even 8/11.', "Slurpee (Dr Pepper)": '23 flavors, all of them frozen. Most requested in guild history.', "Slurpee (Mountain Dew Code Red)": 'Gamer fuel. +5% APM, -5% sleep.', "Slurpee (Wild Cherry Pepsi)": 'For when the 8/11 is out of Dr Pepper.', "Slurpee (Half & Half Mix)": 'Every flavor at once. The machine wept.', "Slurpee (Sugar Free, For Reb's Doctor)": 'Reb has never touched it.', 'Ret Paladin 6% Buff Coupon': 'Void where prohibited (everywhere).',
         'Goblin Timeshare Brochure': 'Page 2 is just a bomb emoji.', "Platemage's Spare Plate": 'Not plate. Not a mage. A plate.',
         'Murder Row Teleport Scroll': 'Not a rat. Strategically elsewhere.', 'Road Beer (Still Cold)': 'Do not drink and fly a gryphon.',
-        "Biblehumping's Holy Lasso": 'Yanks allies into danger with love.', "Axa's Defibrillator": 'CLEAR! (Batteries not included.)',
+        "Bibledaddy's Holy Lasso": 'Yanks allies into danger with love.', "Axa's Defibrillator": 'CLEAR! (Batteries not included.)',
         'Knob Creek Single Barrel': 'Reb would trade his guild bank for this.', "ChAoTiC's Blown-Out Headset": 'MEPHISTOOOOO (still echoing)',
         'M*A*S*H Medevac Voucher': 'One free chopper ride out of a wipe.', 'Shield of Kevin Avoidance': 'Blocks 1 Kevin. Has never blocked a Kevin.',
         "Gammon's Saving Grace": 'Gammon will save us. Allegedly.', "Clussy's Clown Nose of Doom": 'Honk.', 'The Undermine Deed': 'You own a sewer. Congrats.',
@@ -108,7 +108,7 @@ const ITEM_DESC = {
         "Kevin's ROG Ally Battery": 'Lasts 40 minutes. Kevin spent all 40 in a loading screen.',
         "Axazon's Empty Heart Pill Bottle": 'Refill pending. The wheel raised his blood pressure again.',
         "ChAoTiC's Last Nerve": 'Frayed. Do not step on it. Kevin already did.',
-        "Rubber Replica of Biblehumping's Finger": 'Squeaks when you poke it. Still has a better grip than the original.',
+        "Rubber Replica of Bibledaddy's Finger": 'Squeaks when you poke it. Still has a better grip than the original.',
         "Corrinne's Platinum Achievement": "He is going to be SO pissed you stole this. He earned it. You did not."
     };
 const LOOT_SETS = [
@@ -118,7 +118,7 @@ const LOOT_SETS = [
           perk: 'Kevin bets pay 4× instead of 3×, and every Kevin you land pays 0.5% of your gold in pity money.' },
         { id: 'ret', name: '🔨 Ret Paladin Kit', items: ['Ret Paladin 6% Buff Coupon', 'Belt of Standing in Fire', "Platemage's Spare Plate", 'Ashbringer (Plastic Replica)'],
           perk: 'Ret bets pay 20× instead of 15×, and every Ret you land pays 10% of your gold.' },
-        { id: 'priest', name: '🛐 Holy Priest Starter Pack', items: ['Frayed Leap of Faith Rope', 'Light Feather', 'Expired Healthstone', "Biblehumping's Holy Lasso"],
+        { id: 'priest', name: '🛐 Holy Priest Starter Pack', items: ['Frayed Leap of Faith Rope', 'Light Feather', 'Expired Healthstone', "Bibledaddy's Holy Lasso"],
           perk: 'Healer insurance: lose a bet and get 25% of it back.' },
         { id: 'goblin', name: '💰 Goblin Portfolio', items: ['Linen Cloth (x3)', 'Conjured Mana Bun', 'Goblin Timeshare Brochure', 'The Undermine Deed'],
           perk: 'Items sell for 50% more, and the timeshare HOA fee is waived.' },
@@ -126,17 +126,24 @@ const LOOT_SETS = [
           perk: 'Loot luck: items drop on about 45% of spins instead of 33%.' },
         { id: 'shame', name: '🏛️ Guild Hall of Shame', items: ['Torn Discord Log', 'Jar of Sewer Pickle Juice', "ChAoTiC's Blown-Out Headset", "Clussy's Clown Nose of Doom", "Gammon's Saving Grace", "The Wheel's Rigging Manual"],
           perk: 'Museum royalties: +1% of your gold every 10 minutes you have the wheel open.' },
-        { id: 'lostfound', name: '📦 Guild Lost & Found', items: ["Kevin's ROG Ally Battery", "Axazon's Empty Heart Pill Bottle", "ChAoTiC's Last Nerve", "Rubber Replica of Biblehumping's Finger", "Corrinne's Platinum Achievement"],
+        { id: 'lostfound', name: '📦 Guild Lost & Found', items: ["Kevin's ROG Ally Battery", "Axazon's Empty Heart Pill Bottle", "ChAoTiC's Last Nerve", "Rubber Replica of Bibledaddy's Finger", "Corrinne's Platinum Achievement"],
           perk: 'Every 10 minutes a guildie "returns" something you lost: a free random item.' },
         // not in the game yet: they show as locked teasers in the Sets tab
         { id: 'irs', soon: true, name: '🧾 Goblin IRS Audit Defense', items: [], slots: 5, perk: 'Protection from the Goblin IRS. Coming soon...' },
         { id: 'hex', soon: true, name: '🧿 Hex Insurance', items: [], slots: 5, perk: 'Protection from curses, cursed cookies and a certain voodoo doll. Coming soon...' }
     ];
+    (function renameBible() {   // Nick's toon got renamed (Biblehumping -> Bibledaddy): move his items in everyone's bag so nothing is lost
+        const MAP = { "Biblehumping's Holy Lasso": "Bibledaddy's Holy Lasso", "Rubber Replica of Biblehumping's Finger": "Rubber Replica of Bibledaddy's Finger" };
+        ['painWheelBag', 'painWheelFound'].forEach(k => { const o = store.get(k, null); if (!o || typeof o !== 'object' || Array.isArray(o)) return; let ch = false;
+            Object.keys(MAP).forEach(a => { if (o[a] !== undefined) { if (k === 'painWheelBag' && o[MAP[a]]) o[MAP[a]].n = (o[MAP[a]].n || 0) + (o[a].n || 0); else o[MAP[a]] = o[a]; delete o[a]; ch = true; } });
+            if (ch) store.set(k, o); });
+        const q = store.get('painWheelPendingLoot', []); if (Array.isArray(q) && q.some(l => MAP[l[2]])) store.set('painWheelPendingLoot', q.map(l => MAP[l[2]] ? [l[0], l[1], MAP[l[2]]] : l));
+    })();
 const ITEM_ICON = { 'Golden Chocolate Donut': "media/photo_toy_donut.png?v=6ea2d469", 'Ret Paladin 6% Buff Coupon': "media/photo_item_coupon.png?v=b3ef1576", 'Ashbringer (Plastic Replica)': "media/photo_item_sword.png?v=55d3df90",
         'Goblin Timeshare Brochure': "media/photo_item_brochure.png?v=14e29592", 'Knob Creek Single Barrel': "media/photo_item_barrel.png?v=1ead128c", 'Torn Discord Log': "media/photo_item_chatlog.png?v=bbaa2dd6", "Kevin's ROG Ally Battery": "media/photo_item_battery.png?v=ba703a5c",
         "ChAoTiC's Blown-Out Headset": "media/photo_item_headset.png?v=fcda3409", 'Frayed Leap of Faith Rope': "media/photo_item_rope.png?v=27ad2ab7", 'Jar of Sewer Pickle Juice': "media/photo_item_pickles.png?v=64117ec0", 'Expired Healthstone': "media/photo_item_healthstone.png?v=9cc10eb7",
         'Broken Hearthstone': "media/photo_item_hearthstone.png?v=04098f73", 'Half a Stale Cheeto': "media/photo_item_cheeto.png?v=5014fab4", 'Road Beer (Still Cold)': "media/photo_item_beer.png?v=6e999522", "Axazon's Empty Heart Pill Bottle": "media/photo_item_pills.png?v=3744a055",
-        "Biblehumping's Holy Lasso": "media/photo_item_lasso.png?v=f12b594c", "Rubber Replica of Biblehumping's Finger": "media/photo_item_finger.png?v=78b04efe", "Corrinne's Platinum Achievement": "media/photo_item_badge.png?v=b7832eda", "Kevin's Participation Trophy": "media/photo_item_trophy.png?v=74f92c51", "Reb's Liver (Mint Condition)": "media/photo_item_liver.png?v=008933cd" };
+        "Bibledaddy's Holy Lasso": "media/photo_item_lasso.png?v=f12b594c", "Rubber Replica of Bibledaddy's Finger": "media/photo_item_finger.png?v=78b04efe", "Corrinne's Platinum Achievement": "media/photo_item_badge.png?v=b7832eda", "Kevin's Participation Trophy": "media/photo_item_trophy.png?v=74f92c51", "Reb's Liver (Mint Condition)": "media/photo_item_liver.png?v=008933cd" };
 const $ = (id) => document.getElementById(id);
 const pick = (a) => a[Math.floor(Math.random() * a.length)];
 const get = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } };
