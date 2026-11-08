@@ -223,7 +223,7 @@ document.querySelectorAll('[data-f]').forEach(b => b.onclick = () => slurpee(b.d
 <script>
 // ---- the 8/11's music: lo-fi on the store speakers (Pixabay: zephiramusic, franzian-deo, Alex Morgan). A random song each time, never the same one twice in a row ----
 (() => {
-  const SONGS = [1, 2, 3, 4].map(n => `media/audio_bgm_811_${n}.mp3`);
+  const SONGS = [1, 2, 3, 4, 5].map(n => `media/audio_bgm_811_${n}.mp3`);
   const g = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v === null ? d : v; } catch (e) { return d; } };
   const target = () => { if (g('painWheelMusicOff', false) === true || document.hidden || !document.hasFocus()) return 0; const mv = g('painWheelMusicVol', .5), v = parseFloat(localStorage.getItem('painWheelVolume')); return .5 * (typeof mv === 'number' ? mv : .5) * (isNaN(v) ? .6 : Math.max(0, Math.min(1, v))); };
   const ramp = (a, to, ms, done) => { const f = a.volume, t0 = performance.now(); (function st() { const k = Math.min(1, (performance.now() - t0) / ms); a.volume = Math.max(0, Math.min(1, f + (to - f) * k)); if (k < 1) requestAnimationFrame(st); else if (done) done(); })(); };
