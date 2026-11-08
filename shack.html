@@ -139,8 +139,22 @@ function clawSong(i) {
   a.addEventListener('timeupdate', function nx() { if (a.duration && a.currentTime > a.duration - 4 && clawA === a) { a.removeEventListener('timeupdate', nx); clawSong(clawI + 1); } });
   a.addEventListener('ended', () => { if (clawA === a) clawSong(clawI + 1); });
 }
+// ---- the shack's own music (Pixabay: tunetank, mickeyscat): western and old-film ragtime, under the wind; steps aside for the arcade ----
+const SHACK_BGM = ['media/audio_bgm_shack1.mp3', 'media/audio_bgm_shack2.mp3'];
+let shA = null, shI = Math.floor(Math.random() * 2);
+const shTarget = () => (clawOn || musicOff() || document.hidden || !document.hasFocus()) ? 0 : .5 * musicVol() * vol();
+function shSong(i) {
+  shI = i % SHACK_BGM.length; const a = new Audio(SHACK_BGM[shI]); a.volume = 0; const old = shA; shA = a;
+  if (old) ramp(old, 0, 3000, () => old.pause());
+  if (shTarget() > 0) a.play().then(() => ramp(a, shTarget(), 2500)).catch(() => {});
+  a.addEventListener('timeupdate', function nx() { if (a.duration && a.currentTime > a.duration - 4 && shA === a) { a.removeEventListener('timeupdate', nx); shSong(shI + 1); } });
+  a.addEventListener('ended', () => { if (shA === a) shSong(shI + 1); });
+}
+function shApply() { if (!shA) return; const t = shTarget(); if (t > 0) { shA.play().catch(() => {}); ramp(shA, t, 900); } else ramp(shA, 0, 600, () => { if (!shTarget()) shA.pause(); }); }
+addEventListener('pointerdown', () => { if (!shA) shSong(shI); }, { once: true });
+document.addEventListener('visibilitychange', shApply); addEventListener('blur', shApply); addEventListener('focus', shApply);
 function clawMusic(on) {
-  clawOn = on; if (window.windGain && AC) windGain.gain.setTargetAtTime(on ? .03 * vol() : .14 * vol(), AC.currentTime, .4);   // wind steps back while the arcade plays
+  clawOn = on; shApply(); if (window.windGain && AC) windGain.gain.setTargetAtTime(on ? .03 * vol() : .14 * vol(), AC.currentTime, .4);   // wind steps back while the arcade plays
   if (on && !clawA) return clawSong(clawI);
   if (!clawA) return; const t = clawTarget();
   if (t > 0) { clawA.play().catch(() => {}); ramp(clawA, t, 800); } else ramp(clawA, 0, 600, () => { if (!clawTarget()) clawA.pause(); });
