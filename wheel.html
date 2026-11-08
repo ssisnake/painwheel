@@ -882,7 +882,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 11:49 AM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 12:04 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -7534,6 +7534,7 @@
         setTimeout(() => sqPost('uwutek', 'someone trusted Biblehumping and Platemage to heal. they healed me. +10 hp. thank you for your service'), 3000);
     }
     function bossHitFloat(dmg) {
+        { const m = store.get('painWheelMetNpcs', {}) || {}; if (!m.uwu) { m.uwu = Date.now(); store.set('painWheelMetNpcs', m); } }   // first hit: now Uwutek has your number
         const f = $('bossDmgFloat'); f.textContent = `-${dmg.toLocaleString()}`;
         f.classList.remove('dmg-float'); void f.offsetWidth; f.classList.add('dmg-float');
         if (bossState) renderBoss(Object.assign({}, bossState, { hp: bossState.hp - dmg }));
@@ -9515,7 +9516,7 @@
         strangerRing();
     }, 30000);
     // ---------- 📞 NPC calls: about every 30 minutes, somebody you've met calls you ----------
-    // who you've "met" is saved by the other pages (shack skeleton, 8/11 clerk + regulars); Clippy, Uwutek and Gary know you already
+    // who you've "met" is saved by the pages you meet them on (shack skeleton, 8/11 clerk + regulars, Gary on the yacht, Uwutek on your first hit)
     const NPC_CALLERS = {
         skeleton: ['The Skeleton (Desert Shack)', null, ["It's me. From the shack. You left the door open. Sand everywhere. Well. More sand.", "I'm not calling about the map. Why would I be calling about the map. ...Did you find the map?",
             "Quick tip, and you didn't hear it from me. I don't have ears.", "I've been sitting in this corner since 1987. You're the first person who visited. Call me back sometime. I'll be here.",
@@ -9540,7 +9541,7 @@
         photo_pet_piggy: ['Piggy Bank', 'PHOTO_PET_PIGGY', ['Time is money, friend. This call is costing you. Kidding. Unless...', 'Got a deal for you. Real limited. Call back later.', "Don't trust the ATM at the 8/11. I would know."]],
         photo_pet_skeleton: ['Bones', 'PHOTO_PET_SKELETON', ['Have you seen my brother? Big guy. Desert shack. Very bony.', "I'm not spending my token. Stop asking.", '*rattle rattle* (that is how skeletons laugh)']],
     };
-    function npcMet() { const m = store.get('painWheelMetNpcs', {}) || {}; return Object.keys(NPC_CALLERS).filter(k => ['clippy', 'uwu', 'gary'].includes(k) || m[k]); }
+    function npcMet() { const m = store.get('painWheelMetNpcs', {}) || {}; return Object.keys(NPC_CALLERS).filter(k => k === 'clippy' || m[k]); }   // Clippy always has your number. Uwutek after your first hit, Gary once you've been on the yacht
     let npcCallBox = null;
     function npcCall(force) {
         if (npcCallBox || strangerRinging) return;

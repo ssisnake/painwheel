@@ -348,6 +348,7 @@
 <div id="achPop"><small>ACHIEVEMENT UNLOCKED</small><b id="achName"></b></div>
 
 <script>
+try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || {}; if (!m.gary) { m.gary = Date.now(); localStorage.setItem('painWheelMetNpcs', JSON.stringify(m)); } } catch (e) {}   // Gary the marlin is on the wall. He has your number now
 (function () {
     'use strict';
     const $ = (id) => document.getElementById(id);
