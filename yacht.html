@@ -841,5 +841,26 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
   document.addEventListener('visibilitychange', apply); addEventListener('wfchange', apply);
 })();
 </script>
+<script>
+// the gaming PC in the VIP room hums away the whole time you're in there (a sound effect: follows the main volume, not the Music switch)
+(() => {
+  const vip = document.getElementById('vip'); if (!vip) return;
+  let AC2 = null, buf = null, src = null, gain = null;
+  const vol = () => { const v = parseFloat(localStorage.getItem('painWheelVolume')); return isNaN(v) ? .6 : Math.max(0, Math.min(1, v)); };
+  const want = () => vip.classList.contains('open') && !document.hidden && window.__wf !== false;
+  async function sync() {
+    try {
+      if (want() && vol() > 0) {
+        AC2 = AC2 || new (window.AudioContext || window.webkitAudioContext)(); if (AC2.state === 'suspended') AC2.resume();
+        if (!buf) buf = await fetch('media/audio_pc_hum.mp3').then(r => r.arrayBuffer()).then(ab => AC2.decodeAudioData(ab));
+        if (!src && want()) { gain = AC2.createGain(); gain.gain.value = 0; src = AC2.createBufferSource(); src.buffer = buf; src.loop = true; src.connect(gain); gain.connect(AC2.destination); src.start(); }
+        if (gain) gain.gain.setTargetAtTime(.22 * vol(), AC2.currentTime, .6);
+      } else if (src) { const s = src, g = gain; src = null; gain = null; g.gain.setTargetAtTime(0, AC2.currentTime, .3); setTimeout(() => { try { s.stop(); } catch (e) {} }, 1500); }
+    } catch (e) {}
+  }
+  new MutationObserver(sync).observe(vip, { attributes: true, attributeFilter: ['class'] });
+  addEventListener('wfchange', sync); document.addEventListener('visibilitychange', sync);
+})();
+</script>
 </body>
 </html>
