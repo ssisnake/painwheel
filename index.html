@@ -56,7 +56,7 @@ if (/(transfer|import)=/.test(location.hash) || location.search) location.replac
   .lswitch:hover img, .cnote:hover img, .lswitch:focus-visible img, .cnote:focus-visible img { filter: drop-shadow(0 0 .6cqw #fde68a); } .lswitch:focus-visible, .cnote:focus-visible { outline: none; }
   /* the two little papers, bottom middle: a running tally */
   .tally { position: absolute; z-index: 2; pointer-events: none; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #1c1917; font-family: 'Permanent Marker', cursive; line-height: 1; }
-  .tally small { font-size: .46cqw; line-height: 1.1; letter-spacing: .04em; color: #44403c; white-space: nowrap; } .tally b { font-weight: normal; font-size: 1.35cqw; margin-top: .1cqw; color: #7f1d1d; }
+  .tally small { font-size: .4cqw; line-height: 1.1; letter-spacing: 0; color: #44403c; white-space: nowrap; } .tally b { font-weight: normal; font-size: 1.15cqw; margin-top: .1cqw; color: #7f1d1d; }
   .tally s { font-size: .62cqw; color: #78716c; margin: 0 .12cqw; } .tally .marks { font-size: .7cqw; letter-spacing: -.05cqw; color: #1c1917; margin-top: .15cqw; }
   #lightsOut { position: fixed; inset: 0; z-index: 99; background: #000; opacity: 0; pointer-events: none; transition: opacity .7s; }
   #lightsOut.on { opacity: 1; }
@@ -241,6 +241,12 @@ const credNote = document.createElement('img'); credNote.className = 'cnote'; cr
   const b = document.createElement('div'); b.className = 'tally'; b.style.cssText = 'left:47.7%;top:75.6%;width:3.3%;height:5.2%;transform:rotate(-5deg);pointer-events:auto;cursor:help'; b.title = 'Days since the last wipe: 0. It is always 0.';
   b.innerHTML = '<small>DAYS WITHOUT<br>A WIPE</small><b><s>3</s><s>1</s> 0</b>';
   board.appendChild(a); board.appendChild(b);
+  // the marker font is wide: once it loads, shrink anything that still spills off its paper
+  const fit = () => [a, b].forEach(p => p.querySelectorAll('small, b, .marks').forEach(c => {
+    c.style.fontSize = ''; const max = p.getBoundingClientRect().width * .84, w = c.getBoundingClientRect().width;
+    if (w > max) c.style.fontSize = (parseFloat(getComputedStyle(c).fontSize) * max / w) + 'px';
+  }));
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(fit); setTimeout(fit, 1500); addEventListener('resize', fit);
 })();
 const lightsOut = document.createElement('div'); lightsOut.id = 'lightsOut'; document.body.appendChild(lightsOut);
 const clickSnd = (n) => { try { const v = parseFloat(localStorage.getItem('painWheelVolume')); const a = new Audio('media/' + n + '.mp3'); a.volume = .8 * (isNaN(v) ? .6 : Math.max(0, Math.min(1, v))); if (a.volume) a.play().catch(() => {}); } catch (e) {} };
