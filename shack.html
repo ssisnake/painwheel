@@ -16,6 +16,7 @@
   .hs:hover, .hs:focus-visible { border-color: #fbbf24; box-shadow: 0 0 24px rgba(251,191,36,.6); outline: none; }
   .hs b { position: absolute; left: 50%; bottom: 4%; transform: translateX(-50%); white-space: nowrap; padding: 4px 12px; border-radius: 8px; background: rgba(12,10,9,.88); color: #fde68a; font: 800 17px system-ui, sans-serif; opacity: 0; transition: opacity .15s; }
   .hs:hover b, .hs:focus-visible b { opacity: 1; }
+  .hs.secret, .hs.secret:hover, .hs.secret:focus-visible { border-color: transparent; box-shadow: none; cursor: default; }
   .hs.q span { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 48px; height: 48px; display: grid; place-items: center; border-radius: 50%; background: rgba(12,10,9,.75); border: 2px solid #a16207; color: #fde68a; font: 900 30px/1 Georgia, serif; }
   .flicker { position: absolute; pointer-events: none; left: 10.3%; top: 22.4%; width: 19%; height: 19.7%; mix-blend-mode: screen; background: radial-gradient(ellipse at 50% 50%, rgba(255,120,90,.35), transparent 70%); animation: neon 7s infinite; }
   @keyframes neon { 0%, 18%, 22%, 62%, 64%, 66%, 100% { opacity: 1; } 20%, 63%, 65% { opacity: 0; } }
@@ -37,7 +38,7 @@
       <button class="hs" data-hs="door" style="left:51.1%;top:16.1%;width:13.5%;height:48.4%" aria-label="🚪 Back to The Wheel"><b>🚪 Back to The Wheel</b></button>
       <button class="hs" data-hs="sign" style="left:10.3%;top:22.4%;width:19.0%;height:19.7%" aria-label="💡 The sign"><b>💡 The sign</b></button>
       <button class="hs" data-hs="skel" style="left:65.6%;top:34.1%;width:14.0%;height:44.8%" aria-label="💀 The skeleton"><b>💀 The skeleton</b></button>
-      <button class="hs" data-hs="table" style="left:79.6%;top:63.6%;width:11.0%;height:18.8%" aria-label="🗺️ The table"><b>🗺️ The table</b></button>
+      <button class="hs secret" data-hs="table" style="left:79.6%;top:63.6%;width:11.0%;height:18.8%" tabindex="-1" aria-hidden="true"></button>
       <button class="hs" data-hs="barrel" style="left:0.0%;top:61.8%;width:15.0%;height:38.2%" aria-label="🛢️ The barrel"><b>🛢️ The barrel</b></button>
       <button class="hs" data-hs="tools" style="left:22.0%;top:74.4%;width:13.0%;height:13.9%" aria-label="🧰 The toolbox"><b>🧰 The toolbox</b></button>
       <div class="flicker"></div>
@@ -56,12 +57,14 @@ const SKELETON = ["Day 4,012. Still waiting for the claw to pay out. One more to
   "Don't look at me like that. You'll be sitting here too.", "Tell Kevin I said hi. He owes me 40 gold. And a new spine.", "The coffee's cold. It has been cold since 1987.",
   "I tried calling Vince for help. The brick phone had 20 minutes of battery. I had less.", "Every 20th play is rigged in your favor. I'm on play 19. Forever.",
   "I knew the wheel would spin without me. I just didn't think it would spin THIS long."];
+const SKELETON_HINTS = ["I was working on something before the claw got me. It's all on my map. Somewhere in here.", "Don't touch my stuff. Especially not what's on the table. Especially not that.",
+  "Every photo on that board is a place. Every place is hiding something. I found the first one. Then I found this claw machine.", "The coffee mug on my table is holding something down. I couldn't remember what. I've had a lot of time to think about it."];
 const ACT = {
-  skel: () => say('💀 ' + pick(SKELETON), 4800),
+  skel: () => say('💀 ' + (!(get('painWheelClues', {}) || {}).map && Math.random() < .55 ? pick(SKELETON_HINTS) : pick(SKELETON)), 5200),
   sign: () => { const sc = document.getElementById('scene'); sc.classList.add('dim'); setTimeout(() => sc.classList.remove('dim'), 1200); say(pick(['bzzzt.', 'The sign flickers. It does that.', 'THE WH  L. Then THE WHEEL again.']), 2000); },
   table: () => {
     const clues = get('painWheelClues', {}); const first = !clues.map; clues.map = true; put('painWheelClues', clues);
-    show('🗺️ A map on the table', '<p>Hand-drawn. Coffee-stained. The desert is labeled <i>"here (shack)"</i>. A dotted line runs off the edge of the paper toward a big red X.</p><p>Next to the X, in shaky writing: <b>"DON\'T GO DOWN THERE."</b></p><p style="color:#7c2d12;font-weight:bold">' + (first ? '📌 Evidence found! It\'s pinned to The Board now.' : 'You already pinned this one to The Board.') + '</p>');
+    show('🗺️ A map under the coffee mug', '<p>Hand-drawn. Coffee-stained. The desert is labeled <i>"here (shack)"</i>. A dotted line runs off the edge of the paper toward a big red X.</p><p>Next to the X, in shaky writing: <b>"DON\'T GO DOWN THERE."</b></p><p>On the back, scribbled fast: <i>"Every photo on the board is a place. Every place is hiding something. Find them all and the middle opens. I got one. Your turn."</i></p><p style="color:#7c2d12;font-weight:bold">' + (first ? '📌 Evidence found! It\'s pinned to The Board now. Check the middle photo.' : 'You already pinned this one to The Board.') + '</p>');
   },
   barrel: () => {
     if (get('painWheelBarrelDay', '') === today()) { say("🛢️ Empty. Whoever refills this barrel comes back tomorrow.", 3200); return; }
@@ -75,7 +78,7 @@ const ACT = {
     say('🧰 You crank a rusty bolt on the claw. It grips HARD now. Your next grab is way more likely to win (once a day).', 4800);
   }
 };
-setTimeout(() => say(pick(['The door creaks. Sand everywhere. Someone left the claw machine plugged in.', 'It smells like 1987 in here.', 'The neon sign still works. Nothing else does.', 'Your shack. Your claw machine. Your... roommate?'])), 400);
+setTimeout(() => say(!(get('painWheelClues', {}) || {}).map && Math.random() < .5 ? pick(['The skeleton in the corner looks like he was in the middle of something.', 'Somebody was living here. Somebody was looking for something.', 'Sand everywhere. A coffee mug on the table. Still a little warm? No. That cannot be right.']) : pick(['The door creaks. Sand everywhere. Someone left the claw machine plugged in.', 'It smells like 1987 in here.', 'The neon sign still works. Nothing else does.', 'Your shack. Your claw machine. Your... roommate?'])), 400);
 document.querySelectorAll('[data-hs]').forEach(b => b.addEventListener('click', () => {
   const k = b.dataset.hs;
   if (k === 'claw') { openClaw(); return; }
