@@ -882,7 +882,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 2:32 AM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 11:49 AM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -9514,6 +9514,71 @@
         store.set('painWheelStrangerNext', Date.now() + (60 + Math.random() * 60) * 60000);   // once every 1-2 hours
         strangerRing();
     }, 30000);
+    // ---------- 📞 NPC calls: about every 30 minutes, somebody you've met calls you ----------
+    // who you've "met" is saved by the other pages (shack skeleton, 8/11 clerk + regulars); Clippy, Uwutek and Gary know you already
+    const NPC_CALLERS = {
+        skeleton: ['The Skeleton (Desert Shack)', null, ["It's me. From the shack. You left the door open. Sand everywhere. Well. More sand.", "I'm not calling about the map. Why would I be calling about the map. ...Did you find the map?",
+            "Quick tip, and you didn't hear it from me. I don't have ears.", "I've been sitting in this corner since 1987. You're the first person who visited. Call me back sometime. I'll be here.",
+            "The claw machine made a noise last night. I'm not saying it's haunted. I'm a skeleton. I'd know."], 'tip'],
+        clerk: ['8/11 Clerk', 'PHOTO_811_CLERK', ['Hey, it\'s the 8/11. You left your Slurpee on the counter. It\'s mine now.', 'Calling to let you know we\'re open. We\'re always open. Eleven days a week. Help me.',
+            'Somebody asked for you by name. Green guy, sunglasses, smelled like a slime. I said I never saw you.', 'The light is still flickering. Corporate says it adds "ambiance". Corporate is a raccoon in a vest.',
+            'Do you know anything about the Slurpee machine making a clicking noise? Red, green, blue... no? Okay. Never mind.']],
+        clippy: ['Clippy', 'PHOTO_CLIPPY', ["It looks like you're answering a phone call! Would you like help with that?", "Hi! I just wanted to talk. Nobody calls me anymore. Since 2001.",
+            "It looks like you're about to hang up. Would you like help NOT doing that?", "I'm calling from inside the wheel. Don't worry about it."]],
+        uwu: ['Uwutek', 'PHOTO_UWU_ICON', ['Hey. It\'s Uwutek. The raid boss. Are you... going to hit me again today? Just asking. For scheduling.', 'I just want you to know the guild is very mean to me.',
+            'Do you guys have a strat for me, or do you just spin and hope?', 'My therapist says I should call the people who hurt me. So. Hi.']],
+        gary: ['Gary (allegedly)', 'PHOTO_GARY_AV', ['MY NAME IS NOT GARY.', 'I am a MARLIN. Tell the guild. Tell everyone.', 'Who gave you this number. Was it Reb. It was Reb.', '...is this Gary? No. No it is NOT.']],
+        photo_volley: ['Volley', 'PHOTO_VOLLEY', ['...', '... (heavy breathing. it is a volleyball.)', '... (Volley hung up.)']],
+        photo_whelp: ['The Whelp', 'PHOTO_WHELP', ['*crunching sounds* (it is eating the phone)', '*tiny roar into the receiver*', '*it sneezed fire. the line went dead.*']],
+        photo_chicken: ['The Chicken', 'PHOTO_CHICKEN', ['Bawk.', 'Bawk bawk BAWK. (it sounds urgent. it is not.)', 'Bawk. (you hear a UFO in the background)']],
+        photo_pet_spinny: ["Lil' Spinny", 'PHOTO_PET_SPINNY', ["wheeeeeee I'm calling while spinning", 'did you know the phone cord gets tangled when you spin', 'i got so dizzy i called you on purpose']],
+        photo_pet_gerald: ['Gerald', 'PHOTO_PET_GERALD', ['Gerald here. I am on break. The Wheel is running on backup. The backup is also me.', 'I want a raise. In sunflower seeds.', 'Please stop spinning so fast. My legs.']],
+        photo_pet_kevjr: ['Kevin Jr.', 'PHOTO_PET_KEVJR', ['HI! Is my dad there? He said he was going to pull the boss.', 'I found Dad\'s credit card!! Can I buy a pet?', 'Dad says hi. Dad didn\'t say that. I said it for him.']],
+        photo_pet_needle: ['The Needle', 'PHOTO_PET_NEEDLE', ['*silence* (you can hear it pointing at something)', '*click click click* (it is spinning in place)']],
+        photo_pet_duck: ['Raid Duck', 'PHOTO_PET_DUCK', ['Quack. (it would like to know when raid is)', 'QUACK. (someone stood in fire)', '*squeak*']],
+        photo_pet_slime: ['Slimothy', 'PHOTO_PET_SLIME', ['sup.', 'just calling. no reason. slimes get lonely.', '*slorp* sorry. ate the phone.']],
+        photo_pet_piggy: ['Piggy Bank', 'PHOTO_PET_PIGGY', ['Time is money, friend. This call is costing you. Kidding. Unless...', 'Got a deal for you. Real limited. Call back later.', "Don't trust the ATM at the 8/11. I would know."]],
+        photo_pet_skeleton: ['Bones', 'PHOTO_PET_SKELETON', ['Have you seen my brother? Big guy. Desert shack. Very bony.', "I'm not spending my token. Stop asking.", '*rattle rattle* (that is how skeletons laugh)']],
+    };
+    function npcMet() { const m = store.get('painWheelMetNpcs', {}) || {}; return Object.keys(NPC_CALLERS).filter(k => ['clippy', 'uwu', 'gary'].includes(k) || m[k]); }
+    let npcCallBox = null;
+    function npcCall(force) {
+        if (npcCallBox || strangerRinging) return;
+        const who = force || pick(npcMet()), N = NPC_CALLERS[who]; if (!N) return;
+        const [name, imgK, lines, extra] = N, img = imgK ? window[imgK] || eval(imgK) : null;
+        const box = npcCallBox = document.createElement('div');
+        box.style.cssText = 'position:fixed;z-index:79;left:16px;bottom:84px;width:min(360px,calc(100vw - 32px));padding:12px 14px;border-radius:14px;border:2px solid #38bdf8;background:linear-gradient(170deg,#0f172a,#1e293b);color:#e2e8f0;box-shadow:0 12px 30px rgba(0,0,0,.6);font-size:16px';
+        box.innerHTML = `<div style="display:flex;gap:10px;align-items:center"><div style="width:52px;height:52px;border-radius:50%;background:#0b1220;border:2px solid #38bdf8;display:flex;align-items:center;justify-content:center;overflow:hidden;flex:none;font-size:30px">${img ? `<img src="${img}" alt="" style="width:46px;height:46px;object-fit:contain;image-rendering:pixelated">` : '💀'}</div>
+            <div style="min-width:0"><div style="font-family:'JetBrains Mono',monospace;font-weight:800;color:#38bdf8;font-size:12px;letter-spacing:.12em">📞 INCOMING CALL</div><div style="font-weight:800;font-size:18px" data-n></div></div></div>
+            <div data-l style="margin-top:8px;font-weight:700;display:none"></div><div data-t style="margin-top:6px;color:#a3e635;font-size:14px"></div>
+            <div data-b style="display:flex;gap:8px;margin-top:10px"><button data-a style="flex:1;padding:8px;border-radius:10px;background:#16a34a;color:#fff;font-weight:800">Answer</button><button data-x style="flex:1;padding:8px;border-radius:10px;background:#b91c1c;color:#fff;font-weight:800">Ignore</button></div>`;
+        box.querySelector('[data-n]').textContent = name;
+        document.body.appendChild(box);
+        playBrickRing(); const ring = setInterval(playBrickRing, 3000);
+        const end = (ms) => { clearInterval(ring); clearTimeout(miss); setTimeout(() => { box.style.transition = 'opacity .6s'; box.style.opacity = '0'; setTimeout(() => { box.remove(); if (npcCallBox === box) npcCallBox = null; }, 700); }, ms); };
+        const miss = setTimeout(() => { moveToast(`📞 Missed call: ${name}. No voicemail.`); end(0); }, 20000);
+        box.querySelector('[data-x]').onclick = () => { moveToast(`📞 You sent ${name} to voicemail. They'll call back. They always call back.`); end(0); };
+        box.querySelector('[data-a]').onclick = () => {
+            box.querySelector('[data-b]').remove(); const l = box.querySelector('[data-l]'); l.style.display = ''; l.textContent = '"' + pickFresh(lines) + '"';
+            clearInterval(ring); clearTimeout(miss);
+            if (extra === 'tip' && typeof STOCKS !== 'undefined' && STOCKS.length) setTimeout(() => {   // the skeleton watches the market from the desert. He's right more often than Vince
+                const st = pick(STOCKS), good = Math.random() < 0.7;
+                exMove(st, good ? 0.06 : -0.05, good ? 'A tip from the desert shack' : 'A tip from the desert shack. The skeleton blames the sand');
+                store.set('painWheelStockPrices2', exPrice); exRender();
+                box.querySelector('[data-t]').textContent = good ? `📈 "Psst. $${st.sym}." It went up 6%.` : `📉 "Psst. $${st.sym}." It went down 5%. *rattle*`;
+            }, 2000);
+            chatBurst(['who is calling', 'pick up pick up', 'put it on speaker', "it's for you", 'ring ring', 'tell them I said hi'], 2, 2000);
+            end(extra === 'tip' ? 9000 : 7000);
+        };
+    }
+    setInterval(() => {   // about every 30 minutes (only while the page is open; not in Forever, mid-spin or in the 8/11 shop frame)
+        if (EMBED_SHOP || document.hidden || isSpinning || strangerRinging || npcCallBox || document.body.classList.contains('ghost-town')) return;
+        const next = store.get('painWheelNpcCallNext', 0);
+        if (!next) { store.set('painWheelNpcCallNext', Date.now() + (5 + Math.random() * 10) * 60000); return; }
+        if (Date.now() < next) return;
+        store.set('painWheelNpcCallNext', Date.now() + (27 + Math.random() * 6) * 60000);
+        npcCall();
+    }, 30000);
     function chickenFingerHeist() {
         const f = $('nickFinger'); if (!f || f.style.display === 'none') return;
         { const today = new Date().toDateString(), hl = store.get('painWheelHeistLog', {}); store.set('painWheelHeistLog', { day: today, n: hl.day === today ? (hl.n || 0) + 1 : 1, at: Date.now() }); }
@@ -9776,6 +9841,7 @@
             ['🫀', "Reb's liver is becoming a guild-wide boss: every drink anyone takes hurts it. Buy it water, or take a double and hurt everyone. If it survives the week, everyone who didn't wreck it gets paid."],
             ['🛡️', "New slices: Taunting (Casimir would never; the untaunted add goes for Reb's liver), Can't Park There (repair bill included) and Forever Depends. 185 slices."],
             ['🦺', 'OSHA landings break things now: the rocket crashes, the banker trips, a slice falls off the wheel, a vehicle explodes, a pet trips, a top-bar button falls off (click it to bolt it back on), Clippy pokes his eye out, or the shack catches fire.'],
+            ['📞', "Your phone rings now. About every half hour, someone you've met calls to chat. You can let it ring."],
             ['🏪', "The shop opens right inside the 8/11 now. Click an aisle sign and you stay in the store. New shelves too."],
             ['⚡', 'Holding the spin button has a real charge-up sound now.'],
             ['🕹️', "The claw machine is fully stocked: every prize you haven't won sits inside at once. Line up on whichever one you want."],
