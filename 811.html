@@ -13,7 +13,7 @@
   nav a.alt { background: #14532d; color: #fde68a; }
   .wrap { flex: 1; display: grid; place-items: center; padding: 0 12px 16px; }
   .scroller { width: 100%; overflow-x: auto; display: grid; place-items: center; }
-  .scene { position: relative; width: min(2576px, 100%, calc((100vh - 150px) * 2576 / 1438)); aspect-ratio: 2576 / 1438; background: url(media/store811_bg.jpg) 0 0 / 100% 100% no-repeat; border-radius: 10px; box-shadow: 0 0 0 3px #f97316, 0 20px 60px rgba(0,0,0,.7); overflow: hidden; }
+  .scene { position: relative; width: min(2576px, 100%, calc((100vh - 178px) * 2576 / 1438)); aspect-ratio: 2576 / 1438; background: url(media/store811_bg.jpg) 0 0 / 100% 100% no-repeat; border-radius: 10px; box-shadow: 0 0 0 3px #f97316, 0 20px 60px rgba(0,0,0,.7); overflow: hidden; }
   @media (max-width: 700px) { .scene { min-width: 640px; } .scroller { place-items: start; } }
   .prop { position: absolute; display: block; padding: 0; border: 0; background: none; cursor: pointer; transition: transform .15s, filter .15s; }
   .prop img { display: block; width: 100%; height: auto; image-rendering: pixelated; pointer-events: none; }
@@ -38,7 +38,13 @@
   @keyframes idle { 50% { translate: 0 -3%; } }
   #say { position: absolute; left: 50%; top: 4%; transform: translateX(-50%); max-width: 80%; padding: 10px 18px; border-radius: 10px; background: rgba(12,10,9,.92); border: 2px solid #f97316; color: #fef3c7; font: 800 19px/1.35 system-ui, sans-serif; text-align: center; display: none; z-index: 9; }
   .bar { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center; padding: 10px 12px 18px; font-size: 18px; color: #d6d3d1; }
-  .bar button { font: 800 17px system-ui, sans-serif; padding: 9px 16px; border: 0; border-radius: 10px; cursor: pointer; color: #fff; }
+  .bar { gap: 12px 18px; }
+  .barlbl { font-size: 18px; color: #d6d3d1; } .barlbl b { color: #fb923c; }
+  .flav { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; padding: 6px; border-radius: 14px; background: linear-gradient(#1f2937, #111827); box-shadow: inset 0 0 0 2px #374151, 0 6px 16px rgba(0,0,0,.5); }
+  .fl { display: inline-flex; align-items: center; gap: 8px; font: 900 18px system-ui, sans-serif; padding: 6px 16px 6px 8px; border: 2px solid rgba(255,255,255,.25); border-radius: 10px; cursor: pointer; color: #fff; text-shadow: 0 2px 0 rgba(0,0,0,.45);
+    background: linear-gradient(180deg, var(--c2), var(--c1) 70%); box-shadow: inset 0 -3px 0 rgba(0,0,0,.3), 0 3px 0 rgba(0,0,0,.45); transition: transform .12s, filter .12s; }
+  .fl img { height: 38px; width: auto; image-rendering: pixelated; filter: drop-shadow(0 2px 0 rgba(0,0,0,.5)); }
+  .fl:hover, .fl:focus-visible { transform: translateY(-2px); filter: brightness(1.12); outline: none; } .fl:active { transform: translateY(1px); }
   #closed { position: absolute; inset: 0; z-index: 20; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 20px; text-align: center; background: rgba(5,10,8,.88); }
   #closed b { font-size: clamp(28px, 4vw, 48px); color: #f87171; letter-spacing: .06em; }
   #closed p { margin: 0; font-size: 20px; color: #e7e5e4; max-width: 560px; line-height: 1.4; }
@@ -58,8 +64,8 @@
   <div id="say" role="status"></div>
   <div id="closed"><b>CLOSED</b><p>The 8/11 is closed. It is open 11 days a week, just not for you yet.<br>Land on <b style="font-size:inherit;color:#fb923c">8/11</b> on the wheel to open it. The shop lives in here.</p><a href="wheel.html">🎡 Go spin</a></div>
 </div></div></div>
-<div class="bar"><span>Click a Slurpee drum (1 gold) or an aisle sign to shop.</span>
-  <button data-f="Blue Raspberry" style="background:#2563eb">🫐 Blue Raspberry</button><button data-f="Cherry" style="background:#dc2626">🍒 Cherry</button><button data-f="Lime" style="background:#16a34a">🍈 Lime</button>
+<div class="bar"><span class="barlbl">🥤 <b>Slurpee machine</b> · 1 gold a cup · or click an aisle sign to shop</span>
+  <div class="flav"><button data-f="Blue Raspberry" class="fl" style="--c1:#1d4ed8;--c2:#38bdf8"><img src="media/photo_cup_full.png" alt="" style="filter:hue-rotate(215deg) saturate(1.3)">Blue Raspberry</button><button data-f="Cherry" class="fl" style="--c1:#b91c1c;--c2:#fb7185"><img src="media/photo_cup_full.png" alt="">Cherry</button><button data-f="Lime" class="fl" style="--c1:#15803d;--c2:#86efac"><img src="media/photo_cup_full.png" alt="" style="filter:hue-rotate(110deg) saturate(1.2)">Lime</button></div>
 </div>
 <script>
 const $ = (id) => document.getElementById(id);
