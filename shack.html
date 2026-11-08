@@ -313,5 +313,41 @@ function startWind() {
   } catch (e) {}
 }
 addEventListener('pointerdown', startWind, { once: true });
+</script><script>
+// ---- shack life: dust falling through the light, motes drifting, and a lizard who very rarely strolls through ----
+(() => {
+  const scene = document.getElementById('scene'); if (!scene) return;
+  const st = document.createElement('style');
+  st.textContent = `.dust { position:absolute; pointer-events:none; z-index:1; opacity:0; transition:opacity .5s; image-rendering:auto; }
+    .mote { position:absolute; pointer-events:none; z-index:1; opacity:.55; animation: drift 14s ease-in-out infinite; }
+    @keyframes drift { 0% { transform: translate(0,0); } 25% { transform: translate(1.2vw,1.5vh); } 50% { transform: translate(-.6vw,3vh); } 75% { transform: translate(.8vw,1.2vh); } 100% { transform: translate(0,0); } }
+    .lizard { position:absolute; z-index:3; width:9%; cursor:pointer; border:0; padding:0; background:none; transition: left linear; }
+    .lizard img { display:block; width:100%; height:auto; filter: drop-shadow(0 4px 3px rgba(0,0,0,.5)); }`;
+  document.head.appendChild(st);
+  // motes hanging in the light from the doorway and the roof cracks
+  [[55, 30], [62, 22], [68, 38], [47, 44]].forEach(([x, y], k) => { const m = document.createElement('img'); m.className = 'mote'; m.src = 'media/dust_mote.webp'; m.alt = '';
+    m.style.cssText += `left:${x}%;top:${y}%;width:${3 + k}%;animation-delay:${-k * 3.5}s`; scene.appendChild(m); });
+  // a puff sifts down through a beam now and then
+  (function puff() {
+    if (!document.hidden) { const d = document.createElement('img'); d.className = 'dust'; d.src = 'media/dust_fall.webp'; d.alt = '';
+      d.style.cssText += `left:${44 + Math.random() * 30}%;top:${6 + Math.random() * 10}%;width:${5 + Math.random() * 3}%`; scene.appendChild(d);
+      requestAnimationFrame(() => d.style.opacity = '.75'); setTimeout(() => d.style.opacity = '0', 1100); setTimeout(() => d.remove(), 1700); }
+    setTimeout(puff, 6000 + Math.random() * 9000);
+  })();
+  // the lizard: very rare, crosses the floor and leaves
+  const LIZ = ['The lizard does not care about your problems.', 'The lizard looks at you. The lizard has seen better gamers.', 'It is just passing through. It has places to be.', 'The lizard was here before the shack. It will be here after.'];
+  function lizard() {
+    if (document.hidden || scene.querySelector('.lizard')) return;
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'lizard'; b.setAttribute('aria-label', 'A lizard'); b.innerHTML = '<img src="media/lizard.webp" alt="">';
+    b.style.left = '-10%'; b.style.top = (84 + Math.random() * 5) + '%'; scene.appendChild(b);
+    const ms = 15000 + Math.random() * 6000;
+    requestAnimationFrame(() => requestAnimationFrame(() => { b.style.transitionDuration = ms + 'ms'; b.style.left = '102%'; }));
+    b.onclick = (e) => { e.stopPropagation(); if (typeof say === 'function') say('🦎 ' + LIZ[Math.floor(Math.random() * LIZ.length)], 3600); b.style.transitionDuration = '1200ms'; b.style.left = '104%'; };
+    setTimeout(() => b.remove(), ms + 500);
+  }
+  if (Math.random() < .08) setTimeout(lizard, 4000 + Math.random() * 8000);
+  setInterval(() => { if (Math.random() < .05) lizard(); }, 90000);
+  window.lizard = lizard;
+})();
 </script><script>window.AXA_CAMEO = { id: 'shack', host: '#scene', x: 54.6, y: 30.5, w: 4.2, z: 1, filter: 'brightness(0) opacity(.75) drop-shadow(0 0 6px rgba(255,220,160,.6))', op: .85 };</script><script src="axa_cameo.js"></script>
 </body></html>
