@@ -16,6 +16,16 @@
   .hs b { position: absolute; left: 50%; bottom: 4%; transform: translateX(-50%); white-space: nowrap; padding: 4px 12px; border-radius: 8px; background: rgba(12,10,9,.88); color: #fde68a; font: 800 17px system-ui, sans-serif; opacity: 0; transition: opacity .15s; }
   .hs:hover b, .hs:focus-visible b { opacity: 1; }
   .hs.q span { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 48px; height: 48px; display: grid; place-items: center; border-radius: 50%; background: rgba(12,10,9,.75); border: 2px solid #a16207; color: #fde68a; font: 900 30px/1 Georgia, serif; }
+  .flicker { position: absolute; pointer-events: none; left: 10.3%; top: 22.4%; width: 19%; height: 19.7%; mix-blend-mode: screen; background: radial-gradient(ellipse at 50% 50%, rgba(255,120,90,.35), transparent 70%); animation: neon 7s infinite; }
+  @keyframes neon { 0%, 18%, 22%, 62%, 64%, 66%, 100% { opacity: 1; } 20%, 63%, 65% { opacity: 0; } }
+  .scene.dim .flicker { animation: neonFast .18s 6; }
+  @keyframes neonFast { 50% { opacity: 0; } }
+  .scene::after { content: ''; position: absolute; left: 10.3%; top: 22.4%; width: 19%; height: 19.7%; pointer-events: none; background: rgba(0,0,0,.55); opacity: 0; animation: neonDark 7s infinite; }
+  @keyframes neonDark { 0%, 18%, 22%, 62%, 64%, 66%, 100% { opacity: 0; } 20%, 63%, 65% { opacity: 1; } }
+  dialog { max-width: min(560px, 92vw); border: 0; border-radius: 6px; padding: 24px; background: #f5e6c8; color: #292524; font: 18px/1.45 Georgia, serif; box-shadow: 0 20px 60px rgba(0,0,0,.8); }
+  dialog::backdrop { background: rgba(0,0,0,.75); }
+  dialog h3 { margin: 0 0 8px; font-size: 26px; color: #7c2d12; }
+  dialog button { margin-top: 12px; font: 700 17px system-ui, sans-serif; padding: 8px 18px; background: #292524; color: #fde68a; border: 0; border-radius: 6px; cursor: pointer; }
   #say { position: absolute; left: 50%; bottom: 5%; transform: translateX(-50%); max-width: 80%; padding: 10px 18px; border-radius: 10px; background: rgba(12,10,9,.92); border: 1px solid #b45309; color: #fef3c7; font: 700 18px system-ui, sans-serif; text-align: center; display: none; }
   .scroller { width: 100%; overflow-x: auto; display: grid; place-items: center; }
   @media (max-width: 700px) { .scene { min-width: 640px; } .scroller { place-items: start; } }
@@ -24,22 +34,51 @@
 <div class="wrap"><div class="scroller"><div class="scene" id="scene">
       <button class="hs" data-hs="claw" style="left:30.8%;top:21.1%;width:15.8%;height:60.9%" aria-label="🕹️ Little St. Jeff's Prize Island"><b>🕹️ Little St. Jeff's Prize Island</b></button>
       <button class="hs" data-hs="door" style="left:51.1%;top:16.1%;width:13.5%;height:48.4%" aria-label="🚪 Back to The Wheel"><b>🚪 Back to The Wheel</b></button>
-      <button class="hs q" data-hs="sign" style="left:10.3%;top:22.4%;width:19.0%;height:19.7%" aria-label="Something hidden"><span>?</span></button>
-      <button class="hs q" data-hs="skel" style="left:65.6%;top:34.1%;width:14.0%;height:44.8%" aria-label="Something hidden"><span>?</span></button>
-      <button class="hs q" data-hs="table" style="left:79.6%;top:63.6%;width:11.0%;height:18.8%" aria-label="Something hidden"><span>?</span></button>
-      <button class="hs q" data-hs="barrel" style="left:0.0%;top:61.8%;width:15.0%;height:38.2%" aria-label="Something hidden"><span>?</span></button>
-      <button class="hs q" data-hs="tools" style="left:22.0%;top:74.4%;width:13.0%;height:13.9%" aria-label="Something hidden"><span>?</span></button>
+      <button class="hs" data-hs="sign" style="left:10.3%;top:22.4%;width:19.0%;height:19.7%" aria-label="💡 The sign"><b>💡 The sign</b></button>
+      <button class="hs" data-hs="skel" style="left:65.6%;top:34.1%;width:14.0%;height:44.8%" aria-label="💀 The skeleton"><b>💀 The skeleton</b></button>
+      <button class="hs" data-hs="table" style="left:79.6%;top:63.6%;width:11.0%;height:18.8%" aria-label="🗺️ The table"><b>🗺️ The table</b></button>
+      <button class="hs" data-hs="barrel" style="left:0.0%;top:61.8%;width:15.0%;height:38.2%" aria-label="🛢️ The barrel"><b>🛢️ The barrel</b></button>
+      <button class="hs" data-hs="tools" style="left:22.0%;top:74.4%;width:13.0%;height:13.9%" aria-label="🧰 The toolbox"><b>🧰 The toolbox</b></button>
+      <div class="flicker"></div>
       <div id="say" role="status"></div>
 </div></div></div>
+<dialog id="dlg"><h3 id="dT"></h3><div id="dB"></div><button onclick="dlg.close()">Close</button></dialog>
 <script>
 try { localStorage.setItem('painWheelSeenClaw', 'true'); } catch (e) {}
 const say = (t, ms) => { const d = document.getElementById('say'); d.textContent = t; d.style.display = 'block'; clearTimeout(say.t); say.t = setTimeout(() => d.style.display = 'none', ms || 3400); };
 const pick = (a) => a[Math.floor(Math.random() * a.length)];
+const get = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } };
+const put = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const today = () => new Date().toISOString().slice(0, 10);
+const show = (t, h) => { document.getElementById('dT').textContent = t; document.getElementById('dB').innerHTML = h; document.getElementById('dlg').showModal(); };
+const SKELETON = ["Day 4,012. Still waiting for the claw to pay out. One more token. Just one more.", "I was SO close to the Volley McBallface. The claw opened. It always opens.",
+  "Don't look at me like that. You'll be sitting here too.", "Tell Kevin I said hi. He owes me 40 gold. And a new spine.", "The coffee's cold. It has been cold since 1987.",
+  "I tried calling Vince for help. The brick phone had 20 minutes of battery. I had less.", "Every 12th play is rigged in your favor. I'm on play 11. Forever.",
+  "I knew the wheel would spin without me. I just didn't think it would spin THIS long."];
+const ACT = {
+  skel: () => say('💀 ' + pick(SKELETON), 4800),
+  sign: () => { const sc = document.getElementById('scene'); sc.classList.add('dim'); setTimeout(() => sc.classList.remove('dim'), 1200); say(pick(['bzzzt.', 'The sign flickers. It does that.', 'THE WH  L. Then THE WHEEL again.']), 2000); },
+  table: () => {
+    const clues = get('painWheelClues', {}); const first = !clues.map; clues.map = true; put('painWheelClues', clues);
+    show('🗺️ A map on the table', '<p>Hand-drawn. Coffee-stained. The desert is labeled <i>"here (shack)"</i>. A dotted line runs off the edge of the paper toward a big red X.</p><p>Next to the X, in shaky writing: <b>"UNCLE TOUCHY\'S. BASEMENT. DON\'T."</b></p><p style="color:#7c2d12;font-weight:bold">' + (first ? '📌 Clue found! It\'s pinned to The Board now.' : 'You already pinned this one to The Board.') + '</p>');
+  },
+  barrel: () => {
+    if (get('painWheelBarrelDay', '') === today()) { say("🛢️ Empty. Whoever refills this barrel comes back tomorrow.", 3200); return; }
+    put('painWheelBarrelDay', today()); put('painWheelTokens', get('painWheelTokens', 0) + 1);
+    say('🛢️ You dig through the sand in the barrel... 🎰 a casino token! (one a day, come back tomorrow)', 4200);
+  },
+  tools: () => {
+    if (get('painWheelClawGrip', 0) > 0) { say('🧰 The claw is already tightened. Go use it before it loosens up.', 3200); return; }
+    if (get('painWheelGripDay', '') === today()) { say("🧰 You already tightened it today. The bolts can only take so much.", 3200); return; }
+    put('painWheelGripDay', today()); put('painWheelClawGrip', 1);
+    say('🧰 You crank a rusty bolt on the claw. It grips HARD now. Your next grab is way more likely to win (once a day).', 4800);
+  }
+};
 setTimeout(() => say(pick(['The door creaks. Sand everywhere. Someone left the claw machine plugged in.', 'It smells like 1987 in here.', 'The neon sign still works. Nothing else does.', 'Your shack. Your claw machine. Your... roommate?'])), 400);
 document.querySelectorAll('[data-hs]').forEach(b => b.addEventListener('click', () => {
   const k = b.dataset.hs;
   if (k === 'claw') { location.href = 'wheel.html#go=claw'; return; }
   if (k === 'door') { location.href = 'wheel.html'; return; }
-  say(pick(['???', 'Something is here. Not yet.', 'You feel like you will need this later.', 'Locked. For now.']), 2400);
+  (ACT[k] || (() => {}))();
 }));
 </script></body></html>

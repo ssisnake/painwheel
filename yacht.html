@@ -254,7 +254,7 @@
     <button class="hs below" id="hsHatch" data-label="⛓️ ???" style="left:77%;top:81%;width:21%;height:17.5%"></button>
     <button class="hs" id="hsBar" data-label="🥇 Solid Gold Bar" style="left:61.7%;top:86.2%;width:6.1%;height:9.6%"></button>
     <button class="hs below" id="hsChand" data-label="🪙 Coin Chandelier" style="left:50.8%;top:0;width:13.6%;height:22%"></button>
-    <button class="hs below" id="hsFish1" data-label="🐟 Mounted Swordfish" style="left:0;top:5.5%;width:11.6%;height:13.5%"></button>
+    <button class="hs below" id="hsFish1" data-label="🐟 Gary (not his name)" style="left:0;top:5.5%;width:11.6%;height:13.5%"></button>
     <button class="hs" id="hsFish2" data-label="🐟 The Other Swordfish" style="left:50.3%;top:25.4%;width:7%;height:9%"></button>
     <button class="hs round" id="hsPort1" data-label="🌊 Porthole" style="left:0;top:29%;width:10.4%;height:32%"></button>
     <button class="hs round" id="hsPort2" data-label="🌊 Porthole" style="left:50.4%;top:39%;width:5.6%;height:16.4%"></button>
@@ -397,10 +397,13 @@
         open: () => { tone(180, 0, .3, 'sawtooth', .08); [523, 659, 784, 1047].forEach((f, i) => tone(f, .25 + i * .09, .3, 'triangle', .09)); },
         hiss: () => noise(0, .9, .09, 3000),
         ach: () => [784, 988, 1175, 1568].forEach((f, i) => tone(f, i * .1, .35, 'triangle', .1)),
-        // an original little sea shanty for the singing swordfish
-        shanty: () => { const N = { D4: 294, E4: 330, F4: 349, G4: 392, A4: 440, B4: 494, C5: 523, D5: 587 };
-            [['D4', .25], ['G4', .25], ['G4', .25], ['A4', .25], ['B4', .5], ['G4', .5], ['A4', .25], ['A4', .25], ['F4', .25], ['E4', .25], ['D4', .5], ['D4', .25], ['D4', .25],
-             ['G4', .25], ['B4', .25], ['D5', .5], ['C5', .25], ['B4', .25], ['A4', .5], ['G4', .75]].reduce((t, [n, d]) => { tone(N[n], t, d * .9, 'square', .05); tone(N[n] / 2, t, d * .9, 'triangle', .05); return t + d * .55; }, 0); }
+        // a real sea shanty: Drunken Sailor (traditional), chiptune style, for Gary the singing swordfish
+        shanty: () => { const N = { C4: 262, D4: 294, E4: 330, F4: 349, G4: 392, A4: 440, B4: 494, C5: 523, D5: 587 }, b = 0.19;
+            const L1 = [['A4',2],['A4',1],['A4',1],['A4',2],['A4',1],['A4',1],['A4',2],['D4',2],['F4',2],['A4',2]], L2 = [['G4',2],['G4',1],['G4',1],['G4',2],['G4',1],['G4',1],['G4',2],['C4',2],['E4',2],['G4',2]],
+                  L3 = [['A4',2],['A4',1],['A4',1],['A4',2],['A4',1],['A4',1],['A4',2],['B4',2],['C5',2],['D5',2]], L4 = [['C5',2],['A4',2],['G4',2],['E4',2],['D4',4],['D4',4]],
+                  C1 = [['A4',4],['A4',2],['A4',2],['D4',2],['F4',2],['A4',4]], C2 = [['G4',4],['G4',2],['G4',2],['C4',2],['E4',2],['G4',4]], C3 = [['A4',4],['A4',2],['A4',2],['B4',2],['C5',2],['D5',4]];
+            const bass = { A4: 147, G4: 131, C5: 110, B4: 98 };
+            [...L1, ...L2, ...L3, ...L4, ...C1, ...C2, ...C3, ...L4].reduce((t, [n, d], i) => { tone(N[n], t, d * b * .92, 'square', .05); if (i % 2 === 0) tone(bass[n] || 147, t, .3, 'triangle', .08); return t + d * b; }, 0); }
     };
 
     // ---------- speech bubble + achievement popup ----------
@@ -451,6 +454,10 @@
     // a few achievements get their own trophy
     const ICONS = { kevind: '🤡', yacht: '🛥️', castle: '🏰', debtfree: '💸', taxman: '🧾', goldcookie: '🍪', cluck: '🐔', clippy: '📎', fenderbender: '🚑',
         soc1: '🔺', soc2: '💀', soc3: '🦉', soc4: '👁️', soc5: '🦎', soc6: '📜', aboard: '⚓', wheelception: '🖥️', wheelception5: '🌀', purpleheart: '💜', vault: '🏦', chocobar: '🍫', hearth: '🪨', first: '🩸' };
+    // TEMP sprites from art we already have, until the real trophy set is drawn (see the sprite checklist)
+    const SPR = { yacht: 'gif_yacht.gif', castle: 'photo_house_5.png', goldcookie: 'photo_cookie_gold.png', cluck: 'photo_chicken.png', clippy: 'photo_clippy.png', fenderbender: 'photo_amb_icon.png',
+        hearth: 'photo_toy_hearth.png', brickphone: 'photo_toy_phone.png', rocket: 'photo_rocket.png', clawall: 'photo_pet_spinny.png' };
+    const sprFor = (d) => SPR[d.id] || (/^spins/.test(d.id) ? 'photo_pet_spinny.png' : null);
     const iconFor = (d) => ICONS[d.id] || (/^aipac/.test(d.id) ? '🏛️' : /^spins/.test(d.id) ? '🎡' : d.secret ? '💎' : '🏆');
     let page = 0;
     function renderCabinet(fresh) {
@@ -462,7 +469,8 @@
             b.className = 'plaque ' + (have ? 'got' : 'locked') + (fresh === d.id ? ' new' : '');
             b.style.cssText = `left:${s.x - s.w / 2}%;width:${s.w}%;top:${s.y - 8.2}%;height:8.2%`;
             b.innerHTML = '<span class="t"></span><span class="base"></span>';
-            b.firstChild.textContent = have ? iconFor(d) : (d.secret ? '❔' : '🏆');
+            if (have && sprFor(d)) b.firstChild.innerHTML = `<img src="media/${sprFor(d)}" alt="" style="height:1.25em;width:auto;max-width:100%;image-rendering:pixelated;vertical-align:middle">`;
+            else b.firstChild.textContent = have ? iconFor(d) : (d.secret ? '❔' : '🏆');
             b.title = have || !d.secretName ? d.name : 'Secret achievement';
             b.addEventListener('click', () => showTrophy(d, got[d.id]));
             cab.appendChild(b);
@@ -595,7 +603,9 @@
             'Gallywix had it made from the guild repair fund.', 'It sways. The yacht is not moving. Why is it swaying?']));
         chandAt = Date.now();
     });
-    $('hsFish1').addEventListener('click', () => { sfx.shanty(); say('🐟🎵 The swordfish turns its head and sings you a sea shanty. You did not ask for this.', 4500); });
+    let shantyAt = 0;
+    $('hsFish1').addEventListener('click', () => { if (Date.now() - shantyAt > 16000) { shantyAt = Date.now(); sfx.shanty(); }
+        say('🐟🎵 ' + pick(['Gary turns his head and sings you a sea shanty. You did not ask for this. (Do not call him Gary.)', 'WHAT SHALL WE DO WITH A DRUNKEN REB. EAR-LY IN THE MORNING.', 'The swordfish sings. His name is not Gary. He sings anyway.', 'Way hay and up she rises. The yacht does not. It is in the desert.']), 5500); });
     $('hsFish2').addEventListener('click', () => say('🐟 ' + pick(['Reb caught this one. It was already dead. It was in a freezer aisle.', 'The plaque says "THE ONE THAT GOT AWAY." It did not get away.',
         'This swordfish has seen things. It will not sing for you.', 'Kevin named it Gary. Do not call it Gary. It hates that.'])));
     const VIEWS = ['A murloc presses its face to the glass. MRGLGLGL.', 'Kevin is swimming next to the yacht. He fell off the dock. Again.', 'Is that... Mankrik\'s wife?',

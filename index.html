@@ -23,6 +23,10 @@ if (/(transfer|import)=/.test(location.hash) || location.search) location.replac
   .stamp { font-family: 'Permanent Marker', cursive; font-size: 1.15cqw; color: #b91c1c; border: .2cqw solid #b91c1c; padding: .05cqw .5cqw; transform: rotate(-8deg); background: rgba(253,246,227,.85); }
   .new { position: absolute; top: -.6cqw; right: -.6cqw; font-family: 'Permanent Marker', cursive; font-size: .95cqw; background: #dc2626; color: #fff; padding: .1cqw .5cqw; border-radius: .4cqw; transform: rotate(8deg); }
   .note { font-family: 'Permanent Marker', cursive; font-size: .9cqw; line-height: 1.15; color: #1e3a8a; pointer-events: none; justify-content: center; }
+  .fish { position: absolute; left: 89.5%; top: 16%; width: 9.5%; height: 13%; border: 0; background: none; cursor: pointer; border-radius: 40%; }
+  .fish:hover, .fish:focus-visible { box-shadow: 0 0 1.2cqw #7dd3fc; outline: none; }
+  .gary { position: absolute; right: 2%; top: 30%; max-width: 22%; padding: .5cqw .9cqw; border-radius: .6cqw; background: #fdf6e3; color: #1c1917; font-family: 'Permanent Marker', cursive; font-size: 1.1cqw; box-shadow: 0 .3cqw 1cqw rgba(0,0,0,.6); display: none; z-index: 5; }
+  .clue { position: absolute; display: flex; align-items: center; justify-content: center; text-align: center; padding: .5cqw; font-family: 'Permanent Marker', cursive; font-size: .95cqw; line-height: 1.1; color: #7f1d1d; background: #fef3c7; box-shadow: 0 .3cqw .8cqw rgba(0,0,0,.5); }
   .hint { text-align: center; color: #a8a29e; font-size: 16px; margin: 6px 0 0; }
   dialog { max-width: min(680px, 92vw); max-height: 86vh; border: 0; border-radius: 4px; padding: 26px; background: #fdf6e3; color: #1c1917; font-family: 'Special Elite', monospace; font-size: 18px; line-height: 1.45; box-shadow: 0 20px 60px rgba(0,0,0,.7); }
   dialog::backdrop { background: rgba(0,0,0,.7); }
@@ -33,7 +37,7 @@ if (/(transfer|import)=/.test(location.hash) || location.search) location.replac
   .redact { background: #1c1917; color: #1c1917; border-radius: 2px; padding: 0 4px; }
 </style></head><body>
 <header><div><h1>📌 THE BOARD</h1><div class="sub">It's all connected. Every place you unlock gets pinned up here. Click a photo to go there.</div></div><a class="go" href="wheel.html">🎡 Spin The Wheel →</a></header>
-<div class="scroller"><div class="board" id="board"></div><p class="hint">Every string leads to the middle. Locked photos say how to find them.</p></div>
+<div class="scroller"><div class="board" id="board"></div><p class="hint">Every string leads to the middle. Locked photos say how to find them. <span id="clueCount"></span></p></div>
 <dialog id="dlg"><h3 id="dTitle"></h3><div id="dBody"></div><button onclick="dlg.close()">Close</button></dialog>
 <script>
 const PINS = [
@@ -90,5 +94,40 @@ PAGES.forEach((p, i) => {
 });
 try { localStorage.setItem('painWheelBoardSeen', JSON.stringify(seen)); } catch (e) {}
 NOTES.forEach(([r, t, rot]) => { const d = document.createElement('div'); d.className = 'slot note'; at(d, r, rot); d.textContent = t; board.appendChild(d); });
+// 🐟 Gary (do not call him Gary) is mounted on the wall. Click him: a sea shanty (Drunken Sailor, traditional), chiptune style
+const fishBtn = document.createElement('button'); fishBtn.className = 'fish'; fishBtn.title = 'A swordfish. Definitely not named Gary.'; board.appendChild(fishBtn);
+const garySay = document.createElement('div'); garySay.className = 'gary'; board.appendChild(garySay);
+const GARY = ["My name is not Gary.", "I AM A MARLIN.", "Sing along. Or don't. I'm mounted. I can't stop you.", "I was on the yacht before it was cool. Before it was in the desert.", "Who keeps calling me Gary? I'm pressing charges.", "Heave ho. Spin the wheel. Same thing."];
+let shanty = null;
+fishBtn.onclick = () => {
+  garySay.textContent = '🐟 ' + GARY[Math.floor(Math.random() * GARY.length)]; garySay.style.display = 'block'; clearTimeout(fishBtn.t); fishBtn.t = setTimeout(() => garySay.style.display = 'none', 4500);
+  if (shanty) return;
+  let vol = 0.6; try { const v = parseFloat(localStorage.getItem('painWheelVolume')); if (!isNaN(v)) vol = v; if (localStorage.getItem('painWheelMuted') === 'true') vol = 0; } catch (e) {}
+  if (!vol) return;
+  const ac = new (window.AudioContext || window.webkitAudioContext)(), out = ac.createGain(); out.gain.value = 0.18 * vol; out.connect(ac.destination);
+  const N = { D3: 146.8, A2: 110, G2: 98, C3: 130.8, D4: 293.7, E4: 329.6, F4: 349.2, G4: 392, A4: 440, B4: 493.9, C5: 523.3, D5: 587.3, C4: 261.6 };
+  const b = 0.19;   // one eighth note
+  const L1 = [['A4',2],['A4',1],['A4',1],['A4',2],['A4',1],['A4',1],['A4',2],['D4',2],['F4',2],['A4',2]];
+  const L2 = [['G4',2],['G4',1],['G4',1],['G4',2],['G4',1],['G4',1],['G4',2],['C4',2],['E4',2],['G4',2]];
+  const L3 = [['A4',2],['A4',1],['A4',1],['A4',2],['A4',1],['A4',1],['A4',2],['B4',2],['C5',2],['D5',2]];
+  const L4 = [['C5',2],['A4',2],['G4',2],['E4',2],['D4',4],['D4',4]];
+  const C1 = [['A4',4],['A4',2],['A4',2],['D4',2],['F4',2],['A4',4]], C2 = [['G4',4],['G4',2],['G4',2],['C4',2],['E4',2],['G4',4]], C3 = [['A4',4],['A4',2],['A4',2],['B4',2],['C5',2],['D5',4]];
+  const song = [...L1, ...L2, ...L3, ...L4, ...C1, ...C2, ...C3, ...L4];
+  const bass = { A4: 'D3', G4: 'C3', C5: 'A2', B4: 'G2' };
+  let t = ac.currentTime + 0.05;
+  song.forEach(([n, len], i) => {
+    const o = ac.createOscillator(), g = ac.createGain(); o.type = 'square'; o.frequency.value = N[n];
+    g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.5, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + len * b * 0.95);
+    o.connect(g); g.connect(out); o.start(t); o.stop(t + len * b);
+    if (i % 2 === 0) { const bo = ac.createOscillator(), bg = ac.createGain(); bo.type = 'triangle'; bo.frequency.value = N[bass[n] || 'D3'];
+      bg.gain.setValueAtTime(0.6, t); bg.gain.exponentialRampToValueAtTime(0.0001, t + 0.3); bo.connect(bg); bg.connect(out); bo.start(t); bo.stop(t + 0.32); }
+    t += len * b;
+  });
+  shanty = ac; setTimeout(() => { ac.close(); shanty = null; }, (t - ac.currentTime + 0.3) * 1000);
+};
+// clues toward the basement (the first one is the map in the shack)
+const clues = get('painWheelClues', {}), nClues = Object.keys(clues).length;
+if (nClues) document.getElementById('clueCount').textContent = `🔍 Basement clues found: ${nClues}`;
+if (clues.map) { const c = document.createElement('div'); c.className = 'clue'; at(c, [54.6, 66, 7.2, 11.4], -4); c.textContent = '🗺️ CLUE: the shack map. X = the basement'; board.appendChild(c); }
 function show(t, h) { document.getElementById('dTitle').textContent = t; document.getElementById('dBody').innerHTML = h; dlg.showModal(); }
 </script></body></html>
