@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/png" href="favicon.png">
+<title>The 8/11 · The Wheel</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; background: #0b1410; color: #fde68a; font-family: system-ui, sans-serif; display: flex; flex-direction: column; }
+  header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 16px; }
+  h1 { margin: 0; font-size: clamp(24px, 3.4vw, 36px); letter-spacing: .03em; color: #fb923c; text-shadow: 0 2px 0 #14532d, 0 0 14px rgba(251,146,60,.4); }
+  #goldBox { font: 800 20px ui-monospace, monospace; color: #fde047; }
+  nav { display: flex; flex-wrap: wrap; gap: 10px; }
+  nav a { color: #1c1917; background: #f59e0b; font-weight: 800; font-size: 18px; text-decoration: none; padding: 8px 16px; border-radius: 8px; }
+  nav a.alt { background: #14532d; color: #fde68a; }
+  .wrap { flex: 1; display: grid; place-items: center; padding: 0 12px 16px; }
+  .scroller { width: 100%; overflow-x: auto; display: grid; place-items: center; }
+  .scene { position: relative; width: min(1500px, 100%, calc((100vh - 120px) * 2576 / 1438)); aspect-ratio: 2576 / 1438; background: url(media/photo_store811.jpg) 0 0 / 100% 100% no-repeat; border-radius: 10px; box-shadow: 0 0 0 3px #f97316, 0 20px 60px rgba(0,0,0,.7); overflow: hidden; }
+  @media (max-width: 700px) { .scene { min-width: 640px; } .scroller { place-items: start; } }
+  .prop { position: absolute; display: block; padding: 0; border: 0; background: none; cursor: pointer; transition: transform .15s, filter .15s; }
+  .prop img { display: block; width: 100%; height: auto; image-rendering: pixelated; pointer-events: none; }
+  .prop:hover, .prop:focus-visible { transform: scale(1.07); filter: drop-shadow(0 0 10px #fde68a); outline: none; z-index: 4; }
+  .deco { position: absolute; pointer-events: none; image-rendering: pixelated; }
+  .hs { position: absolute; padding: 0; border: 3px solid transparent; border-radius: 10px; background: transparent; cursor: pointer; }
+  .hs:hover, .hs:focus-visible { border-color: #fde68a; box-shadow: 0 0 14px #fde68a; outline: none; }
+  .hs.secret, .hs.secret:hover, .hs.secret:focus-visible { border-color: transparent; box-shadow: none; cursor: default; }
+  .tap { position: absolute; padding: 0; border: 3px solid transparent; border-radius: 12px; background: transparent; cursor: pointer; }
+  .tap:hover, .tap:focus-visible { border-color: #fde68a; box-shadow: 0 0 18px #fde68a; outline: none; }
+  #cup { position: absolute; display: none; translate: -50% 0; image-rendering: pixelated; pointer-events: none; z-index: 5; transition: opacity 1.2s; }
+  @keyframes wob { 25% { transform: rotate(-6deg); } 75% { transform: rotate(6deg); } }
+  /* the dying fluorescent tube (right ceiling light) */
+  .bulb { position: absolute; left: 67.6%; top: 3.6%; width: 19.6%; height: 3.8%; pointer-events: none; background: rgba(30,30,28,.82); mix-blend-mode: multiply; opacity: 0; animation: bulb 6.5s infinite; }
+  @keyframes bulb { 0%, 41%, 47%, 49%, 77%, 100% { opacity: 0; } 42%, 46%, 48%, 78%, 79.5% { opacity: 1; } }
+  .bulbglow { position: absolute; left: 66%; top: 6%; width: 23%; height: 22%; pointer-events: none; background: radial-gradient(ellipse at 50% 0%, rgba(255,255,220,.22), transparent 70%); animation: glow 6.5s infinite; }
+  @keyframes glow { 0%, 41%, 47%, 49%, 77%, 100% { opacity: 1; } 42%, 46%, 48%, 78%, 79.5% { opacity: 0; } }
+  #customer { position: absolute; bottom: 4%; z-index: 3; animation: idle 2.6s ease-in-out infinite; }
+  @keyframes idle { 50% { translate: 0 -3%; } }
+  #say { position: absolute; left: 50%; top: 4%; transform: translateX(-50%); max-width: 80%; padding: 10px 18px; border-radius: 10px; background: rgba(12,10,9,.92); border: 2px solid #f97316; color: #fef3c7; font: 800 19px/1.35 system-ui, sans-serif; text-align: center; display: none; z-index: 9; }
+  .bar { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center; padding: 10px 12px 18px; font-size: 18px; color: #d6d3d1; }
+  .bar button { font: 800 17px system-ui, sans-serif; padding: 9px 16px; border: 0; border-radius: 10px; cursor: pointer; color: #fff; }
+  #closed { position: absolute; inset: 0; z-index: 20; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 20px; text-align: center; background: rgba(5,10,8,.88); }
+  #closed b { font-size: clamp(28px, 4vw, 48px); color: #f87171; letter-spacing: .06em; }
+  #closed p { margin: 0; font-size: 20px; color: #e7e5e4; max-width: 560px; line-height: 1.4; }
+  #closed a { font: 800 18px system-ui, sans-serif; padding: 9px 18px; border-radius: 10px; background: #f59e0b; color: #1c1917; text-decoration: none; }
+</style></head><body>
+<header><h1>🏪 The 8/11</h1><span id="goldBox"></span><nav><a class="alt" href="./">📌 The Board</a><a class="alt" href="wheel.html#go=shop">🛒 The whole catalog</a><a href="wheel.html">🎡 Back to The Wheel</a></nav></header>
+<div class="wrap"><div class="scroller"><div class="scene" id="scene">
+  <div class="bulbglow"></div><div class="bulb"></div>
+  <button class="tap" data-f="Blue Raspberry" style="left:3%;top:33%;width:10.5%;height:27%" title="Blue Raspberry Slurpee (1 gold)" aria-label="Blue Raspberry Slurpee, 1 gold"></button>
+  <button class="tap" data-f="Cherry" style="left:13.5%;top:33%;width:5.3%;height:27%" title="Cherry Slurpee (1 gold)" aria-label="Cherry Slurpee, 1 gold"></button>
+  <button class="tap" data-f="Lime" style="left:18.8%;top:33%;width:4.4%;height:27%" title="Lime Slurpee (1 gold)" aria-label="Lime Slurpee, 1 gold"></button>
+  <img id="cup" alt="">
+  <div id="props"></div>
+  <div id="say" role="status"></div>
+  <div id="closed"><b>CLOSED</b><p>The 8/11 is closed. It is open 11 days a week, just not for you yet.<br>Land on <b style="font-size:inherit;color:#fb923c">8/11</b> on the wheel to open it. The shop lives in here.</p><a href="wheel.html">🎡 Go spin</a></div>
+</div></div></div>
+<div class="bar"><span>Click a Slurpee drum (1 gold) or an aisle sign to shop.</span>
+  <button data-f="Blue Raspberry" style="background:#2563eb">🫐 Blue Raspberry</button><button data-f="Cherry" style="background:#dc2626">🍒 Cherry</button><button data-f="Lime" style="background:#16a34a">🍈 Lime</button>
+</div>
+<script>
+const $ = (id) => document.getElementById(id);
+const pick = (a) => a[Math.floor(Math.random() * a.length)];
+const get = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } };
+const put = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const fmt = (n) => { n = Math.round(n); if (n < 1e15) return n.toLocaleString() + 'g'; const e = Math.floor(Math.log10(n)); return (n / Math.pow(10, e)).toFixed(2) + 'e' + e + 'g'; };
+const say = (t, ms) => { const d = $('say'); d.textContent = t; d.style.display = 'block'; clearTimeout(say.t); say.t = setTimeout(() => d.style.display = 'none', ms || 3400); };
+const has811 = () => get('painWheel811Open', false) || ((get('painWheelStats', {}) || {}).byType || {}).SEVEN_ELEVEN > 0;
+const showGold = () => { $('goldBox').textContent = '🪙 ' + fmt(get('painWheelGold', 0)); };
+showGold(); addEventListener('storage', (e) => { if (e.key === 'painWheelGold') showGold(); });
+
+// sound: the wheel's own clips, at the wheel's volume (browsers wait for your first click)
+let AC = null; const BUF = {};
+const vol = () => { const v = parseFloat(localStorage.getItem('painWheelVolume')); return isNaN(v) ? 0.6 : Math.max(0, Math.min(1, v)); };
+const sfx = (name) => {
+  try {
+    if (!vol()) return;
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    const go = (b) => { const s = AC.createBufferSource(), g = AC.createGain(); s.buffer = b; g.gain.value = 0.8 * vol(); s.connect(g); g.connect(AC.destination); s.start(); };
+    if (BUF[name]) return go(BUF[name]);
+    fetch('media/' + name + '.mp3').then(r => r.arrayBuffer()).then(ab => AC.decodeAudioData(ab)).then(b => { BUF[name] = b; go(b); }).catch(() => {});
+  } catch (e) {}
+};
+
+if (!has811()) $('closed').style.display = 'flex';
+else {
+  put('painWheelSeen811', true);
+  sfx('audio_door_chime'); addEventListener('pointerdown', () => { if (AC && AC.state === 'suspended') { AC.resume(); } }, { once: true });
+}
+
+// ---- the store: aisle signs open that shop tab on the wheel, the clerk points, the rest is jokes ----
+const AISLES = [
+  ['PETS', 'photo_811_sign_pets', 43, 26.6, 7.4, 'pets', 'Pets. They bite. The claw machine is in the desert shack.'],
+  ['TOYS', 'photo_811_sign_toys', 51.8, 26.6, 7, 'garage', 'Toys. And cars. And a rocket. Do not ask where we keep the rocket.'],
+  ['SNACKS & POTIONS', 'photo_811_sign_snacks', 60.6, 25.4, 7.4, 'consumables', 'Snacks and potions. Same shelf. Same expiration date.'],
+  ['COSMETICS', 'photo_811_sign_cosmetics', 69.3, 26.6, 8.6, 'cosmetics', 'Cosmetics. Make the needle pretty. Switch them in Settings.'],
+  ['THEMES', 'photo_811_sign_themes', 33.4, 21.5, 8, 'themes', 'Themes. New paint for the whole wheel. Switch them in Settings.'],
+  ['CURSES', 'photo_811_sign_curses', 88.4, 25, 7.8, 'curses', 'Curses. Aim them at a guildmate. We are not liable.'] ];
+const PROPS = [['photo_811_hotdog', 24.6, 51.6, 9.2, 'hotdog', 'Hot dog roller'], ['photo_811_lottery', 34, 47.8, 7.6, 'scratch', 'Scratch-offs'],
+  ['photo_811_carrier1', 44.5, 74, 6.2, 'pets', 'Pets'], ['photo_811_carrier2', 51.4, 75, 5.8, 'pets', 'Pets']];
+const JOKES = {
+  hotdog: ['That hot dog has been rolling since 2019. It is not for sale. It is load-bearing.', 'The hot dogs are free. Nobody has ever taken one. Ever.', "Kevin ate one in 2021. He doesn't talk about it."],
+  atm: ['OUT OF ORDER. Has been since the Cataclysm.', 'The ATM charges a 1% fee to tell you it is out of order.', 'Try the Guild Bank Vault on the yacht. This thing eats cards.'],
+  open: ['Open 7 hours a day, 11 days a week. Do the math. We did not.', 'Closed on days that end in Y.'],
+  cam: ['The camera blinks at you. It has seen things.', 'Smile. You are on Goblin Security TV.', 'The red light is on. Nobody is watching. Probably.'] };
+const props = $('props');
+const add = (html) => { props.insertAdjacentHTML('beforeend', html); return props.lastElementChild; };
+const clerk = add('<img class="deco" src="media/photo_811_clerk.png" alt="" style="right:5.4%;bottom:37.6%;width:10.4%;z-index:1">');
+function point(ms) { clerk.src = 'media/photo_811_clerk_point.png'; clerk.style.width = '11.4%'; clearTimeout(point.t); point.t = setTimeout(() => { clerk.src = 'media/photo_811_clerk.png'; clerk.style.width = '10.4%'; }, ms || 1400); }
+const goShop = (tab) => { point(1000); setTimeout(() => { location.href = 'wheel.html#go=shop_' + tab; }, 650); };
+AISLES.forEach(([name, img, l, t, w, tab, line]) => {
+  const b = add(`<button type="button" class="prop" title="${name}" aria-label="Shop: ${name}" style="left:${l}%;top:${t}%;width:${w}%"><img src="media/${img}.png" alt=""></button>`);
+  b.onmouseenter = b.onfocus = () => point(1800);
+  b.onclick = () => { say(line, 2600); goShop(tab); };
+});
+add('<img class="deco" src="media/photo_811_sale.png" alt="" style="left:93.4%;top:22.4%;width:4%;transform:rotate(14deg);z-index:2">');
+PROPS.forEach(([img, l, t, w, act, name]) => {
+  const b = add(`<button type="button" class="prop" title="${name}" aria-label="${name}" style="left:${l}%;top:${t}%;width:${w}%"><img src="media/${img}.png" alt=""></button>`);
+  b.onclick = () => JOKES[act] ? say(pick(JOKES[act]), 3400) : goShop(act);
+});
+add('<img class="deco" src="media/photo_811_pricetag.png" alt="" style="left:30.2%;top:57.6%;width:3%;transform:rotate(-8deg)">');
+[['atm', 'The ATM', 34.4, 42.5, 6, 18, ''], ['open', 'The sign', 80.2, 29.5, 5.6, 11, ''], ['door', 'Leave', 24.4, 21, 6.4, 28, ''], ['cam', '', 82.6, 12.4, 6, 8, ' secret']].forEach(([k, name, l, t, w, h, cls]) => {
+  const b = add(`<button type="button" class="hs${cls}" ${name ? `title="${name}" aria-label="${name}"` : 'tabindex="-1" aria-hidden="true"'} style="left:${l}%;top:${t}%;width:${w}%;height:${h}%"></button>`);
+  b.onclick = () => {
+    if (k === 'door') { location.href = 'wheel.html'; return; }
+    if (k === 'cam' && get('painWheelSeenVip', false)) { say('📹 The camera feed flickers... is that the VIP room?', 1800); setTimeout(() => { location.href = 'yacht.html#vip'; }, 1300); return; }
+    say(pick(JOKES[k]), 3400);
+  };
+});
+
+// ---- a random regular wanders in every visit ----
+const REGULARS = [
+  ['photo_clippy', 5, 'It looks like you are buying a Slurpee. Would you like help with that?'],
+  ['photo_volley', 4.5, '...(Volley says nothing. Volley is a volleyball.)'],
+  ['photo_whelp', 7, '*the whelp is licking the Slurpee machine*'],
+  ['photo_chicken', 5, 'Bawk. (The chicken is here for the hot dogs. Do not ask.)'],
+  ['photo_pet_spinny', 5, 'Lil\' Spinny is spinning in the aisle. Nobody can stop him.'],
+  ['photo_pet_gerald', 5.5, 'Gerald is reading the magazines without buying any. Classic Gerald.'],
+  ['photo_pet_kevjr', 5.5, 'Kevin Jr. is trying to buy a lottery ticket with a Monopoly bill.'],
+  ['photo_pet_needle', 4, 'The Needle is pointing at the CURSES aisle. Ominous.'],
+  ['photo_uwu_icon', 6, 'Uwutek is buying 40 energy drinks. Raid tonight, apparently.']];
+const [rImg, rW, rLine] = pick(REGULARS), rx = 60 + Math.random() * 10;
+const reg = add(`<button type="button" class="prop" id="customer" title="A regular" aria-label="A regular" style="left:${rx}%;width:${rW}%"><img src="media/${rImg}.png" alt=""></button>`);
+reg.onclick = () => say(rLine, 3600);
+
+// ---- Slurpees: 1 gold, poured from the real machine. The cup gets cleared once you're done ----
+const HUE = { 'Cherry': '', 'Blue Raspberry': 'hue-rotate(215deg) saturate(1.3)', 'Lime': 'hue-rotate(110deg) saturate(1.2)' };
+const LINES = { 'Cherry': ['Cherry. A classic. Like Kevin pulling.', 'Red. Like the raid frames.'], 'Blue Raspberry': ["Blue raspberry. Raspberries aren't blue. Don't think about it.", 'Your tongue is blue for three raid nights.'],
+  'Lime': ['Lime. Bold choice. Wrong, but bold.', 'Green, like the pull timer Kevin ignored.'] };
+const SPILL = ['Clean up on aisle 8. Your gold is gone. So is your Slurpee.', 'Dropped it. The 8/11 has a no-refund policy. And no floor mop.', 'Kevin bumped you. Kevin says he did not bump you.', 'It hit the floor before the lid did. Gravity: 1, you: 0.'];
+const TAPS = { 'Blue Raspberry': 11.6, 'Cherry': 16.4, 'Lime': 21 };
+let busy = false;
+function slurpee(f) {
+  if (busy || !has811()) return;
+  const g = get('painWheelGold', 0);
+  if (g < 1) return say("You can't afford ONE gold. That's a new low.");
+  busy = true; put('painWheelGold', g - 1); showGold();
+  const cup = $('cup'); cup.style.transition = 'none'; cup.style.opacity = '1'; cup.style.filter = ''; cup.style.animation = '';
+  cup.style.left = TAPS[f] + '%'; cup.style.top = '56.5%'; cup.style.height = '9.5%'; cup.src = 'media/photo_cup_empty.png'; cup.style.display = 'block';
+  say('*machine noises*', 1200); point(1600);
+  setTimeout(() => { cup.src = 'media/photo_cup_pour.png'; cup.style.filter = HUE[f]; cup.style.top = '53%'; cup.style.height = '13%'; }, 700);
+  setTimeout(() => { cup.src = 'media/photo_cup_full.png'; cup.style.animation = 'wob .4s 2'; }, 1600);
+  setTimeout(() => {
+    cup.style.animation = '';
+    if (Math.random() < .12) { cup.src = 'media/photo_spill.png'; cup.style.filter = HUE[f]; cup.style.height = '14%'; cup.style.top = '80%'; say(pick(SPILL), 3800); }
+    else {
+      say(pick(LINES[f]) + ' (It went in your bag.)', 3600);
+      const q = get('painWheelPendingLoot', []); q.push(['uncommon', '🥤 8/11', 'Slurpee (' + f + ')']); put('painWheelPendingLoot', q);   // the wheel adds it to your bag
+      if (Math.random() < .15) setTimeout(() => say('🧠❄️ BRAIN FREEZE. You forgot your rotation.', 2600), 1800);
+    }
+    setTimeout(() => { cup.style.transition = 'opacity 1.2s'; cup.style.opacity = '0'; setTimeout(() => { cup.style.display = 'none'; busy = false; }, 1250); }, 2600);   // somebody cleans it up
+  }, 2300);
+}
+document.querySelectorAll('[data-f]').forEach(b => b.onclick = () => slurpee(b.dataset.f));
+</script>
+</body></html>

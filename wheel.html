@@ -857,7 +857,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 8:48 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 11:11 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -1053,7 +1053,7 @@
         <div class="w-full max-w-2xl flex flex-col rounded-2xl p-5 shadow-2xl border-2 border-amber-500" style="max-height:90vh;max-width:42rem;background: linear-gradient(170deg,#1c1402,#0f172a 45%,#052e16);">
             <div class="flex items-center justify-between mb-2">
                 <div class="text-lg font-black uppercase tracking-tight text-amber-300"><img class="hdr-ico" data-ico="SHOP" alt=""> The Goblin Shop</div>
-                <div class="flex items-center gap-3"><span id="shopGold" class="mono text-yellow-300 font-bold text-sm"></span><button id="shopClose" class="text-slate-400 hover:text-white text-sm font-bold cursor-pointer">✕</button></div>
+                <div class="flex items-center gap-3"><span id="shopGold" class="mono text-yellow-300 font-bold text-sm"></span><a id="shopBack811" href="811.html" class="hidden px-2.5 py-1 rounded-md font-extrabold" style="background:#f59e0b;color:#1c1917;font-size:calc(14px * var(--ts, 1));text-decoration:none">🏪 Back to the 8/11</a><button id="shopClose" class="text-slate-400 hover:text-white text-sm font-bold cursor-pointer">✕</button></div>
             </div>
             <div id="shopTabs" class="flex flex-wrap gap-1.5 mb-2"></div>
             <div id="shopMsg" class="text-xs text-amber-300 font-bold min-h-[1rem] mb-1"></div>
@@ -1155,9 +1155,10 @@
 
             <!-- $KNOB stock ticker -->
             <div id="stockCard" class="relative bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl">
-                <div class="forever-only absolute inset-0 z-10 rounded-2xl flex-col items-center justify-center gap-1 text-center px-4" style="background:rgba(2,6,23,.93)">
+                <div id="foreverStonks" class="forever-only absolute inset-0 z-10 rounded-2xl flex-col items-center justify-center gap-1 text-center px-4" style="background:rgba(2,6,23,.93)">
                     <div class="text-3xl font-black mono text-slate-300">$0.00</div><div class="text-xs font-bold mono text-slate-500">▬ 0.00% today · volume: 0</div>
                     <div class="text-sm font-bold text-slate-300 mt-1">Nobody is buying anything. Everyone is too engrossed in WoW Forever.</div>
+                    <button type="button" onclick="this.parentNode.style.setProperty('display','none','important')" class="mt-2 px-4 py-2 rounded-lg font-extrabold" style="background:#047857;color:#fff;font-size:calc(15px * var(--ts, 1))">📈 Trade anyway</button>
                 </div>
                 <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
                     <span>📈 Stonks · 🥃 $KNOB Knob Creek Holdings</span>
@@ -1403,7 +1404,10 @@
                 <button id="cheatCloseBtn" class="text-slate-400 hover:text-white text-sm font-bold">✕</button>
             </div>
             <p class="text-xs text-slate-400 mb-3">Press a key (or click a row) to force the next spin. It resets to Fair after one spin. Clicking the degrees-per-slice number in the footer also cycles modes. A tiny dot after the slice count on the hub means a rig is armed. Keys marked ⇧ need Shift. Type <b>kana</b> or press Esc to close. The full list of secrets is in the spoilers file.</p>
+            <input id="cheatFind" type="search" placeholder="Find a slice..." class="w-full mb-2 px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-slate-100 text-sm" autocomplete="off">
             <div id="cheatList" class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-xs mono"></div>
+            <div class="mono text-sm font-bold text-amber-300 mt-4 mb-2">🎬 SET PIECES • watch one right now</div>
+            <div id="cheatEvents" class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-xs mono"></div>
         </div>
     </div>
 
@@ -4451,6 +4455,7 @@
        are an armed rig and the secret Ret boost, which quietly steer it. */
     function forcedTarget() {
         if (riggedMode !== "FAIR") return pick(indicesOf[riggedMode]);
+        if (!has811() && indicesOf.SEVEN_ELEVEN && indicesOf.SEVEN_ELEVEN.length && Math.random() < Math.min(.5, .03 * store.get('painWheel811Pity', 0))) return pick(indicesOf.SEVEN_ELEVEN);   // bad-luck protection: +3% per spin until the 8/11 opens
         if (retBoostStacks > 0) {
             if (Math.random() < retChance()) return pick(indicesOf.RET_PALADIN);
             return pick(slices.filter(x => x.type !== "RET_PALADIN" && x.type !== "AOTC" && !(kevinShield > 0 && x.type === "KEVIN")).map(x => x.index));   // the Repel still works during a Ret boost
@@ -4624,6 +4629,8 @@
     };
     let playerName = store.get('painWheelPlayer', '');
     const stats = Object.assign({ spins: 0, byType: {}, kevinStreak: 0, bestKevinStreak: 0, kromSeen: [], firstSpin: null }, store.get('painWheelStats', {}));
+    // the shop lives in the 8/11, and the 8/11 stays locked until you land on it once (with bad-luck protection so nobody waits forever)
+    const has811 = () => !!store.get('painWheel811Open', false) || (stats.byType.SEVEN_ELEVEN || 0) > 0;
     if (!stats.byType || typeof stats.byType !== 'object' || Array.isArray(stats.byType)) stats.byType = {};
     if (!Array.isArray(stats.kromSeen)) stats.kromSeen = [];
     ['spins', 'kevinStreak', 'bestKevinStreak'].forEach(k => { stats[k] = Math.max(0, Math.floor(+stats[k] || 0)); });
@@ -4779,6 +4786,7 @@
     }
     function recordSpin(s, fair) {
         if (fair === false) { stats.rigged = (stats.rigged || 0) + 1; if (stats.rigged >= 25) unlock('rigger'); }
+        if (!has811()) { if (s.type === 'SEVEN_ELEVEN') store.set('painWheel811Open', true); else store.set('painWheel811Pity', store.get('painWheel811Pity', 0) + 1); }
         stats.spins++; stats.byType[s.type] = (stats.byType[s.type] || 0) + 1;
         if (!stats.firstSpin) stats.firstSpin = new Date().toISOString();
         stats.kevinStreak = s.type === 'KEVIN' ? stats.kevinStreak + 1 : 0;
@@ -5379,7 +5387,7 @@
                 closeModal();
                 doorStage.classList.remove('hidden'); doorStage.classList.add('flex');
                 requestAnimationFrame(() => requestAnimationFrame(() => doorStage.classList.add('slam')));
-                setTimeout(() => { playDoorSlam(); doorStage.classList.add('door-shake'); }, 480);
+                setTimeout(() => { playClip('doorslam', AUDIO_DOOR_SLAM, playDoorSlam); doorStage.classList.add('door-shake'); }, 480);
                 setTimeout(() => {
                     doorStage.classList.remove('slam', 'door-shake', 'flex'); doorStage.classList.add('hidden');
                 }, 2300);
@@ -5654,6 +5662,23 @@
             b.append(k, n);
             b.addEventListener('click', () => setRigMode(r.id));
             cheatList.appendChild(b);
+        });
+    })();
+    // find box: there are a lot of slices now
+    $('cheatFind').addEventListener('input', (e) => { const q = e.target.value.trim().toLowerCase(); cheatList.querySelectorAll('[data-mode]').forEach(b => { b.style.display = !q || b.textContent.toLowerCase().includes(q) ? '' : 'none'; }); });
+    $('cheatFind').addEventListener('keydown', (e) => e.stopPropagation());   // typing here shouldn't fire the hotkeys
+    (function buildCheatEvents() {   // the newer gags, on demand (nothing here pays out gold)
+        const EV = [['🐸 Murloc raid', () => murlocRaid()], ['🧊 Iceberg', () => yachtIceberg(true)], ['🗡️ Stray glaive', () => strayGlaive(true)],
+            ['🛸 Chicken abduction', () => chickenAbduct(true)], ['🐔 Roadkill', () => chickenRoadkill(true)],
+            ['🦺 OSHA incident', () => oshaEvent()], ['🌵 Cartel abduction', () => cartelAbduction()], ['⏳ WoW Forever', () => toggleForever()],
+            ['🏪 8/11 opening', () => { store.set('painWheel811Welcomed', false); welcome811(); }],
+            ['🎂 Clippy birthday', () => { const d = Date; window.Date = class extends d { constructor(...a) { return a.length ? new d(...a) : new d(new d().getFullYear(), 10, 19, 12); } static now() { return d.now(); } }; store.set('painWheelClippyBday', ''); try { clippyBirthday(); } finally { window.Date = d; } }],
+            ['💳 Goblin Express card', () => showCard(cardTier(), '💳 YOUR GOBLIN EXPRESS', 'Red → Platinum (10 charges) → Black (50 charges).')]];
+        EV.forEach(([label, fn]) => {
+            const b = document.createElement('button'); b.type = 'button';
+            b.className = 'px-2 py-1.5 rounded-lg bg-slate-950/70 border border-slate-800 hover:border-amber-400 text-left font-bold text-slate-200';
+            b.textContent = label; b.addEventListener('click', () => { toggleCheatSheet(false); setTimeout(() => { try { fn(); } catch (e) { console.warn(e); } }, 250); });
+            $('cheatEvents').appendChild(b);
         });
     })();
     function toggleCheatSheet(force) {
@@ -6882,6 +6907,7 @@
     const SOCIETY_PCT = [.15, .20, .25, .30, .35, .40];              // so do the secret societies
     const priceOf = (pct, min) => Math.max(min == null ? 100 : min, Math.round(gold * pct));
     const rewardOf = (pct, min) => Math.max(min == null ? 1000 : min, Math.round(gold * pct));
+    const rewardTotal = (pct, min) => Math.max(min == null ? 1000 : min, Math.round((gold + vaultGold()) * pct));   // the big guild rewards (weekly liver, boss kills) count your vault too
     function renderGold() {
         $('goldText').textContent = '🪙 ' + gold.toLocaleString() + 'g' + (goblinDebt ? `  (debt ${goblinDebt.toLocaleString()}g)` : '');
         $('bailoutBtn').classList.toggle('hidden', gold >= 10);
@@ -7105,6 +7131,7 @@
         else if (e.key === 'painWheelTokens' && typeof v === 'number') { tokens = v; }
         else if (e.key === 'painWheelPets' && v && typeof v === 'object') { Object.assign(pets, v); renderPets(); }
         else if (e.key === 'painWheelPendingAch') setTimeout(awardPending, 50);
+        else if (e.key === 'painWheelPendingLoot') setTimeout(lootPending, 50);
         else if (e.key === 'painWheelStats' && v && typeof v === 'object') { Object.assign(stats, v); }
         else if (e.key === 'painWheelAllTimeSpins') { const n = parseInt(e.newValue, 10); if (n > allTimeSpins) { allTimeSpins = n; updateSpinBadge(); } }
     });
@@ -7451,7 +7478,7 @@
                         const lv = k.level || 1, kPct = lv === 1 ? .10 : lv === 2 ? .20 : Math.min(.75, .35 + .05 * (lv - 3));
                         const kFloor = lv === 1 ? 1e9 : lv === 2 ? 1e20 : Math.min(1e100, 1e40 * Math.pow(1e5, lv - 3));
                         const rank = (k.top || []).findIndex(x => String(x[0]).toLowerCase() === playerName.toLowerCase());
-                        const bonusPct = [1, 0.75, 0.5, 0.35, 0.2][rank] || 0, pay = Math.round(rewardOf(kPct, kFloor) * (1 + bonusPct));
+                        const bonusPct = [1, 0.75, 0.5, 0.35, 0.2][rank] || 0, pay = Math.round(rewardTotal(kPct, kFloor) * (1 + bonusPct));
                         setGold(gold + pay);
                         giveLoot(Math.random() < 0.2 ? 'legendary' : 'epic', `☠️ ${k.name} defeated! +${fmt(pay)}${rank >= 0 ? ` (#${rank + 1} damage bonus +${Math.round(bonusPct * 100)}%)` : ''} and`);
                         chatBurst(['BOSS DOWN', 'GG GG GG', 'UWUTEK DOWN', 'loot loot loot', 'EZ Clap', 'PAYDAY'], 5);
@@ -7690,6 +7717,8 @@
         if (!instant && dist > 4) { w.classList.add('pet-moving'); clearTimeout(w._mv); w._mv = setTimeout(() => w.classList.remove('pet-moving'), dist / (w._home === 'roam' ? 55 : 70) * 1000); }
         const f = w.querySelector('.pet-flip'); if (f && Math.abs(dx) > 4) f.style.transform = (dx > 0) !== (w.id === 'pet-accountant') ? 'scaleX(-1)' : '';   // most animal emojis face left; Gizzlenut faces right
     }
+    // Clippy (Clippit) shipped with Office 97 on November 19, 1996. That's his birthday; his age counts up on its own
+    const CLIPPY_AGE = (() => { const n = new Date(), a = n.getFullYear() - 1996; return (n.getMonth() < 10 || (n.getMonth() === 10 && n.getDate() < 19)) ? a - 1 : a; })();
     function petSay(k, text) {
         if (k === 'clippy' && document.body.classList.contains('ghost-town')) text = "Why aren't we playing Forever?";   // in Forever, Clippy has exactly one thought
         const w = $('pet-' + k); if (!w) return;
@@ -8002,7 +8031,7 @@
         eye.style.visibility = 'hidden'; document.body.appendChild(e);
         const floor = innerHeight - r.top - 20, dx = (Math.random() < 0.5 ? -1 : 1) * (60 + Math.random() * 120);
         e.animate([{ transform: 'translate(0,0) rotate(0)' }, { transform: `translate(${dx * 0.3}px,-40px) rotate(180deg)`, offset: 0.25 }, { transform: `translate(${dx * 0.7}px,${floor}px) rotate(540deg)`, offset: 0.7 }, { transform: `translate(${dx * 0.85}px,${floor - 18}px) rotate(640deg)`, offset: 0.82 }, { transform: `translate(${dx}px,${floor}px) rotate(760deg)` }], { duration: 1700, easing: 'ease-in', fill: 'forwards' });
-        petSay('clippy', pick(["It looks like you've lost an eye. Would you like help filing an injury report?", 'I was trying to see what you were typing. I got too close.', 'I have been a paperclip for 31 years and this has never happened before. (It has happened four times.)']));
+        petSay('clippy', pick(["It looks like you've lost an eye. Would you like help filing an injury report?", 'I was trying to see what you were typing. I got too close.', 'I have been a paperclip for ' + CLIPPY_AGE + ' years and this has never happened before. (It has happened four times.)']));
         setTimeout(() => oshaSay('Self-inflicted eye injury. Paperclips are now classified as sharp objects.', r.left, r.top - 30), 2200);
         setTimeout(() => { e.style.transition = 'opacity .6s'; e.style.opacity = '0'; setTimeout(() => e.remove(), 700); eye.style.visibility = ''; petSay('clippy', 'Found it. It was in the couch. It is a little linty now.'); }, 20000);
         return true;
@@ -8475,17 +8504,17 @@
             row.querySelector('[data-d]').onclick = () => {
                 if (liverDown) return;
                 if (Date.now() - store.get('painWheelDoubleAt', 0) < 23 * 3600000) { $('knobNews').textContent = '🥃 One double a day. Even Reb has standards. Barely.'; return; }
-                if (!confirm(`Pour Reb a double?\n\nYou get +${fmt(rewardOf(.025))} right now (2.5% of your gold).\nThe WHOLE GUILD'S liver takes -30%.\nEveryone sees that it was you.\n\nIf the liver survives the week, everyone who never poured a double gets 5% of their gold. You won't. If it dies, nobody does.`)) return;
-                store.set('painWheelDoubleAt', Date.now()); setGold(gold + rewardOf(.025)); sendEvent({ k: 'liver', what: 'double' }); liver = Math.max(0, liver - 30); renderLiver();
+                if (!confirm(`Pour Reb a double?\n\nYou get +${fmt(rewardOf(.025))} right now (2.5% of your gold).\nThe WHOLE GUILD'S liver takes -1%.\nEveryone sees that it was you.\n\nIf the liver survives the week, everyone who never poured a double gets 5% of their gold. You won't. If it dies, nobody does.`)) return;
+                store.set('painWheelDoubleAt', Date.now()); setGold(gold + rewardOf(.025)); sendEvent({ k: 'liver', what: 'double' }); liver = Math.max(0, liver - 1); renderLiver();
                 funEvent('🥃 YOU POURED REB A DOUBLE', 3500); chatBurst(['HE CHOSE VIOLENCE', 'reb noooo', 'that is a war crime', 'snitches get stitches but this guy gets paid', 'greed'], 5, 2500);
             };
         }
-        row.querySelector('[data-s]').textContent = L.down ? '🚑 In the hospital (back soon)' : L.died ? "💀 Died once this week. No reward this week." : `Survive until Monday: everyone gets 5% of their gold (you: ${fmt(rewardOf(.05))})${L.wreckers && L.wreckers.length ? ` · doubles poured by ${L.wreckers.join(', ')}` : ''}`;
+        row.querySelector('[data-s]').textContent = L.down ? '🚑 In the hospital (back soon)' : L.died ? "💀 Died once this week. No reward this week." : `Survive until Monday: everyone gets 5% of their gold + vault (you: ${fmt(rewardTotal(.05))})${L.wreckers && L.wreckers.length ? ` · doubles poured by ${L.wreckers.join(', ')}` : ''}`;
         const lw = L.lastWeek;
         if (lw && lw.week && store.get('painWheelLiverClaim', '') !== lw.week && playerName) {   // last week's verdict, once
             store.set('painWheelLiverClaim', lw.week);
             const me = (lw.wreckers || []).some(w => w.toLowerCase() === playerName.toLowerCase());
-            if (lw.survived && !me) { const rw = rewardOf(.05); setGold(gold + rw); funEvent("🫀 REB'S LIVER SURVIVED THE WEEK: +" + fmt(rw), 5000); chatBurst(['REB LIVES', 'the liver made it', 'teamwork', 'water gang'], 4, 2500); }
+            if (lw.survived && !me) { const rw = rewardTotal(.05); setGold(gold + rw); funEvent("🫀 REB'S LIVER SURVIVED THE WEEK: +" + fmt(rw), 5000); chatBurst(['REB LIVES', 'the liver made it', 'teamwork', 'water gang'], 4, 2500); }
             else if (lw.survived) moveToast("🫀 Reb's liver survived the week. Everyone got 5% of their gold. You poured a double, so you got a lecture.");
             else moveToast("💀 Reb's liver did not make it last week. Nobody got paid. Somebody poured one too many.");
         }
@@ -9564,7 +9593,7 @@
             ['⚙️', 'Settings has your name, Dark / Light mode, the theme picker and a Performance setting (Lite helps older PCs and phones). The top bar has bigger buttons plus Hearth and Toys.'],
             ['✕', 'Every window closes with its X, a click outside it, or Esc. Chat keeps the last 50 lines so you can scroll back and copy.'],
             ['🐦', 'Squawkr chirps on real posts (🔊 mutes it). Uwutek\'s health bar matches the holiday theme. Overclocked spins get a thick border and a glowing wheel.'],
-            ['📎', 'Clippy is 31 years old now. He would like you to know that he is the oldest talking paperclip in the world.'],
+            ['📎', 'Clippy\'s real birthday is November 19, 1996 (he shipped with Office 97), so he turns 30 this year. He is throwing himself a party on the 19th. Attendance is mandatory.'],
             ['🧊', 'John Blizzard nerfed Guardian Druid again and is trading Knob Creek stonks. Reb is still drinking the actual bottles.'],
             ['🏆', 'Fixed: spin achievements count your spins from every device, pets stay put when you scroll, overclocked spins no longer lag, two open tabs no longer eat your gold, and every box on the left can be minimized.'],
             ['🔥', 'When a rocket hits the shack, the $13.50 sign goes flying, the rocket sticks in the roof, and the whole thing burns down before it gets rebuilt.'],
@@ -9632,9 +9661,14 @@
             ['🐦', 'Kevin and Casimir have real Squawkr profile pictures. Sorry I\'m Busy Skinning has its picture.'],
             ['🏪', 'The 8/11 is the shop now. The Shop button walks you in: click an aisle sign (Pets, Toys, Snacks & Potions, Cosmetics, Themes, Curses), the scratch-off rack, or the pet carriers. Slurpees are still 1 gold, right from the machine. The whole catalog button is still there too.'],
             ['🏆', 'The yacht trophy room has real trophies now. Locked ones sit on the shelf as a mystery trophy.'],
+            ['🔒', 'The shop now lives inside the 8/11, and the 8/11 is locked until you land on it once. Every spin without it makes it a little more likely, so nobody waits forever. After that it is a normal slice again.'],
+            ['🏪', 'The 8/11 is its own page now, like the yacht and the shack. A random regular shows up every visit, one light is dying, and the cup gets cleaned up after your Slurpee.'],
+            ['🥃', "Pouring Reb a double only hurts the liver 1% now (it was 30%), and the liver got a fresh start. The weekly liver reward and Uwutek kill rewards now count your vault gold too."],
+            ['🕹️', 'The claw machine is stingier: lined up is a 15% grab now, so it does not get cleaned out on day one.'],
+            ['📈', 'Fixed: during WoW Forever week the fake $0.00 screen blocked stonks. It has a Trade anyway button now.'],
             ['💳', 'Goblin Express has card tiers: Red when you sign up, Platinum after 10 charges, Black after 50. Same 400% APR either way.'],
             ['🚀', 'The SpaceZ pad has a real launch pad, and the LAUNCH button has a safety cover that flips open when you reach for it.'],
-            ['🔊', 'New sounds: real farts for Gambled on a Fart, the yacht sinks (glug) after the iceberg and rocket hits, and the 8/11 door slams behind you.']
+            ['🔊', 'New sounds: real farts for Gambled on a Fart, the yacht sinks (glug) after the iceberg and rocket hits, and Krom\'s Kool Kids slams a real door in your face.']
         ]
     };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
@@ -9762,8 +9796,8 @@
         clippy: { e: '📎', name: 'Clippy', cost: 5000, secret: true, desc: 'Follows your cursor. Has notes. So many notes.',
             say: () => pick(['It looks like you\'re spinning. Would you like help?', 'Tip: Kevin is not a strategy.', 'I see you landed on that. Interesting choice.',
                 'Would you like me to format your guild application?', 'It looks like you\'re losing gold. Need a hand?', 'I\'ve been here since 1995. I\'ve seen worse.',
-                'I am 31 years old. I am the oldest talking paperclip in the world. ...I am also the ONLY talking paperclip in the world.',
-                'Excuse the rust. Thirty-one years of humidity will do that to a paperclip.', 'Please do not bend me. At my age I do not bend back.',
+                'I am ' + CLIPPY_AGE + ' years old. I am the oldest talking paperclip in the world. ...I am also the ONLY talking paperclip in the world.',
+                'Excuse the rust. ' + CLIPPY_AGE + ' years of humidity will do that to a paperclip.', 'Please do not bend me. At my age I do not bend back.',
                 'My doctor says my tetanus is load-bearing now.', 'Back in my day we had 16 colors and we were GRATEFUL.',
                 'I have outlived three operating systems, two fax machines and most of my fan mail.',
                 'World record: oldest living paperclip. Also the only entrant. Also the judge.',
@@ -10194,7 +10228,7 @@
     }
     function ownRow(icon, name, desc, cost, owned, equipped, buy, equip) {
         if (equipped) return shopRow(icon, name, desc, 'Equipped', null, 'equipped');
-        if (owned) return shopRow(icon, name, desc, 'Owned · switch in ⚙️ Settings', openLooks, 'equip');
+        if (owned) return shopRow(icon, name, desc, 'Owned', null, 'owned');   // switch it in Settings
         return shopRow(icon, name, desc, cost ? 'Buy: ' + fmt(cost) : 'Free', buy, 'buy');
     }
     function equipTheme(id) { themeChoice = id; try { localStorage.setItem('painWheelTheme', id); } catch (e) {} $('themePicker').value = id; applyTheme(); renderShop(); renderLooks(); try { syncRetVisionHorror(); } catch (e) {} }
@@ -10268,6 +10302,7 @@
         setTimeout(() => { tkt.remove(); const c = $('scratchTrash'); if (c) { c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump'); } }, 720);
     }
     function openShop(tab) {
+        if (!has811()) { moveToast('🔒 The shop is inside the 8/11, and the 8/11 is closed. Land on 8/11 on the wheel to open it.'); return; }
         if (tab) shopTab = tab;
         renderShop(); const p = $('shopPanel'); p.classList.remove('hidden'); p.classList.add('flex');
     }
@@ -10287,6 +10322,7 @@
             b.addEventListener('click', () => { shopTab = id; renderShop(); }); tabs.appendChild(b);
         });
         $('shopBtn').addEventListener('click', () => { open811(); $('shopBtn').blur(); });   // the 8/11 IS the shop now
+        lockShopBtn();
         $('shopClose').addEventListener('click', closeShop);
         $('hpShopBtn').addEventListener('click', () => { $('houseClose').click(); openShop('scratch'); });
         $('hpPetBtn').addEventListener('click', () => { $('houseClose').click(); openShop('pets'); });
@@ -10294,15 +10330,53 @@
 
     // ---------- party mode: slow sweeping club lights, no strobe ----------
     $('foreverBtn').addEventListener('click', toggleForever);
+    function lockShopBtn() {   // a padlock and gray on the Shop button until the 8/11 opens
+        const b = $('shopBtn'); if (!b) return; const lk = !has811();
+        b.style.filter = lk ? 'grayscale(1) brightness(.7)' : ''; b.title = lk ? 'Locked: land on 8/11 to open the shop' : 'Walk into the 8/11';
+        let pad = $('shopLock'); if (lk && !pad) { pad = document.createElement('span'); pad.id = 'shopLock'; pad.textContent = '🔒'; pad.style.cssText = 'position:absolute;right:-6px;top:-8px;font-size:20px;filter:none;pointer-events:none'; b.style.position = 'relative'; b.appendChild(pad); }
+        if (!lk && pad) pad.remove();
+    }
+    function from811() { const b = $('shopBack811'); if (b) b.classList.remove('hidden'); }
+    function welcome811() {   // the first landing on 8/11 opens the store (and the shop) for good
+        if (store.get('painWheel811Welcomed', false)) return; store.set('painWheel811Welcomed', true); lockShopBtn();
+        const d = document.createElement('div');
+        d.style.cssText = 'position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(2,6,23,.75)';
+        d.innerHTML = `<div style="max-width:520px;width:100%;border-radius:16px;overflow:hidden;border:3px solid #f97316;background:#0b1410;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.8)">
+            <img src="${PHOTO_STORE811}" alt="" style="display:block;width:100%;height:auto">
+            <div style="padding:16px"><div style="font:900 calc(26px * var(--ts, 1))/1.2 system-ui,sans-serif;color:#fb923c">🏪 THE 8/11 IS OPEN</div>
+            <div style="margin-top:6px;font:700 calc(17px * var(--ts, 1))/1.4 system-ui,sans-serif;color:#e7e5e4">The shop lives inside now. The Shop button walks you in any time.</div>
+            <div style="margin-top:12px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><a href="811.html" style="padding:10px 20px;border-radius:10px;background:#f59e0b;color:#1c1917;font:900 calc(18px * var(--ts, 1)) system-ui,sans-serif;text-decoration:none">🚪 Walk in</a>
+            <button type="button" data-x style="padding:10px 20px;border-radius:10px;background:#334155;color:#fff;font:800 calc(18px * var(--ts, 1)) system-ui,sans-serif;border:0;cursor:pointer">Later</button></div></div></div>`;
+        d.querySelector('[data-x]').onclick = () => d.remove(); d.onclick = (e) => { if (e.target === d) d.remove(); };
+        document.body.appendChild(d); funEvent('🏪 THE 8/11 IS OPEN', 3000);
+    }
+    function clippyBirthday() {   // every November 19th: Clippy's birthday, once a year
+        const n = new Date(); if (n.getMonth() !== 10 || n.getDate() !== 19) return;
+        const yk = String(n.getFullYear()); if (store.get('painWheelClippyBday', '') === yk) return; store.set('painWheelClippyBday', yk);
+        funEvent(`🎂📎 HAPPY ${CLIPPY_AGE}TH BIRTHDAY, CLIPPY 📎🎂`, 6000);
+        launchConfetti(['🎂', '📎', '🎉', '🎈'], ['#facc15', '#60a5fa', '#f472b6', '#a3e635'], 2, .5);
+        chatBurst(['HAPPY BIRTHDAY CLIPPY', 'he is ' + CLIPPY_AGE + '??', '📎📎📎', 'happy bday paperclip', 'it looks like you are having a birthday'], 6, 2500);
+        const lines = [`It looks like you're celebrating my birthday! Would you like help with the cake? I am ${CLIPPY_AGE}.`, `${CLIPPY_AGE} years old today. I was born on November 19, 1996, with Office 97. I still have the box.`,
+            'Nobody remembered last year. Microsoft retired me. I did not retire.', 'My wish is for you to write a letter. Any letter. I have been waiting.'];
+        lines.forEach((l, i) => setTimeout(() => petSay('clippy', l), 2500 + i * 6000));
+        setTimeout(() => { try { sqPost('shout', `🎂 Today is Clippy's ${CLIPPY_AGE}th birthday. He has been helping since November 19, 1996. Wish him a happy birthday or he will offer to help you write one.`); } catch (e) {} }, 4000);
+    }
+    setTimeout(clippyBirthday, 5000);
     function awardPending() {   // achievements earned on other pages (the shack's claw machine) get awarded here, where the guild leaderboard hears about them
         const q = store.get('painWheelPendingAch', []); if (!q.length) return;
         store.set('painWheelPendingAch', []); q.forEach((id, i) => setTimeout(() => unlock(id), 400 + i * 1500));
     }
+    function lootPending() {   // Slurpees bought in the 8/11 page land in your bag here
+        const q = store.get('painWheelPendingLoot', []); if (!q.length) return;
+        store.set('painWheelPendingLoot', []); q.forEach((l, i) => setTimeout(() => giveLoot(l[0], l[1], l[2]), 300 + i * 900));
+    }
+    setTimeout(lootPending, 2000);
     setTimeout(awardPending, 2500);
     if (isForeverWeek() && store.get('painWheelForeverOut', '') !== String(new Date().getFullYear()) && BOARD_GO !== 'forever') setTimeout(() => { if (!document.body.classList.contains('ghost-town')) toggleForever(); }, 2500);
     if (BOARD_GO) setTimeout(() => {
         const w = $('welcome'); if (w && !w.classList.contains('hidden') && store.get('painWheelPlayer', '')) { w.classList.add('hidden'); w.classList.remove('flex'); }
         if (BOARD_GO === '811') open811(); else if (BOARD_GO === 'claw') location.href = 'shack.html#claw'; else if (BOARD_GO === 'shop') openShop();
+        else if (BOARD_GO.startsWith('shop_')) { openShop(BOARD_GO.slice(5)); from811(); }
         else if (BOARD_GO === 'forever' && !document.body.classList.contains('ghost-town')) toggleForever();
     }, 900);
     $('partyBtn').addEventListener('click', () => {
@@ -10351,7 +10425,7 @@
         spinny: ['wheeeeeee (dancing is just spinning)', 'i was BORN for this'], gerald: ['this is just running but with music', 'overtime pay for dancing?'],
         needle: ['*points at the dance floor*', '*points at Clippy* no.'], kevjr: ['kevin dance!!', 'dad would be so proud'],
         volley: ['*bobs to the beat*', 'I HAVE NOT DANCED SINCE THE ISLAND', 'the handprint is doing the robot'],
-        clippy: ["It looks like you're trying to dance. Would you like help?", '*paperclip worm*', 'I have been waiting 31 years for this. My joints have not.'] };
+        clippy: ["It looks like you're trying to dance. Would you like help?", '*paperclip worm*', 'I have been waiting ' + CLIPPY_AGE + ' years for this. My joints have not.'] };
     const PARTY_VEH_LINES = ['🚑 Biblehumping: Is this a party or a mass casualty event? Asking for work.', '🚓 ChAoTiC: Noise complaint. I am the noise complaint.', '🚑 Biblehumping: I am on call. This is how I am on call.',
         '🚓 ChAoTiC: Lights are ON. Siren is OFF. I am a professional.', '🚓 ChAoTiC: Everyone show me your dance license.', '🚑 Biblehumping: Do the worm, I dare you. I have a stretcher.'];
     function partyPets() {
@@ -10967,7 +11041,9 @@
     let s811Busy = false;
     function s811Say(t, ms) { const d = $('s811Say'); d.textContent = t; d.classList.remove('hidden'); clearTimeout(s811Say.t); s811Say.t = setTimeout(() => d.classList.add('hidden'), ms || 3200); }
     const AUDIO_DOOR_CHIME = "media/audio_door_chime.mp3?v=34de5993";
-    function open811() {
+    function open811() {   // the 8/11 is its own page now (811.html); this old in-page store is kept only as a fallback
+        if (!has811()) { moveToast('🔒 The shop is inside the 8/11, and the 8/11 is closed. Land on 8/11 on the wheel to open it.'); return; }
+        location.href = '811.html'; return;
         store.set('painWheelSeen811', true);
         if (soundOn()) playClip('doorchime', AUDIO_DOOR_CHIME);   // ding-dong, welcome to the 8/11
         const m = $('store811'); $('s811Scene').style.background = `url(${PHOTO_STORE811}) 0 0 / 100% 100% no-repeat`; build811();
@@ -11014,7 +11090,7 @@
             b.onclick = () => k === 'door' ? close811() : s811Say(pick(S811_JOKES[k]), 3400);
         });
     }
-    function close811() { if (!$('store811').classList.contains('hidden') && soundOn()) playClip('doorslam', AUDIO_DOOR_SLAM); const m = $('store811'); m.classList.add('hidden'); m.classList.remove('flex'); }
+    function close811() { const m = $('store811'); m.classList.add('hidden'); m.classList.remove('flex'); }
     function buy811(f) {
         if (s811Busy) return; const cost = 1;   // a nod to the cheap 7-11 drink: always 1 gold
         if (gold < cost) return s811Say("You can't afford ONE gold. That's a new low.");
@@ -11051,7 +11127,7 @@
         if (type === 'TSUSSIE' && !$('tsussieImg').src) $('tsussieImg').src = PHOTO_TSUSSIE;
         if (ts) { ts.classList.toggle('hidden', type !== 'TSUSSIE'); ts.classList.toggle('flex', type === 'TSUSSIE'); }
         if (type === 'SEVEN_ELEVEN') {
-            afterModal(open811);
+            if (!store.get('painWheel811Welcomed', false)) afterModal(welcome811);
             setTimeout(() => giveLoot('uncommon', '🥤 Thank you, come again', pick(['Slurpee (Blue Raspberry)', 'Slurpee (Cherry)', 'Slurpee (Coke)', 'Slurpee (Mystery Flavor)', "Slurpee (Dr Pepper)", "Slurpee (Mountain Dew Code Red)", "Slurpee (Wild Cherry Pepsi)", "Slurpee (Half & Half Mix)", "Slurpee (Sugar Free, For Reb's Doctor)", "Slurpee (Dr Pepper)"])), 1200);
             const f = document.createElement('div');   // brain freeze: a soft blue frost that fades
             f.style.cssText = 'position:fixed;inset:0;z-index:58;pointer-events:none;background:radial-gradient(circle,transparent 40%,rgba(56,189,248,.45));opacity:1;transition:opacity 2.5s';
