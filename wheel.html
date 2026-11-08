@@ -436,6 +436,11 @@
         .plate-btn:focus-visible { outline: 2px solid #facc15; outline-offset: 2px; }
         .plate-btn { position: relative; }
         .plate-btn.plate-on { filter: brightness(1.15) drop-shadow(0 0 8px rgba(250,204,21,.85)); }
+        .shack-hs { position: absolute; background: transparent; border: 3px solid transparent; border-radius: 10px; cursor: pointer; }
+        .shack-hs:hover, .shack-hs:focus-visible { border-color: #fbbf24; box-shadow: 0 0 22px rgba(251,191,36,.6); outline: none; }
+        .shack-hs .lbl { position: absolute; left: 50%; bottom: 4%; transform: translateX(-50%); white-space: nowrap; padding: 3px 10px; border-radius: 8px; background: rgba(12,10,9,.85); color: #fde68a; font-weight: 800; font-size: calc(15px * var(--ts, 1)); opacity: 0; transition: opacity .15s; }
+        .shack-hs:hover .lbl, .shack-hs:focus-visible .lbl { opacity: 1; }
+        .shack-hs.q span { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 46px; height: 46px; display: grid; place-items: center; border-radius: 50%; background: rgba(12,10,9,.75); border: 2px solid #a16207; color: #fde68a; font: 900 28px/1 Georgia, serif; }
         .hypno { width: 26px; height: 26px; border-radius: 50%; flex: none; background: repeating-conic-gradient(#fff 0 15deg, #111 15deg 30deg); animation: hypnoSpin 2.4s linear infinite; box-shadow: 0 0 0 2px #fff; }
         .hypno::after { content: ''; display: block; width: 100%; height: 100%; border-radius: 50%; background: radial-gradient(circle, transparent 0 20%, rgba(0,0,0,.55) 21% 30%, transparent 31% 45%, rgba(0,0,0,.55) 46% 55%, transparent 56%); }
         @keyframes hypnoSpin { to { transform: rotate(360deg); } }
@@ -615,7 +620,7 @@
         #wildChicken .bub { position: absolute; bottom: 52px; left: 50%; transform: translateX(-50%); white-space: nowrap; background: #fffbe6; color: #111; font-size: 12px; font-weight: 800; padding: 3px 8px; border-radius: 8px; border: 1.5px solid #111; }
         .quest-box { background: linear-gradient(180deg,#f5e6c4,#e6cf9c); color: #3b2512; border: 3px solid #7c5a2a; box-shadow: 0 10px 40px rgba(0,0,0,.7); font-family: Georgia, serif; }
         @media (prefers-reduced-motion: reduce) { #partyLights .beam, body.party-on #partyLights .ball, #partyLights .speck, .dance-slot > * { animation: none; } }
-      .s811-tap { position:absolute; width:4.5%; height:12%; border-radius:12px; background:transparent; border:3px solid transparent; cursor:pointer; }
+      .s811-tap { position:absolute; width:19%; height:36%; border-radius:12px; background:transparent; border:3px solid transparent; cursor:pointer; }
   .s811-tap:hover, .s811-tap:focus-visible { border-color:#fde68a; box-shadow:0 0 18px #fde68a; outline:none; }
   @keyframes s811wob { 0%,100% { transform:rotate(0) } 25% { transform:rotate(-6deg) } 75% { transform:rotate(6deg) } }
 </style>
@@ -704,13 +709,31 @@
     </div>
 
     <!-- Hourly popup ad (rotates between several fake ads) -->
+    <!-- The desert shack, inside. The claw machine lives here now. -->
+    <div id="shackRoom" class="fixed inset-0 z-[66] hidden items-center justify-center bg-black/85 p-3">
+      <div class="w-full rounded-xl overflow-hidden border-2 border-amber-700 shadow-2xl bg-black" style="max-width:1200px">
+        <div id="shackScene" class="relative w-full" style="aspect-ratio:1998/1116">
+            <button class="shack-hs" data-hs="claw" style="left:30.8%;top:21.1%;width:15.8%;height:60.9%" title="🕹️ Little St. Jeff's Prize Island"><span class='lbl'>🕹️ Little St. Jeff's Prize Island</span></button>
+            <button class="shack-hs" data-hs="door" style="left:51.1%;top:16.1%;width:13.5%;height:48.4%" title="🚪 Leave the shack"><span class='lbl'>🚪 Leave the shack</span></button>
+            <button class="shack-hs q" data-hs="sign" style="left:10.3%;top:22.4%;width:19.0%;height:19.7%" title="???"><span>?</span></button>
+            <button class="shack-hs q" data-hs="skel" style="left:65.6%;top:34.1%;width:14.0%;height:44.8%" title="???"><span>?</span></button>
+            <button class="shack-hs q" data-hs="table" style="left:79.6%;top:63.6%;width:11.0%;height:18.8%" title="???"><span>?</span></button>
+            <button class="shack-hs q" data-hs="barrel" style="left:0.0%;top:61.8%;width:15.0%;height:38.2%" title="???"><span>?</span></button>
+            <button class="shack-hs q" data-hs="tools" style="left:22.0%;top:74.4%;width:13.0%;height:13.9%" title="???"><span>?</span></button>
+          <div id="shackSay" class="hidden absolute left-1/2 -translate-x-1/2 bottom-[5%] px-4 py-2 rounded-lg bg-stone-950/90 border border-amber-600 text-amber-100 font-bold text-center" style="font-size:calc(18px * var(--ts, 1));max-width:80%"></div>
+        </div>
+      </div>
+    </div>
     <div id="store811" class="fixed inset-0 z-[66] hidden items-center justify-center bg-black/75 p-3">
       <div class="w-full rounded-xl overflow-hidden border-2 border-orange-500 shadow-2xl bg-slate-950" style="max-width:1100px">
         <div id="s811Scene" class="relative w-full" style="aspect-ratio:2000/849;background-size:100% 100%">
-          <button class="s811-tap" data-f="Cherry" style="left:17.5%;top:41%" title="Cherry"></button>
-          <button class="s811-tap" data-f="Blue Raspberry" style="left:21%;top:41%" title="Blue Raspberry"></button>
-          <button class="s811-tap" data-f="Lime" style="left:24.25%;top:41%" title="Lime"></button>
-          <img id="s811Cup" alt="" class="hidden absolute" style="left:31%;top:44%;height:26%;image-rendering:pixelated;transition:transform .3s">
+          <div id="s811Machine" style="position:absolute;left:10.5%;top:13%;width:23.6%;height:50%;border-radius:10px;overflow:hidden;box-shadow:0 0 0 3px #1f2937,0 10px 30px rgba(0,0,0,.7)">
+            <video id="s811Vid" muted loop playsinline preload="none" style="display:block;width:100%;height:100%;object-fit:cover"></video>
+            <button class="s811-tap" data-f="Blue Raspberry" style="left:10%;top:38%" title="Blue Raspberry"></button>
+            <button class="s811-tap" data-f="Cherry" style="left:41%;top:38%" title="Cherry"></button>
+            <button class="s811-tap" data-f="Lime" style="left:71.5%;top:38%" title="Lime"></button>
+            <img id="s811Cup" alt="" class="hidden absolute" style="left:40%;top:72%;height:28%;image-rendering:pixelated;transition:transform .3s">
+          </div>
           <div id="s811Say" class="hidden absolute left-1/2 -translate-x-1/2 top-[6%] px-4 py-2 rounded-lg bg-slate-950/90 border border-orange-400 text-orange-100 font-bold text-center" style="font-size:calc(18px * var(--ts, 1));max-width:80%"></div>
         </div>
         <div class="p-4 flex flex-col items-center gap-3 text-center">
@@ -839,7 +862,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 6:12 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 6:20 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -1503,6 +1526,7 @@
     const VIDEO_ASMON = "media/video_asmon.mp4?v=78682d89";
     const GIF_LOST = "media/gif_lost.gif?v=0694f342";      // Enron Ethics Handbook
     const PHOTO_DOUBLE_ENDER = "media/photo_double_ender.jpg?v=436a5e85";
+    const PHOTO_BUSY_SKINNING = "media/photo_busy_skinning.jpg?v=8ce49238";
     const PHOTO_NICKS_MOM = "media/photo_nicks_mom.jpg?v=bd3c018a";
     const PHOTO_PARDNER_HELP = "media/photo_pardner_help.jpg?v=75fab1d8";
     const PHOTO_MOOD = "media/photo_mood.jpg?v=c0cca48f";
@@ -1738,7 +1762,8 @@
         { id: "PVP_ARMOR", n: 2, label: "NO I AM IN MY PVP ARMOR AND WRONG SPEC!!!!", pill: "PVP ARMOR", bg: "#4f46e5", text: "#ffffff", border: "#c7d2fe", color: "text-indigo-400", glow: "bg-indigo-600", key: "p", rig: "PVP",
           win: { size: SIZE.smaller, sub: (s, o) => `WAIT STOP THE PULL! (Slice #${s} • ${o} odds) — Still wearing PvP gear and in the wrong spec!` } },
         { id: "BUSY_SKINNING", n: 2, label: "sorry im busy skinning", pill: "SKINNING", bg: "#0d9488", text: "#f0fdfa", border: "#99f6e4", color: "text-teal-400", glow: "bg-teal-600", key: "s", rig: "SKN",
-          win: { size: SIZE.med, sub: (s, o) => `HOLD ON TANK! (Slice #${s} • ${o} odds) — Sorry, busy skinning the last pack!` } },
+          win: { size: SIZE.med, media: { src: PHOTO_BUSY_SKINNING, fallback: null, caption: "🔪 SKINNING: 3/5 · THE TANK CAN WAIT" },
+                 sub: (s, o) => `HOLD ON TANK! (Slice #${s} • ${o} odds) — Sorry, busy skinning the last pack!` } },
         { id: "DONUT", n: 2, label: "🍩 Glazed Donut 🍩", pill: "DONUT", bg: "#ec4899", text: "#ffffff", border: "#fde68a", fill: "donut", color: "text-pink-400", glow: "bg-pink-500", key: "o", rig: "DNT",
           win: { title: "🍩 THANKS TO OUR FIRST RESPONDERS, EXCEPT NICK 🍩", size: SIZE.small, extra: "drop-shadow-[0_0_14px_rgba(244,114,182,0.75)]", sub: (s, o) => `FRESH OUT OF THE BOX! Landed on a Donut slice (#${s} • ${o} odds)!` } },
         { id: "DYLAN", n: 2, label: "🦇 Dylan 🦇", pill: "DYLAN 🦇", bg: "#4c1d95", text: "#f5f3ff", border: "#c4b5fd", color: "text-violet-400", glow: "bg-violet-600", key: "y", rig: "DYL",
@@ -7198,6 +7223,22 @@
             return () => { try { const n = audioCtx.currentTime; g.gain.cancelScheduledValues(n); g.gain.setValueAtTime(g.gain.value, n); g.gain.linearRampToValueAtTime(0.0001, n + 0.1); src.stop(n + 0.12); } catch (e) {} };
         } catch (e) { return () => {}; }
     }
+    const PHOTO_SHACK_INTERIOR = "media/photo_shack_interior.jpg?v=5466bb0c";
+    function shackSay(t, ms) { const d = $('shackSay'); d.textContent = t; d.classList.remove('hidden'); clearTimeout(shackSay.t); shackSay.t = setTimeout(() => d.classList.add('hidden'), ms || 3200); }
+    function openShack() {   // the desert shack's interior; the claw machine is in the corner
+        store.set('painWheelSeenClaw', true);
+        const m = $('shackRoom'); $('shackScene').style.background = `url(${PHOTO_SHACK_INTERIOR}) 0 0 / 100% 100% no-repeat`;
+        m.classList.remove('hidden'); m.classList.add('flex');
+        shackSay(pick(['The door creaks. Sand everywhere. Someone left the claw machine plugged in.', 'It smells like 1987 in here.', 'The neon sign still works. Nothing else does.', 'Your shack. Your claw machine. Your... roommate?']));
+    }
+    function closeShack() { const m = $('shackRoom'); m.classList.add('hidden'); m.classList.remove('flex'); }
+    document.querySelectorAll('#shackRoom [data-hs]').forEach(b => b.addEventListener('click', () => {
+        const k = b.dataset.hs;
+        if (k === 'claw') { closeShack(); openClaw(); return; }
+        if (k === 'door') { closeShack(); return; }
+        shackSay(pick(['???', 'Something is here. Not yet.', 'You feel like you will need this later.', 'Locked. For now.']), 2200);
+    }));
+    $('shackRoom').addEventListener('click', (e) => { if (e.target.id === 'shackRoom') closeShack(); });
     function openClaw() {
         store.set('painWheelSeenClaw', true);
         clawMotor(0.01);   // start decoding the motor so the first move has sound
@@ -8567,21 +8608,22 @@
     const AUDIO_SIREN_AMB2 = "media/audio_siren_amb2.mp3?v=572f7b6e";
     const AUDIO_SIREN_COP1 = "media/audio_siren_cop1.mp3?v=570f1e2e";
     const AUDIO_SIREN_COP2 = "media/audio_siren_cop2.mp3?v=82d4f2e5";
-    const sirenBufs = { amb: [], cop: [] }; let sirensLoading = false;
+    const AUDIO_SIREN_BOAT = "media/audio_siren_boat.mp3?v=19b7ec03";
+    const sirenBufs = { amb: [], cop: [], boat: [] }; let sirensLoading = false;
     function loadSirens() {   // real recorded sirens (two ambulance, two police); synth wee-woo until they decode
         if (sirensLoading || !audioCtx) return; sirensLoading = true;
-        [['amb', AUDIO_SIREN_AMB1], ['amb', AUDIO_SIREN_AMB2], ['cop', AUDIO_SIREN_COP1], ['cop', AUDIO_SIREN_COP2]].forEach(([k, u]) =>
+        [['amb', AUDIO_SIREN_AMB1], ['amb', AUDIO_SIREN_AMB2], ['cop', AUDIO_SIREN_COP1], ['cop', AUDIO_SIREN_COP2], ['boat', AUDIO_SIREN_BOAT]].forEach(([k, u]) =>
             loadBytes(u).then(ab => new Promise((res, rej) => audioCtx.decodeAudioData(ab, res, rej))).then(b => sirenBufs[k].push(b)).catch(() => {}));
     }
     function playSiren(secs, kind) {   // kind: 'amb' (Biblehumping) or 'cop' (ChAoTiC); a random stretch of a real siren, faded in and out
         if (!soundOn()) return () => {};
         try {
             ensureAudio(); loadSirens();
-            const k = kind === 'cop' || kind === 'boat' ? 'cop' : kind === 'amb' ? 'amb' : (Math.random() < 0.5 ? 'cop' : 'amb'), bufs = sfxStyle === 'classic' ? [] : sirenBufs[k];
+            const k = kind === 'boat' ? 'boat' : kind === 'cop' ? 'cop' : kind === 'amb' ? 'amb' : (Math.random() < 0.5 ? 'cop' : 'amb'), bufs = sfxStyle === 'classic' ? [] : sirenBufs[k];
             if (bufs.length) {
                 const b = pick(bufs), t = audioCtx.currentTime, src = audioCtx.createBufferSource(), g = audioCtx.createGain();
                 const off = Math.random() * Math.max(0, b.duration - secs - 0.3);
-                src.buffer = b; if (kind === 'boat') src.playbackRate.value = 0.8;   // marine units: a lower, slower wail
+                src.buffer = b;
                 g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.7, t + 0.15);
                 g.gain.setValueAtTime(0.7, t + Math.max(0.2, secs - 0.5)); g.gain.linearRampToValueAtTime(0.0001, t + secs);
                 src.connect(g); g.connect(outGain); src.start(t, off); src.stop(t + secs + 0.05);
@@ -9125,8 +9167,7 @@
     }
     function renderGarage() {
         const d = $('garageDock'); d.innerHTML = ''; $('shackSpot').innerHTML = '';
-        [['shack', shackHTML(), 'Your Shack in the Desert', () => moveToast('🏜️ ' + pick(['The shack is quiet. The desert is quiet. Kevin cannot find you here.', 'You sit on the shack porch and think about your parses.',
-            'A tumbleweed rolls by. It has better DPS than Kevin.', 'No WiFi out here. Somehow the wheel still loads.', 'Rent collected from a lizard: it paid in gold.']))],
+        [['shack', shackHTML(), 'Your Shack in the Desert (click to go inside)', () => openShack()],
          ['ambulance', ambSprite(false, 0.75), "Biblehumping's Ambulance (click for siren)", driveAmbulance], ['police', copSprite(false, 0.75), "ChAoTiC's Cop Car (click for whoop whoop)", drivePolice],
          ['phone', SVG_PHONE, "Vince's 1980s Brick Phone (click to take the call)", vinceCall], ['voodoo', SVG_DOLL, 'Kevin Voodoo Doll (click to poke)', pokeVoodoo]].forEach(([k, e, tip, fn]) => {
             if (!garage[k]) return;
@@ -9519,7 +9560,10 @@
             ['⚙️', 'Buy it in the Shop, switch it in Settings: themes, needles, spin sounds and titles all have picture pickers in ⚙️ Settings now. Don\'t like the new recorded sounds? Settings → Sound style → Classic brings the old ones back.'],
             ['📌', 'The Board is the new front page: every place you unlock (the yacht, the VIP room, the 8/11, Prize Island, WHEEL-2600, Forever) gets pinned up with a photo. Click one to go there. The wheel has a Back to The Board link.'],
             ['🛠️', 'Fixes: Party mode works again, OSHA landings always break something now, the Kevin joke shows under the news video too, the Toys button lost its number, and the wheel makes a charging whine while you hold SPIN.'],
-            ['🌵', 'Forever mode: the news has nothing to report (the entire planet is in WoW Forever) and the ad is stuck on PLAY FOREVER. Police boats have their own lower siren.']
+            ['🌵', 'Forever mode: the news has nothing to report (the entire planet is in WoW Forever) and the ad is stuck on PLAY FOREVER. Police boats have their own siren now.'],
+            ['🏚️', 'The desert shack has an inside now, and the claw machine lives in the corner. Click your shack (or Claw & Disorder in the shop) to go in. Some things in there are still a mystery.'],
+            ['🥤', 'The 8/11 Slurpee machine actually runs now, and you watch your cup fill under the tap.'],
+            ['🐦', 'Kevin and Casimir have real Squawkr profile pictures. Sorry I\'m Busy Skinning has its picture.']
         ]
     };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
@@ -9847,7 +9891,7 @@
                 chicken: `<img src="${PHOTO_CHICKEN}" alt="" style="display:inline-block;height:28px;vertical-align:middle">`, whelp: `<img src="${PHOTO_WHELP}" alt="" style="display:inline-block;height:28px;vertical-align:middle">`,
                 accountant: `<img src="${PHOTO_GIZ_GRIN}" alt="" style="display:inline-block;height:34px;vertical-align:middle">`, volley: `<img src="${PHOTO_VOLLEY}" alt="" style="display:inline-block;height:28px;vertical-align:middle">` };
             ['spinny', 'gerald', 'needle', 'kevjr'].forEach(k => { PET_ICON[k] = `<img src="${PETS[k].img}" alt="" style="display:inline-block;height:30px;vertical-align:middle;image-rendering:pixelated">`; });
-            add(shopRow(`<img src="${PHOTO_CLAW}" alt="" style="display:inline-block;height:30px;vertical-align:middle">`, 'Claw & Disorder', 'THE WHEEL™ claw machine at Little St. Jeff\'s Prize Island. New pets live inside. Nobody gets what they came for. Usually.', `Play: 1 🎰 token (you have ${tokens})`, () => { closeShop(); openClaw(); }));
+            add(shopRow(`<img src="${PHOTO_CLAW}" alt="" style="display:inline-block;height:30px;vertical-align:middle">`, 'Claw & Disorder', 'THE WHEEL™ claw machine at Little St. Jeff\'s Prize Island, in the corner of the desert shack. New pets live inside. Nobody gets what they came for. Usually.', `Play: 1 🎰 token (you have ${tokens})`, () => { closeShop(); openShack(); }));
             { const n = document.createElement('div'); n.className = 'text-sm text-slate-300'; n.textContent = `Up to ${PET_LIMIT} pets can be out at once (${activePets().length}/${PET_LIMIT} now). Clippy doesn't count. Clippy is not a pet. Clippy is a consequence.`; add(n); }
             Object.entries(PETS).forEach(([k, p0]) => {
                 const p = PET_ICON[k] ? Object.assign({}, p0, { e: PET_ICON[k] }) : p0;
@@ -10181,7 +10225,7 @@
     $('foreverBtn').addEventListener('click', toggleForever);
     if (BOARD_GO) setTimeout(() => {
         const w = $('welcome'); if (w && !w.classList.contains('hidden') && store.get('painWheelPlayer', '')) { w.classList.add('hidden'); w.classList.remove('flex'); }
-        if (BOARD_GO === '811') open811(); else if (BOARD_GO === 'claw') openClaw(); else if (BOARD_GO === 'shop') openShop();
+        if (BOARD_GO === '811') open811(); else if (BOARD_GO === 'claw') openShack(); else if (BOARD_GO === 'shop') openShop();
         else if (BOARD_GO === 'forever' && !document.body.classList.contains('ghost-town')) toggleForever();
     }, 900);
     $('partyBtn').addEventListener('click', () => {
@@ -10511,9 +10555,12 @@
         gary: ['Gary', '@SwordfishGary', '🐟', false], uwutek: ['Uwutek', '@Uwutek_Boss', '👹', true], shout: ['Paid Shoutout', '@GuildShoutouts', '📣', true], goblinx: ['Goblin Express', '@GoblinExpressCard', '💳', true],
         irs: ['Goblin IRS', '@GoblinIRS', '🧾', true], casimir: ['Casimir', '@Casimir_Rigs', '🔧', false], yacht: ["Gallywix's Yacht Club", '@GallywixYachtClub', '🛥️', true] };
     // vehicle sprites double as Squawkr profile pictures (cropped into the round avatar)
+    const SQ_PHOTO = (src) => () => `<span style="display:block;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b"><img src="${src}" alt="" style="width:100%;height:100%;object-fit:cover"></span>`;   // real photos fill the circle
     const SQ_IMG = (src) => () => `<span style="display:grid;place-items:center;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b"><img src="${src}" alt="" style="width:30px;height:30px;object-fit:contain"></span>`;
+    const PHOTO_AV_KEVIN = "media/photo_av_kevin.jpg?v=0a4131dd";
+    const PHOTO_AV_CASIMIR = "media/photo_av_casimir.jpg?v=d977fb5b";
     const SQ_PIC = { elan: SQ_IMG(PHOTO_ROCKET), vince: SQ_IMG(PHOTO_TOY_PHONE),
-        kevin: SQ_IMG(PHOTO_PET_KEVJR), grandma: SQ_IMG(PHOTO_COOKIE_GOLD),   // temp until real Kevin + Grandma art
+        kevin: SQ_PHOTO(PHOTO_AV_KEVIN), casimir: SQ_PHOTO(PHOTO_AV_CASIMIR), grandma: SQ_IMG(PHOTO_COOKIE_GOLD),   // Grandma is still a temp
         alt: () => `<span style="display:grid;place-items:center;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b"><img src="${PHOTO_COP_ICON}" alt="" style="width:30px;height:30px;object-fit:contain;filter:hue-rotate(150deg) saturate(1.4)"></span>`,
         reb: SQ_IMG(PHOTO_CLS_LIVER), shack: SQ_IMG(PHOTO_SHACK), yacht: SQ_IMG(GIF_YACHT), uwutek: SQ_IMG(PHOTO_UWU_ICON), chaotic: () => `<span style="display:block;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b;display:grid;place-items:center">${copSprite(false, 0.5)}</span>`,
         bible: () => `<span style="display:block;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b;display:grid;place-items:center">${ambSprite(false, 0.5)}</span>` };
@@ -10821,13 +10868,12 @@
         } catch (e) {}
     }
     const PHOTO_STORE811 = "media/photo_store811.jpg?v=a82807f6";
-    const PHOTO_CUP_BLUE = "media/photo_cup_blue.png?v=e7b9a3d2";
-    const PHOTO_CUP_RED = "media/photo_cup_red.png?v=203e1287";
-    const PHOTO_CUP_GREEN = "media/photo_cup_green.png?v=483597f9";
-    const PHOTO_SPILL = "media/photo_spill.png?v=72be668f";
-    const PHOTO_CUP_LID = "media/photo_cup_lid.png?v=2d248609";
-    const PHOTO_CUP_EMPTY = "media/photo_cup_empty.png?v=e00fcbb8";
-    const S811_CUP = { 'Cherry': () => PHOTO_CUP_RED, 'Blue Raspberry': () => PHOTO_CUP_BLUE, 'Lime': () => PHOTO_CUP_GREEN };
+    const PHOTO_CUP_EMPTY = "media/photo_cup_empty.png?v=ba50d8f6";
+    const PHOTO_CUP_POUR = "media/photo_cup_pour.png?v=b6129448";
+    const PHOTO_CUP_FULL = "media/photo_cup_full.png?v=0740b576";
+    const PHOTO_SPILL = "media/photo_spill.png?v=38525d35";
+    const VIDEO_SLURPEE = "media/video_slurpee.mp4?v=86412ce7";
+    const S811_HUE = { 'Cherry': '', 'Blue Raspberry': 'hue-rotate(215deg) saturate(1.3)', 'Lime': 'hue-rotate(110deg) saturate(1.2)' };   // the art pours cherry; tint it for the others
     const S811_LINES = { 'Cherry': ['Cherry. A classic. Like Kevin pulling.', 'Red. Like the raid frames.'], 'Blue Raspberry': ["Blue raspberry. Raspberries aren't blue. Don't think about it.", 'Your tongue is blue for three raid nights.'],
         'Lime': ['Lime. Bold choice. Wrong, but bold.', 'Green, like the pull timer Kevin ignored.'] };
     const S811_SPILL = ['Clean up on aisle 8. Your gold is gone. So is your Slurpee.', 'Dropped it. The 8/11 has a no-refund policy. And no floor mop.', 'Kevin bumped you. Kevin says he did not bump you.', 'It hit the floor before the lid did. Gravity: 1, you: 0.'];
@@ -10840,23 +10886,25 @@
         const m = $('store811'); $('s811Scene').style.background = `url(${PHOTO_STORE811}) 0 0 / 100% 100% no-repeat`;
         $('s811Price').textContent = `Every Slurpee costs ${fmt(priceOf(PCT.slurpee))} gold (1% of what you have). Pocket change.`;
         $('s811Cup').classList.add('hidden'); m.classList.remove('hidden'); m.classList.add('flex');
+        const v = $('s811Vid'); if (!v.src) v.src = VIDEO_SLURPEE; v.play().catch(() => {});
         s811Say(pick(['Open 7 hours a day, 11 days a week.', "We're open. Don't ask which days.", 'The hot dogs have been rolling since 2019. The Slurpees are fresh. Probably.']));
     }
-    function close811() { const m = $('store811'); m.classList.add('hidden'); m.classList.remove('flex'); }
+    function close811() { try { $('s811Vid').pause(); } catch (e) {} const m = $('store811'); m.classList.add('hidden'); m.classList.remove('flex'); }
     function buy811(f) {
         if (s811Busy) return; const cost = priceOf(PCT.slurpee);
         if (gold < cost) return s811Say("You can't afford pocket change. That's a new low.");
         s811Busy = true; setGold(gold - cost);
-        const cup = $('s811Cup'), taps = { 'Cherry': 19.75, 'Blue Raspberry': 23.25, 'Lime': 26.5 };
-        cup.style.left = (taps[f] - 3) + '%'; cup.style.top = '46%'; cup.style.height = '22%'; cup.style.animation = ''; cup.src = PHOTO_CUP_EMPTY; cup.classList.remove('hidden');
+        const cup = $('s811Cup'), taps = { 'Blue Raspberry': 18.7, 'Cherry': 50, 'Lime': 80.5 };   // tap centers in the machine video
+        cup.style.filter = ''; cup.style.top = '76%'; cup.style.height = '24%'; cup.style.left = (taps[f] - 9) + '%'; cup.style.animation = ''; cup.src = PHOTO_CUP_EMPTY; cup.classList.remove('hidden');
         s811Say('*machine noises*', 1200);
-        setTimeout(() => { cup.src = S811_CUP[f](); cup.style.animation = 's811wob .4s 2'; }, 1200);
+        setTimeout(() => { cup.src = PHOTO_CUP_POUR; cup.style.filter = S811_HUE[f]; cup.style.top = '68%'; cup.style.height = '32%'; cup.style.left = (taps[f] - 6) + '%'; }, 700);
+        setTimeout(() => { cup.src = PHOTO_CUP_FULL; cup.style.animation = 's811wob .4s 2'; }, 1600);
         setTimeout(() => {
             if (Math.random() < .12) {
-                cup.src = PHOTO_SPILL; cup.style.height = '18%'; cup.style.top = '54%'; cup.style.animation = '';
+                cup.src = PHOTO_SPILL; cup.style.height = '36%'; cup.style.top = '64%'; cup.style.left = (taps[f] - 7) + '%'; cup.style.animation = '';
                 s811Say(pick(S811_SPILL), 3800); chat(pick(['CLEAN UP AISLE 8', 'he dropped the slurpee KEKW', 'RIP slurpee', 'F']));
             } else {
-                if (f === 'Cherry') cup.src = PHOTO_CUP_LID; cup.style.animation = '';
+                cup.style.animation = '';
                 giveLoot('uncommon', '🥤 8/11', 'Slurpee (' + f + ')'); s811Say(pick(S811_LINES[f]));
                 const fr = document.createElement('div');   // brain freeze
                 fr.style.cssText = 'position:fixed;inset:0;z-index:67;pointer-events:none;background:radial-gradient(circle,transparent 40%,rgba(56,189,248,.45));opacity:1;transition:opacity 2.5s';
