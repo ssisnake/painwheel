@@ -29,6 +29,11 @@
   .tag.sold { background: #7f1d1d; color: #fecaca; border-color: #450a0a; rotate: 6deg; }
   .hs { position: absolute; padding: 0; border: 3px solid transparent; border-radius: 10px; background: transparent; cursor: pointer; }
   .hs:hover, .hs:focus-visible { border-color: rgba(253,230,138,.6); box-shadow: 0 0 14px rgba(253,230,138,.5); outline: none; }
+  /* Axazon stands behind the table: only the part above the table shows */
+  #axa { position: absolute; left: 35.5%; top: 30.6%; height: 33.6%; width: 22cqw; translate: -50% 0; overflow: hidden; z-index: 1; cursor: pointer; padding: 0; border: 0; background: none; display: flex; justify-content: center; }
+  #axa img { height: 34cqw; width: auto; flex: none; image-rendering: pixelated; filter: drop-shadow(0 0 .6cqw rgba(0,0,0,.45)); animation: breathe 3.4s ease-in-out infinite; transform-origin: 50% 60%; }
+  @keyframes breathe { 50% { transform: translateY(.25cqw) scaleY(.995); } }
+  #axa:hover img, #axa:focus-visible img { filter: drop-shadow(0 0 .8cqw #fde68a); } #axa:focus-visible { outline: none; }
   #say { position: absolute; left: 50%; top: 20%; transform: translateX(-50%); max-width: 70%; padding: 10px 18px; border-radius: 10px; background: rgba(28,20,10,.94); border: 2px solid #f59e0b; color: #fef3c7; font: 800 clamp(16px, 1.5vw, 26px)/1.35 system-ui, sans-serif; text-align: center; display: none; z-index: 8; box-shadow: 0 10px 30px rgba(0,0,0,.6); }
   #say b { color: #fcd34d; }
   .bar { display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: center; align-items: center; padding: 8px 12px 16px; font-size: 18px; color: #d6d3d1; text-align: center; }
@@ -63,6 +68,7 @@
   <button class="hs" data-hs="pig" style="left:41.5%;top:50%;width:5.8%;height:9%" aria-label="The green piggy bank"></button>
   <button class="hs" data-hs="console" style="left:43.3%;top:35%;width:11.2%;height:7.5%" aria-label="The old console"></button>
   <button class="hs" data-hs="jar" style="left:24.5%;top:32%;width:4.3%;height:9%" aria-label="The jar on the shelf"></button>
+  <button id="axa" type="button" aria-label="Axazon"><img id="axaImg" src="media/axa_crossed.png" alt=""></button>
   <div id="goods"></div>
   <div id="say" role="status"></div>
   <div id="closed"><b>CLOSED</b><p>A tarp, a folding table and a hand-painted sign. Nobody's home.<br>Land on <b style="font-size:inherit;color:#e879f9">Axazon's Emporium</b> on the wheel and he'll open up for you.</p><a href="wheel.html">🎡 Go spin</a></div>
@@ -137,7 +143,10 @@ const get = (k, d) => { try { const v = localStorage.getItem(k); return v === nu
 const put = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
 const fmt = (n) => { n = Math.round(n); if (n < 1e15) return n.toLocaleString() + 'g'; const e = Math.floor(Math.log10(n)); return (n / Math.pow(10, e)).toFixed(2) + 'e' + e + 'g'; };
 const short = (n) => { n = Math.round(n); if (n < 1e4) return n.toLocaleString() + 'g'; const u = [[1e12, 'T'], [1e9, 'B'], [1e6, 'M'], [1e3, 'K']]; if (n >= 1e15) { const e = Math.floor(Math.log10(n)); return (n / Math.pow(10, e)).toFixed(1) + 'e' + e + 'g'; } for (const [v, s] of u) if (n >= v) return (n / v).toFixed(n / v < 10 ? 1 : 0) + s; return n + 'g'; };
-const say = (t, ms) => { const d = $('say'); d.innerHTML = '<b>Axazon:</b> ' + t; d.style.display = 'block'; clearTimeout(say.t); say.t = setTimeout(() => d.style.display = 'none', ms || 4200); };
+// Axazon's poses: arms crossed (waiting), waving (talking), holding up the goods (a sale)
+const POSE = (k, ms) => { const im = document.getElementById('axaImg'); if (!im) return; im.src = 'media/axa_' + k + '.png'; clearTimeout(POSE.t); if (k !== 'crossed') POSE.t = setTimeout(() => im.src = 'media/axa_crossed.png', ms || 3000); };
+const say = (t, ms, pose) => { const d = $('say'); d.innerHTML = '<b>Axazon:</b> ' + t; d.style.display = 'block'; clearTimeout(say.t); say.t = setTimeout(() => d.style.display = 'none', ms || 4200); POSE(pose || 'wave', Math.min(ms || 4200, 3200)); };
+[new Image(), new Image()].forEach((im, i) => im.src = 'media/axa_' + ['wave', 'shield'][i] + '.png');   // preload the other poses
 const gold = () => { const g = get('painWheelGold', 0); return typeof g === 'number' && isFinite(g) ? g : 0; };
 const showGold = () => { $('goldBox').textContent = '🪙 ' + fmt(gold()); };
 showGold();
@@ -239,7 +248,7 @@ function showItem(i) {
     const b = get('painWheelEmporium', {}) || {}; put('painWheelEmporium', { rot: ROT.id, slots: (b.rot === ROT.id ? b.slots || [] : []).concat(i) });
     const spent = get('painWheelEmporiumSpent', 0) || 0; put('painWheelEmporiumSpent', spent + 1);
     sfx('audio_token'); showGold(); render(); $('dlg').close();
-    say(pick(BUY_LINES).replace('{item}', it.n), 5200);
+    say(pick(BUY_LINES).replace('{item}', it.n), 5200, 'shield');
   };
   card.querySelector('.no').onclick = () => { $('dlg').close(); if (Math.random() < .5) say(pick(LOOK_LINES)); };
   $('dlg').showModal();
@@ -259,6 +268,9 @@ const JOKES = {
   jar: ['Don\'t ask what\'s in the jar.', 'That jar has been on that shelf since before the shack. Before the desert.', 'Reb asked about the jar once. Reb doesn\'t ask anymore.']
 };
 document.querySelectorAll('.hs').forEach(h => h.onclick = () => say(pick(JOKES[h.dataset.hs])));
+const AXA_LINES = ['What. I\'m working.', 'Eyes on the merchandise, not the merchant.', 'Yes, the shoulders are looking at you. They do that.', 'This outfit is not for sale. I asked. I said no.',
+  'Fishnet breathes. It\'s the desert. Do the math.', 'The halo is real. Don\'t ask how I got it.', 'Browse or buy. Loitering is 5% of your gold.'];
+$('axa').onclick = () => say(pick(AXA_LINES));
 
 if (!isOpen()) $('closed').style.display = 'flex';
 else { put('painWheelSeenEmporium', true); setTimeout(() => say(pick(HELLO), 4800), 700); addEventListener('pointerdown', () => sfx('audio_door_chime', .5), { once: true }); }
