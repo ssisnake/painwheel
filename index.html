@@ -240,10 +240,15 @@ function showEvidence() {
 // ---------- background music for the Board: two Pixabay tracks, crossfading into each other, quiet ----------
 // "Detective Documentary" by leberch, "Time Lapse" by kulakovka (credited in the roll). Starts on your first click (browsers wait for one)
 const BGM = ['media/audio_bgm_detective.mp3', 'media/audio_bgm_timelapse.mp3', 'media/audio_bgm_dark.mp3'];
+(() => { if (window.__wfSet) return; window.__wfSet = true; window.__wf = window.__wf;   // our own record of whether this window has focus (more reliable than asking during the blur event)
+  addEventListener('blur', () => { window.__wf = false; setTimeout(() => { if (document.activeElement && document.activeElement.tagName === 'IFRAME') window.__wf = true; dispatchEvent(new Event('wfchange')); }, 0); }, true);
+  addEventListener('focus', () => { window.__wf = true; dispatchEvent(new Event('wfchange')); }, true);
+  addEventListener('pointerdown', () => { if (!window.__wf) { window.__wf = true; dispatchEvent(new Event('wfchange')); } }, true);   // clicking the page means you're here
+  document.addEventListener('visibilitychange', () => dispatchEvent(new Event('wfchange'))); })();
 const musicOff = () => { try { return JSON.parse(localStorage.getItem('painWheelMusicOff')) === true; } catch (e) { return false; } };   // the Music switch (also in the wheel's Settings)
 try { localStorage.setItem('painWheelBoardVisited', 'true'); } catch (e) {}   // first-timers land here before the wheel
 const musicVol = () => { try { const v = JSON.parse(localStorage.getItem('painWheelMusicVol')); return typeof v === 'number' ? Math.max(0, Math.min(1, v)) : .5; } catch (e) { return .5; } };
-const bgmVol = () => { if (musicOff() || document.hidden || !document.hasFocus()) return 0; const v = parseFloat(localStorage.getItem('painWheelVolume')); return .7 * musicVol() * (isNaN(v) ? .6 : Math.max(0, Math.min(1, v))); };
+const bgmVol = () => { if (musicOff() || document.hidden || !window.__wf) return 0; const v = parseFloat(localStorage.getItem('painWheelVolume')); return .7 * musicVol() * (isNaN(v) ? .6 : Math.max(0, Math.min(1, v))); };
 let bgmIdx = 0, bgmCur = null, bgmFadeT = null, bgmHeld = false;
 function bgmFade(a, to, ms, done) { const from = a.volume, t0 = performance.now(); const step = () => { const k = Math.min(1, (performance.now() - t0) / ms); a.volume = Math.max(0, Math.min(1, from + (to - from) * k)); if (k < 1) requestAnimationFrame(step); else if (done) done(); }; requestAnimationFrame(step); }
 function bgmPlay(i) {
@@ -267,7 +272,7 @@ musicBtn.onclick = () => {
 };
 // pause when you leave the window, come back when you return
 const bgmFocus = () => { if (!bgmCur || bgmHeld) return; const t = bgmVol(); if (t > 0) { bgmCur.play().catch(() => {}); bgmFade(bgmCur, t, 800); } else bgmFade(bgmCur, 0, 500, () => { if (!bgmVol()) bgmCur.pause(); }); };
-document.addEventListener('visibilitychange', bgmFocus); addEventListener('blur', bgmFocus); addEventListener('focus', bgmFocus);
+document.addEventListener('visibilitychange', bgmFocus); addEventListener('wfchange', bgmFocus);
 const bgmHold = (on) => { bgmHeld = on; if (!bgmCur) return; if (on) bgmFade(bgmCur, 0, 800, () => bgmCur.pause()); else { bgmCur.play().catch(() => {}); bgmFade(bgmCur, bgmVol(), 2500); } };   // quiet while the credits roll
 const credBtn = document.createElement('button'); credBtn.className = 'lswitch'; credBtn.type = 'button'; credBtn.title = 'Lights out (credits)'; credBtn.setAttribute('aria-label', 'Light switch: roll the credits');
 credBtn.innerHTML = '<img src="media/switch_up.png" alt="">'; board.appendChild(credBtn);

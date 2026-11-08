@@ -126,11 +126,16 @@ const sfx = (name, dur, rate) => {
   } catch (e) {}
 };
 // ---- arcade music while you're at the claw machine (Pixabay: atlasaudio, mfcc), crossfading; the wind ducks under it ----
+(() => { if (window.__wfSet) return; window.__wfSet = true; window.__wf = window.__wf;   // our own record of whether this window has focus (more reliable than asking during the blur event)
+  addEventListener('blur', () => { window.__wf = false; setTimeout(() => { if (document.activeElement && document.activeElement.tagName === 'IFRAME') window.__wf = true; dispatchEvent(new Event('wfchange')); }, 0); }, true);
+  addEventListener('focus', () => { window.__wf = true; dispatchEvent(new Event('wfchange')); }, true);
+  addEventListener('pointerdown', () => { if (!window.__wf) { window.__wf = true; dispatchEvent(new Event('wfchange')); } }, true);   // clicking the page means you're here
+  document.addEventListener('visibilitychange', () => dispatchEvent(new Event('wfchange'))); })();
 const CLAW_BGM = [1, 2, 3, 4, 5].map(n => `media/audio_bgm_claw${n}.mp3`);
 let clawA = null, clawI = Math.floor(Math.random() * 5), clawOn = false;
 const musicOff = () => get('painWheelMusicOff', false) === true;
 const musicVol = () => { const v = get('painWheelMusicVol', .5); return typeof v === 'number' ? Math.max(0, Math.min(1, v)) : .5; };
-const clawTarget = () => (!clawOn || musicOff() || document.hidden || !document.hasFocus()) ? 0 : .6 * musicVol() * vol();
+const clawTarget = () => (!clawOn || musicOff() || document.hidden || !window.__wf) ? 0 : .6 * musicVol() * vol();
 function ramp(a, to, ms, done) { const f = a.volume, t0 = performance.now(); (function st() { const k = Math.min(1, (performance.now() - t0) / ms); a.volume = Math.max(0, Math.min(1, f + (to - f) * k)); if (k < 1) requestAnimationFrame(st); else if (done) done(); })(); }
 function clawSong(i) {
   clawI = i % CLAW_BGM.length; const a = new Audio(CLAW_BGM[clawI]); a.volume = 0; const old = clawA; clawA = a;
@@ -142,7 +147,7 @@ function clawSong(i) {
 // ---- the shack's own music (Pixabay: tunetank, mickeyscat): western and old-film ragtime, under the wind; steps aside for the arcade ----
 const SHACK_BGM = ['media/audio_bgm_shack1.mp3', 'media/audio_bgm_shack2.mp3'];
 let shA = null, shI = Math.floor(Math.random() * 2);
-const shTarget = () => (clawOn || musicOff() || document.hidden || !document.hasFocus()) ? 0 : .5 * musicVol() * vol();
+const shTarget = () => (clawOn || musicOff() || document.hidden || !window.__wf) ? 0 : .5 * musicVol() * vol();
 function shSong(i) {
   shI = i % SHACK_BGM.length; const a = new Audio(SHACK_BGM[shI]); a.volume = 0; const old = shA; shA = a;
   if (old) ramp(old, 0, 3000, () => old.pause());
@@ -152,14 +157,14 @@ function shSong(i) {
 }
 function shApply() { if (!shA) return; const t = shTarget(); if (t > 0) { shA.play().catch(() => {}); ramp(shA, t, 900); } else ramp(shA, 0, 600, () => { if (!shTarget()) shA.pause(); }); }
 addEventListener('pointerdown', () => { if (!shA) shSong(shI); }, { once: true });
-document.addEventListener('visibilitychange', shApply); addEventListener('blur', shApply); addEventListener('focus', shApply);
+document.addEventListener('visibilitychange', shApply); addEventListener('wfchange', shApply);
 function clawMusic(on) {
   clawOn = on; shApply(); if (window.windGain && AC) windGain.gain.setTargetAtTime(on ? .03 * vol() : .14 * vol(), AC.currentTime, .4);   // wind steps back while the arcade plays
   if (on && !clawA) return clawSong(clawI);
   if (!clawA) return; const t = clawTarget();
   if (t > 0) { clawA.play().catch(() => {}); ramp(clawA, t, 800); } else ramp(clawA, 0, 600, () => { if (!clawTarget()) clawA.pause(); });
 }
-document.addEventListener('visibilitychange', () => clawOn && clawMusic(true)); addEventListener('blur', () => clawOn && clawMusic(true)); addEventListener('focus', () => clawOn && clawMusic(true));
+addEventListener('wfchange', () => clawOn && clawMusic(true));
 function openClaw() {
   clawMusic(true);
   if (document.getElementById('clawOv')) return;

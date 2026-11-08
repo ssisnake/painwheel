@@ -223,9 +223,14 @@ document.querySelectorAll('[data-f]').forEach(b => b.onclick = () => slurpee(b.d
 <script>
 // ---- the 8/11's music: lo-fi on the store speakers (Pixabay: zephiramusic, franzian-deo, Alex Morgan). A random song each time, never the same one twice in a row ----
 (() => {
+(() => { if (window.__wfSet) return; window.__wfSet = true; window.__wf = window.__wf;   // our own record of whether this window has focus (more reliable than asking during the blur event)
+  addEventListener('blur', () => { window.__wf = false; setTimeout(() => { if (document.activeElement && document.activeElement.tagName === 'IFRAME') window.__wf = true; dispatchEvent(new Event('wfchange')); }, 0); }, true);
+  addEventListener('focus', () => { window.__wf = true; dispatchEvent(new Event('wfchange')); }, true);
+  addEventListener('pointerdown', () => { if (!window.__wf) { window.__wf = true; dispatchEvent(new Event('wfchange')); } }, true);   // clicking the page means you're here
+  document.addEventListener('visibilitychange', () => dispatchEvent(new Event('wfchange'))); })();
   const SONGS = [1, 2, 3, 4, 5].map(n => `media/audio_bgm_811_${n}.mp3`);
   const g = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v === null ? d : v; } catch (e) { return d; } };
-  const target = () => { if (g('painWheelMusicOff', false) === true || document.hidden || !document.hasFocus()) return 0; const mv = g('painWheelMusicVol', .5), v = parseFloat(localStorage.getItem('painWheelVolume')); return .5 * (typeof mv === 'number' ? mv : .5) * (isNaN(v) ? .6 : Math.max(0, Math.min(1, v))); };
+  const target = () => { if (g('painWheelMusicOff', false) === true || document.hidden || !window.__wf) return 0; const mv = g('painWheelMusicVol', .5), v = parseFloat(localStorage.getItem('painWheelVolume')); return .5 * (typeof mv === 'number' ? mv : .5) * (isNaN(v) ? .6 : Math.max(0, Math.min(1, v))); };
   const ramp = (a, to, ms, done) => { const f = a.volume, t0 = performance.now(); (function st() { const k = Math.min(1, (performance.now() - t0) / ms); a.volume = Math.max(0, Math.min(1, f + (to - f) * k)); if (k < 1) requestAnimationFrame(st); else if (done) done(); })(); };
   let cur = null, last = -1;
   function next() {
@@ -237,7 +242,7 @@ document.querySelectorAll('[data-f]').forEach(b => b.onclick = () => slurpee(b.d
   }
   const apply = () => { if (!cur) return; const t = target(); if (t > 0) { cur.play().catch(() => {}); ramp(cur, t, 900); } else ramp(cur, 0, 600, () => { if (!target()) cur.pause(); }); };
   addEventListener('pointerdown', () => { if (!cur) next(); }, { once: true });
-  document.addEventListener('visibilitychange', apply); addEventListener('blur', apply); addEventListener('focus', apply);
+  document.addEventListener('visibilitychange', apply); addEventListener('wfchange', apply);
 })();
 </script><script>window.AXA_CAMEO = { id: '811', host: '#scene', x: 25.6, y: 26.5, w: 3.6, z: 1, filter: 'brightness(.5) saturate(.4) blur(.4px)', op: .7 };</script><script src="axa_cameo.js"></script>
 </body></html>

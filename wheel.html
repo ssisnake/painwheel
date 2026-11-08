@@ -884,7 +884,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 5:19 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 5:21 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -3860,13 +3860,18 @@
     const clipBuffers = {}, clipSources = {};
     // Sound style: 'classic' skips the new recorded sounds and uses the original synth ones
     const NEW_CLIPS = /^(doorslam|sink|fart1|fart2|rocketboom|achieve|fanfare|trombone|vcrash|crash|sqchirp|ufo|ufobeam|brickring|heli|doorchime|yachthorn|token)/;
+(() => { if (window.__wfSet) return; window.__wfSet = true; window.__wf = window.__wf;   // our own record of whether this window has focus (more reliable than asking during the blur event)
+  addEventListener('blur', () => { window.__wf = false; setTimeout(() => { if (document.activeElement && document.activeElement.tagName === 'IFRAME') window.__wf = true; dispatchEvent(new Event('wfchange')); }, 0); }, true);
+  addEventListener('focus', () => { window.__wf = true; dispatchEvent(new Event('wfchange')); }, true);
+  addEventListener('pointerdown', () => { if (!window.__wf) { window.__wf = true; dispatchEvent(new Event('wfchange')); } }, true);   // clicking the page means you're here
+  document.addEventListener('visibilitychange', () => dispatchEvent(new Event('wfchange'))); })();
     const MUSIC_CLIPS = /^(waiting|policesong)$/;   // songs, not sound effects: the Music toggle mutes these
     const musicOn = () => !store.get('painWheelMusicOff', false);
     const musicVol = () => { const v = store.get('painWheelMusicVol', .5); return typeof v === 'number' ? Math.max(0, Math.min(1, v)) : .5; };
     // ---------- background music (Pixabay: maksymmalko, tatamusic), crossfading, quiet, pauses when you leave the window ----------
     const WHEEL_BGM = [1, 2, 3, 4, 5, 6, 7, 8].map(n => `media/audio_bgm_wheel${n}.mp3`);   // 8 songs: people spend the most time here
     let bgmI = Math.floor(Math.random() * 8), bgmA = null, bgmDucked = false;
-    const bgmTarget = () => (EMBED_SHOP || !musicOn() || bgmDucked || document.hidden || !document.hasFocus() || document.body.classList.contains('ghost-town')) ? 0 : .5 * musicVol() * currentVolume;
+    const bgmTarget = () => (EMBED_SHOP || !musicOn() || bgmDucked || document.hidden || !window.__wf || document.body.classList.contains('ghost-town')) ? 0 : .5 * musicVol() * currentVolume;
     function bgmRamp(a, to, ms, done) { const from = a.volume, t0 = performance.now(); (function st() { const k = Math.min(1, (performance.now() - t0) / ms); a.volume = Math.max(0, Math.min(1, from + (to - from) * k)); if (k < 1) requestAnimationFrame(st); else if (done) done(); })(); }
     function bgmStart(i) {
         if (EMBED_SHOP) return; bgmI = i % WHEEL_BGM.length; const a = new Audio(WHEEL_BGM[bgmI]); a.volume = 0;
@@ -3880,7 +3885,7 @@
         if (t > 0) { if (bgmA.paused) bgmA.play().catch(() => {}); bgmRamp(bgmA, t, 700); } else bgmRamp(bgmA, 0, 500, () => { if (bgmTarget() === 0) bgmA.pause(); });
     }
     addEventListener('pointerdown', () => { if (!bgmA) bgmStart(bgmI); }, { once: true });
-    document.addEventListener('visibilitychange', bgmApply); addEventListener('blur', bgmApply); addEventListener('focus', bgmApply);
+    document.addEventListener('visibilitychange', bgmApply); addEventListener('wfchange', bgmApply);
     function playClip(name, dataUrl, fallback) {
         if (!soundOn()) return;
         if (MUSIC_CLIPS.test(name) && !musicOn()) return;
