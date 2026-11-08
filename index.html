@@ -154,7 +154,7 @@ if (nClues) document.getElementById('clueCount').textContent = `🔍 Evidence fo
 if (clues.map) { const c = document.createElement('div'); c.className = 'clue'; at(c, [54.6, 66, 7.2, 11.4], -4); c.textContent = '🗺️ A map. The X is not on it.'; board.appendChild(c); }
 // the middle photo: a checklist of hidden evidence. Found items show; the rest stay ??? (more get added as we decide them)
 const EVIDENCE = [
-  { k: 'map', name: '🗺️ The hand-drawn map', where: 'Left on a table. The owner did not need it anymore.' },
+  { k: 'map', name: '🗺️ The hand-drawn map', where: 'Left on a table. The owner did not need it anymore.', hint: 'Start in the desert. Somebody already died looking. Ask him.' },
   { k: 'darkmagic', name: '🪡 A note sewn inside a voodoo doll', where: 'It only came out when the doll met the finger. It says: R, G, B.' },
   { k: 'rgb', name: '🔑 Whatever was in the secret compartment', where: 'Red, then green, then blue. The machine remembers. It came with a TV with a wheel on it.' },
   { k: 'wheelception', name: '📷 A photo taped inside the smallest wheel', where: 'Five wheels down. A door at the bottom of the stairs. "THE MIDDLE."' },
@@ -163,7 +163,7 @@ const EVIDENCE = [
 function showEvidence() {
   const got = EVIDENCE.filter(e => clues[e.k]).length;
   show('MISSING EVIDENCE', `<p style="font-style:italic;color:#57534e">Every string points here. Find everything. ${got} of ${EVIDENCE.length} found.</p>` +
-    EVIDENCE.map(e => clues[e.k] && e.name ? `<div class="ev got"><span class="bx">✔</span><div><b>${e.name}</b><small>${e.where}</small></div></div>` : `<div class="ev"><span class="bx"></span><div><b>???</b><small>Not found yet.</small></div></div>`).join(''));
+    EVIDENCE.map(e => clues[e.k] && e.name ? `<div class="ev got"><span class="bx">✔</span><div><b>${e.name}</b><small>${e.where}</small></div></div>` : `<div class="ev"><span class="bx"></span><div><b>???</b><small>${e.hint || 'Not found yet.'}</small></div></div>`).join(''));
 }
 // 🎬 credits on the little sticky note, bottom middle
 const credBtn = document.createElement('button'); credBtn.className = 'credbtn'; credBtn.textContent = 'credits'; credBtn.title = 'Credits'; board.appendChild(credBtn);
