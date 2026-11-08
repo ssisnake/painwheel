@@ -51,8 +51,13 @@ if (/(transfer|import)=/.test(location.hash) || location.search) location.replac
   /* the light switch on the wall: flip it and the room goes dark for the credits */
   .lswitch, .cnote { position: absolute; padding: 0; border: 0; background: none; cursor: pointer; z-index: 3; }
   .lswitch { left: 7.47%; top: 60.71%; width: 3.52%; height: 10.48%; } .cnote { left: 6.2%; top: 71.2%; width: 5.91%; height: 14.63%; }
-  .lswitch img, .cnote { display: block; width: 100%; height: 100%; filter: drop-shadow(.1cqw .2cqw .2cqw rgba(0,0,0,.5)); }
+  .cnote { pointer-events: none; }
+  .lswitch img { display: block; width: 100%; height: 100%; filter: drop-shadow(.1cqw .2cqw .2cqw rgba(0,0,0,.5)); }
   .lswitch:hover img, .cnote:hover img, .lswitch:focus-visible img, .cnote:focus-visible img { filter: drop-shadow(0 0 .6cqw #fde68a); } .lswitch:focus-visible, .cnote:focus-visible { outline: none; }
+  /* the two little papers, bottom middle: a running tally */
+  .tally { position: absolute; z-index: 2; pointer-events: none; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #1c1917; font-family: 'Permanent Marker', cursive; line-height: 1; }
+  .tally small { font-size: .46cqw; line-height: 1.1; letter-spacing: .04em; color: #44403c; white-space: nowrap; } .tally b { font-weight: normal; font-size: 1.35cqw; margin-top: .1cqw; color: #7f1d1d; }
+  .tally s { font-size: .62cqw; color: #78716c; margin: 0 .12cqw; } .tally .marks { font-size: .7cqw; letter-spacing: -.05cqw; color: #1c1917; margin-top: .15cqw; }
   #lightsOut { position: fixed; inset: 0; z-index: 99; background: #000; opacity: 0; pointer-events: none; transition: opacity .7s; }
   #lightsOut.on { opacity: 1; }
   #credits { position: fixed; inset: 0; z-index: 100; background: #000; display: none; overflow: hidden; cursor: pointer; }
@@ -227,6 +232,16 @@ function showEvidence() {
 const credBtn = document.createElement('button'); credBtn.className = 'lswitch'; credBtn.type = 'button'; credBtn.title = 'Lights out (credits)'; credBtn.setAttribute('aria-label', 'Light switch: roll the credits');
 credBtn.innerHTML = '<img src="media/switch_up.png" alt="">'; board.appendChild(credBtn);
 const credNote = document.createElement('img'); credNote.className = 'cnote'; credNote.src = 'media/credits_note.png'; credNote.alt = ''; credNote.style.pointerEvents = 'none'; board.appendChild(credNote);   // just a label for the switch
+// the two blank papers: how many times the wheel landed on Kevin for you, and days since the last wipe (it's always 0)
+(() => {
+  let k = 0; try { k = ((JSON.parse(localStorage.getItem('painWheelStats')) || {}).byType || {}).KEVIN || 0; } catch (e) {}
+  const a = document.createElement('div'); a.className = 'tally'; a.style.cssText = 'left:44.4%;top:77.4%;width:3.3%;height:6.4%;transform:rotate(3deg);pointer-events:auto;cursor:help'; a.title = `The wheel has landed on Kevin ${k.toLocaleString()} times for you.`;
+  const marks = '卌 '.repeat(Math.min(2, Math.floor(k / 5))) + (k >= 10 ? '...' : '|'.repeat(k % 5));
+  a.innerHTML = `<small>KEVINS</small><b></b><span class="marks"></span>`; a.querySelector('b').textContent = k.toLocaleString(); a.querySelector('.marks').textContent = marks;
+  const b = document.createElement('div'); b.className = 'tally'; b.style.cssText = 'left:47.7%;top:75.6%;width:3.3%;height:5.2%;transform:rotate(-5deg);pointer-events:auto;cursor:help'; b.title = 'Days since the last wipe: 0. It is always 0.';
+  b.innerHTML = '<small>DAYS WITHOUT<br>A WIPE</small><b><s>3</s><s>1</s> 0</b>';
+  board.appendChild(a); board.appendChild(b);
+})();
 const lightsOut = document.createElement('div'); lightsOut.id = 'lightsOut'; document.body.appendChild(lightsOut);
 const clickSnd = (n) => { try { const v = parseFloat(localStorage.getItem('painWheelVolume')); const a = new Audio('media/' + n + '.mp3'); a.volume = .8 * (isNaN(v) ? .6 : Math.max(0, Math.min(1, v))); if (a.volume) a.play().catch(() => {}); } catch (e) {} };
 const cred = document.getElementById('credits'), credRoll = document.getElementById('credRoll');
