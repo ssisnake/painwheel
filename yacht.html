@@ -811,14 +811,16 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
 })();
 </script>
 <script>
-// ---- the yacht's music: pirate tavern songs (Pixabay: magiksolo, ebunny). A random song each time, never the same one twice in a row ----
+// ---- the yacht's music: pirate tavern songs on deck, true-crime tension in the VIP room, 8-bit on the WHEEL-2600 (Pixabay). A random song each time, never the same one twice in a row ----
 (() => {
 (() => { if (window.__wfSet) return; window.__wfSet = true; window.__wf = window.__wf;   // our own record of whether this window has focus (more reliable than asking during the blur event)
   addEventListener('blur', () => { window.__wf = false; setTimeout(() => { if (document.activeElement && document.activeElement.tagName === 'IFRAME') window.__wf = true; dispatchEvent(new Event('wfchange')); }, 0); }, true);
   addEventListener('focus', () => { window.__wf = true; dispatchEvent(new Event('wfchange')); }, true);
   addEventListener('pointerdown', () => { if (!window.__wf) { window.__wf = true; dispatchEvent(new Event('wfchange')); } }, true);   // clicking the page means you're here
   document.addEventListener('visibilitychange', () => dispatchEvent(new Event('wfchange'))); })();
-  const SONGS = [1, 2, 3].map(n => `media/audio_bgm_yacht_${n}.mp3`);
+  // three playlists on this page: the yacht deck, the VIP room, and the WHEEL-2600 (the claw machine's 8-bit arcade songs)
+  const LISTS = { yacht: [1, 2, 3].map(n => `media/audio_bgm_yacht_${n}.mp3`), vip: [1, 2, 3].map(n => `media/audio_bgm_vip_${n}.mp3`), atari: [1, 2, 3, 4, 5].map(n => `media/audio_bgm_claw${n}.mp3`) };
+  let mode = 'yacht'; const SONGS = new Proxy([], { get: (t, k) => LISTS[mode][k] === undefined && k !== 'length' ? undefined : (k === 'length' ? LISTS[mode].length : LISTS[mode][k]) });
   const g = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v === null ? d : v; } catch (e) { return d; } };
   const target = () => { if (g('painWheelMusicOff', false) === true || document.hidden || !window.__wf) return 0; const mv = g('painWheelMusicVol', .5), v = parseFloat(localStorage.getItem('painWheelVolume')); return .5 * (typeof mv === 'number' ? mv : .5) * (isNaN(v) ? .6 : Math.max(0, Math.min(1, v))); };
   const ramp = (a, to, ms, done) => { const f = a.volume, t0 = performance.now(); (function st() { const k = Math.min(1, (performance.now() - t0) / ms); a.volume = Math.max(0, Math.min(1, f + (to - f) * k)); if (k < 1) requestAnimationFrame(st); else if (done) done(); })(); };
@@ -832,6 +834,10 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
   }
   const apply = () => { if (!cur) return; const t = target(); if (t > 0) { cur.play().catch(() => {}); ramp(cur, t, 900); } else ramp(cur, 0, 600, () => { if (!target()) cur.pause(); }); };
   addEventListener('pointerdown', () => { if (!cur) next(); }, { once: true });
+  const watch = () => { const m = document.getElementById('mini'), v = document.getElementById('vip');
+    const want = m && m.classList.contains('open') ? 'atari' : v && v.classList.contains('open') ? 'vip' : 'yacht';
+    if (want !== mode) { mode = want; last = -1; if (cur) next(); } };
+  ['vip', 'mini'].forEach(id => { const el = document.getElementById(id); if (el) new MutationObserver(watch).observe(el, { attributes: true, attributeFilter: ['class'] }); });
   document.addEventListener('visibilitychange', apply); addEventListener('wfchange', apply);
 })();
 </script>
