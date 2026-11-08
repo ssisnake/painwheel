@@ -418,7 +418,7 @@
     // ---------- leaving ----------
     function goBack() {
         try { if (document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1) { history.back(); return; } } catch (e) {}
-        location.href = './';
+        location.href = 'wheel.html';
     }
     $('rotateOk').addEventListener('click', () => $('rotateTip').classList.add('gone'));
     $('backBtn').addEventListener('click', goBack); $('gateBack').addEventListener('click', goBack);
@@ -609,6 +609,7 @@
         setTimeout(openVip, 900);
     });
     function openVip() {
+        try { localStorage.setItem('painWheelSeenVip', 'true'); } catch (e) {}
         $('vipMsg').textContent = pick(VIP_MSGS);
         $('vipScene').classList.remove('zoom'); $('mini').classList.remove('open'); $('vipBar').style.display = '';
         $('vip').classList.add('open'); sfx.clunk();
@@ -621,6 +622,7 @@
         $('vipMsg').textContent = 'You sit down. The chair molds to you. The monitors lean in closer.'; $('vipBar').style.display = 'none';
         $('vipScene').classList.add('zoom');
         setTimeout(() => { depth = 1; renderMini(); $('mini').classList.add('open'); $('vipMsg').textContent = ''; }, 1250);
+        try { localStorage.setItem('painWheelSeen2600', 'true'); } catch (e) {}
     }
     $('vipSit').addEventListener('click', sitDown);
     const VIP_SAY = {
@@ -772,6 +774,7 @@
     // ---------- welcome aboard ----------
     award('aboard');
     if (!S.get('painWheelYachtVisited', false)) { S.set('painWheelYachtVisited', true); setTimeout(() => say('🛥️ Welcome aboard! Click around. Your trophies are in the cabinet, your gold goes in the vault, and the hatch... leave the hatch alone.', 6500), 600); }
+    if (location.hash === '#vip') setTimeout(openVip, 600);   // arriving from the conspiracy board's VIP Room photo
 })();
 </script>
 </body>
