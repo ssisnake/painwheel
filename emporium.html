@@ -273,7 +273,7 @@ const AXA_LINES = ['What. I\'m working.', 'Eyes on the merchandise, not the merc
 $('axa').onclick = () => say(pick(AXA_LINES));
 
 if (!isOpen()) $('closed').style.display = 'flex';
-else { put('painWheelSeenEmporium', true); setTimeout(() => say(pick(HELLO), 4800), 700); addEventListener('pointerdown', () => sfx('audio_door_chime', .5), { once: true }); }
+else { const first = !get('painWheelSeenEmporium', false); put('painWheelSeenEmporium', true); setTimeout(() => say(first ? 'Did you really climb out that window? You special or something?' : pick(HELLO), first ? 6000 : 4800), 700); addEventListener('pointerdown', () => sfx('audio_door_chime', .5), { once: true }); }
 addEventListener('storage', (e) => { if (e.key === 'painWheelGold') { showGold(); render(); } if (e.key === 'painWheelEmporium' || e.key === 'painWheelFound') render(); });
 render(); tick(); setInterval(tick, 15000);
 setInterval(() => { showGold(); }, 5000);
