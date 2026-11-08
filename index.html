@@ -39,7 +39,7 @@ if (/(transfer|import)=/.test(location.hash) || location.search) location.replac
 </style></head><body>
 <header><div><h1>📌 THE BOARD</h1><div class="sub">It's all connected. Every place you unlock gets pinned up here. Click a photo to go there.</div></div><a class="go" href="wheel.html">🎡 Spin The Wheel →</a></header>
 <div class="scroller"><div class="board" id="board"></div><p class="hint">Every string leads to the middle. Locked photos say how to find them. <span id="clueCount"></span></p></div>
-<dialog id="dlg"><h3 id="dTitle"></h3><div id="dBody"></div><button onclick="dlg.close()">Close</button></dialog>
+<dialog id="dlg" tabindex="-1"><h3 id="dTitle"></h3><div id="dBody"></div><button onclick="dlg.close()">Close</button></dialog>
 <script>
 const PINS = [
   { id: 'susan', x: 6, y: 6, rot: -4, kind: 'card', title: 'SUSAN EXPRESS', stamp: 'UNSOLVED',
@@ -70,7 +70,7 @@ const PINS = [
     body: 'The door is locked. For now. Everything on this board ends here.',
     file: '<p>The managers are not taking visitors.</p><p>Bring lotion. It\'s for carpal tunnel.</p><p><b>Status:</b> <span class="redact">COMING SOON COMING</span></p>' }
 ];
-const PAGES = [{"slot": "susan", "id": "wheel", "title": "The Wheel", "href": "wheel.html", "lock": null, "hint": "It started here. It always starts here.", "r": [18.9, 19.79, 9.1, 17.9]}, {"slot": "john", "id": "yacht", "title": "Gallywix's Yacht", "href": "yacht.html", "lock": "house", "hint": "Max out your house (Undermine Castle) to get the keys.", "r": [38.9, 20.97, 8.85, 14.13]}, {"slot": "knob", "id": "vip", "title": "The VIP Room", "href": "yacht.html#vip", "lock": "vip", "hint": "Get past the velvet rope on the yacht.", "r": [56.75, 20.02, 7.5, 13.55]}, {"slot": "reb", "id": "811", "title": "The 8/11", "href": "wheel.html#go=811", "lock": "s811", "hint": "Land on 8/11. Open 7 hours a day, 11 days a week.", "r": [72.25, 20.61, 9.0, 17.67]}, {"slot": "island", "id": "claw", "title": "The Shack (Prize Island)", "href": "shack.html", "lock": "claw", "hint": "Get a casino token, then find the claw machine in the desert shack.", "r": [28.9, 38.87, 9.1, 15.31]}, {"slot": "caller", "id": "2600", "title": "WHEEL-2600", "href": "yacht.html#vip", "lock": "s2600", "hint": "Sit down at the lonely PC in the VIP room.", "r": [74.5, 42.17, 7.1, 11.43]}, {"slot": "bike", "id": "soon", "title": "???", "href": null, "lock": "never", "hint": "Not everything is pinned up yet. Keep spinning.", "r": [19.75, 60.66, 7.75, 15.31]}, {"slot": "chicken", "id": "evidence", "title": "The Evidence Locker", "href": null, "lock": null, "hint": "Case files. Read them. Then read them again.", "r": [33.15, 61.84, 9.35, 16.25]}, {"slot": "basement", "id": "basement", "title": "Uncle Touchy's Puzzle Basement", "href": null, "lock": "never", "hint": "Everything points here. Not yet.", "r": [44.25, 41.22, 11.0, 18.26]}];
+const PAGES = [{"slot": "susan", "id": "wheel", "title": "The Wheel", "href": "wheel.html", "lock": null, "hint": "It started here. It always starts here.", "r": [18.9, 19.79, 9.1, 17.9]}, {"slot": "john", "id": "yacht", "title": "Gallywix's Yacht", "href": "yacht.html", "lock": "house", "hint": "Max out your house (Undermine Castle) to get the keys.", "r": [38.9, 20.97, 8.85, 14.13]}, {"slot": "knob", "id": "vip", "title": "The VIP Room", "href": "yacht.html#vip", "lock": "vip", "hint": "Get past the velvet rope on the yacht.", "r": [56.75, 20.02, 7.5, 13.55]}, {"slot": "island", "id": "claw", "title": "The Shack (Prize Island)", "href": "shack.html", "lock": "claw", "hint": "Get a casino token, then find the claw machine in the desert shack.", "r": [28.9, 38.87, 9.1, 15.31]}, {"slot": "caller", "id": "2600", "title": "WHEEL-2600", "href": "yacht.html#vip", "lock": "s2600", "hint": "Sit down at the lonely PC in the VIP room.", "r": [74.5, 42.17, 7.1, 11.43]}, {"slot": "basement", "id": "basement", "title": "Uncle Touchy's Puzzle Basement", "href": null, "lock": "never", "hint": "Everything points here. Not yet.", "r": [44.25, 41.22, 11.0, 18.26]}, {"slot": "reb", "id": "evidence", "title": "The Evidence Locker", "href": null, "lock": null, "hint": "Case files. Read them. Then read them again.", "r": [72.25, 20.61, 9.0, 17.67]}, {"slot": "bike", "id": "811", "title": "8/11 (coming soon)", "href": null, "lock": "never", "hint": "The 8/11 is getting renovated into the real shop. Coming soon. (You can still grab a Slurpee when you land on 8/11.)", "r": [19.75, 60.66, 7.75, 15.31]}, {"slot": "chicken", "id": "soon", "title": "???", "href": null, "lock": "never", "hint": "Not everything is pinned up yet. Keep spinning.", "r": [33.15, 61.84, 9.35, 16.25]}];
 const NOTES = [[[28.25, 20.26, 5.0, 12.49], "WHO IS THE 6%?", -3], [[50.25, 19.43, 7.0, 17.31], "Kevin's alibi: NONE", 2], [[67.4, 21.79, 5.1, 14.72], "The Needle saw everything", -2], [[18.6, 42.99, 7.15, 11.54], "8/11 open 11 days a week. WHY?", 1], [[60.25, 47.47, 5.5, 14.02], "Gerald powers WHAT??", 3], [[69.25, 47.7, 5.75, 14.13], "John Blizzard's 2nd account", -2], [[54.6, 65.96, 7.2, 11.43], "The yacht was in the DESERT", 2], [[64.5, 60.07, 6.6, 12.96], "Clippy is ALWAYS watching", -3], [[73.25, 61.25, 8.55, 16.49], "Platemage wears plate. WHY.", 1]];
 const board = document.getElementById('board'), dlg = document.getElementById('dlg');
 const get = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } };
@@ -84,13 +84,13 @@ PAGES.forEach((p, i) => {
   if (open && p.href) el.href = p.href; else if (open) el.type = 'button'; else el.type = 'button';
   at(el, p.r, (i % 2 ? 1.5 : -1.5));
   el.innerHTML = `<div class="shot"></div><h2></h2>`;
-  el.querySelector('h2').textContent = open ? p.title : '???';
+  el.querySelector('h2').textContent = open || /coming soon/.test(p.title) ? p.title : '???';
   if (open) el.querySelector('.shot').style.backgroundImage = `url(media/board_${p.id}.jpg)`;
   else el.querySelector('.shot').innerHTML = '<span class="stamp">CLASSIFIED</span>';
   el.title = open ? p.title : 'CLASSIFIED: ' + p.hint;
   if (open && p.lock && !seen[p.id]) { const n = document.createElement('span'); n.className = 'new'; n.textContent = 'NEW!'; el.appendChild(n); seen[p.id] = 1; }
   if (!open) el.onclick = () => show('CLASSIFIED', `<p>${p.hint}</p>`);
-  else if (p.id === 'evidence') el.onclick = () => show('The Evidence Locker', PINS.map((c, k) => `<div class="cf"><div class="file">CASE FILE #${String(k + 1).padStart(3, '0')} · ${c.stamp}</div><b>${c.title}</b><p><i>${c.body}</i></p>${c.file}</div>`).join(''));
+  else if (p.id === 'evidence') el.onclick = (e) => { e.preventDefault(); show('Why are we here? Just to suffer?', '<p style="font-style:italic;color:#57534e">The Evidence Locker. Every case file so far.</p>' + PINS.map((c, k) => `<div class="cf"><div class="file">CASE FILE #${String(k + 1).padStart(3, '0')} · ${c.stamp}</div><b>${c.title}</b><p><i>${c.body}</i></p>${c.file}</div>`).join('')); };
   board.appendChild(el);
 });
 try { localStorage.setItem('painWheelBoardSeen', JSON.stringify(seen)); } catch (e) {}
@@ -130,5 +130,5 @@ fishBtn.onclick = () => {
 const clues = get('painWheelClues', {}), nClues = Object.keys(clues).length;
 if (nClues) document.getElementById('clueCount').textContent = `🔍 Basement clues found: ${nClues}`;
 if (clues.map) { const c = document.createElement('div'); c.className = 'clue'; at(c, [54.6, 66, 7.2, 11.4], -4); c.textContent = '🗺️ CLUE: the shack map. X = the basement'; board.appendChild(c); }
-function show(t, h) { document.getElementById('dTitle').textContent = t; document.getElementById('dBody').innerHTML = h; dlg.showModal(); }
+function show(t, h) { document.getElementById('dTitle').textContent = t; document.getElementById('dBody').innerHTML = h; dlg.showModal(); dlg.focus(); dlg.scrollTop = 0; requestAnimationFrame(() => { dlg.scrollTop = 0; }); }
 </script></body></html>
