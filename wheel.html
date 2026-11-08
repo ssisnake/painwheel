@@ -884,7 +884,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 5:28 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 5:29 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -6835,7 +6835,7 @@
         ['KnobCreekCEO', '#f59e0b'], ['not_a_rat_btw', '#c4b5fd'], ['ret_buff_when', '#f9a8d4'], ['BigGammonEnergy', '#34d399'],
         ['Hawkeyez_pet', '#60a5fa'], ['clussy_enjoyer', '#fb7185'], ['MephistoEarRape', '#ef4444'], ['wheel_addict69', '#22d3ee'],
         ['uwutek_simp', '#e879f9'], ['dalaran_sewer_rat', '#a3e635'], ['ChAoTiC_rigs_it', '#fca5a5'], ['goblin_banker', '#4ade80']];
-    const CHAT_IDLE = ['rip biblehumping o7', 'bibledaddy is just biblehumping with a fake mustache', 'john blizzard nerfed guardian druid again', 'this is john blizzards fault', 'blame john blizzard', 'john blizzard is selling his knob creek stonks again', 'who is this streamer', 'first time chatter, long time Kevin', '!discord', 'Reb drinking again?', 'is this pre-recorded',
+    const CHAT_IDLE = ['rip biblehumping o7', 'bibledaddy is just biblehumping with a fake mustache', "don't deadname him. the name is literally dead. john blizzard buried it", 'john blizzard nerfed guardian druid again', 'this is john blizzards fault', 'blame john blizzard', 'john blizzard is selling his knob creek stonks again', 'who is this streamer', 'first time chatter, long time Kevin', '!discord', 'Reb drinking again?', 'is this pre-recorded',
         'modCheck', 'where is ret buff', 'catJAM', 'PogU', 'Kappa', 'raid tonight?', 'ChAoTiC rigging again', 'gamba time', 'L wheel',
         'spin it coward', 'how many Kevins is this wheel', 'Uwutek is so back', 'buy $KNOB', 'sell $KNOB', 'this chat is bots', 'hi mom',
         '!uptime', 'PepeHands', 'Clippy where', 'the wheel knows', '5Head play', 'monkaS', 'Sadge', 'OMEGALUL', 'W streamer', 'any healers here?',
@@ -9642,8 +9642,8 @@
     setTimeout(() => {   // the name change, announced once
         if (EMBED_SHOP || store.get('painWheelBibleRenamed', false)) return; store.set('painWheelBibleRenamed', true);
         try { sqPost('bible', pick(["new name. same finger. john blizzard took the old one after i PAID for a name change. rip biblehumping, you were too good for this world 🍁",
-            "it's bibledaddy now. don't ask. blizzard asked. blizzard lost. (blizzard won.)", "biblehumping 🪦 → bibledaddy 🚑. the ambulance keeps running. the name did not."])); } catch (e) {}
-        chatBurst(['RIP BIBLEHUMPING', 'o7 biblehumping', 'bibledaddy??', 'john blizzard strikes again', 'he PAID for that name change', 'press F'], 4, 3000);
+            "it's bibledaddy now. don't ask. blizzard asked. blizzard lost. (blizzard won.)", "biblehumping 🪦 → bibledaddy 🚑. the ambulance keeps running. the name did not.", "please do not deadname me. and i mean that literally. blizzard took my name out back. it is in a better place now (the ban log) 🍁"])); } catch (e) {}
+        chatBurst(['RIP BIBLEHUMPING', 'o7 biblehumping', 'bibledaddy??', 'john blizzard strikes again', 'he PAID for that name change', 'press F', "chat don't deadname him (blizzard already killed it)"], 4, 3000);
     }, 9000);
     setInterval(() => {   // about every 30 minutes (only while the page is open; not in Forever, mid-spin or in the 8/11 shop frame)
         if (EMBED_SHOP || document.hidden || isSpinning || strangerRinging || npcCallBox || document.body.classList.contains('ghost-town')) return;
