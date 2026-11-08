@@ -849,7 +849,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 6:39 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 6:41 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -6067,7 +6067,7 @@
         return m[k] || (m[k] = c.createPattern(themeTile(th, s.kevinAlt), 'repeat'));
     }
     function applyTheme() {
-        const th = currentTheme();
+        const th = document.body.classList.contains('ghost-town') ? null : currentTheme();   // Forever: plain default look (your theme comes back when you leave)
         activeThemeId = th ? th.id : null;
         const rv = $('retVisionFx'); if (rv) rv.style.display = activeThemeId === 'retvision' ? 'block' : 'none';
         if (window.syncRetVisionHorror) window.syncRetVisionHorror();
@@ -8132,7 +8132,7 @@
             setTimeout(() => { fb.style.visibility = ''; foreverPrankBusy = false; funEvent("😜 JUST KIDDING. WE'RE STILL HERE.", 4500); toggleForever(); }, 30000);
             return;
         }
-        document.body.classList.toggle('ghost-town', on); if (on) store.set('painWheelSeenForever', true);
+        document.body.classList.toggle('ghost-town', on); if (on) store.set('painWheelSeenForever', true); applyTheme();
         $('foreverBtn').querySelector('.plate-tag').textContent = on ? 'come back?' : ''; $('foreverBtn').classList.toggle('plate-on', on);
         clearTimeout(tumbleT);
         if (!on && isForeverWeek()) store.set('painWheelForeverOut', String(new Date().getFullYear()));   // left Forever during launch week: stay out this year
