@@ -126,8 +126,8 @@ const sfx = (name, dur, rate) => {
   } catch (e) {}
 };
 // ---- arcade music while you're at the claw machine (Pixabay: atlasaudio, mfcc), crossfading; the wind ducks under it ----
-const CLAW_BGM = ['media/audio_bgm_claw1.mp3', 'media/audio_bgm_claw2.mp3'];
-let clawA = null, clawI = Math.floor(Math.random() * 2), clawOn = false;
+const CLAW_BGM = [1, 2, 3, 4, 5].map(n => `media/audio_bgm_claw${n}.mp3`);
+let clawA = null, clawI = Math.floor(Math.random() * 5), clawOn = false;
 const musicOff = () => get('painWheelMusicOff', false) === true;
 const musicVol = () => { const v = get('painWheelMusicVol', .5); return typeof v === 'number' ? Math.max(0, Math.min(1, v)) : .5; };
 const clawTarget = () => (!clawOn || musicOff() || document.hidden || !document.hasFocus()) ? 0 : .6 * musicVol() * vol();
