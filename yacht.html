@@ -73,6 +73,8 @@
     .plaque.got .t { filter: drop-shadow(0 0 .5cqw rgba(253,224,71,.55)) drop-shadow(0 .15cqw .25cqw rgba(0,0,0,.7)); }
     .plaque.locked .t { filter: grayscale(1) brightness(.35); opacity: .55; }
     .plaque.locked .base { opacity: .45; }
+    .plaque.spr .base { display: none; }
+    .plaque.spr.locked .t { filter: brightness(.75); opacity: .8; }
     .plaque.new .t { animation: shine 1.6s ease-in-out 3; }
     @keyframes shine { 50% { transform: scale(1.25); filter: drop-shadow(0 0 1cqw #fde047); } }
     #cabNav { position: absolute; left: 31.6%; top: 72.6%; width: 9.2%; display: flex; align-items: center; justify-content: space-between; gap: .3cqw; z-index: 4; }
@@ -454,10 +456,19 @@
     // a few achievements get their own trophy
     const ICONS = { kevind: '🤡', yacht: '🛥️', castle: '🏰', debtfree: '💸', taxman: '🧾', goldcookie: '🍪', cluck: '🐔', clippy: '📎', fenderbender: '🚑',
         soc1: '🔺', soc2: '💀', soc3: '🦉', soc4: '👁️', soc5: '🦎', soc6: '📜', aboard: '⚓', wheelception: '🖥️', wheelception5: '🌀', purpleheart: '💜', vault: '🏦', chocobar: '🍫', hearth: '🪨', first: '🩸' };
-    // TEMP sprites from art we already have, until the real trophy set is drawn (see the sprite checklist)
-    const SPR = { yacht: 'gif_yacht.gif', castle: 'photo_house_5.png', goldcookie: 'photo_cookie_gold.png', cluck: 'photo_chicken.png', clippy: 'photo_clippy.png', fenderbender: 'photo_amb_icon.png',
-        hearth: 'photo_toy_hearth.png', brickphone: 'photo_toy_phone.png', rocket: 'photo_rocket.png', clawall: 'photo_pet_spinny.png' };
-    const sprFor = (d) => SPR[d.id] || (/^spins/.test(d.id) ? 'photo_pet_spinny.png' : null);
+    // the trophy set (Gemini sheet, cut into media/trophy_*.png). Achievements not listed here still use older sprites or an emoji.
+    const TROPHY = { first: 'blood', kevind: 'clown', kevin3: 'clown', kevin5: 'clown', kevin10: 'clown', kevin50: 'clown', clussy: 'clown',
+        ret: 'hammer', retmax: 'hammer', retascend: 'hammer', ashbringer: 'hammer',
+        spins10: 'wheel_bronze', spins25: 'wheel_bronze', spins50: 'wheel_silver', spins100: 'wheel_silver', spins250: 'wheel_silver',
+        spins500: 'wheel_gold', spins1000: 'wheel_gold', spins2000: 'wheel_gold', spins5000: 'wheel_diamond', spins10000: 'wheel_diamond',
+        debtfree: 'coins', jackpot: 'coins', vault: 'coins', boughttop: 'coins', rugpull: 'coins', castle: 'castle', yacht: 'yacht', aboard: 'yacht', rocket: 'rocket',
+        soc1: 'pyramid', soc4: 'pyramid', soc2: 'coffin', soc3: 'owl', soc5: 'snake', soc6: 'manual', clawwin: 'claw', clawall: 'claw', goldcookie: 'cookie', cluck: 'chicken',
+        weewoo: 'ambulance', mash: 'ambulance', fenderbender: 'copcar', rui: 'copcar', golddonut: 'donut', taxman: 'tax', seized: 'tax', goblincard: 'tax',
+        brickphone: 'brickphone', voodoo: 'voodoo', purpleheart: 'purpleheart', foreveralone: 'tumbleweed' };
+    // older stand-ins for the few that are not in the set yet
+    const SPR = { clippy: 'photo_clippy.png', hearth: 'photo_toy_hearth.png', wheelception: 'photo_pet_spinny.png', wheelception5: 'photo_pet_spinny.png' };
+    const sprFor = (d) => TROPHY[d.id] || /^aipac/.test(d.id) ? 'trophy_' + (TROPHY[d.id] || 'capitol') + '.png' : SPR[d.id] || null;
+    const isSet = (d) => !!(TROPHY[d.id] || /^aipac/.test(d.id));
     const iconFor = (d) => ICONS[d.id] || (/^aipac/.test(d.id) ? '🏛️' : /^spins/.test(d.id) ? '🎡' : d.secret ? '💎' : '🏆');
     let page = 0;
     function renderCabinet(fresh) {
@@ -469,8 +480,10 @@
             b.className = 'plaque ' + (have ? 'got' : 'locked') + (fresh === d.id ? ' new' : '');
             b.style.cssText = `left:${s.x - s.w / 2}%;width:${s.w}%;top:${s.y - 8.2}%;height:8.2%`;
             b.innerHTML = '<span class="t"></span><span class="base"></span>';
-            if (have && sprFor(d)) b.firstChild.innerHTML = `<img src="media/${sprFor(d)}" alt="" style="height:1.25em;width:auto;max-width:100%;image-rendering:pixelated;vertical-align:middle">`;
-            else b.firstChild.textContent = have ? iconFor(d) : (d.secret ? '❔' : '🏆');
+            if (have && isSet(d)) { b.classList.add('spr'); b.firstChild.innerHTML = `<img src="media/${sprFor(d)}" alt="" style="height:3.9cqw;width:auto;max-width:100%;image-rendering:pixelated;vertical-align:bottom">`; }
+            else if (have && sprFor(d)) b.firstChild.innerHTML = `<img src="media/${sprFor(d)}" alt="" style="height:1.25em;width:auto;max-width:100%;image-rendering:pixelated;vertical-align:middle">`;
+            else if (!have) { b.classList.add('spr'); b.firstChild.innerHTML = '<img src="media/trophy_locked.png" alt="" style="height:3.6cqw;width:auto;max-width:100%;image-rendering:pixelated;vertical-align:bottom">'; }
+            else b.firstChild.textContent = iconFor(d);
             b.title = have || !d.secretName ? d.name : 'Secret achievement';
             b.addEventListener('click', () => showTrophy(d, got[d.id]));
             cab.appendChild(b);
@@ -483,7 +496,8 @@
     $('pgNext').addEventListener('click', () => { page++; sfx.click(); renderCabinet(); });
     function showTrophy(d, when) {
         sfx.click();
-        $('tBig').textContent = when ? iconFor(d) : '🔒';
+        const big = !when ? 'trophy_locked.png' : isSet(d) ? sprFor(d) : null;
+        if (big) $('tBig').innerHTML = `<img src="media/${big}" alt="" style="height:120px;width:auto;image-rendering:pixelated">`; else $('tBig').textContent = iconFor(d);
         $('tName').textContent = when || !d.secretName ? d.name : '???';
         $('tDesc').textContent = when || !d.secret ? d.desc : 'A secret achievement. The cabinet has saved it a spot.';
         $('tDate').textContent = when ? 'Earned ' + new Date(when).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : 'Not earned yet. The shelf is dusty.';
