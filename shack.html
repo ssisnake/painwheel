@@ -61,7 +61,7 @@ const ACT = {
   sign: () => { const sc = document.getElementById('scene'); sc.classList.add('dim'); setTimeout(() => sc.classList.remove('dim'), 1200); say(pick(['bzzzt.', 'The sign flickers. It does that.', 'THE WH  L. Then THE WHEEL again.']), 2000); },
   table: () => {
     const clues = get('painWheelClues', {}); const first = !clues.map; clues.map = true; put('painWheelClues', clues);
-    show('🗺️ A map on the table', '<p>Hand-drawn. Coffee-stained. The desert is labeled <i>"here (shack)"</i>. A dotted line runs off the edge of the paper toward a big red X.</p><p>Next to the X, in shaky writing: <b>"UNCLE TOUCHY\'S. BASEMENT. DON\'T."</b></p><p style="color:#7c2d12;font-weight:bold">' + (first ? '📌 Clue found! It\'s pinned to The Board now.' : 'You already pinned this one to The Board.') + '</p>');
+    show('🗺️ A map on the table', '<p>Hand-drawn. Coffee-stained. The desert is labeled <i>"here (shack)"</i>. A dotted line runs off the edge of the paper toward a big red X.</p><p>Next to the X, in shaky writing: <b>"DON\'T GO DOWN THERE."</b></p><p style="color:#7c2d12;font-weight:bold">' + (first ? '📌 Evidence found! It\'s pinned to The Board now.' : 'You already pinned this one to The Board.') + '</p>');
   },
   barrel: () => {
     if (get('painWheelBarrelDay', '') === today()) { say("🛢️ Empty. Whoever refills this barrel comes back tomorrow.", 3200); return; }
