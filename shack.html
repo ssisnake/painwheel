@@ -32,11 +32,12 @@
   .scroller { width: 100%; overflow-x: auto; display: grid; place-items: center; }
   @media (max-width: 700px) { .scene { min-width: 640px; } .scroller { place-items: start; } }
 </style></head><body>
-<header><h1>🏜️ The Shack in the Desert</h1><nav><a class="alt" href="./">📌 The Board</a><a href="wheel.html">🎡 Back to The Wheel</a></nav></header>
+<header><h1>🏜️ The Shack in the Desert</h1><nav><a class="alt" href="./">📌 The Board</a><a class="alt" href="emporium.html" id="fleaNav" style="display:none">🏷️ Flea Market</a><a href="wheel.html">🎡 Back to The Wheel</a></nav></header>
 <div class="wrap"><div class="scroller"><div class="scene" id="scene">
       <button class="hs" data-hs="claw" style="left:30.8%;top:21.1%;width:15.8%;height:60.9%" aria-label="🕹️ Little St. Jeff's Prize Island"><b>🕹️ Little St. Jeff's Prize Island</b></button>
       <button class="hs" data-hs="door" style="left:51.1%;top:16.1%;width:13.5%;height:48.4%" aria-label="🚪 Back to The Wheel"><b>🚪 Back to The Wheel</b></button>
       <button class="hs" data-hs="sign" style="left:10.3%;top:22.4%;width:19.0%;height:19.7%" aria-label="💡 The sign"><b>💡 The sign</b></button>
+      <button class="hs" data-hs="flea" id="fleaPath" style="left:84%;top:18%;width:8.5%;height:30%;display:none" aria-label="🏷️ Path to the flea market"><b>🏷️ Flea market →</b></button>
       <button class="hs" data-hs="skel" style="left:65.6%;top:34.1%;width:14.0%;height:44.8%" aria-label="💀 The skeleton"><b>💀 The skeleton</b></button>
       <button class="hs secret" data-hs="table" style="left:79.6%;top:63.6%;width:11.0%;height:18.8%" tabindex="-1" aria-hidden="true"></button>
       <button class="hs" data-hs="barrel" style="left:0.0%;top:61.8%;width:15.0%;height:38.2%" aria-label="🛢️ The barrel"><b>🛢️ The barrel</b></button>
@@ -216,4 +217,8 @@ function openClaw() {
   }
 }
 if (location.hash === '#claw') setTimeout(openClaw, 500);
+
+// once Axazon's Emporium is open, there's a path out the side window to his flea market
+(() => { let open = false; try { open = JSON.parse(localStorage.getItem('painWheelEmporiumOpen')) || ((JSON.parse(localStorage.getItem('painWheelStats')) || {}).byType || {}).EMPORIUM > 0; } catch (e) {}
+  if (!open) return; document.getElementById('fleaNav').style.display = ''; const f = document.getElementById('fleaPath'); f.style.display = ''; f.onclick = (e) => { e.stopPropagation(); location.href = 'emporium.html'; }; })();
 </script></body></html>
