@@ -441,6 +441,10 @@
         .shack-hs .lbl { position: absolute; left: 50%; bottom: 4%; transform: translateX(-50%); white-space: nowrap; padding: 3px 10px; border-radius: 8px; background: rgba(12,10,9,.85); color: #fde68a; font-weight: 800; font-size: calc(15px * var(--ts, 1)); opacity: 0; transition: opacity .15s; }
         .shack-hs:hover .lbl, .shack-hs:focus-visible .lbl { opacity: 1; }
         .shack-hs.q span { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 46px; height: 46px; display: grid; place-items: center; border-radius: 50%; background: rgba(12,10,9,.75); border: 2px solid #a16207; color: #fde68a; font: 900 28px/1 Georgia, serif; }
+        .forever-only { display: none !important; }
+        body.ghost-town .forever-only { display: flex !important; }
+        body.ghost-town svg.forever-only { display: block !important; }
+        body.ghost-town #bossBar { display: none !important; }
         .hypno { width: 26px; height: 26px; border-radius: 50%; flex: none; background: repeating-conic-gradient(#fff 0 15deg, #111 15deg 30deg); animation: hypnoSpin 2.4s linear infinite; box-shadow: 0 0 0 2px #fff; }
         .hypno::after { content: ''; display: block; width: 100%; height: 100%; border-radius: 50%; background: radial-gradient(circle, transparent 0 20%, rgba(0,0,0,.55) 21% 30%, transparent 31% 45%, rgba(0,0,0,.55) 46% 55%, transparent 56%); }
         @keyframes hypnoSpin { to { transform: rotate(360deg); } }
@@ -671,6 +675,7 @@
             <button id="foreverBtn" title="WoW Forever is out" class="plate-btn cursor-pointer"><img class="plate-img" data-plate="FOREVER" alt="Forever"><span class="plate-tag"></span></button>
         </div>
     </header>
+    <div class="forever-only w-full px-4 py-2 border-b border-slate-800/80 items-center justify-center text-center font-bold text-slate-300" style="background:#0f0b16;font-size:calc(15px * var(--ts, 1))">👹 Uwutek is busy playing WoW Forever too. Why aren't you?</div>
     <div id="bossBar" class="hidden w-full px-4 py-2 border-b border-slate-800/80" style="background: linear-gradient(90deg,#1a0b2e,#3b0764 50%,#1a0b2e);">
         <div class="max-w-[2400px] mx-auto flex flex-col md:flex-row md:items-center gap-x-4 gap-y-1 text-xs">
             <div class="flex items-center gap-2 shrink-0 font-black uppercase tracking-wider text-fuchsia-200"><span id="bossIcon" tabindex="0"><img id="bossIconImg" alt="👹"><span id="bossArt"><img id="bossArtImg" alt="Uwutek"><b>UWUTEK</b><small>Guild boss. Fear the blush.</small></span></span><span id="bossName">Uwutek</span></div>
@@ -864,7 +869,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 6:24 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 6:28 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -1135,6 +1140,9 @@
                 </div>
                 <div class="relative w-full h-56 rounded-xl overflow-hidden bg-slate-950 border border-slate-800 shadow-inner">
                     <canvas id="zoomCanvas" class="w-full h-full block"></canvas>
+                    <svg class="forever-only absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 400 224" preserveAspectRatio="none" aria-hidden="true"><g fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M262 0 L248 38 L270 61 L231 104 L246 132 L205 171 L214 199 L188 224 M248 38 L219 49 L196 41 M231 104 L281 118 L322 109 M246 132 L276 157 L271 189 M205 171 L163 165 L131 182 M270 61 L304 54" stroke="rgba(0,0,0,.65)" stroke-width="4"/>
+                        <path d="M262 0 L248 38 L270 61 L231 104 L246 132 L205 171 L214 199 L188 224 M248 38 L219 49 L196 41 M231 104 L281 118 L322 109 M246 132 L276 157 L271 189 M205 171 L163 165 L131 182 M270 61 L304 54" stroke="rgba(241,245,249,.85)" stroke-width="1.6"/></g></svg>
                     <div class="absolute top-0 left-1/2 -translate-x-1/2 w-0.5 h-8 bg-amber-400 shadow-[0_0_10px_#fbbf24] pointer-events-none"></div>
                     <div class="absolute top-0 left-1/2 -translate-x-1/2 border-l-[8px] border-r-[8px] border-t-[12px] border-l-transparent border-r-transparent border-t-amber-400 pointer-events-none"></div>
                 </div>
@@ -1158,7 +1166,11 @@
             </div>
 
             <!-- $KNOB stock ticker -->
-            <div id="stockCard" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl">
+            <div id="stockCard" class="relative bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl">
+                <div class="forever-only absolute inset-0 z-10 rounded-2xl flex-col items-center justify-center gap-1 text-center px-4" style="background:rgba(2,6,23,.93)">
+                    <div class="text-3xl font-black mono text-slate-300">$0.00</div><div class="text-xs font-bold mono text-slate-500">▬ 0.00% today · volume: 0</div>
+                    <div class="text-sm font-bold text-slate-300 mt-1">Nobody is buying anything. Everyone is too engrossed in WoW Forever.</div>
+                </div>
                 <div class="flex items-center justify-between text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
                     <span>📈 Stonks · 🥃 $KNOB Knob Creek Holdings</span>
                     <span class="flex items-center gap-1.5 text-[10px] text-red-400"><span class="w-1.5 h-1.5 rounded-full bg-red-500 ad-blink"></span>LIVE</span>
@@ -1205,7 +1217,8 @@
                 <div id="feedHead" class="flex items-center justify-between gap-2 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
                     <span>🛰️ Guild feed</span><span class="flex items-center gap-2"><span class="flex items-center gap-1.5 text-[10px] text-emerald-400"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 ad-blink"></span>LIVE</span><button id="feedPop" class="pop-btn" title="Pop the guild feed out into its own window">⧉</button></span>
                 </div>
-                <div id="feedList" class="flex-1 overflow-y-auto space-y-1 text-xs mono pr-1"></div>
+                <div class="relative flex-1 min-h-0 flex flex-col"><div id="feedList" class="flex-1 overflow-y-auto space-y-1 text-xs mono pr-1"></div>
+                <div class="forever-only absolute inset-0 flex-col items-center justify-center text-center gap-1" style="background:rgba(15,23,42,.96)"><div class="text-3xl">🦗</div><div class="text-sm font-bold text-slate-400 italic">*crickets*</div><div class="text-xs text-slate-500">Nobody has spun since Forever came out.</div></div></div>
             </div>
 
             <div id="historyCard" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col" style="height: 260px;">
@@ -7669,6 +7682,7 @@
         const f = w.querySelector('.pet-flip'); if (f && Math.abs(dx) > 4) f.style.transform = (dx > 0) !== (w.id === 'pet-accountant') ? 'scaleX(-1)' : '';   // most animal emojis face left; Gizzlenut faces right
     }
     function petSay(k, text) {
+        if (k === 'clippy' && document.body.classList.contains('ghost-town')) text = "Why aren't we playing Forever?";   // in Forever, Clippy has exactly one thought
         const w = $('pet-' + k); if (!w) return;
         const b = w.querySelector('.pet-bubble'); b.textContent = text; b.classList.remove('hidden');
         clearTimeout(w._t); w._t = setTimeout(() => b.classList.add('hidden'), 3800);
@@ -8135,11 +8149,13 @@
         a.innerHTML = '<span class="hypno"></span><span class="text-sm md:text-lg font-extrabold text-white uppercase">▶ Play Forever ◀</span><span class="hypno"></span>';
         box(adTicker).appendChild(a);
     }
+    function isForeverWeek(d) { d = d || new Date(); return d.getMonth() === 10 && d.getDate() >= 4 && d.getDate() <= 10; }   // WoW Forever launched Nov 4: the whole guild "leaves" that week every year
     function toggleForever() {
         const on = !document.body.classList.contains('ghost-town');
         document.body.classList.toggle('ghost-town', on); if (on) store.set('painWheelSeenForever', true);
         $('foreverBtn').querySelector('.plate-tag').textContent = on ? 'come back?' : ''; $('foreverBtn').classList.toggle('plate-on', on);
         clearTimeout(tumbleT);
+        if (!on && isForeverWeek()) store.set('painWheelForeverOut', String(new Date().getFullYear()));   // left Forever during launch week: stay out this year
         if (on) {
             if (document.body.classList.contains('party-on')) $('partyBtn').click();
             chatLog && (chatLog.innerHTML = '<div style="color:#64748b;font-style:italic">*crickets*</div>');
@@ -9564,6 +9580,7 @@
             ['🛠️', 'Fixes: Party mode works again, OSHA landings always break something now, the Kevin joke shows under the news video too, the Toys button lost its number, and the wheel makes a charging whine while you hold SPIN.'],
             ['🌵', 'Forever mode: the news has nothing to report (the entire planet is in WoW Forever) and the ad is stuck on PLAY FOREVER. Police boats have their own siren now.'],
             ['🏚️', 'The desert shack has an inside now, and the claw machine lives in the corner. Click your shack (or Claw & Disorder in the shop) to go in. Some things in there are still a mystery.'],
+            ['🌵', 'WoW Forever week (Nov 4-10, every year): the whole wheel goes ghost town by itself. $KNOB crashes to $0.00, the guild feed is crickets, the zoom window cracked from neglect, and Uwutek is off playing Forever too. Clippy has one question. Click Forever (come back?) to leave.'],
             ['🥤', 'The 8/11 Slurpee machine actually runs now, and you watch your cup fill under the tap.'],
             ['🐦', 'Kevin and Casimir have real Squawkr profile pictures. Sorry I\'m Busy Skinning has its picture.']
         ]
@@ -10225,6 +10242,7 @@
 
     // ---------- party mode: slow sweeping club lights, no strobe ----------
     $('foreverBtn').addEventListener('click', toggleForever);
+    if (isForeverWeek() && store.get('painWheelForeverOut', '') !== String(new Date().getFullYear()) && BOARD_GO !== 'forever') setTimeout(() => { if (!document.body.classList.contains('ghost-town')) toggleForever(); }, 2500);
     if (BOARD_GO) setTimeout(() => {
         const w = $('welcome'); if (w && !w.classList.contains('hidden') && store.get('painWheelPlayer', '')) { w.classList.add('hidden'); w.classList.remove('flex'); }
         if (BOARD_GO === '811') open811(); else if (BOARD_GO === 'claw') openShack(); else if (BOARD_GO === 'shop') openShop();
