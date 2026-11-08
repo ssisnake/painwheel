@@ -857,7 +857,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 11:11 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 11:48 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -1403,7 +1403,7 @@
                 <div class="mono text-sm font-bold text-amber-300">🔒 RIG CONTROLS • now: <span id="rigStatusLabel">FAIR</span></div>
                 <button id="cheatCloseBtn" class="text-slate-400 hover:text-white text-sm font-bold">✕</button>
             </div>
-            <p class="text-xs text-slate-400 mb-3">Press a key (or click a row) to force the next spin. It resets to Fair after one spin. Clicking the degrees-per-slice number in the footer also cycles modes. A tiny dot after the slice count on the hub means a rig is armed. Keys marked ⇧ need Shift. Type <b>kana</b> or press Esc to close. The full list of secrets is in the spoilers file.</p>
+            <p class="text-xs text-slate-400 mb-3">Press a key (or click a row) to force the next spin. It resets to Fair after one spin. Clicking the degrees-per-slice number in the footer also cycles modes. A tiny dot after the slice count on the hub means a rig is armed. Keys marked ⇧ need Shift, and the few slices with a word instead (like <b>gym</b>) are rigged by typing that word. The list scrolls: use the find box. Type <b>kana</b> or press Esc to close. The full list of secrets is in the spoilers file.</p>
             <input id="cheatFind" type="search" placeholder="Find a slice..." class="w-full mb-2 px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-slate-100 text-sm" autocomplete="off">
             <div id="cheatList" class="grid grid-cols-2 sm:grid-cols-3 gap-1.5 text-xs mono"></div>
             <div class="mono text-sm font-bold text-amber-300 mt-4 mb-2">🎬 SET PIECES • watch one right now</div>
@@ -1839,7 +1839,7 @@
                  "The add has been taunted. By the warlock's imp. Casimir is very proud of him.", "Taunt was on Casimir's bars. Taunt was never pressed. Taunt is still on cooldown from 2019.", "Casimir prefers to tank with positive reinforcement."]) } },
         { id: "CANT_PARK", n: 1, label: "🅿️ Can't Park There 🅿️", pill: "CAN'T PARK", bg: "#1d4ed8", text: "#ffffff", border: "#facc15", color: "text-blue-300", glow: "bg-blue-700", key: "", rig: "CPT",
           win: { title: "🅿️ CAN'T PARK THERE 🅿️", size: SIZE.mid, sub: () => pick(CANT_PARK_LINES) + " (A repair bill for the wipe is in your bills.)" } },
-        { id: "FOREVER_DEPENDS", n: 1, label: "🩲 Forever Depends 🩲", pill: "FOREVER DEPENDS", bg: "#1e3a8a", text: "#dbeafe", border: "#60a5fa", color: "text-blue-300", glow: "bg-blue-700", key: "0", rig: "DEP",
+        { id: "FOREVER_DEPENDS", n: 1, label: "🩲 Forever Depends 🩲", pill: "FOREVER DEPENDS", bg: "#1e3a8a", text: "#dbeafe", border: "#60a5fa", color: "text-blue-300", glow: "bg-blue-700", rig: "DEP",
           win: { title: "🩲 MAXIMUM DEGENERACY 🩲", size: SIZE.mid, sub: () => pick(['You might shit, you might not. It just depends.', 'WoW Forever: absorbs 25x its weight in raid nights.',
                  '28 underwear. One raid night. Do the math.', 'Kana+ members save 15% with code DEPENDS. You might need it. You might not.', 'Five-hour progression night? It just depends.']),
                  media: { src: PHOTO_DEPENDS, fallback: null, caption: '🩲 YOU MIGHT SHIT, YOU MIGHT NOT • IT JUST DEPENDS' } } },
@@ -1985,7 +1985,7 @@
                  sub: () => pick(["Contour on point. Threat on point. Tsussie has entered the raid.", "Shield up, lashes on. The boss never stood a chance.",
                      "Tsussie took 40 minutes to get ready. The pull timer waited.", "Tanking in full glam. Not one smudge after a wipe.",
                      "Sword, shield, setting spray. Tsussie is fully geared.", "The T is silent. The taunt is not."]) + " 🛡️ This popup was brought to you by TsukBlock™: Tsussie tanks the ads so you don't have to." } },
-        { id: "MOOD", n: 1, label: "🚬 Mood 🌲", pill: "MOOD", bg: "#7c2d12", text: "#fed7aa", border: "#fb923c", color: "text-orange-300", glow: "bg-orange-700", key: "u", rig: "MOO",
+        { id: "MOOD", n: 1, label: "🚬 Mood 🌲", pill: "MOOD", bg: "#7c2d12", text: "#fed7aa", border: "#fb923c", color: "text-orange-300", glow: "bg-orange-700", rig: "MOO",
           win: { title: "🚬 MOOD 🌲", size: SIZE.mid, sub: () => pick(["Sat in the truck in the driveway for 20 minutes before going inside. Not sad. Just... mood.",
                      "Mortgage. Knees. Raid at 7. He lit one and stared at the treeline. Life happened to him.", "The thousand-yard stare of a man who just found out the truck needs a $3,000 repair.",
                      "He's not thinking about anything. That's the point. That's the mood.", "Back hurts. Knee hurts. Raid wiped. He is going to sit on this log until something stops hurting.",
@@ -5646,16 +5646,17 @@
         setRigMode(rigStates[(i + 1) % rigStates.length].mode);
     });
 
+    const TYPED_RIG_WORDS = { FOREVER_DEPENDS: 'depends', MOOD: 'mood', CANT_PARK: 'park', GYM_ETIQUETTE: 'gym', TP_2020: 'tpaper', SEASONAL: 'season' };
     (function buildCheatSheet() {
         const rows = [{ key: "0", id: "FAIR", pill: "FAIR (no rig)", color: "text-slate-200" }]
-            .concat(TYPES.map(t => ({ key: t.key || "—", id: t.id, pill: t.pill, color: t.color })));
+            .concat(TYPES.map(t => ({ key: t.key || TYPED_RIG_WORDS[t.id] || "—", id: t.id, pill: t.pill, color: t.color })));
         rows.forEach(r => {
             const b = document.createElement('button');
             b.dataset.mode = r.id;
             b.className = "flex items-center gap-2 px-2 py-1.5 rounded-lg bg-slate-950/70 border border-slate-800 hover:border-slate-500 text-left";
             const k = document.createElement('span');
             k.className = "min-w-[1.75rem] px-1 text-center rounded bg-slate-800 text-amber-300 font-bold";
-            k.textContent = /^[A-Z]$/.test(r.key) ? '⇧' + r.key : r.key;
+            k.textContent = /^[A-Z]$/.test(r.key) ? '⇧' + r.key : r.key;   // words (like "gym") are typed out
             const n = document.createElement('span');
             n.className = `truncate font-bold ${r.color}`;
             n.textContent = r.pill;
@@ -5689,6 +5690,7 @@
     $('cheatCloseBtn').addEventListener('click', () => toggleCheatSheet(false));
 
     const HOTKEYS = Object.fromEntries(TYPES.filter(t => t.key).map(t => [t.key, t.id]));
+
     let typedBuffer = "";
 
     /* ===================== KONAMI CODE =====================
@@ -5763,6 +5765,8 @@
             toggleCheatSheet();
             return;
         }
+        const word = Object.entries(TYPED_RIG_WORDS).find(([, w]) => typedBuffer.endsWith(w));
+        if (word) { typedBuffer = ""; setRigMode(word[0]); return; }
         if (k === '0') setRigMode("FAIR");
         else if (HOTKEYS[k]) setRigMode(HOTKEYS[k]);
     });
@@ -9666,6 +9670,7 @@
             ['🥃', "Pouring Reb a double only hurts the liver 1% now (it was 30%), and the liver got a fresh start. The weekly liver reward and Uwutek kill rewards now count your vault gold too."],
             ['🕹️', 'The claw machine is stingier: lined up is a 15% grab now, so it does not get cleaned out on day one.'],
             ['📈', 'Fixed: during WoW Forever week the fake $0.00 screen blocked stonks. It has a Trade anyway button now.'],
+            ['⏳', 'WoW Forever mode only turns on when YOU press the Forever button now. It no longer switches itself on during launch week.'],
             ['💳', 'Goblin Express has card tiers: Red when you sign up, Platinum after 10 charges, Black after 50. Same 400% APR either way.'],
             ['🚀', 'The SpaceZ pad has a real launch pad, and the LAUNCH button has a safety cover that flips open when you reach for it.'],
             ['🔊', 'New sounds: real farts for Gambled on a Fart, the yacht sinks (glug) after the iceberg and rocket hits, and Krom\'s Kool Kids slams a real door in your face.']
@@ -10372,7 +10377,6 @@
     }
     setTimeout(lootPending, 2000);
     setTimeout(awardPending, 2500);
-    if (isForeverWeek() && store.get('painWheelForeverOut', '') !== String(new Date().getFullYear()) && BOARD_GO !== 'forever') setTimeout(() => { if (!document.body.classList.contains('ghost-town')) toggleForever(); }, 2500);
     if (BOARD_GO) setTimeout(() => {
         const w = $('welcome'); if (w && !w.classList.contains('hidden') && store.get('painWheelPlayer', '')) { w.classList.add('hidden'); w.classList.remove('flex'); }
         if (BOARD_GO === '811') open811(); else if (BOARD_GO === 'claw') location.href = 'shack.html#claw'; else if (BOARD_GO === 'shop') openShop();
