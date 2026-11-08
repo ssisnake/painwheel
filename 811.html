@@ -220,5 +220,24 @@ function slurpee(f) {
 }
 document.querySelectorAll('[data-f]').forEach(b => b.onclick = () => slurpee(b.dataset.f));
 </script>
-<script>window.AXA_CAMEO = { id: '811', host: '#scene', x: 25.6, y: 26.5, w: 3.6, z: 1, filter: 'brightness(.5) saturate(.4) blur(.4px)', op: .7 };</script><script src="axa_cameo.js"></script>
+<script>
+// ---- the 8/11's music: lo-fi on the store speakers (Pixabay: zephiramusic, franzian-deo, Alex Morgan). A random song each time, never the same one twice in a row ----
+(() => {
+  const SONGS = [1, 2, 3, 4].map(n => `media/audio_bgm_811_${n}.mp3`);
+  const g = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v === null ? d : v; } catch (e) { return d; } };
+  const target = () => { if (g('painWheelMusicOff', false) === true || document.hidden || !document.hasFocus()) return 0; const mv = g('painWheelMusicVol', .5), v = parseFloat(localStorage.getItem('painWheelVolume')); return .5 * (typeof mv === 'number' ? mv : .5) * (isNaN(v) ? .6 : Math.max(0, Math.min(1, v))); };
+  const ramp = (a, to, ms, done) => { const f = a.volume, t0 = performance.now(); (function st() { const k = Math.min(1, (performance.now() - t0) / ms); a.volume = Math.max(0, Math.min(1, f + (to - f) * k)); if (k < 1) requestAnimationFrame(st); else if (done) done(); })(); };
+  let cur = null, last = -1;
+  function next() {
+    let i; do { i = Math.floor(Math.random() * SONGS.length); } while (SONGS.length > 1 && i === last); last = i;
+    const a = new Audio(SONGS[i]); a.volume = 0; const old = cur; cur = a; if (old) ramp(old, 0, 3000, () => old.pause());
+    if (target() > 0) a.play().then(() => ramp(a, target(), 2500)).catch(() => {});
+    a.addEventListener('timeupdate', function nx() { if (a.duration && a.currentTime > a.duration - 4 && cur === a) { a.removeEventListener('timeupdate', nx); next(); } });
+    a.addEventListener('ended', () => { if (cur === a) next(); });
+  }
+  const apply = () => { if (!cur) return; const t = target(); if (t > 0) { cur.play().catch(() => {}); ramp(cur, t, 900); } else ramp(cur, 0, 600, () => { if (!target()) cur.pause(); }); };
+  addEventListener('pointerdown', () => { if (!cur) next(); }, { once: true });
+  document.addEventListener('visibilitychange', apply); addEventListener('blur', apply); addEventListener('focus', apply);
+})();
+</script><script>window.AXA_CAMEO = { id: '811', host: '#scene', x: 25.6, y: 26.5, w: 3.6, z: 1, filter: 'brightness(.5) saturate(.4) blur(.4px)', op: .7 };</script><script src="axa_cameo.js"></script>
 </body></html>

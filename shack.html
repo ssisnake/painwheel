@@ -136,8 +136,8 @@ function clawSong(i) {
   clawI = i % CLAW_BGM.length; const a = new Audio(CLAW_BGM[clawI]); a.volume = 0; const old = clawA; clawA = a;
   if (old) ramp(old, 0, 3000, () => old.pause());
   if (clawTarget() > 0) a.play().then(() => ramp(a, clawTarget(), 1500)).catch(() => {});
-  a.addEventListener('timeupdate', function nx() { if (a.duration && a.currentTime > a.duration - 4 && clawA === a) { a.removeEventListener('timeupdate', nx); clawSong(clawI + 1); } });
-  a.addEventListener('ended', () => { if (clawA === a) clawSong(clawI + 1); });
+  a.addEventListener('timeupdate', function nx() { if (a.duration && a.currentTime > a.duration - 4 && clawA === a) { a.removeEventListener('timeupdate', nx); clawSong((clawI + 1 + Math.floor(Math.random() * Math.max(1, CLAW_BGM.length - 1))) % CLAW_BGM.length); } });
+  a.addEventListener('ended', () => { if (clawA === a) clawSong((clawI + 1 + Math.floor(Math.random() * Math.max(1, CLAW_BGM.length - 1))) % CLAW_BGM.length); });
 }
 // ---- the shack's own music (Pixabay: tunetank, mickeyscat): western and old-film ragtime, under the wind; steps aside for the arcade ----
 const SHACK_BGM = ['media/audio_bgm_shack1.mp3', 'media/audio_bgm_shack2.mp3'];
@@ -147,8 +147,8 @@ function shSong(i) {
   shI = i % SHACK_BGM.length; const a = new Audio(SHACK_BGM[shI]); a.volume = 0; const old = shA; shA = a;
   if (old) ramp(old, 0, 3000, () => old.pause());
   if (shTarget() > 0) a.play().then(() => ramp(a, shTarget(), 2500)).catch(() => {});
-  a.addEventListener('timeupdate', function nx() { if (a.duration && a.currentTime > a.duration - 4 && shA === a) { a.removeEventListener('timeupdate', nx); shSong(shI + 1); } });
-  a.addEventListener('ended', () => { if (shA === a) shSong(shI + 1); });
+  a.addEventListener('timeupdate', function nx() { if (a.duration && a.currentTime > a.duration - 4 && shA === a) { a.removeEventListener('timeupdate', nx); shSong((shI + 1 + Math.floor(Math.random() * Math.max(1, SHACK_BGM.length - 1))) % SHACK_BGM.length); } });
+  a.addEventListener('ended', () => { if (shA === a) shSong((shI + 1 + Math.floor(Math.random() * Math.max(1, SHACK_BGM.length - 1))) % SHACK_BGM.length); });
 }
 function shApply() { if (!shA) return; const t = shTarget(); if (t > 0) { shA.play().catch(() => {}); ramp(shA, t, 900); } else ramp(shA, 0, 600, () => { if (!shTarget()) shA.pause(); }); }
 addEventListener('pointerdown', () => { if (!shA) shSong(shI); }, { once: true });
