@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/png" href="favicon.png">
 <title>The Shack · The Wheel</title>
 <style>
   * { box-sizing: border-box; }
@@ -77,8 +78,122 @@ const ACT = {
 setTimeout(() => say(pick(['The door creaks. Sand everywhere. Someone left the claw machine plugged in.', 'It smells like 1987 in here.', 'The neon sign still works. Nothing else does.', 'Your shack. Your claw machine. Your... roommate?'])), 400);
 document.querySelectorAll('[data-hs]').forEach(b => b.addEventListener('click', () => {
   const k = b.dataset.hs;
-  if (k === 'claw') { location.href = 'wheel.html#go=claw'; return; }
+  if (k === 'claw') { openClaw(); return; }
   if (k === 'door') { location.href = 'wheel.html'; return; }
   (ACT[k] || (() => {}))();
 }));
+
+// ================= 🕹️ the claw machine, right here in the shack =================
+// Shares everything with the wheel through localStorage: tokens, gold, pets. Achievements are queued for the wheel to award.
+const CLAW_SLOGANS = ['THE CLAW OF DISAPPOINTMENT', 'Prize list sealed by court order.', 'Cameras were down that day. Totally normal.', 'TERMINAL CLAW MACHINE: your odds are worse than your raid\'s survival rate.',
+        'The guard fell asleep. The claw did not.', 'Flight logs available upon request. Request denied.', 'Grab your dreams. Watch us drop them.', 'Where dreams go to die and idiots pay admission.'];
+const CLAW_PRIZES = [
+  { k: 'volley', img: 'media/photo_volley.png', won: '🏐 YOU WON VOLLEY McBALLFACE. He is yours now. He does not explain the handprint.' },
+  { k: 'spinny', img: 'media/photo_pet_spinny.png', won: "🎡 YOU WON LIL' SPINNY. It has not stopped spinning since you picked it up." },
+  { k: 'gerald', img: 'media/photo_pet_gerald.png', won: '🐹 YOU WON GERALD. He says he powers The Wheel. He wants a raise.' },
+  { k: 'needle', img: 'media/photo_pet_needle.png', won: '📍 YOU WON THE NEEDLE. It is pointing at you. It will keep doing that.' },
+  { k: 'kevjr', img: 'media/photo_pet_kevjr.png', won: '🍕 YOU WON KEVIN JR. Congratulations? You have more Kevin now.' }];
+const fmt = (n) => { n = Math.round(n); if (n < 1e15) return n.toLocaleString() + 'g'; const e = Math.floor(Math.log10(n)); return (n / Math.pow(10, e)).toFixed(2) + 'e' + e + 'g'; };
+const queueAch = (id) => { const q = get('painWheelPendingAch', []); if (!q.includes(id)) q.push(id); put('painWheelPendingAch', q); };
+// sound: the real claw motor / token / crash files, at the wheel's volume
+let AC = null; const BUF = {};
+const vol = () => { const v = parseFloat(localStorage.getItem('painWheelVolume')); return isNaN(v) ? 0.6 : Math.max(0, Math.min(1, v)); };
+const sfx = (name, dur, rate) => {
+  try {
+    if (!vol()) return () => {};
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    const go = (b) => { const t = AC.currentTime, s = AC.createBufferSource(), g = AC.createGain(); s.buffer = b; s.playbackRate.value = rate || 1; if (dur) s.loop = true;
+      g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.8 * vol(), t + .05); if (dur) { g.gain.setValueAtTime(0.8 * vol(), t + Math.max(.08, dur - .12)); g.gain.linearRampToValueAtTime(0.0001, t + dur); s.stop(t + dur + .05); }
+      s.connect(g); g.connect(AC.destination); s.start(t, dur ? Math.random() * Math.max(0, b.duration - 1) : 0); return s; };
+    if (BUF[name]) { go(BUF[name]); return; }
+    fetch('media/' + name + '.mp3').then(r => r.arrayBuffer()).then(ab => AC.decodeAudioData(ab)).then(b => { BUF[name] = b; go(b); }).catch(() => {});
+  } catch (e) {}
+};
+function openClaw() {
+  if (document.getElementById('clawOv')) return;
+  put('painWheelSeenClaw', true);
+  let tokens = get('painWheelTokens', 0); const pets = get('painWheelPets', {});
+  let prize0 = CLAW_PRIZES.find(c => !pets[c.k]); const prizeOn = !!prize0;
+  const ov = document.createElement('div'); ov.id = 'clawOv';
+  ov.style.cssText = 'position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;padding:12px;background:rgba(12,10,9,.82);overflow:auto';
+  ov.innerHTML = `<div style="position:relative;width:min(460px,100%,calc((100vh - 250px) * .65));text-align:center;font-family:system-ui,sans-serif">
+      <button data-x style="position:absolute;right:-6px;top:-6px;z-index:5;width:40px;height:40px;border-radius:50%;background:#292524;color:#fff;font-size:22px;border:2px solid #78716c;cursor:pointer">✕</button>
+      <div style="position:relative;width:100%;aspect-ratio:460/708;background:url(media/photo_claw_cab.png) 0 0/100% 100% no-repeat;image-rendering:pixelated">
+        <div style="position:absolute;left:10.5%;top:25%;width:79%;height:35.5%;overflow:hidden">
+          <div data-rope style="position:absolute;top:0;left:0;width:3px;height:6%;background:#57534e;transform:translateX(-50%)"></div>
+          <img data-claw src="media/photo_claw.png" alt="" style="position:absolute;top:2%;left:0;width:19%;transform:translateX(-50%);transition:top 1.1s ease-in-out">
+          <img data-prize src="${prize0 ? prize0.img : CLAW_PRIZES[0].img}" alt="" style="position:absolute;bottom:4%;left:0;width:15%;image-rendering:pixelated;transform:translateX(-50%);transition:bottom 1.1s ease-in-out;${prizeOn ? '' : 'display:none'}">
+          <div data-sold style="position:absolute;inset:0;display:${prizeOn ? 'none' : 'flex'};align-items:center;justify-content:center;padding:10px;color:#fde68a;font:900 15px/1.3 ui-monospace,monospace;text-shadow:0 2px 0 #000">SOLD OUT<br>You won every prize.<br>The claw is empty. Like your token jar.</div>
+        </div>
+      </div>
+      <div data-slogan style="margin-top:8px;color:#fde68a;font:800 16px/1.3 system-ui,sans-serif;min-height:42px"></div>
+      <div data-msg style="color:#f5f5f4;font:700 17px/1.35 system-ui,sans-serif;min-height:48px"></div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:6px">
+        <button data-buy style="white-space:nowrap;font-size:15px;font-weight:800;padding:10px 12px;border-radius:10px;background:#713f12;color:#fde68a;border:none;cursor:pointer">🎰 Buy token</button>
+        <button data-l style="font-size:22px;padding:10px 20px;border-radius:10px;background:#44403c;color:#fff;border:none;cursor:pointer">◀</button>
+        <button data-d style="white-space:nowrap;font-size:20px;font-weight:900;padding:10px 18px;border-radius:10px;background:#b91c1c;color:#fff;border:none;cursor:pointer">DROP (1 🎰)</button>
+        <button data-r style="font-size:22px;padding:10px 20px;border-radius:10px;background:#44403c;color:#fff;border:none;cursor:pointer">▶</button>
+      </div>
+      <div style="margin-top:8px;color:#78716c;font-size:12px">THE WHEEL™ is not responsible for missing prizes, missing persons, or anything found during a federal investigation. No Refunds</div>
+    </div>`;
+  document.body.appendChild(ov);
+  const q = (a) => ov.querySelector(`[data-${a}]`), claw = q('claw'), rope = q('rope'), prize = q('prize'), msg = q('msg');
+  const status = () => { msg.innerHTML = (prize0 ? `1 casino token a play. You have ${tokens}. Move the claw, then DROP.` : 'Nothing left to win. You can still lose tokens though.') + `<br><span style="color:#a8a29e;font-size:14px">Prize ${prize0 ? CLAW_PRIZES.indexOf(prize0) + 1 : CLAW_PRIZES.length} of ${CLAW_PRIZES.length}</span>`; };
+  status();
+  let x = 50, busy = false, px = 20 + Math.random() * 60, sl = 0;
+  prize.style.left = px + '%';
+  const place = () => { claw.style.left = x + '%'; rope.style.left = x + '%'; }; place();
+  const slogan = () => { q('slogan').textContent = CLAW_SLOGANS[sl++ % CLAW_SLOGANS.length]; }; slogan(); const st = setInterval(slogan, 3500);
+  const close = () => { clearInterval(st); removeEventListener('keydown', key, true); ov.remove(); };
+  const move = (d, quiet) => { if (busy) return; x = Math.max(8, Math.min(92, x + d)); place(); if (!quiet) sfx('audio_claw_motor', .16, 1.15); };
+  const key = (e) => { if (e.key === 'ArrowLeft') { move(-4); e.preventDefault(); } else if (e.key === 'ArrowRight') { move(4); e.preventDefault(); } else if (e.key === ' ' || e.key === 'Enter') { drop(); e.preventDefault(); } else if (e.key === 'Escape') close(); };
+  addEventListener('keydown', key, true);
+  q('x').onclick = close; ov.addEventListener('click', (e) => { if (e.target === ov) close(); });
+  let hold; [['l', -3], ['r', 3]].forEach(([b, d]) => { const el = q(b); el.onpointerdown = () => { move(d); hold = setInterval(() => move(d, true), 90); }; el.onpointerup = el.onpointerleave = () => clearInterval(hold); });
+  q('d').onclick = drop;
+  q('buy').onclick = () => {   // the cashier cage: 5% of your gold (min 100g)
+    const gold = get('painWheelGold', 0), c = Math.max(100, Math.round(gold * .05));
+    if (gold < c) { msg.textContent = `The cashier wants ${fmt(c)}. You do not have ${fmt(c)}.`; return; }
+    put('painWheelGold', gold - c); tokens = get('painWheelTokens', 0) + 1; put('painWheelTokens', tokens); sfx('audio_token');
+    msg.textContent = `🎰 Bought 1 token for ${fmt(c)} (5% of your gold). You have ${tokens}. The cashier bit it to check.`;
+  };
+  function drop() {
+    if (busy) return;
+    tokens = get('painWheelTokens', 0);
+    if (tokens < 1) { msg.textContent = 'No casino tokens. Spin the wheel, check the barrel, or buy one at the cashier. Gold is no good in the machine.'; return; }
+    tokens--; put('painWheelTokens', tokens);
+    busy = true; const plays = get('painWheelClawPlays', 0) + 1; put('painWheelClawPlays', plays);
+    const near = prize.style.display !== 'none' && Math.abs(x - px) < 7;
+    const grip = get('painWheelClawGrip', 0) > 0; if (grip) put('painWheelClawGrip', 0);   // the toolbox tightened it: one strong grab
+    const win = near && (Math.random() < (grip ? 0.85 : 0.3) || plays % 12 === 0);
+    claw.style.top = '60%'; rope.style.transition = 'height 1.1s ease-in-out'; rope.style.height = '64%'; msg.textContent = '...';
+    sfx('audio_claw_motor', 1.1, .9); setTimeout(() => sfx('audio_claw_motor', 1.1, 1.05), 1250);
+    setTimeout(() => {
+      claw.style.transform = 'translateX(-50%) scaleX(.82)';
+      if (near) { prize.style.transition = 'bottom 1.1s ease-in-out'; prize.style.left = x + '%'; prize.style.bottom = '58%'; }
+      claw.style.top = '2%'; rope.style.height = '6%';
+      setTimeout(() => {
+        if (win) {
+          const P = prize0; msg.textContent = P.won;
+          prize.style.transition = 'left .9s ease-in-out, bottom .9s ease-in'; prize.style.left = '4%'; sfx('audio_claw_motor', .9, 1.2); setTimeout(() => { prize.style.bottom = '-40%'; setTimeout(() => sfx('audio_crash_1'), 600); }, 900);
+          const pets2 = get('painWheelPets', {}); pets2[P.k] = true; put('painWheelPets', pets2); pets[P.k] = true;
+          queueAch('clawwin'); if (CLAW_PRIZES.every(c => pets2[c.k])) queueAch('clawall');
+          setTimeout(() => {
+            prize0 = CLAW_PRIZES.find(c => !pets2[c.k]);
+            if (!prize0) { q('sold').style.display = 'flex'; prize.style.display = 'none'; busy = false; return; }
+            prize.style.transition = 'none'; prize.src = prize0.img; px = 20 + Math.random() * 60; prize.style.left = px + '%'; prize.style.bottom = '4%';
+            claw.style.transform = 'translateX(-50%)'; busy = false;
+          }, 2400);
+        } else {
+          if (near) { prize.style.bottom = '4%'; }
+          claw.style.transform = 'translateX(-50%)';
+          msg.textContent = near ? pick(['The claw opened. It always opens.', 'SO close. The claw has arthritis.', 'It slipped. The skeleton in the corner laughs. Silently.']) : pick(['Nothing. You grabbed sand.', 'The claw came up empty. Like your wallet.', 'Missed. The skeleton nods knowingly.']);
+          if (Math.random() < 0.2) setTimeout(() => { tokens = get('painWheelTokens', 0) + 1; put('painWheelTokens', tokens); sfx('audio_token'); msg.textContent += ' ...CLINK. A token fell out of the coin return.'; }, 900);
+          busy = false;
+        }
+      }, 1300);
+    }, 1250);
+  }
+}
+if (location.hash === '#claw') setTimeout(openClaw, 500);
 </script></body></html>

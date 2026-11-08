@@ -849,7 +849,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 6:49 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 7:23 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -7065,6 +7065,9 @@
         else if (e.key === 'painWheelBag' && v && typeof v === 'object' && !Array.isArray(v)) { bag = v; if (!$('bagPanel').classList.contains('hidden')) renderBag(); }
         else if (e.key === 'painWheelFound' && v && typeof v === 'object' && !Array.isArray(v)) { foundItems = v; }
         else if (e.key === 'painWheelAchievements' && v && typeof v === 'object') { Object.assign(achieved, v); }
+        else if (e.key === 'painWheelTokens' && typeof v === 'number') { tokens = v; }
+        else if (e.key === 'painWheelPets' && v && typeof v === 'object') { Object.assign(pets, v); renderPets(); }
+        else if (e.key === 'painWheelPendingAch') setTimeout(awardPending, 50);
         else if (e.key === 'painWheelStats' && v && typeof v === 'object') { Object.assign(stats, v); }
         else if (e.key === 'painWheelAllTimeSpins') { const n = parseInt(e.newValue, 10); if (n > allTimeSpins) { allTimeSpins = n; updateSpinBadge(); } }
     });
@@ -9562,7 +9565,7 @@
             ['📌', 'The Board is the new front page: every place you unlock (the yacht, the VIP room, the 8/11, the shack, WHEEL-2600) gets pinned up with a photo. Click one to go there. The wheel has a Back to The Board link.'],
             ['🛠️', 'Fixes: Party mode works again, OSHA landings always break something now, the Kevin joke shows under the news video too, the Toys button lost its number, and the wheel makes a charging whine while you hold SPIN.'],
             ['🌵', 'Forever mode: the news has nothing to report (the entire planet is in WoW Forever) and the ad is stuck on PLAY FOREVER. Police boats have their own siren now.'],
-            ['🏚️', 'The desert shack has an inside now, and the claw machine lives in the corner. Click your shack (or its photo on The Board) to go in: it is its own page now. Some things in there are still a mystery. Golden cookies in Forever burst into tumbleweeds.'],
+            ['🏚️', 'The desert shack has an inside now, and the claw machine lives in the corner. Click your shack (or its photo on The Board) to go in: it is its own page now, and the claw machine runs right there in the corner. Some things in there are still a mystery. Golden cookies in Forever burst into tumbleweeds.'],
             ['🌵', 'WoW Forever week (Nov 4-10, every year): the whole wheel goes ghost town by itself. $KNOB crashes to $0.00, the guild feed is crickets, the zoom window cracked from neglect, and Uwutek is off playing Forever too. Clippy has one question. Click Forever (come back?) to leave.'],
             ['🥤', 'The 8/11 Slurpee machine actually runs now, and you watch your cup fill under the tap.'],
             ['🏚️', 'Shack secrets: the skeleton talks, the barrel has a daily casino token, the toolbox tightens the claw for one strong grab a day, and the map on the table is the first clue toward the basement (it gets pinned to The Board). The sign flickers. It does that.'],
@@ -9895,7 +9898,7 @@
                 chicken: `<img src="${PHOTO_CHICKEN}" alt="" style="display:inline-block;height:28px;vertical-align:middle">`, whelp: `<img src="${PHOTO_WHELP}" alt="" style="display:inline-block;height:28px;vertical-align:middle">`,
                 accountant: `<img src="${PHOTO_GIZ_GRIN}" alt="" style="display:inline-block;height:34px;vertical-align:middle">`, volley: `<img src="${PHOTO_VOLLEY}" alt="" style="display:inline-block;height:28px;vertical-align:middle">` };
             ['spinny', 'gerald', 'needle', 'kevjr'].forEach(k => { PET_ICON[k] = `<img src="${PETS[k].img}" alt="" style="display:inline-block;height:30px;vertical-align:middle;image-rendering:pixelated">`; });
-            add(shopRow(`<img src="${PHOTO_CLAW}" alt="" style="display:inline-block;height:30px;vertical-align:middle">`, 'Claw & Disorder', 'THE WHEEL™ claw machine at Little St. Jeff\'s Prize Island, in the corner of the desert shack. New pets live inside. Nobody gets what they came for. Usually.', `Play: 1 🎰 token (you have ${tokens})`, () => { closeShop(); openClaw(); }));
+            add(shopRow(`<img src="${PHOTO_CLAW}" alt="" style="display:inline-block;height:30px;vertical-align:middle">`, 'Claw & Disorder', 'THE WHEEL™ claw machine at Little St. Jeff\'s Prize Island, in the corner of the desert shack. New pets live inside. Nobody gets what they came for. Usually.', `Play: 1 🎰 token (you have ${tokens})`, () => { closeShop(); location.href = 'shack.html#claw'; }));
             { const n = document.createElement('div'); n.className = 'text-sm text-slate-300'; n.textContent = `Up to ${PET_LIMIT} pets can be out at once (${activePets().length}/${PET_LIMIT} now). Clippy doesn't count. Clippy is not a pet. Clippy is a consequence.`; add(n); }
             Object.entries(PETS).forEach(([k, p0]) => {
                 const p = PET_ICON[k] ? Object.assign({}, p0, { e: PET_ICON[k] }) : p0;
@@ -10227,10 +10230,15 @@
 
     // ---------- party mode: slow sweeping club lights, no strobe ----------
     $('foreverBtn').addEventListener('click', toggleForever);
+    function awardPending() {   // achievements earned on other pages (the shack's claw machine) get awarded here, where the guild leaderboard hears about them
+        const q = store.get('painWheelPendingAch', []); if (!q.length) return;
+        store.set('painWheelPendingAch', []); q.forEach((id, i) => setTimeout(() => unlock(id), 400 + i * 1500));
+    }
+    setTimeout(awardPending, 2500);
     if (isForeverWeek() && store.get('painWheelForeverOut', '') !== String(new Date().getFullYear()) && BOARD_GO !== 'forever') setTimeout(() => { if (!document.body.classList.contains('ghost-town')) toggleForever(); }, 2500);
     if (BOARD_GO) setTimeout(() => {
         const w = $('welcome'); if (w && !w.classList.contains('hidden') && store.get('painWheelPlayer', '')) { w.classList.add('hidden'); w.classList.remove('flex'); }
-        if (BOARD_GO === '811') open811(); else if (BOARD_GO === 'claw') openClaw(); else if (BOARD_GO === 'shop') openShop();
+        if (BOARD_GO === '811') open811(); else if (BOARD_GO === 'claw') location.href = 'shack.html#claw'; else if (BOARD_GO === 'shop') openShop();
         else if (BOARD_GO === 'forever' && !document.body.classList.contains('ghost-town')) toggleForever();
     }, 900);
     $('partyBtn').addEventListener('click', () => {
