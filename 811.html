@@ -31,6 +31,9 @@
   @keyframes bulb { 0%, 41%, 47%, 49%, 77%, 100% { opacity: 0; } 42%, 46%, 48%, 78%, 79.5% { opacity: 1; } }
   .bulbglow { position: absolute; left: 66%; top: 6%; width: 23%; height: 22%; pointer-events: none; background: radial-gradient(ellipse at 50% 0%, rgba(255,255,220,.22), transparent 70%); animation: glow 6.5s infinite; }
   @keyframes glow { 0%, 41%, 47%, 49%, 77%, 100% { opacity: 1; } 42%, 46%, 48%, 78%, 79.5% { opacity: 0; } }
+  #hatch { position: absolute; left: 3.2%; top: 57.5%; width: 4.4%; height: 10.5%; display: none; padding: 0; border: 2px solid #78716c; border-radius: 4px; cursor: pointer; z-index: 6;
+    background: radial-gradient(circle at 50% 55%, rgba(250,204,21,.55), #0c0a09 70%); box-shadow: inset 0 0 12px #000, 0 0 16px rgba(250,204,21,.5); font-size: clamp(14px, 2vw, 28px); animation: hatchIn .6s ease-out; }
+  @keyframes hatchIn { from { transform: scaleY(0); transform-origin: top; } to { transform: none; } }
   #customer { position: absolute; bottom: 4%; z-index: 3; animation: idle 2.6s ease-in-out infinite; }
   @keyframes idle { 50% { translate: 0 -3%; } }
   #say { position: absolute; left: 50%; top: 4%; transform: translateX(-50%); max-width: 80%; padding: 10px 18px; border-radius: 10px; background: rgba(12,10,9,.92); border: 2px solid #f97316; color: #fef3c7; font: 800 19px/1.35 system-ui, sans-serif; text-align: center; display: none; z-index: 9; }
@@ -48,6 +51,7 @@
   <button class="tap" data-f="Cherry" style="left:13.5%;top:33%;width:5.3%;height:27%" title="Cherry Slurpee (1 gold)" aria-label="Cherry Slurpee, 1 gold"></button>
   <button class="tap" data-f="Lime" style="left:18.8%;top:33%;width:4.4%;height:27%" title="Lime Slurpee (1 gold)" aria-label="Lime Slurpee, 1 gold"></button>
   <img id="cup" alt="">
+  <button id="hatch" type="button" aria-label="A secret compartment">🔑</button>
   <div id="props"></div>
   <div id="say" role="status"></div>
   <div id="closed"><b>CLOSED</b><p>The 8/11 is closed. It is open 11 days a week, just not for you yet.<br>Land on <b style="font-size:inherit;color:#fb923c">8/11</b> on the wheel to open it. The shop lives in here.</p><a href="wheel.html">🎡 Go spin</a></div>
@@ -127,18 +131,20 @@ add('<img class="deco" src="media/photo_811_pricetag.png" alt="" style="left:30.
 
 // ---- a random regular wanders in every visit ----
 const REGULARS = [
-  ['photo_clippy', 5, 'It looks like you are buying a Slurpee. Would you like help with that?'],
-  ['photo_volley', 4.5, '...(Volley says nothing. Volley is a volleyball.)'],
-  ['photo_whelp', 7, '*the whelp is licking the Slurpee machine*'],
-  ['photo_chicken', 5, 'Bawk. (The chicken is here for the hot dogs. Do not ask.)'],
-  ['photo_pet_spinny', 5, 'Lil\' Spinny is spinning in the aisle. Nobody can stop him.'],
-  ['photo_pet_gerald', 5.5, 'Gerald is reading the magazines without buying any. Classic Gerald.'],
-  ['photo_pet_kevjr', 5.5, 'Kevin Jr. is trying to buy a lottery ticket with a Monopoly bill.'],
-  ['photo_pet_needle', 4, 'The Needle is pointing at the CURSES aisle. Ominous.'],
-  ['photo_uwu_icon', 6, 'Uwutek is buying 40 energy drinks. Raid tonight, apparently.']];
-const [rImg, rW, rLine] = pick(REGULARS), rx = 60 + Math.random() * 10;
+  ['photo_clippy', 5, ["It looks like you're buying a Slurpee. Would you like help with that?", 'I come here for the fluorescent lights. They remind me of 1997.', 'I asked the clerk for a job. He said they already have a paperclip. It is holding the receipts.',
+    "Do not tell anyone, but I have never tried a Slurpee. I don't have a mouth. I have opinions.", 'It looks like you are leaving. Would you like help staying?']],
+  ['photo_volley', 4.5, ['...', '... (Volley stares at the hot dog roller.)', '... (Volley is a volleyball. Volley does not talk. Volley is judging you.)', '... (There is a handprint on Volley. Nobody asks.)']],
+  ['photo_whelp', 7, ['*the whelp is licking the Slurpee machine*', '*tiny smoke puff* (it wants the hot dogs)', '*the whelp tries to breathe fire on the ice machine. Steam everywhere.*', '*it curls up on the warm hot dog roller and refuses to move*']],
+  ['photo_chicken', 5, ['Bawk.', 'Bawk bawk. (The chicken is here for the hot dogs. Do not ask what is in them.)', 'BAWK! (It saw the egg salad sandwiches.)', 'Bawk. (It has a quest for you. The quest is "leave".)']],
+  ['photo_pet_spinny', 5, ["wheeeee I can't stop spinning in the aisle", 'do they sell anything that makes you stop spinning', 'i got dizzy in the candy aisle. it was the best day of my life', 'the clerk said no running in the store. i am not running. i am rolling']],
+  ['photo_pet_gerald', 5.5, ['Reading the magazines. Not buying any. Classic me.', 'I power The Wheel, you know. Twelve-hour shifts. I am here for the coffee.', 'They will not let me pay in sunflower seeds. Unions have fallen for less.', 'Do not tell The Wheel I took a break.']],
+  ['photo_pet_kevjr', 5.5, ['I want a lottery ticket! I have a Monopoly dollar!', "Dad says don't stand in fire. I don't know what that means. Dad doesn't either.", 'Can I have a hot dog? Can I have two? Can I have the roller?', 'I pulled the fire alarm. Like dad pulls bosses.']],
+  ['photo_pet_needle', 4, ['*The Needle points at the CURSES aisle.*', '*The Needle points at you. Then at the Slurpee machine. Then back at you.*', '*The Needle points at the security camera. Huh.*', '*The Needle spins once and points at the door. Rude.*']],
+  ['photo_uwu_icon', 6, ['Forty energy drinks. Raid tonight.', 'Do not tell the guild you saw me here. I have a reputation.', 'The clerk gave me the boss discount. It is 0%.', 'I could wipe this whole store. I am choosing not to. Today.']]];
+const [rImg, rW, rLines] = pick(REGULARS), rx = 60 + Math.random() * 10; let rN = 0;
 const reg = add(`<button type="button" class="prop" id="customer" title="A regular" aria-label="A regular" style="left:${rx}%;width:${rW}%"><img src="media/${rImg}.png" alt=""></button>`);
-reg.onclick = () => say(rLine, 3600);
+reg.onclick = () => say(rLines[rN++ % rLines.length], 4200);
+setTimeout(() => { if (has811()) say(rLines[rN++ % rLines.length], 3800); }, 2600);   // they say hi when you walk in
 
 // ---- Slurpees: 1 gold, poured from the real machine. The cup gets cleared once you're done ----
 const HUE = { 'Cherry': '', 'Blue Raspberry': 'hue-rotate(215deg) saturate(1.3)', 'Lime': 'hue-rotate(110deg) saturate(1.2)' };
@@ -146,12 +152,23 @@ const LINES = { 'Cherry': ['Cherry. A classic. Like Kevin pulling.', 'Red. Like 
   'Lime': ['Lime. Bold choice. Wrong, but bold.', 'Green, like the pull timer Kevin ignored.'] };
 const SPILL = ['Clean up on aisle 8. Your gold is gone. So is your Slurpee.', 'Dropped it. The 8/11 has a no-refund policy. And no floor mop.', 'Kevin bumped you. Kevin says he did not bump you.', 'It hit the floor before the lid did. Gravity: 1, you: 0.'];
 const TAPS = { 'Blue Raspberry': 11.6, 'Cherry': 16.4, 'Lime': 21 };
-let busy = false;
+let busy = false, seq = [];
+const clues = () => get('painWheelClues', {}) || {};
+function checkRGB(f) {   // hidden evidence: pour red, then green, then blue and the machine opens a secret compartment
+  seq.push(f); seq = seq.slice(-3);
+  if (seq.join('|') !== 'Cherry|Lime|Blue Raspberry') return;
+  seq = []; setTimeout(() => { $('hatch').style.display = 'grid'; $('hatch').style.placeItems = 'center'; say('*CLUNK* A little panel just popped open on the side of the Slurpee machine.', 4000); point(2500); }, 2600);
+}
+$('hatch').onclick = () => {
+  const cl = clues(), first = !cl.rgb; cl.rgb = true; put('painWheelClues', cl);
+  say('Inside the secret compartment: a tiny key, and a sticker of an old TV with a little wheel on the screen.' + (first ? ' 📌 Evidence found! It is pinned to The Board.' : ' You already took this one.'), 6500);
+  $('hatch').style.display = 'none';
+};
 function slurpee(f) {
   if (busy || !has811()) return;
   const g = get('painWheelGold', 0);
   if (g < 1) return say("You can't afford ONE gold. That's a new low.");
-  busy = true; put('painWheelGold', g - 1); showGold();
+  busy = true; put('painWheelGold', g - 1); showGold(); checkRGB(f);
   const cup = $('cup'); cup.style.transition = 'none'; cup.style.opacity = '1'; cup.style.filter = ''; cup.style.animation = '';
   cup.style.left = TAPS[f] + '%'; cup.style.top = '56.5%'; cup.style.height = '9.5%'; cup.src = 'media/photo_cup_empty.png'; cup.style.display = 'block';
   say('*machine noises*', 1200); point(1600);

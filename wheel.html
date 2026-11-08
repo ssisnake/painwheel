@@ -857,7 +857,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 11:48 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 12:03 AM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -4455,7 +4455,7 @@
        are an armed rig and the secret Ret boost, which quietly steer it. */
     function forcedTarget() {
         if (riggedMode !== "FAIR") return pick(indicesOf[riggedMode]);
-        if (!has811() && indicesOf.SEVEN_ELEVEN && indicesOf.SEVEN_ELEVEN.length && Math.random() < Math.min(.5, .03 * store.get('painWheel811Pity', 0))) return pick(indicesOf.SEVEN_ELEVEN);   // bad-luck protection: +3% per spin until the 8/11 opens
+        if (!has811() && indicesOf.SEVEN_ELEVEN && indicesOf.SEVEN_ELEVEN.length && Math.random() < Math.min(.9, .06 * store.get('painWheel811Pity', 0))) return pick(indicesOf.SEVEN_ELEVEN);   // bad-luck protection: +6% per spin (up to 90%) until the 8/11 opens
         if (retBoostStacks > 0) {
             if (Math.random() < retChance()) return pick(indicesOf.RET_PALADIN);
             return pick(slices.filter(x => x.type !== "RET_PALADIN" && x.type !== "AOTC" && !(kevinShield > 0 && x.type === "KEVIN")).map(x => x.index));   // the Repel still works during a Ret boost
@@ -9441,6 +9441,16 @@
         const img = $('nickFingerImg'), want = garage.voodoo ? PHOTO_FINGER_CURSED : PHOTO_FINGER;
         if (img.getAttribute('src') !== want) img.src = want;
         img.classList.toggle('finger-cursed', !!garage.voodoo);
+        if (garage.voodoo) darkMagicClue();
+    }
+    function darkMagicClue() {   // hidden evidence: own Biblehumping's finger AND the voodoo doll and the dark magic coughs something up
+        const cl = store.get('painWheelClues', {}) || {}; if (cl.darkmagic) return;
+        cl.darkmagic = true; store.set('painWheelClues', cl);
+        setTimeout(() => {
+            funEvent('🪡🖐️ THE FINGER AND THE DOLL ARE COMMUNICATING', 4500);
+            chatBurst(['dark magic', 'the finger moved again', 'what is happening', 'monkaS', 'why is the doll glowing'], 4, 2000);
+            setTimeout(() => moveToast('🪡 A seam split on the voodoo doll. Sewn inside: a scrap of paper that just says "R, G, B." 📌 Evidence pinned to The Board.'), 2200);
+        }, 3000);
     }
     function fingerPress(then) {
         const f = $('nickFinger'); f.style.transform = 'translate(-50%,-62%) rotate(-24deg) scale(.95)';
@@ -9670,6 +9680,7 @@
             ['🥃', "Pouring Reb a double only hurts the liver 1% now (it was 30%), and the liver got a fresh start. The weekly liver reward and Uwutek kill rewards now count your vault gold too."],
             ['🕹️', 'The claw machine is stingier: lined up is a 15% grab now, so it does not get cleaned out on day one.'],
             ['📈', 'Fixed: during WoW Forever week the fake $0.00 screen blocked stonks. It has a Trade anyway button now.'],
+            ['🍀', 'The 8/11 bad-luck protection is stronger: +6% per spin (up to 90%) until you land it.'],
             ['⏳', 'WoW Forever mode only turns on when YOU press the Forever button now. It no longer switches itself on during launch week.'],
             ['💳', 'Goblin Express has card tiers: Red when you sign up, Platinum after 10 charges, Black after 50. Same 400% APR either way.'],
             ['🚀', 'The SpaceZ pad has a real launch pad, and the LAUNCH button has a safety cover that flips open when you reach for it.'],

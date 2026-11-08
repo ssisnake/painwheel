@@ -155,7 +155,10 @@ if (clues.map) { const c = document.createElement('div'); c.className = 'clue'; 
 // the middle photo: a checklist of hidden evidence. Found items show; the rest stay ??? (more get added as we decide them)
 const EVIDENCE = [
   { k: 'map', name: '🗺️ The hand-drawn map', where: 'Left on a table. The owner did not need it anymore.' },
-  { k: 'ev2' }, { k: 'ev3' }, { k: 'ev4' }, { k: 'ev5' }, { k: 'ev6' }
+  { k: 'darkmagic', name: '🪡 A note sewn inside a voodoo doll', where: 'It only came out when the doll met the finger. It says: R, G, B.' },
+  { k: 'rgb', name: '🔑 Whatever was in the secret compartment', where: 'Red, then green, then blue. The machine remembers. It came with a TV with a wheel on it.' },
+  { k: 'wheelception', name: '📷 A photo taped inside the smallest wheel', where: 'Five wheels down. A door at the bottom of the stairs. "THE MIDDLE."' },
+  { k: 'ev5' }, { k: 'ev6' }
 ];
 function showEvidence() {
   const got = EVIDENCE.filter(e => clues[e.k]).length;

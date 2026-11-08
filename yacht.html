@@ -784,6 +784,10 @@
             }
             sfx.open(); depth++; renderMini(); if (depth >= MAX_DEPTH) award('wheelception5');   // 5 wheels deep
             $('miniRes').textContent = pick(['You landed on THE WHEEL. Here is a smaller wheel. Spin it.', 'Another wheel?? Inside the wheel?? Inside THE Wheel??', 'We have to go deeper.', 'It\'s wheels. It\'s always been wheels.']);
+            if (depth >= MAX_DEPTH) {   // hidden evidence: taped inside the smallest wheel
+                const cl = S.get('painWheelClues', {}) || {}, first = !cl.wheelception; cl.wheelception = true; S.set('painWheelClues', cl);
+                $('miniRes').textContent = 'Five wheels deep. Something is taped to the back of the smallest wheel: a tiny photo of a door at the bottom of some stairs. Somebody wrote "THE MIDDLE" on it.' + (first ? ' 📌 Evidence found! It\'s pinned to The Board now.' : '');
+            }
             return;
         }
         if (label === '+1 GOLD') { gold = Math.min(1e300, gold + 1); saveGold(); sfx.coins(); $('miniRes').textContent = '+1 gold! It\'s a tiny wheel. What did you expect.'; return; }
