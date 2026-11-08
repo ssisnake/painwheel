@@ -43,8 +43,10 @@
   #closed b { font-size: clamp(28px, 4vw, 48px); color: #f87171; letter-spacing: .06em; }
   #closed p { margin: 0; font-size: 20px; color: #e7e5e4; max-width: 560px; line-height: 1.4; }
   #closed a { font: 800 18px system-ui, sans-serif; padding: 9px 18px; border-radius: 10px; background: #f59e0b; color: #1c1917; text-decoration: none; }
+  #shopFrame { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; z-index: 60; background: transparent; opacity: 0; transition: opacity .2s; }
+  #shopWait { position: fixed; inset: 0; z-index: 59; display: flex; align-items: center; justify-content: center; background: rgba(2,6,23,.55); color: #fde68a; font: 800 22px system-ui, sans-serif; text-shadow: 0 2px 0 #000; }
 </style></head><body>
-<header><h1>🏪 The 8/11</h1><span id="goldBox"></span><nav><a class="alt" href="./">📌 The Board</a><a class="alt" href="wheel.html#go=shop">🛒 The whole catalog</a><a href="wheel.html">🎡 Back to The Wheel</a></nav></header>
+<header><h1>🏪 The 8/11</h1><span id="goldBox"></span><nav><a class="alt" href="./">📌 The Board</a><a class="alt" href="#" id="catalogBtn">🛒 The whole catalog</a><a href="wheel.html">🎡 Back to The Wheel</a></nav></header>
 <div class="wrap"><div class="scroller"><div class="scene" id="scene">
   <div class="bulbglow"></div><div class="bulb"></div>
   <button class="tap" data-f="Blue Raspberry" style="left:3%;top:33%;width:10.5%;height:27%" title="Blue Raspberry Slurpee (1 gold)" aria-label="Blue Raspberry Slurpee, 1 gold"></button>
@@ -113,7 +115,22 @@ const props = $('props');
 const add = (html) => { props.insertAdjacentHTML('beforeend', html); return props.lastElementChild; };
 const clerk = add('<img class="deco" src="media/photo_811_clerk.png" alt="" style="right:5.4%;bottom:37.6%;width:10.4%;z-index:1">');
 function point(ms) { clerk.src = 'media/photo_811_clerk_point.png'; clerk.style.width = '11.4%'; clearTimeout(point.t); point.t = setTimeout(() => { clerk.src = 'media/photo_811_clerk.png'; clerk.style.width = '10.4%'; }, ms || 1400); }
-const goShop = (tab) => { point(1000); setTimeout(() => { location.href = 'wheel.html#go=shop_' + tab; }, 650); };
+// the shop opens right here in the store: the wheel page loads in a frame showing only the shop, and goes away when you close it
+function goShop(tab) {
+  point(1000); if ($('shopFrame')) return;
+  const w = document.createElement('div'); w.id = 'shopWait'; w.textContent = 'The clerk is getting the price gun...'; document.body.appendChild(w);
+  const f = document.createElement('iframe'); f.id = 'shopFrame'; f.title = 'The 8/11 shop';
+  f.src = 'wheel.html?embed=shop' + (tab ? '#go=shop_' + tab : ''); document.body.appendChild(f);
+  setTimeout(() => { if ($('shopWait')) closeShopFrame(); }, 20000);   // never got ready: don't leave a dead overlay up
+}
+function closeShopFrame() { const f = $('shopFrame'), w = $('shopWait'); if (f) f.remove(); if (w) w.remove(); showGold(); }
+addEventListener('message', (e) => {
+  if (e.origin !== location.origin || !e.data || !e.data.shop) return;
+  if (e.data.shop === 'ready') { const f = $('shopFrame'), w = $('shopWait'); if (f) { f.style.opacity = '1'; try { f.focus(); } catch (err) {} } if (w) w.remove(); }
+  else if (e.data.shop === 'close') closeShopFrame();
+  else if (e.data.shop === 'go' && /^wheel\.html#go=\w+$/.test(e.data.href || '')) location.href = e.data.href;
+});
+$('catalogBtn').onclick = (e) => { e.preventDefault(); goShop(''); };
 AISLES.forEach(([name, img, l, t, w, tab, line]) => {
   const b = add(`<button type="button" class="prop" title="${name}" aria-label="Shop: ${name}" style="left:${l}%;top:${t}%;width:${w}%"><img src="media/${img}.png" alt=""></button>`);
   b.onmouseenter = b.onfocus = () => point(1800);

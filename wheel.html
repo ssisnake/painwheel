@@ -216,6 +216,20 @@
         #shopPanel .ui-btn:not(:disabled):hover img { filter: brightness(1.15); }
         #shopPanel .ui-price { display: inline-flex; align-items: center; height: 30px; padding: 0 10px; background: var(--ui-tag) 0 0 / 100% 100% no-repeat; color: #1c1917; font-weight: 900; font-size: calc(12px * var(--ts, 1)); white-space: nowrap; }
         #shopPanel .shop-title { background: var(--ui-header) 0 0 / 100% 100% no-repeat; padding: 8px 18px 6px; color: #fcd34d; text-shadow: 0 2px 0 #000; }
+        /* 8/11 shelves: every row is a shelf bay. Pegboard back, items sit on a wood shelf with a chrome price rail */
+        #shopPanel .shop-box { background: linear-gradient(180deg, #f97316 0 6px, #fff 6px 9px, #16a34a 9px 15px, transparent 15px), linear-gradient(170deg, #1d2b24, #111a15 60%, #0c120f) !important; border-color: #f97316 !important; padding-top: 26px !important; }
+        #shopPanel .shop-row { border: 0 !important; border-image: none !important; border-radius: 3px !important; position: relative;
+            background: linear-gradient(to bottom, transparent calc(100% - 13px), #a16207 calc(100% - 13px), #ca8a04 calc(100% - 10px), #713f12 calc(100% - 5px), #cbd5e1 calc(100% - 5px), #f1f5f9 calc(100% - 3px), #64748b 100%),
+                radial-gradient(circle at 7px 7px, rgba(0,0,0,.55) 1.6px, transparent 2.2px) 0 0 / 14px 14px,
+                linear-gradient(#3a4740, #26322c) !important;
+            box-shadow: inset 0 8px 10px -6px rgba(0,0,0,.7), 0 2px 0 rgba(0,0,0,.5); padding: 8px 10px 18px 10px !important; color: #f8fafc; }
+        #shopPanel .shop-row > div:first-child > span:first-child { display: inline-flex; justify-content: center; width: 38px; margin: 0 8px 0 0; vertical-align: middle; filter: drop-shadow(0 3px 0 rgba(0,0,0,.6)); }
+        #shopPanel .shop-row b { text-shadow: 0 1px 0 #000; }
+        #shopPanel .shop-row .text-slate-400 { color: #cbd5e1; }
+        html.embed-shop, html.embed-shop body { background: transparent !important; overflow: hidden !important; }
+        html.embed-shop body > *:not(#shopPanel):not(#moveToast):not(#achToast):not(.embed-ok) { display: none !important; }
+        html.embed-shop #shopPanel { background: rgba(2, 6, 23, .55) !important; }
+        html.embed-shop #shopBack811 { display: none !important; }
         .scratch-cell { width: 48px; height: 48px; border-radius: 8px; border: 2px solid #b45309; display: flex; align-items: center; justify-content: center; font-size: 26px;
             background: repeating-linear-gradient(45deg,#a16207 0 6px,#ca8a04 6px 12px); }
         .scratch-cell.open { background: #0f172a; border-color: #f59e0b; animation: scratchPop .35s ease-out both; }
@@ -868,7 +882,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 2:22 AM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 2:29 AM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -1048,9 +1062,9 @@
         </div>
     </div>
     <div id="shopPanel" style="z-index: 72" class="fixed inset-0 hidden items-center justify-center bg-slate-950/90 p-4">
-        <div class="w-full max-w-2xl flex flex-col rounded-2xl p-5 shadow-2xl border-2 border-amber-500" style="max-height:90vh;max-width:42rem;background: linear-gradient(170deg,#1c1402,#0f172a 45%,#052e16);">
+        <div class="shop-box w-full max-w-2xl flex flex-col rounded-2xl p-5 shadow-2xl border-2 border-amber-500" style="max-height:90vh;max-width:42rem;background: linear-gradient(170deg,#1c1402,#0f172a 45%,#052e16);">
             <div class="flex items-center justify-between mb-2">
-                <div class="shop-title text-lg font-black uppercase tracking-tight text-amber-300"><img class="hdr-ico" data-ico="SHOP" alt=""> The Goblin Shop</div>
+                <div class="shop-title text-lg font-black uppercase tracking-tight text-amber-300"><img class="hdr-ico" data-ico="SHOP" alt=""> The 8/11 Aisles</div>
                 <div class="flex items-center gap-3"><span id="shopGold" class="mono text-yellow-300 font-bold text-sm"></span><a id="shopBack811" href="811.html" class="hidden px-2.5 py-1 rounded-md font-extrabold" style="background:#f59e0b;color:#1c1917;font-size:calc(14px * var(--ts, 1));text-decoration:none">🏪 Back to the 8/11</a><button id="shopClose" class="text-slate-400 hover:text-white text-sm font-bold cursor-pointer">✕</button></div>
             </div>
             <div id="shopTabs" class="flex flex-wrap gap-1.5 mb-2"></div>
@@ -1411,6 +1425,9 @@
 
     <script src="config.js"></script>
     <script>
+    // the 8/11 page loads this page inside itself with ?embed=shop: only the shop shows, nothing else runs at you
+    const EMBED_SHOP = new URLSearchParams(location.search).get('embed') === 'shop';
+    if (EMBED_SHOP) document.documentElement.classList.add('embed-shop');
     /* ===================== MOVING TO THE NEW WHEEL (stats transfer) =====================
        Each browser keeps its stats per site, so the old link and the GitHub link don't share
        them. The old page builds a link (or a code) holding this browser's painWheel* data;
@@ -7212,8 +7229,8 @@
         else if (e.key === 'painWheelAchievements' && v && typeof v === 'object') { Object.assign(achieved, v); }
         else if (e.key === 'painWheelTokens' && typeof v === 'number') { tokens = v; }
         else if (e.key === 'painWheelPets' && v && typeof v === 'object') { Object.assign(pets, v); renderPets(); }
-        else if (e.key === 'painWheelPendingAch') setTimeout(awardPending, 50);
-        else if (e.key === 'painWheelPendingLoot') setTimeout(lootPending, 50);
+        else if (e.key === 'painWheelPendingAch' && !EMBED_SHOP) setTimeout(awardPending, 50);
+        else if (e.key === 'painWheelPendingLoot' && !EMBED_SHOP) setTimeout(lootPending, 50);
         else if (e.key === 'painWheelStats' && v && typeof v === 'object') { Object.assign(stats, v); }
         else if (e.key === 'painWheelAllTimeSpins') { const n = parseInt(e.newValue, 10); if (n > allTimeSpins) { allTimeSpins = n; updateSpinBadge(); } }
     });
@@ -9759,6 +9776,7 @@
             ['🫀', "Reb's liver is becoming a guild-wide boss: every drink anyone takes hurts it. Buy it water, or take a double and hurt everyone. If it survives the week, everyone who didn't wreck it gets paid."],
             ['🛡️', "New slices: Taunting (Casimir would never; the untaunted add goes for Reb's liver), Can't Park There (repair bill included) and Forever Depends. 185 slices."],
             ['🦺', 'OSHA landings break things now: the rocket crashes, the banker trips, a slice falls off the wheel, a vehicle explodes, a pet trips, a top-bar button falls off (click it to bolt it back on), Clippy pokes his eye out, or the shack catches fire.'],
+            ['🏪', "The shop opens right inside the 8/11 now. Click an aisle sign and you stay in the store. New shelves too."],
             ['⚡', 'Holding the spin button has a real charge-up sound now.'],
             ['🕹️', "The claw machine is fully stocked: every prize you haven't won sits inside at once. Line up on whichever one you want."],
             ['📈', "Fixed: the stock market box vanished for anyone who had it minimized. It's back, and the — button works again."],
@@ -9872,7 +9890,7 @@
     $('updNever').addEventListener('change', (e) => store.set('painWheelNoUpdates', e.target.checked));
     $('updateReopen').addEventListener('click', () => { $('settingsClose').click(); showUpdateNotes(); });
     const maybeAnnounce = (function maybeAnnounce(tries) {
-        if (store.get('painWheelSeenUpdate', '') === UPDATE_NOTES.id || store.get('painWheelNoUpdates', false)) return;
+        if (EMBED_SHOP || store.get('painWheelSeenUpdate', '') === UPDATE_NOTES.id || store.get('painWheelNoUpdates', false)) return;
         if (UPDATE_NOTES.showAfter && Date.now() < UPDATE_NOTES.showAfter) { const wait = UPDATE_NOTES.showAfter - Date.now(); if (wait < 6 * 3600 * 1000) setTimeout(() => maybeAnnounce(0), wait + 5000); return; }   // not out yet
         if (!playerName) { store.set('painWheelSeenUpdate', UPDATE_NOTES.id); return; }   // brand-new players get the welcome, not patch notes
         const busy = isSpinning || ['welcome', 'lawAd', 'statsPanel', 'settingsPanel', 'bagPanel', 'housePanel', 'shopPanel', 'moveModal', 'cheatSheet', 'winnerModal', 'questDialog']
@@ -10426,7 +10444,7 @@
         lookTile(tl, !titleChoice, 'No title', '🚫', () => equipTitle(''));
         TITLES.filter(([t]) => ownedTitles[t]).forEach(([t]) => lookTile(tl, titleChoice === t, t, '🏷️', () => equipTitle(t)));
     }
-    function openLooks() { closeShop(); $('settingsBtn').click(); setTimeout(() => { const el = $('looksSection'); if (el) el.scrollIntoView({ block: 'start', behavior: 'smooth' }); }, 60); }
+    function openLooks() { if (EMBED_SHOP) { try { parent.postMessage({ shop: 'go', href: 'wheel.html#go=looks' }, location.origin); } catch (e) {} return; } closeShop(); $('settingsBtn').click(); setTimeout(() => { const el = $('looksSection'); if (el) el.scrollIntoView({ block: 'start', behavior: 'smooth' }); }, 60); }
     $('looksShop').addEventListener('click', () => { const p = $('settingsPanel'); p.classList.add('hidden'); p.classList.remove('flex'); openShop('cosmetics'); });
     $('settingsBtn').addEventListener('click', renderLooks);
     function rebuildThemePicker() {
@@ -10456,16 +10474,21 @@
         const can = $('scratchTrash'); if (!can) return;
         const cr = can.getBoundingClientRect(), tkt = document.createElement('div'); tkt.textContent = '🎟️';
         tkt.style.cssText = `position:fixed;z-index:95;left:${fr.left + fr.width / 2}px;top:${fr.top + fr.height / 2}px;font-size:44px;line-height:1;pointer-events:none;transform:translate(-50%,-50%);transition:left .7s cubic-bezier(.3,0,.7,1), top .7s cubic-bezier(.5,-.6,.7,1), transform .7s`;
-        document.body.appendChild(tkt);
+        tkt.className = 'embed-ok'; document.body.appendChild(tkt);
         requestAnimationFrame(() => requestAnimationFrame(() => { tkt.style.left = (cr.left + cr.width / 2) + 'px'; tkt.style.top = (cr.top + cr.height / 3) + 'px'; tkt.style.transform = 'translate(-50%,-50%) rotate(540deg) scale(.25)'; }));
         setTimeout(() => { tkt.remove(); const c = $('scratchTrash'); if (c) { c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump'); } }, 720);
     }
     function openShop(tab) {
         if (!has811()) { moveToast('🔒 The shop is inside the 8/11, and the 8/11 is closed. Land on 8/11 on the wheel to open it.'); return; }
         if (tab) shopTab = tab;
+        if (EMBED_SHOP) { const g = store.get('painWheelGold', gold); if (typeof g === 'number' && isFinite(g)) gold = g; }   // the 8/11 page may have spent some on Slurpees
         renderShop(); const p = $('shopPanel'); p.classList.remove('hidden'); p.classList.add('flex');
+        if (EMBED_SHOP) try { parent.postMessage({ shop: 'ready' }, location.origin); } catch (e) {}
     }
-    function closeShop() { const p = $('shopPanel'); p.classList.add('hidden'); p.classList.remove('flex'); }
+    function closeShop() {
+        if (EMBED_SHOP) { try { parent.postMessage({ shop: 'close' }, location.origin); } catch (e) {} return; }   // the 8/11 page takes the shop down
+        const p = $('shopPanel'); p.classList.add('hidden'); p.classList.remove('flex');
+    }
     (function setupShop() {
         const tabs = $('shopTabs');
         SHOP_TABS.forEach(([id, label]) => {
@@ -10520,7 +10543,7 @@
         lines.forEach((l, i) => setTimeout(() => petSay('clippy', l), 2500 + i * 6000));
         setTimeout(() => { try { sqPost('shout', `🎂 Today is Clippy's ${CLIPPY_AGE}th birthday. He has been helping since November 19, 1996. Wish him a happy birthday or he will offer to help you write one.`); } catch (e) {} }, 4000);
     }
-    setTimeout(clippyBirthday, 5000);
+    if (!EMBED_SHOP) setTimeout(clippyBirthday, 5000);
     function awardPending() {   // achievements earned on other pages (the shack's claw machine) get awarded here, where the guild leaderboard hears about them
         const q = store.get('painWheelPendingAch', []); if (!q.length) return;
         store.set('painWheelPendingAch', []); q.forEach((id, i) => setTimeout(() => unlock(id), 400 + i * 1500));
@@ -10529,13 +10552,14 @@
         const q = store.get('painWheelPendingLoot', []); if (!q.length) return;
         store.set('painWheelPendingLoot', []); q.forEach((l, i) => setTimeout(() => giveLoot(l[0], l[1], l[2]), 300 + i * 900));
     }
-    setTimeout(lootPending, 2000);
-    setTimeout(awardPending, 2500);
-    if (BOARD_GO) setTimeout(() => {
+    if (!EMBED_SHOP) { setTimeout(lootPending, 2000); setTimeout(awardPending, 2500); }
+    if (EMBED_SHOP) setTimeout(() => openShop(BOARD_GO && BOARD_GO.startsWith('shop_') ? BOARD_GO.slice(5) : null), 30);
+    else if (BOARD_GO) setTimeout(() => {
         const w = $('welcome'); if (w && !w.classList.contains('hidden') && store.get('painWheelPlayer', '')) { w.classList.add('hidden'); w.classList.remove('flex'); }
         if (BOARD_GO === '811') open811(); else if (BOARD_GO === 'claw') location.href = 'shack.html#claw'; else if (BOARD_GO === 'shop') openShop();
         else if (BOARD_GO.startsWith('shop_')) { openShop(BOARD_GO.slice(5)); from811(); }
         else if (BOARD_GO === 'forever' && !document.body.classList.contains('ghost-town')) toggleForever();
+        else if (BOARD_GO === 'looks') openLooks();
     }, 900);
     $('partyBtn').addEventListener('click', () => {
         const on = !document.body.classList.contains('party-on');
