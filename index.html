@@ -296,18 +296,25 @@ function copArrives() {
   try { const v = parseFloat(localStorage.getItem('painWheelVolume')); const a = new Audio('media/audio_siren_cop1.mp3'); a.volume = .3 * (isNaN(v) ? .6 : Math.max(0, Math.min(1, v))); a.play().catch(() => {}); setTimeout(() => a.pause(), 2200); } catch (e) {}
   c.style.transition = 'transform 1.6s ease-out'; c.style.transform = 'translateX(14vw)';
   setTimeout(() => { say.innerHTML = '<b>Officer ChAoTiC:</b> '; say.append(pick(COP_LINES)); say.style.display = 'block'; }, 1700);
-  if (Math.random() < .5 && !dlg.open) setTimeout(() => pencil('I saw everything, officer.'), 4800);   // the witness speaks up
+  if (!dlg.open) setTimeout(pencilWitness, 4800);   // the witness speaks up
   setTimeout(() => { say.style.display = 'none'; c.style.transition = 'transform 2.2s ease-in'; c.style.transform = 'translateX(calc(100vw + 40px))'; }, 7600);
   setTimeout(() => { c.style.transition = 'none'; c.style.transform = 'translateX(-260px)'; copBusy = false; }, 10000);
 }
-// the pencil on the shelf by the board: it saw everything
-const PENCIL_LINES = ['I saw everything, officer.', 'I saw everything, officer. I wrote it all down. Then somebody sharpened me.', "I'm not saying who did it. I'm saying I was there. I'm a pencil. I'm always there.",
-  'Ask the eraser. He knows what he did.', 'Officer, I have a statement. ...I lost it. It was in pencil.'];
+// the pencil on the shelf by the board: the witness in ChAoTiC's visits. Click him and he'll take a bribe to stay quiet (he won't)
 const pencilBtn = document.createElement('button'); pencilBtn.className = 'pencil'; pencilBtn.type = 'button'; pencilBtn.setAttribute('aria-label', 'A pencil'); board.appendChild(pencilBtn);
 const pencilSay = document.createElement('div'); pencilSay.id = 'pencilSay'; board.appendChild(pencilSay);
-function pencil(t) { pencilSay.innerHTML = '<b>The pencil:</b> '; pencilSay.append(t || pick(PENCIL_LINES)); pencilSay.style.display = 'block'; clearTimeout(pencil.t); pencil.t = setTimeout(() => pencilSay.style.display = 'none', 5200); }
-pencilBtn.onclick = () => pencil();
-setInterval(() => { if (!document.hidden && !dlg.open && Math.random() < .25) pencil('I saw everything, officer.'); }, 95000);
+function pencil(t) { pencilSay.innerHTML = '<b>The pencil:</b> '; pencilSay.append(t); pencilSay.style.display = 'block'; clearTimeout(pencil.t); pencil.t = setTimeout(() => pencilSay.style.display = 'none', 5200); }
+let pencilAsked = 0;
+pencilBtn.onclick = () => {
+  if (Date.now() - pencilAsked > 6000) { pencilAsked = Date.now(); return pencil("Psst. 20 gold and I didn't see anything. Click me again to pay."); }
+  pencilAsked = 0;
+  let g = 0; try { g = JSON.parse(localStorage.getItem('painWheelGold')) || 0; } catch (e) {}
+  if (!(g >= 20)) return pencil("You don't have 20 gold? Then I saw EVERYTHING.");
+  try { localStorage.setItem('painWheelGold', JSON.stringify(g - 20)); localStorage.setItem('painWheelPencilBribes', JSON.stringify((JSON.parse(localStorage.getItem('painWheelPencilBribes')) || 0) + 1)); } catch (e) {}
+  pencil(pick(['Pleasure doing business. I saw nothing.', 'Saw what? I am a pencil. I have no eyes.', 'Your secret is safe with me. *pockets 20 gold*']));
+};
+const pencilWitness = () => { let paid = 0; try { paid = JSON.parse(localStorage.getItem('painWheelPencilBribes')) || 0; } catch (e) {}
+  pencil(paid ? 'I saw everything, officer. (He kept your 20 gold.)' : 'I saw everything, officer.'); };
 const _clippy = clippy;
 clippy = function (t) { _clippy(t); if (/authorities|stapler|hostage/i.test(t) && Math.random() < .7) setTimeout(copArrives, 2500); };
 document.getElementById('clippy').onclick = () => clippy(pick(CLIPPY_LINES));
