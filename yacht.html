@@ -464,9 +464,10 @@
         debtfree: 'coins', jackpot: 'coins', vault: 'coins', boughttop: 'coins', rugpull: 'coins', castle: 'castle', yacht: 'yacht', aboard: 'yacht', rocket: 'rocket',
         soc1: 'pyramid', soc4: 'pyramid', soc2: 'coffin', soc3: 'owl', soc5: 'snake', soc6: 'manual', clawwin: 'claw', clawall: 'claw', goldcookie: 'cookie', cluck: 'chicken',
         weewoo: 'ambulance', mash: 'ambulance', fenderbender: 'copcar', rui: 'copcar', golddonut: 'donut', taxman: 'tax', seized: 'tax', goblincard: 'tax',
-        brickphone: 'brickphone', voodoo: 'voodoo', purpleheart: 'purpleheart', foreveralone: 'tumbleweed' };
+        brickphone: 'brickphone', voodoo: 'voodoo', purpleheart: 'purpleheart', foreveralone: 'tumbleweed',
+        noone: 'noone', penis: 'penis', sixtyseven: 'sixtyseven', kromall: 'kromall', greedy: 'greedy', fire: 'fire', glaive: 'glaive', carl: 'carl', collector: 'collector', murderrow: 'murderrow', mephist: 'mephist', rigger: 'rigger', orangetext: 'orangetext', collector1: 'collector1', collectorall: 'collectorall', konami: 'konami', adclick: 'adclick', drip: 'drip', boughtaotc: 'boughtaotc', aotclegit: 'aotclegit', chocobar: 'chocobar', hearth: 'hearth', finger: 'finger', cartel: 'cartel', queue: 'queue', wheelception: 'wheelception', wheelception5: 'wheelception5', clippy: 'clippy' };   // batch 2: every achievement has its own trophy now
     // older stand-ins for the few that are not in the set yet
-    const SPR = { clippy: 'photo_clippy.png', hearth: 'photo_toy_hearth.png', wheelception: 'photo_pet_spinny.png', wheelception5: 'photo_pet_spinny.png' };
+    const SPR = {};   // (old stand-ins; every trophy has real art now)
     const sprFor = (d) => TROPHY[d.id] || /^aipac/.test(d.id) ? 'trophy_' + (TROPHY[d.id] || 'capitol') + '.png' : SPR[d.id] || null;
     const isSet = (d) => !!(TROPHY[d.id] || /^aipac/.test(d.id));
     const iconFor = (d) => ICONS[d.id] || (/^aipac/.test(d.id) ? '🏛️' : /^spins/.test(d.id) ? '🎡' : d.secret ? '💎' : '🏆');
