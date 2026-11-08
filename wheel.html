@@ -868,7 +868,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 2:01 AM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 2:09 AM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -993,23 +993,10 @@
                 <button id="hpUpgrade" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-black cursor-pointer"></button>
                 <div id="hpMsg" class="text-xs text-amber-300 font-bold min-h-[1rem] text-center"></div>
             </div>
-            <div class="mt-3 pt-3 border-t border-emerald-900">
-                <div class="flex gap-2 flex-wrap">
-                    <button id="hpPetBtn" class="px-3 py-1.5 rounded bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold cursor-pointer"><img class="hdr-ico" data-ico="PET" alt="" style="height:1.4em"> Pet shop</button>
-                    <button id="hpShopBtn" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">🎟️ Scratch-offs</button>
-                    <button id="hpBoard" style="display:none" title="No cast, no waiting" class="px-3 py-1.5 rounded bg-sky-700 hover:bg-sky-600 text-white text-xs font-bold cursor-pointer">⚓ Board the yacht now</button>
-                </div>
-
+            <div id="hpBoardRow" class="mt-3 pt-3 border-t border-emerald-900 flex justify-center" style="display:none">
+                <button id="hpBoard" title="No cast, no waiting" class="px-4 py-2 rounded bg-sky-700 hover:bg-sky-600 text-white font-bold cursor-pointer" style="font-size:calc(14px * var(--ts, 1))">⚓ Board the yacht now</button>
             </div>
-            <div class="mt-3 pt-3 border-t border-emerald-900">
-                <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">💸 Goblin debt</div>
-                <div class="flex items-center gap-2 flex-wrap text-sm">
-                    <span id="hpDebt" class="mono text-red-300 font-bold"></span>
-                    <button id="hpPay100" class="px-2 py-1 rounded bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold cursor-pointer">Pay 100g</button>
-                    <button id="hpPayAll" class="px-2 py-1 rounded bg-red-800 hover:bg-red-700 text-white text-xs font-bold cursor-pointer">Pay it all off</button>
-                </div>
-                <div class="text-[11px] text-slate-500 mt-1">Debt grows 1% every 10 minutes. 400% APR, as promised.</div>
-            </div>
+            <div id="hpDebts" class="mt-3 pt-3 border-t border-emerald-900" style="display:none"></div>
         </div>
     </div>
     <div id="retVisionFx" aria-hidden="true" style="display:none;position:fixed;inset:0;z-index:56;pointer-events:none;backdrop-filter:grayscale(.09);-webkit-backdrop-filter:grayscale(.09);box-shadow:inset 0 0 120px 10px rgba(0,0,0,.14)"></div>
@@ -7619,9 +7606,29 @@
         else if (next) { up.textContent = `Upgrade to ${next.e} ${next.name}: ${fmt(next.cost)}`; up.disabled = false; }
         else { up.textContent = 'Fully upgraded. You are the goblin now.'; up.disabled = true; }
         up.style.display = !next && houseLevel >= 6 ? 'none' : '';   // maxed out: the Hearth plate takes this spot
-        $('hpBoard').style.display = houseLevel >= 6 ? '' : 'none'; renderHearth();
-        $('hpDebt').textContent = (goblinDebt ? `You owe ${fmt(goblinDebt)}` : 'Debt free! 🎉') + (store.get('painWheelGoblinCard', false) ? ` · 💳 Goblin Express limit: ${fmt(cardLimit())} (${fmt(cardAvailable())} available)` : '');
-        $('hpPay100').style.display = $('hpPayAll').style.display = goblinDebt ? '' : 'none';
+        $('hpBoardRow').style.display = houseLevel >= 6 ? '' : 'none'; renderHearth();
+        renderHpDebts();
+    }
+    // every kind of debt or fine gets its own box in Home; nothing owed = nothing shown
+    function renderHpDebts() {
+        const box = $('hpDebts'); if (!box) return;
+        let bills = {}; try { bills = debts; } catch (e) {}   // (the bills load later in the page)
+        const rows = [];
+        if (goblinDebt > 0) rows.push({ k: 'goblin', t: '💸 Goblin debt', amt: goblinDebt, note: 'Grows 1% every 10 minutes. 400% APR, as promised.' + (store.get('painWheelGoblinCard', false) ? ` Goblin Express: ${fmt(cardAvailable())} available.` : '') });
+        if (bills.tax) { const ms = Math.max(0, bills.tax.due - Date.now()); rows.push({ k: 'tax', t: '🧾 Goblin IRS tax bill', amt: bills.tax.amt, note: `Due in ${Math.floor(ms / 3600e3)}h ${Math.floor(ms % 3600e3 / 60e3)}m, or they seize 80% of everything.` }); }
+        if (bills.cartel) rows.push({ k: 'cartel', t: '🌵 You owe the Cartel', amt: bills.cartel, note: '+10% every hour until paid off.' });
+        if (bills.court) rows.push({ k: 'court', t: '🚔 RUI court fine', amt: bills.court, note: '400% interest (+1% every 10 min).' });
+        if (bills.repair) rows.push({ k: 'repair', t: "🅿️ Repair bill (can't park there)", amt: bills.repair, note: 'No interest. Just shame.' });
+        box.style.display = rows.length ? '' : 'none'; box.innerHTML = '';
+        rows.forEach(r => {
+            const d = document.createElement('div'); d.className = 'mb-2 rounded-lg border border-red-900 bg-red-950/50 px-3 py-2';
+            d.innerHTML = '<div class="flex justify-between gap-2 font-bold" style="font-size:calc(14px * var(--ts, 1))"><span class="text-red-200"></span><span class="mono text-yellow-300"></span></div><div class="text-slate-400 mt-0.5" style="font-size:calc(12px * var(--ts, 1))"></div><div class="flex gap-2 mt-1.5 flex-wrap"></div>';
+            d.querySelector('span').textContent = r.t; d.querySelectorAll('span')[1].textContent = fmt(r.amt); d.children[1].textContent = r.note;
+            const btns = d.children[2], mk = (label, cls, fn) => { const b = document.createElement('button'); b.className = 'px-2.5 py-1 rounded text-white font-bold cursor-pointer ' + cls; b.style.fontSize = 'calc(12px * var(--ts, 1))'; b.textContent = label; b.onclick = fn; btns.appendChild(b); };
+            if (r.k === 'goblin') { mk('Pay 100g', 'bg-slate-700 hover:bg-slate-600', () => payDebt(100)); mk('Pay it all off', 'bg-red-800 hover:bg-red-700', () => payDebt(goblinDebt)); }
+            else { mk('💰 Pay from wallet', 'bg-emerald-700 hover:bg-emerald-600', () => { payBill(r.k, 'wallet'); renderHpDebts(); }); if (vaultGold() > 0) mk('🏦 Pay from vault', 'bg-amber-700 hover:bg-amber-600', () => { payBill(r.k, 'vault'); renderHpDebts(); }); }
+            box.appendChild(d);
+        });
     }
     $('hpUpgrade').addEventListener('click', () => {
         const msg = $('hpMsg');
@@ -7647,10 +7654,8 @@
         if (!goblinDebt) { unlock('debtfree'); $('hpMsg').textContent = 'DEBT FREE! The goblins are furious.'; chatBurst(['DEBT FREE POG', 'financially literate W', 'goblins seething'], 3); }
         renderGold(); renderHousePanel();
     }
-    $('hpPay100').addEventListener('click', () => payDebt(100));
     $('hpBoard').addEventListener('click', () => { location.href = YACHT_URL; });
     $('hpEmoji').addEventListener('click', () => { if (houseLevel >= 6) location.href = YACHT_URL; });   // click the yacht itself to board right away
-    $('hpPayAll').addEventListener('click', () => payDebt(goblinDebt));
     setInterval(() => { if (goblinDebt && !document.hidden) { goblinDebt = Math.ceil(goblinDebt * 1.01); store.set('painWheelDebt', goblinDebt); renderGold(); } }, 10 * 60 * 1000);
     function openHousePanel() { renderHousePanel(); $('hpMsg').textContent = ''; const p = $('housePanel'); p.classList.remove('hidden'); p.classList.add('flex'); }
     $('houseClose').addEventListener('click', () => { const p = $('housePanel'); p.classList.add('hidden'); p.classList.remove('flex'); });
@@ -9764,10 +9769,10 @@
             ['🛠️', 'Fixes: Party mode works again, OSHA landings always break something now, the Kevin joke shows under the news video too, the Toys button lost its number, and the wheel makes a charging whine while you hold SPIN.'],
             ['🌵', 'Forever mode: the news has nothing to report (the entire planet is in WoW Forever) and the ad is stuck on PLAY FOREVER. Police boats have their own siren now.'],
             ['🏚️', 'The desert shack has an inside now, and the claw machine lives in the corner. Click your shack (or its photo on The Board) to go in: it is its own page now, and the claw machine runs right there in the corner. Some things in there are still a mystery. Golden cookies in Forever burst into tumbleweeds.'],
-            ['🌵', 'WoW Forever week (Nov 4-10, every year): the whole wheel goes ghost town by itself. $KNOB crashes to $0.00, the guild feed is crickets, the zoom window cracked from neglect, and Uwutek is off playing Forever too. Clippy has one question. Click Forever (come back?) to leave.'],
+            ['🌵', 'WoW Forever mode: press the Forever button and the whole wheel goes ghost town. $KNOB crashes to $0.00, the guild feed is crickets, the zoom window cracked from neglect, and Uwutek is off playing Forever. Leaving might take a minute.'],
             ['🥤', 'The 8/11 Slurpee machine actually runs now, and you watch your cup fill under the tap.'],
-            ['🏚️', 'Shack secrets: the skeleton talks, the barrel has a daily casino token, the toolbox tightens the claw for one strong grab a day, and the map on the table is the first clue toward the basement (it gets pinned to The Board). The sign flickers. It does that.'],
-            ['🐟', 'Gary (who is not named Gary) is mounted on The Board. Click him for a sea shanty.'],
+            ['🏚️', 'The shack has company: the skeleton talks, the barrel has a daily casino token, and the toolbox tightens the claw for one strong grab a day. Look around.'],
+            ['🐟', 'Gary (who is not named Gary) is mounted on The Board.'],
             ['🐦', 'Kevin and Casimir have real Squawkr profile pictures. Sorry I\'m Busy Skinning has its picture.'],
             ['🏪', 'The 8/11 is the shop now. The Shop button walks you in: click an aisle sign (Pets, Toys, Snacks & Potions, Cosmetics, Themes, Curses), the scratch-off rack, or the pet carriers. Slurpees are still 1 gold, right from the machine. The whole catalog button is still there too.'],
             ['🏆', 'The yacht trophy room has real trophies now. Locked ones sit on the shelf as a mystery trophy.'],
@@ -9777,10 +9782,11 @@
             ['🕹️', 'The claw machine is stingier: lined up is a 15% grab now, so it does not get cleaned out on day one.'],
             ['📈', 'Fixed: during WoW Forever week the fake $0.00 screen blocked stonks. It has a Trade anyway button now.'],
             ['🎒', 'Real pixel art for most bag items, the casino token, the Goblin Vault, and the Paid Shoutout and Goblin IRS profile pictures.'],
-            ['🕹️', "The claw machine has 4 new prizes: Raid Duck, Bones (the shack skeleton's little brother), Slimothy and the Goblin Piggy Bank. Lil' Spinny, Gerald, The Needle and Kevin Jr. have real art now."],
+            ['🕹️', 'The claw machine has 4 new prizes, and the old prizes got real art.'],
             ['🏆', 'The trophy room is finished: every one of the 90 achievements has its own trophy now.'],
             ['🚨', 'The HEAT meter has a spinning siren next to the stars. It spins faster when ChAoTiC is looking for you.'],
             ['🌵', 'The tumbleweeds are real animated ones now. The chicken loses real feathers. The casino token is the official CKBC coin. Gary has a Squawkr profile picture (he is angry about it).'],
+            ['🏠', 'Home is tidier: one button to board the yacht, and every debt or fine you owe gets its own box with a Pay button. Owe nothing, see nothing.'],
             ['🛒', 'The shop got a makeover: riveted iron tabs and rows, real BUY / OWNED / EQUIPPED buttons.'],
             ['🍀', 'The 8/11 bad-luck protection is stronger: +6% per spin (up to 90%) until you land it.'],
             ['⏳', 'WoW Forever mode only turns on when YOU press the Forever button now. It no longer switches itself on during launch week.'],
@@ -10448,8 +10454,6 @@
         $('shopClose').addEventListener('click', closeShop);
         $('shopClose').innerHTML = `<img src="${PHOTO_UI_CLOSE}" alt="Close" style="width:34px;height:auto;display:block">`;
         [['--ui-tab', PHOTO_UI_TAB], ['--ui-tabon', PHOTO_UI_TABON], ['--ui-row', PHOTO_UI_ROW], ['--ui-tag', PHOTO_UI_TAG], ['--ui-header', PHOTO_UI_HEADER]].forEach(([v, u]) => document.documentElement.style.setProperty(v, `url("${u}")`));
-        $('hpShopBtn').addEventListener('click', () => { $('houseClose').click(); openShop('scratch'); });
-        $('hpPetBtn').addEventListener('click', () => { $('houseClose').click(); openShop('pets'); });
     })();
 
     // ---------- party mode: slow sweeping club lights, no strobe ----------
@@ -10714,7 +10718,7 @@
     // ---------- 💸 bills & debts: the IRS, the Cartel, and the court ----------
     const TAX_GRACE = 48 * 3600 * 1000;
     const debts = Object.assign({ tax: null, cartel: 0, court: 0, repair: 0 }, store.get('painWheelBills', {}));
-    function saveDebts() { store.set('painWheelBills', debts); renderBills(); }
+    function saveDebts() { store.set('painWheelBills', debts); renderBills(); renderHpDebts(); }
     const totalAssets = () => gold + vaultGold();
     function takeAssets(frac, vaultFloor) {   // takes a fraction of the wallet and the vault (the vault keeps its FDIC-insured part)
         const w = Math.round(gold * frac), v0 = vaultGold(), vTake = Math.round(Math.max(0, v0 - (vaultFloor || 0)) * frac);
