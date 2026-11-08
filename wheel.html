@@ -882,7 +882,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 2:52 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 2:53 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -900,6 +900,8 @@
                 <span id="volLabel" class="mono text-xs text-amber-300 w-10 text-right shrink-0">60%</span>
                 <button id="volTest" class="text-[11px] px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold shrink-0 cursor-pointer">Test</button>
             </div>
+            <label class="flex items-center gap-3 mt-2 cursor-pointer select-none"><input id="musicToggle" type="checkbox" class="w-5 h-5 accent-amber-400 cursor-pointer" checked>
+                <span class="text-sm font-bold">🎵 Music</span><span class="text-xs text-slate-400">(songs only: the Board's music, waiting music, the cruiser's radio. Sound effects stay on.)</span></label>
                 <p class="text-[11px] text-slate-500 mt-1">Click the speaker to mute or unmute.</p>
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mt-3 mb-2">Sound style</div>
                 <div id="sfxPicks" class="flex flex-wrap gap-2">
@@ -3855,8 +3857,11 @@
     const clipBuffers = {}, clipSources = {};
     // Sound style: 'classic' skips the new recorded sounds and uses the original synth ones
     const NEW_CLIPS = /^(doorslam|sink|fart1|fart2|rocketboom|achieve|fanfare|trombone|vcrash|crash|sqchirp|ufo|ufobeam|brickring|heli|doorchime|yachthorn|token)/;
+    const MUSIC_CLIPS = /^(waiting|policesong)$/;   // songs, not sound effects: the Music toggle mutes these
+    const musicOn = () => !store.get('painWheelMusicOff', false);
     function playClip(name, dataUrl, fallback) {
         if (!soundOn()) return;
+        if (MUSIC_CLIPS.test(name) && !musicOn()) return;
         if (sfxStyle === 'classic' && NEW_CLIPS.test(name)) { if (fallback) fallback(); return; }
         ensureAudio();
         const start = (buf) => {
@@ -5937,6 +5942,8 @@
         slider.addEventListener('input', () => apply(slider.value / 100, true));
         icon.addEventListener('click', () => apply(currentVolume > 0 ? 0 : lastNonZero, true));
         $('volTest').addEventListener('click', () => playWinSound());
+        const mt = $('musicToggle'); mt.checked = musicOn();   // shared with the Board's music paper
+        mt.addEventListener('change', () => { store.set('painWheelMusicOff', !mt.checked); if (!mt.checked) ['waiting', 'policesong'].forEach(n => { try { clipSources[n] && clipSources[n].stop(); } catch (e) {} }); });
         const renderSfx = () => document.querySelectorAll('#sfxPicks [data-sfx]').forEach(b => { const on = b.dataset.sfx === sfxStyle; b.className = 'px-3 py-1.5 rounded border text-sm font-bold cursor-pointer ' + (on ? 'bg-amber-500 text-black border-amber-400' : 'bg-slate-800 text-slate-200 border-slate-600'); });
         document.querySelectorAll('#sfxPicks [data-sfx]').forEach(b => b.addEventListener('click', () => { sfxStyle = b.dataset.sfx; store.set('painWheelSfx', sfxStyle); renderSfx(); playTickSound(true); setTimeout(() => playTickSound(false), 140); }));
         renderSfx();
@@ -9856,6 +9863,7 @@
             ['🦺', 'OSHA landings break things now: the rocket crashes, the banker trips, a slice falls off the wheel, a vehicle explodes, a pet trips, a top-bar button falls off (click it to bolt it back on), Clippy pokes his eye out, or the shack catches fire.'],
             ['📂', "The Board: clicking a place opens its case file first, with its own polaroid. Clippy has concerns."],
             ['🏷️', "Axazon's Emporium is open: a flea market with six items and new stock every 9 AM and 9 PM Central. Land on the Emporium slice to get in."],
+            ['🎵', "Settings has a Music switch now: turn off the songs and keep the sound effects. The Board has one too."],
             ['📞', "Axazon calls now too, especially when his flea market restocks. He has things to say."],
             ['📞', "Your phone rings now. About every half hour, someone you've met calls to chat. You can let it ring."],
             ['🏪', "The shop opens right inside the 8/11 now. Click an aisle sign and you stay in the store. New shelves too."],

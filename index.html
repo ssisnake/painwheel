@@ -58,6 +58,10 @@ if (/(transfer|import)=/.test(location.hash) || location.search) location.replac
   .tally { position: absolute; z-index: 2; pointer-events: none; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: #1c1917; font-family: 'Permanent Marker', cursive; line-height: 1; }
   .tally small { font-size: .4cqw; line-height: 1.1; letter-spacing: 0; color: #44403c; white-space: nowrap; } .tally b { font-weight: normal; font-size: 1.15cqw; margin-top: .1cqw; color: #7f1d1d; }
   .tally s { font-size: .62cqw; color: #78716c; margin: 0 .12cqw; } .tally .marks { font-size: .7cqw; letter-spacing: -.05cqw; color: #1c1917; margin-top: .15cqw; }
+  .musicnote { position: absolute; left: 10.9%; top: 63.4%; width: 3.8%; height: 9%; z-index: 3; padding: 0; border: 0; background: none; cursor: pointer; transform: rotate(-12deg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Permanent Marker', cursive; color: #1c1917; line-height: 1; }
+  .musicnote span { font-size: 1.15cqw; } .musicnote small { font-size: .62cqw; margin-top: .15cqw; } .musicnote.off small { color: #b91c1c; } .musicnote.off span { opacity: .45; text-decoration: line-through; }
+  .musicnote:hover, .musicnote:focus-visible { filter: drop-shadow(0 0 .5cqw #fde68a); outline: none; }
   #lightsOut { position: fixed; inset: 0; z-index: 99; background: #000; opacity: 0; pointer-events: none; transition: opacity .7s; }
   #lightsOut.on { opacity: 1; }
   #credits { position: fixed; inset: 0; z-index: 100; background: #000; display: none; overflow: hidden; cursor: pointer; }
@@ -232,7 +236,8 @@ function showEvidence() {
 // ---------- background music for the Board: two Pixabay tracks, crossfading into each other, quiet ----------
 // "Detective Documentary" by leberch, "Time Lapse" by kulakovka (credited in the roll). Starts on your first click (browsers wait for one)
 const BGM = ['media/audio_bgm_detective.mp3', 'media/audio_bgm_timelapse.mp3'];
-const bgmVol = () => { const v = parseFloat(localStorage.getItem('painWheelVolume')); return .35 * (isNaN(v) ? .6 : Math.max(0, Math.min(1, v))); };
+const musicOff = () => { try { return JSON.parse(localStorage.getItem('painWheelMusicOff')) === true; } catch (e) { return false; } };   // the Music switch (also in the wheel's Settings)
+const bgmVol = () => { if (musicOff()) return 0; const v = parseFloat(localStorage.getItem('painWheelVolume')); return .35 * (isNaN(v) ? .6 : Math.max(0, Math.min(1, v))); };
 let bgmIdx = 0, bgmCur = null, bgmFadeT = null, bgmHeld = false;
 function bgmFade(a, to, ms, done) { const from = a.volume, t0 = performance.now(); const step = () => { const k = Math.min(1, (performance.now() - t0) / ms); a.volume = Math.max(0, Math.min(1, from + (to - from) * k)); if (k < 1) requestAnimationFrame(step); else if (done) done(); }; requestAnimationFrame(step); }
 function bgmPlay(i) {
@@ -244,7 +249,16 @@ function bgmPlay(i) {
   });
   a.addEventListener('ended', () => { if (bgmCur === a && !bgmHeld) bgmPlay(bgmIdx + 1); });   // safety net if the fade point was missed
 }
-addEventListener('pointerdown', () => { if (!bgmCur) bgmPlay(Math.random() < .5 ? 0 : 1); }, { once: true });
+addEventListener('pointerdown', (e) => { if (!bgmCur && !e.target.closest('.musicnote')) bgmPlay(Math.random() < .5 ? 0 : 1); }, { once: true });
+// the little white paper by the switch: MUSIC ON / OFF (same setting as the wheel's Settings)
+const musicBtn = document.createElement('button'); musicBtn.className = 'musicnote'; musicBtn.type = 'button'; board.appendChild(musicBtn);
+const renderMusicBtn = () => { const off = musicOff(); musicBtn.classList.toggle('off', off); musicBtn.innerHTML = `<span>♪♫</span><small>MUSIC ${off ? 'OFF' : 'ON'}</small>`; musicBtn.setAttribute('aria-label', `Music is ${off ? 'off' : 'on'}. Click to turn it ${off ? 'on' : 'off'}.`); musicBtn.title = musicBtn.getAttribute('aria-label'); };
+renderMusicBtn();
+musicBtn.onclick = () => {
+  const off = !musicOff(); try { localStorage.setItem('painWheelMusicOff', JSON.stringify(off)); } catch (e) {} renderMusicBtn();
+  if (off) { if (bgmCur) bgmFade(bgmCur, 0, 600, () => bgmCur.pause()); if (!credMusic.paused) bgmFade(credMusic, 0, 600, () => credMusic.pause()); }
+  else if (!bgmCur) bgmPlay(Math.random() < .5 ? 0 : 1); else { bgmCur.play().catch(() => {}); bgmFade(bgmCur, bgmVol(), 1500); }
+};
 const bgmHold = (on) => { bgmHeld = on; if (!bgmCur) return; if (on) bgmFade(bgmCur, 0, 800, () => bgmCur.pause()); else { bgmCur.play().catch(() => {}); bgmFade(bgmCur, bgmVol(), 2500); } };   // quiet while the credits roll
 const credBtn = document.createElement('button'); credBtn.className = 'lswitch'; credBtn.type = 'button'; credBtn.title = 'Lights out (credits)'; credBtn.setAttribute('aria-label', 'Light switch: roll the credits');
 credBtn.innerHTML = '<img src="media/switch_up.png" alt="">'; board.appendChild(credBtn);
@@ -270,7 +284,7 @@ const clickSnd = (n) => { try { const v = parseFloat(localStorage.getItem('painW
 const cred = document.getElementById('credits'), credRoll = document.getElementById('credRoll');
 // the credits theme: "Crime Story" by Alex Grohl (royalty free, credited in the roll), at the wheel's volume
 const credMusic = new Audio('media/audio_credits.mp3'); credMusic.preload = 'none';
-const credVol = () => { const v = parseFloat(localStorage.getItem('painWheelVolume')); return .7 * (isNaN(v) ? .6 : Math.max(0, Math.min(1, v))); };
+const credVol = () => { if (musicOff()) return 0; const v = parseFloat(localStorage.getItem('painWheelVolume')); return .7 * (isNaN(v) ? .6 : Math.max(0, Math.min(1, v))); };
 const credClose = () => {
   if (!cred.classList.contains('on')) return;
   cred.classList.remove('on'); clickSnd('audio_switch_on'); setTimeout(() => bgmHold(false), 1200); credBtn.querySelector('img').src = 'media/switch_up.png'; lightsOut.classList.remove('on');   // lights back on
