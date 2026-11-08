@@ -70,7 +70,7 @@ const ACT = {
     if (emp && !get('painWheelSeenEmporium', false) && Math.random() < .7) return say('💀 ' + pick(FLEA_HINTS), 5600);   // he points new customers out the window
     say('💀 ' + (!(get('painWheelClues', {}) || {}).map && Math.random() < .55 ? pick(SKELETON_HINTS) : emp && Math.random() < .15 ? pick(FLEA_HINTS) : pick(SKELETON)), 5200);
   },
-  sign: () => { const sc = document.getElementById('scene'); sc.classList.add('dim'); setTimeout(() => sc.classList.remove('dim'), 1200); say(pick(['bzzzt.', 'The sign flickers. It does that.', 'THE WH  L. Then THE WHEEL again.']), 2000); },
+  sign: () => { sfx('audio_neon'); const sc = document.getElementById('scene'); sc.classList.add('dim'); setTimeout(() => sc.classList.remove('dim'), 1200); say(pick(['bzzzt.', 'The sign flickers. It does that.', 'THE WH  L. Then THE WHEEL again.']), 2000); },
   table: () => {
     const clues = get('painWheelClues', {}); const first = !clues.map; clues.map = true; put('painWheelClues', clues);
     show('🗺️ A map under the coffee mug', '<p>Hand-drawn. Coffee-stained. The desert is labeled <i>"here (shack)"</i>. A dotted line runs off the edge of the paper toward a big red X.</p><p>Next to the X, in shaky writing: <b>"DON\'T GO DOWN THERE."</b></p><p>On the back, scribbled fast: <i>"Every photo on the board is a place. Every place is hiding something. Find them all and the middle opens. I got one. Your turn."</i></p><p style="color:#7c2d12;font-weight:bold">' + (first ? '📌 Evidence found! It\'s pinned to The Board now. Check the middle photo.' : 'You already pinned this one to The Board.') + '</p>');
@@ -228,4 +228,22 @@ if (location.hash === '#claw') setTimeout(openClaw, 500);
 // once Axazon's Emporium is open, there's a path out the side window to his flea market
 (() => { let open = false; try { open = JSON.parse(localStorage.getItem('painWheelEmporiumOpen')) || ((JSON.parse(localStorage.getItem('painWheelStats')) || {}).byType || {}).EMPORIUM > 0; } catch (e) {}
   if (!open) return; document.getElementById('fleaNav').style.display = ''; const f = document.getElementById('fleaPath'); f.style.display = ''; f.onclick = (e) => { e.stopPropagation(); location.href = 'emporium.html'; }; })();
+
+// desert wind through the broken boards: made live (filtered noise with slow gusts), very quiet, starts on your first click
+function startWind() {
+  try {
+    if (!vol()) return; AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (startWind.on) return; startWind.on = true;
+    const len = AC.sampleRate * 4, buf = AC.createBuffer(1, len, AC.sampleRate), d = buf.getChannelData(0); let last = 0;
+    for (let i = 0; i < len; i++) { last = (last + .02 * (Math.random() * 2 - 1)) / 1.02; d[i] = last * 3.5; }   // brown noise: soft and low
+    const src = AC.createBufferSource(); src.buffer = buf; src.loop = true;
+    const bp = AC.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 520; bp.Q.value = .7;
+    const g = AC.createGain(); g.gain.value = .0;
+    const lfoF = AC.createOscillator(), lfoFg = AC.createGain(); lfoF.frequency.value = .07; lfoFg.gain.value = 260; lfoF.connect(lfoFg); lfoFg.connect(bp.frequency);   // the whistle drifts
+    const lfoA = AC.createOscillator(), lfoAg = AC.createGain(); lfoA.frequency.value = .11; lfoAg.gain.value = .045 * vol(); lfoA.connect(lfoAg); lfoAg.connect(g.gain);    // gusts
+    src.connect(bp); bp.connect(g); g.connect(AC.destination);
+    const base = .06 * vol(); g.gain.setValueAtTime(0, AC.currentTime); g.gain.linearRampToValueAtTime(base, AC.currentTime + 3);
+    src.start(); lfoF.start(); lfoA.start();
+  } catch (e) {}
+}
+addEventListener('pointerdown', startWind, { once: true });
 </script></body></html>
