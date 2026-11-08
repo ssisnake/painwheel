@@ -463,9 +463,6 @@
         .nameplate #titleShow { color: #9a3412 !important; text-shadow: 0 1px 0 rgba(255,255,255,.3); }
         .nameplate-input { display: block; max-width: 440px; margin: 0 auto; font: 800 calc(20px * var(--ts, 1)) system-ui, sans-serif; min-height: 64px; border-width: 20px 22px 15px; outline: none; }
         .nameplate-input::placeholder { color: rgba(59,29,10,.45); } .nameplate-input:focus { filter: drop-shadow(0 0 8px rgba(251,191,36,.7)); }
-        #titleGrid > * { border-style: solid !important; border-color: transparent !important; border-width: 12px 13px 9px !important; border-image: url(media/nameplate.png) 56 56 40 56 fill stretch !important; background: none !important; color: #3b1d0a !important; border-radius: 0 !important; box-shadow: none !important; }
-        #titleGrid > * * { color: #3b1d0a !important; }
-        #titleGrid > .on, #titleGrid > [aria-pressed="true"], #titleGrid > .ring-2 { filter: drop-shadow(0 0 7px #fbbf24) brightness(1.08); }
         .nameplate:hover { filter: brightness(1.08) drop-shadow(0 0 6px rgba(251,191,36,.6)); }
         .plate-btn { background: none; border: 0; padding: 0; line-height: 0; border-radius: 8px; transition: transform .12s, filter .12s; }
         .plate-btn:hover { transform: translateY(-1px); filter: brightness(1.15); } .plate-btn:active { transform: translateY(1px); }
@@ -896,7 +893,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 5:45 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 5:48 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -10273,8 +10270,8 @@
                 () => { if (!spend(p.cost, p.name)) return; ownedPacks[k] = true; store.set('painWheelPacks', ownedPacks); unlock('drip'); equipPack(k); },
                 () => equipPack(k))));
             add(shopHead('🏷️ Titles (shown on the guild leaderboard)'));
-            add(ownRow('🏷️', 'No title', 'Humble. Suspicious.', 0, true, !titleChoice, null, () => equipTitle('')));
-            TITLES.forEach(([t, c]) => add(ownRow('🏷️', t, `${playerName || 'You'}, ${t}`, c, ownedTitles[t], titleChoice === t,
+            add(ownRow('<img src="media/nameplate.png" alt="" style="display:inline-block;height:22px;width:auto;vertical-align:middle">', 'No title', 'Humble. Suspicious.', 0, true, !titleChoice, null, () => equipTitle('')));
+            TITLES.forEach(([t, c]) => add(ownRow('<img src="media/nameplate.png" alt="" style="display:inline-block;height:22px;width:auto;vertical-align:middle">', t, `${playerName || 'You'}, ${t}`, c, ownedTitles[t], titleChoice === t,
                 () => { if (!spend(c, t)) return; ownedTitles[t] = true; store.set('painWheelTitles', ownedTitles); unlock('drip'); equipTitle(t); },
                 () => equipTitle(t))));
             add(shopRow('📞', "Vince's 1980s Brick Phone", "A genuine 1983 car phone from Vince the stock broker. Four pounds. Twenty minutes of battery. It sits in the bottom-left corner. Click it and Vince calls with a stock tip (he's right about 60% of the time). Note: comes lightly dusted with a white powder Vince insists is \"just baby powder\" and an alarming amount of stripper glitter. Do not ask Vince about either.", garage.phone ? 'Owned ✓' : `Buy: ${fmt(priceOf(PCT.toy))}`, () => {
@@ -10621,8 +10618,8 @@
         Object.entries(TICK_PACKS).filter(([k]) => ownedPacks[k]).forEach(([k, p]) => lookTile(pg, tickPack === k, p.name, PACK_ICON()[k], () => equipPack(k), p.name + ' (click to hear it)'));
         renderPetPicker();
         const tl = $('titleGrid'); tl.innerHTML = '';
-        lookTile(tl, !titleChoice, 'No title', '🚫', () => equipTitle(''));
-        TITLES.filter(([t]) => ownedTitles[t]).forEach(([t]) => lookTile(tl, titleChoice === t, t, '🏷️', () => equipTitle(t)));
+        lookTile(tl, !titleChoice, 'No title', '🚫', () => equipTitle(''));   // (titles use the nameplate as their icon)
+        TITLES.filter(([t]) => ownedTitles[t]).forEach(([t]) => lookTile(tl, titleChoice === t, t, '<img src="media/nameplate.png" alt="" style="height:26px;width:auto">', () => equipTitle(t)));
     }
     function openLooks() { if (EMBED_SHOP) { try { parent.postMessage({ shop: 'go', href: 'wheel.html#go=looks' }, location.origin); } catch (e) {} return; } closeShop(); $('settingsBtn').click(); setTimeout(() => { const el = $('looksSection'); if (el) el.scrollIntoView({ block: 'start', behavior: 'smooth' }); }, 60); }
     $('looksShop').addEventListener('click', () => { const p = $('settingsPanel'); p.classList.add('hidden'); p.classList.remove('flex'); openShop('cosmetics'); });
