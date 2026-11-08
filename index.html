@@ -51,7 +51,7 @@ if (/(transfer|import)=/.test(location.hash) || location.search) location.replac
   /* the light switch on the wall: flip it and the room goes dark for the credits */
   .lswitch, .cnote { position: absolute; padding: 0; border: 0; background: none; cursor: pointer; z-index: 3; }
   .lswitch { left: 7.47%; top: 60.71%; width: 3.52%; height: 10.48%; } .cnote { left: 6.2%; top: 71.2%; width: 5.91%; height: 14.63%; }
-  .lswitch img, .cnote img { display: block; width: 100%; height: 100%; filter: drop-shadow(.1cqw .2cqw .2cqw rgba(0,0,0,.5)); }
+  .lswitch img, .cnote { display: block; width: 100%; height: 100%; filter: drop-shadow(.1cqw .2cqw .2cqw rgba(0,0,0,.5)); }
   .lswitch:hover img, .cnote:hover img, .lswitch:focus-visible img, .cnote:focus-visible img { filter: drop-shadow(0 0 .6cqw #fde68a); } .lswitch:focus-visible, .cnote:focus-visible { outline: none; }
   #lightsOut { position: fixed; inset: 0; z-index: 99; background: #000; opacity: 0; pointer-events: none; transition: opacity .7s; }
   #lightsOut.on { opacity: 1; }
@@ -226,8 +226,7 @@ function showEvidence() {
 // 🎬 credits on the little sticky note, bottom middle
 const credBtn = document.createElement('button'); credBtn.className = 'lswitch'; credBtn.type = 'button'; credBtn.title = 'Lights out (credits)'; credBtn.setAttribute('aria-label', 'Light switch: roll the credits');
 credBtn.innerHTML = '<img src="media/switch_up.png" alt="">'; board.appendChild(credBtn);
-const credNote = document.createElement('button'); credNote.className = 'cnote'; credNote.type = 'button'; credNote.title = 'Credits'; credNote.setAttribute('aria-label', 'Credits');
-credNote.innerHTML = '<img src="media/credits_note.png" alt="">'; board.appendChild(credNote);
+const credNote = document.createElement('img'); credNote.className = 'cnote'; credNote.src = 'media/credits_note.png'; credNote.alt = ''; credNote.style.pointerEvents = 'none'; board.appendChild(credNote);   // just a label for the switch
 const lightsOut = document.createElement('div'); lightsOut.id = 'lightsOut'; document.body.appendChild(lightsOut);
 const clickSnd = (n) => { try { const v = parseFloat(localStorage.getItem('painWheelVolume')); const a = new Audio('media/' + n + '.mp3'); a.volume = .8 * (isNaN(v) ? .6 : Math.max(0, Math.min(1, v))); if (a.volume) a.play().catch(() => {}); } catch (e) {} };
 const cred = document.getElementById('credits'), credRoll = document.getElementById('credRoll');
@@ -240,7 +239,7 @@ const credClose = () => {
   const fade = setInterval(() => { credMusic.volume = Math.max(0, credMusic.volume - .05); if (credMusic.volume <= .01) { clearInterval(fade); credMusic.pause(); } }, 60);
 };
 const rollCredits = () => { credRoll.style.animation = 'none'; void credRoll.offsetWidth; credRoll.style.animation = ''; cred.classList.add('on'); try { credMusic.currentTime = 0; credMusic.volume = credVol(); if (credMusic.volume) credMusic.play().catch(() => {}); } catch (e) {} };
-credBtn.onclick = credNote.onclick = () => {   // flip the switch: click, the room goes dark, then the credits roll
+credBtn.onclick = () => {   // flip the switch: click, the room goes dark, then the credits roll
   if (cred.classList.contains('on') || lightsOut.classList.contains('on')) return;
   clickSnd('audio_switch_off'); credBtn.querySelector('img').src = 'media/switch_down.png'; lightsOut.classList.add('on'); setTimeout(rollCredits, 900);
 };
