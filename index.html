@@ -26,6 +26,16 @@ if (/(transfer|import)=/.test(location.hash) || location.search) location.replac
   .ev.got .bx { background: #fef3c7; }
   .ev small { display: block; color: #57534e; font-style: italic; }
   .slot.sm .stamp { font-size: .8cqw !important; padding: .1cqw .35cqw !important; }
+  .slot.pol .pin { position: absolute; left: 50%; top: -.3cqw; width: .85cqw; height: .85cqw; margin-left: -.42cqw; border-radius: 50%; z-index: 2; background: radial-gradient(circle at 35% 30%, #fff8 0 18%, var(--pin) 20% 62%, #0006 100%); box-shadow: .12cqw .25cqw .2cqw rgba(0,0,0,.55); }
+  .pencil { position: absolute; left: 87.6%; top: 42.6%; width: 2.4%; height: 7.4%; padding: 0; border: 0; background: transparent; cursor: pointer; border-radius: 6px; z-index: 3; }
+  .pencil:hover, .pencil:focus-visible { box-shadow: 0 0 0 2px #fde68a, 0 0 12px #fde68a; outline: none; }
+  #pencilSay { position: absolute; right: 12.8%; top: 37.5%; z-index: 6; max-width: 17cqw; padding: .5cqw .8cqw; border-radius: .8cqw; background: #fffbe6; color: #1c1917; border: 2px solid #1c1917; font: 1.05cqw/1.3 'Special Elite', monospace; box-shadow: 0 .6cqw 1.4cqw rgba(0,0,0,.5); display: none; }
+  #pencilSay b { color: #a16207; }
+  #clippy { font-size: 150px; } #clippy .googly { position: absolute; left: 50%; top: 10%; transform: translateX(-50%); display: flex; gap: 2px; pointer-events: none; }
+  #clippy .googly i { position: relative; width: .34em; height: .34em; border-radius: 50%; background: #fff; border: 4px solid #111; box-shadow: 0 2px 4px rgba(0,0,0,.5); }
+  #clippy .googly i::after { content: ""; position: absolute; width: 48%; height: 48%; border-radius: 50%; background: #111; left: 26%; top: 26%; animation: googly 1.7s ease-in-out infinite; }
+  #clippy .googly i:last-child::after { animation-duration: 1.3s; animation-delay: -.4s; }
+  @keyframes googly { 0% { transform: translate(-30%, 30%); } 25% { transform: translate(35%, 40%); } 50% { transform: translate(30%, -30%); } 75% { transform: translate(-35%, -20%); } 100% { transform: translate(-30%, 30%); } }
   .slot.pol { padding: 0; } .slot.pol img { display: block; width: 100%; height: 100%; object-fit: fill; filter: drop-shadow(0 .3cqw .4cqw rgba(0,0,0,.45)); }
   .slot.locked .shot { background: repeating-linear-gradient(45deg, #292524 0 .6cqw, #1c1917 .6cqw 1.2cqw); display: grid; place-items: center; }
   .slot h2 { margin: 0; font-family: 'Permanent Marker', cursive; font-size: 1.12cqw; line-height: 1.05; color: #450a0a; text-shadow: 0 0 .05cqw #450a0a; }
@@ -54,28 +64,32 @@ if (/(transfer|import)=/.test(location.hash) || location.search) location.replac
   dialog { max-width: min(680px, 92vw); max-height: 86vh; border: 0; border-radius: 4px; padding: 26px; background: #fdf6e3; color: #1c1917; font-family: 'Special Elite', monospace; font-size: 18px; line-height: 1.45; box-shadow: 0 20px 60px rgba(0,0,0,.7); }
   dialog::backdrop { background: rgba(0,0,0,.7); }
   /* case files: a typed sheet with the polaroid paper-clipped to the top left */
-  dialog.case { max-width: min(860px, 94vw); padding: 30px 32px 26px; background-color: #fbf3dc; background-image: repeating-linear-gradient(transparent 0 29px, rgba(120,113,108,.16) 29px 30px), linear-gradient(#fdf6e3, #f3e8c8); }
-  .case .pol { float: left; position: relative; width: min(300px, 40%); margin: -4px 26px 14px -6px; transform: rotate(-3deg); box-shadow: 0 10px 22px rgba(0,0,0,.35); background: #f4f1ea; }
-  .case .pol img { display: block; width: 100%; height: auto; }
-  .case .pol.made { padding: 6% 6% 0; } .case .pol.made img { aspect-ratio: 16 / 10; object-fit: cover; }
-  .case .pol.made span { display: block; padding: 8px 4px 14px; text-align: center; font: 26px/1.1 'Permanent Marker', cursive; color: #1c1917; }
-  .case .clip { position: absolute; top: -26px; left: 22%; width: 34px; height: 82px; transform: rotate(8deg); z-index: 2; filter: drop-shadow(1px 2px 1px rgba(0,0,0,.35)); }
-  .case .fileno { font-size: 14px; letter-spacing: .14em; color: #78716c; }
-  .case h3 { font-size: 34px; margin: 2px 0 8px; }
-  .case .stamp2 { display: inline-block; margin: 2px 0 10px; padding: 2px 10px; border: 3px solid #b91c1c; color: #b91c1c; font: 20px 'Permanent Marker', cursive; transform: rotate(-4deg); }
-  .case p { margin: 0 0 12px; font-size: 19px; }
-  .case .facts { clear: none; margin: 4px 0 0; padding: 0; list-style: none; font-size: 17px; }
-  .case .facts li { padding: 3px 0; border-bottom: 1px dashed #a8a29e; }
-  .case .facts b { font-family: 'Special Elite', monospace; font-weight: 700; color: #7f1d1d; }
-  .case .acts { clear: both; display: flex; gap: 12px; justify-content: flex-end; padding-top: 10px; }
-  .case .acts a, .case .acts button { margin: 0; font: inherit; font-size: 18px; padding: 10px 20px; border-radius: 6px; text-decoration: none; border: 0; cursor: pointer; }
-  .case .acts a { background: #7f1d1d; color: #fef3c7; } .case .acts button { background: #1c1917; color: #fde68a; }
+  /* case files: the folder art, with the photo, notes and facts written into its blanks (all positions are % of the art) */
+  dialog.case { width: min(1120px, 96vw, calc((100vh - 40px) * 1599 / 984)); max-width: none; max-height: none; padding: 0; background: transparent; overflow: visible; box-shadow: none; }
+  .folder { position: relative; aspect-ratio: 1599 / 984; background: url(media/casefile.webp) 0 0 / 100% 100% no-repeat; container-type: inline-size; filter: drop-shadow(0 20px 40px rgba(0,0,0,.7)); font-family: 'Special Elite', monospace; color: #1c1917; }
+  .folder > * { position: absolute; margin: 0; }
+  .folder .photo { left: 7.2%; top: 17.1%; width: 30.6%; height: 46.9%; clip-path: polygon(0 3.7%, 92.9% 0, 100% 91.3%, 7.1% 100%); background: #111; }
+  .folder .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .folder .clip { left: 8.6%; top: 13.6%; width: 4.6%; height: auto; transform: rotate(-4deg); filter: drop-shadow(.1cqw .2cqw .1cqw rgba(0,0,0,.45)); }
+  .folder .tape { left: 23.4%; top: 11.6%; width: 11.4%; height: 5.4%; transform: rotate(7deg); background: rgba(236,216,150,.62); box-shadow: 0 .1cqw .3cqw rgba(0,0,0,.2); }
+  .folder .cap { left: 9.4%; top: 64.6%; width: 28.6%; height: 9.4%; transform: rotate(-2.5deg); display: flex; align-items: center; justify-content: center; text-align: center; font: 2.1cqw/1.05 'Permanent Marker', cursive; color: #1c1917; }
+  .folder h3 { left: 42.6%; top: 6.4%; width: 51%; height: 7.6%; display: flex; align-items: flex-end; font: 3.1cqw/1 'Permanent Marker', cursive; color: #7f1d1d; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .folder .fileno { left: 42.6%; top: 16.6%; font-size: 1.2cqw; letter-spacing: .16em; color: #78716c; }
+  .folder .stamp2 { left: 42.6%; top: 20.6%; padding: .25cqw .9cqw; border: .3cqw solid #b91c1c; color: #b91c1c; font: 1.9cqw 'Permanent Marker', cursive; transform: rotate(-4deg); background: rgba(254,242,242,.25); }
+  .folder .notes { left: 42.6%; top: 33.1%; width: 51.3%; font-size: 1.42cqw; line-height: 2.16cqw; }
+  .folder .notes p { margin: 0 0 2.16cqw; }
+  .folder .fact { left: 53%; width: 40.4%; font-size: 1.42cqw; line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .folder .hit { position: absolute; display: block; border-radius: .8cqw; cursor: pointer; background: transparent; border: 0; padding: 0; transition: box-shadow .15s, filter .15s; }
+  .folder .hit:hover, .folder .hit:focus-visible { box-shadow: 0 0 0 .25cqw #fde68a, 0 0 1.4cqw #fde68a; outline: none; }
+  .folder .hit.off { pointer-events: none; }
+  .folder .cover { left: 59.5%; top: 84.2%; width: 17%; height: 9.3%; border-radius: .8cqw; background: linear-gradient(#e9d9b0, #dcc89a); }
+  .folder .extra { display: none; }
   /* Clippy, worried about his cousins */
-  #clippy { position: fixed; right: 18px; bottom: 14px; z-index: 40; width: 74px; cursor: pointer; transform: translateY(140%); transition: transform .5s cubic-bezier(.3,1.4,.6,1); background: none; border: 0; padding: 0; }
-  #clippy.up { transform: none; } #clippy img { width: 100%; display: block; image-rendering: pixelated; filter: drop-shadow(0 4px 6px rgba(0,0,0,.6)); }
+  #clippy { position: fixed; right: 18px; bottom: 14px; z-index: 40; cursor: pointer; transform: translateY(140%); transition: transform .5s cubic-bezier(.3,1.4,.6,1); background: none; border: 0; padding: 0; }
+  #clippy.up { transform: none; } #clippy img { height: 1.55em; width: auto; width: 100%; display: block; image-rendering: pixelated; filter: drop-shadow(0 4px 6px rgba(0,0,0,.6)); }
   #clippySay { position: fixed; right: 100px; bottom: 60px; z-index: 41; max-width: min(380px, 70vw); padding: 12px 16px; border-radius: 12px; background: #fffbe6; color: #1c1917; border: 2px solid #1c1917; font: 18px/1.35 'Special Elite', monospace; box-shadow: 0 10px 24px rgba(0,0,0,.5); display: none; }
   #cop { position: fixed; bottom: 10px; left: 0; z-index: 42; pointer-events: none; transform: translateX(-260px); }
-  #cop .car { display: block; width: 216px; height: 144px; background: url(media/copcar_sprite.png) 0 0 / 800% 100% no-repeat; image-rendering: pixelated; animation: copRun 1.04s steps(8) infinite; }
+  #cop .car { display: block; transform: scaleX(-1); width: 216px; height: 144px; background: url(media/copcar_sprite.png) 0 0 / 800% 100% no-repeat; image-rendering: pixelated; animation: copRun 1.04s steps(8) infinite; }
   @keyframes copRun { from { background-position-x: 0%; } to { background-position-x: 114.2857%; } }
   #cop .say { position: absolute; left: 150px; bottom: 140px; width: max-content; max-width: min(420px, 70vw); padding: 12px 16px; border-radius: 12px; background: #eff6ff; color: #0f172a; border: 2px solid #1d4ed8; font: 18px/1.35 'Special Elite', monospace; box-shadow: 0 10px 24px rgba(0,0,0,.5); display: none; }
   #cop .say b { color: #1d4ed8; }
@@ -89,7 +103,7 @@ if (/(transfer|import)=/.test(location.hash) || location.search) location.replac
 <header><div><h1>📌 THE BOARD</h1><div class="sub">It's all connected. Every place you unlock gets pinned up here. Click a photo to open its case file.</div></div><a class="go" href="wheel.html">🎡 Spin The Wheel →</a></header>
 <div class="scroller"><div class="board" id="board"></div><p class="hint">Every string leads to the middle. Locked photos say how to find them. <span id="clueCount"></span></p></div>
 <div id="credits" role="dialog" aria-label="Credits"><div id="credRoll"><h2>THE WHEEL</h2><div class="sub">a Degenerate Rejects production</div><div class="role">Ideas &amp; Direction</div><div class="who">Axazon (ssisnake)</div><div class="role">Code &amp; Many Hours of Consultation</div><div class="who">Claude</div><div class="role">Art</div><div class="who">Gemini</div><div class="role">Additional Art</div><div class="who">ChatGPT</div><div class="role">Sounds</div><div class="who">ElevenLabs</div><div class="role">The Initial Batch of Slices &amp; Over Two Decades of Friendship</div><div class="who">Platemage</div><div class="role">Lots of Ideas &amp; Many Late Night Discussions</div><div class="who">Casimir</div><div class="role">Being Genuine Bros When I Needed It Most &amp; Running This Shitshow With Me</div><div class="who">Biblehumping &amp; Reb</div><div class="role">Advice With Stocks &amp; Game Ideas</div><div class="who">Vinny</div><div class="role">Not Dying &amp; Actually Paying for All Our Wipe Repairs</div><div class="who">Hawkeyes</div><div class="role">Putting Up With All Our Jokes &amp; Helping With the Comedy</div><div class="who">Kevin</div><div class="role">Many Hours of Gaming Time, Lots of Ideas &amp; Tons of Time Beta Testing the Game</div><div class="who">ChAoTiC</div><div class="role">Best Canadian Welder NA</div><div class="who">Dylan</div><div class="role">Many Hours of Fun &amp; Laughs (and Evelyn for Being Adorable &amp; Funny)</div><div class="who">Tsukaar &amp; Evelyn</div><div class="role">The Most Turtly Whistle to Ever Exist</div><div class="who">Whistlethy</div><div class="role">Always Doing Their Best Every Season</div><div class="who">The Guild</div><div class="role">Supporting Me &amp; All the Dumb Things I Do</div><div class="who">My Wife</div><div class="role">Making Me Take Breaks &amp; Go to Bed on Time</div><div class="who">My Boys</div><div class="role">He May or May Not Be Named It. Don't Ask Him.</div><div class="who">🐟 Gary</div><div class="role" style="margin-top:90px">And!!!!!</div><div class="who" style="font-size:44px;color:#fde68a">You, for Playing</div><div class="fine">No copyright infringement intended.<br>All rights reserved.</div></div><div id="credSkip">click anywhere or press Esc to close</div></div>
-<div id="cop" aria-hidden="true"><div class="say" role="status"></div><span class="car"></span></div><button id="clippy" type="button" aria-label="Clippy"><img src="media/photo_clippy.png" alt=""></button><div id="clippySay" role="status"></div>
+<div id="cop" aria-hidden="true"><div class="say" role="status"></div><span class="car"></span></div><button id="clippy" type="button" aria-label="Clippy"><img src="media/photo_clippy.png" alt=""><span class="googly"><i></i><i></i></span></button><div id="clippySay" role="status"></div>
 <dialog id="dlg" tabindex="-1"><h3 id="dTitle"></h3><div id="dBody"></div><button onclick="dlg.close()">Close</button></dialog>
 <script>
 const PINS = [
@@ -139,7 +153,7 @@ PAGES.forEach((p, i) => {
   el.querySelector('h2').textContent = open || /coming soon/.test(p.title) ? p.title : '???';
   if (p.small) { el.querySelector('h2').style.fontSize = '.8cqw'; el.querySelector('.stamp') ; el.classList.add('sm'); }
   if (open) el.querySelector('.shot').style.backgroundImage = `url(media/board_${p.id}.jpg)`;
-  if (open && BOARD_POL.includes(p.id)) { el.classList.add('pol'); el.innerHTML = `<img src="media/bpol_${p.id}.webp" alt="">`; }   // hand-made polaroids fill their spot (caption included)
+  if (open && BOARD_POL.includes(p.id)) { el.classList.add('pol'); el.innerHTML = `<span class="pin" style="--pin:${['#dc2626', '#2563eb', '#16a34a', '#ca8a04'][i % 4]}"></span><img src="media/bpol_${p.id}.webp" alt="">`; }   // hand-made polaroids fill their spot (caption included)
   else el.querySelector('.shot').innerHTML = '<span class="stamp">CLASSIFIED</span>';
   el.title = open ? p.title : 'CLASSIFIED: ' + p.hint;
   if (open && p.lock && !seen[p.id]) { const n = document.createElement('span'); n.className = 'new'; n.textContent = 'NEW!'; el.appendChild(n); seen[p.id] = 1; }
@@ -208,39 +222,42 @@ cred.onclick = credClose; credRoll.addEventListener('animationend', credClose);
 addEventListener('keydown', (e) => { if (e.key === 'Escape' && cred.classList.contains('on')) credClose(); });
 // ---------- case files: click a location, read its file, then decide whether to go ----------
 const CASES = {
-  wheel: { no: '001', pol: 'pol_wheel.jpg', stamp: 'OPEN', text: ['Where it all started. A wheel with nearly two hundred slices and a needle that knows more than it lets on.', 'Every witness says the same thing: it landed on Kevin. Nobody can explain why it keeps landing on Kevin.'],
-    facts: [['Location', 'Center of everything'], ['Suspects', 'The needle. ChAoTiC. Gravity.'], ['Status', 'Open. It is always open.']] },
-  yacht: { no: '002', pol: 'pol_yacht.jpg', stamp: 'UNDER WATCH', text: ["Gallywix's yacht. A trophy room, a chandelier made of coins, and a door that does not want to be opened.", 'Who puts a locked door on a yacht? Someone with something to hide. Or Reb. Usually Reb.'],
-    facts: [['Location', 'Docked somewhere it should not be'], ['Known associates', 'Gallywix, Reb, a marlin named Gary'], ['Status', 'Floating. For now.']] },
+  wheel: { no: '001', photo: 'cfp_wheel.jpg', cap: 'where it all started', stamp: 'OPEN', text: ['Where it all started. A wheel with nearly two hundred slices and a needle that knows more than it lets on.', 'Every witness says the same thing: it landed on Kevin. Nobody can explain why it keeps landing on Kevin.'],
+    facts: ['Center of everything', 'The needle. ChAoTiC. Gravity.', 'Open. It is always open.'] },
+  yacht: { no: '002', photo: 'cfp_yacht.jpg', cap: 'a yacht with a locked door???', stamp: 'UNDER WATCH', text: ["Gallywix's yacht. A trophy room, a chandelier made of coins, and a door that does not want to be opened.", 'Who puts a locked door on a yacht? Someone with something to hide. Or Reb. Usually Reb.'],
+    facts: ['Docked somewhere it should not be', 'Gallywix, Reb, a marlin named Gary', 'Floating. For now.'] },
   vip: { no: '003', stamp: 'INVITE ONLY', text: ['A VIP room nobody was invited to. Somebody plugged a game console in here and never turned it off.', 'The screen hums at night. The guards say it is "just the wiring."'],
-    facts: [['Location', 'Below deck'], ['Dress code', 'Yes'], ['Status', 'Unexplained']] },
+    facts: ['Below deck', 'Whoever has the key', 'Unexplained'] },
   claw: { no: '004', stamp: 'COLD CASE', text: ['A shack in the desert with a claw machine that is still plugged in. Nobody pays the power bill.', 'One resident. He has been sitting in the same chair for a very long time. He talks more than you would expect.'],
-    facts: [['Location', 'The desert. Bring water.'], ['Resident', 'Bones (the big one)'], ['Status', 'Sandy']] },
+    facts: ['The desert. Bring water.', 'A skeleton (cooperative)', 'Sandy'] },
   '2600': { no: '005', stamp: 'DO NOT PLAY', text: ['A wheel inside a wheel. Investigators who went deeper report that it keeps going.', 'The ones who went deepest have not filed their reports yet.'],
-    facts: [['Location', 'The VIP room TV'], ['Depth', 'Unknown'], ['Status', 'Still loading']] },
-  '811': { no: '006', pol: 'pol_811.jpg', stamp: 'OPEN 11 DAYS A WEEK', text: ["Open seven hours a day, eleven days a week. The shop's contents aren't like any we've seen.", 'The clerk does not answer questions. The Slurpee machine makes noises when nobody is pouring.'],
-    facts: [['Location', 'Down the road from the guild hall'], ['Clerk', 'Bored. Possibly cursed.'], ['Status', 'Open (somehow)']] },
+    facts: ['The VIP room TV', 'The wheel. Again.', 'Still loading'] },
+  '811': { no: '006', photo: 'cfp_811.jpg', cap: "shop's contents aren't like any I've seen", stamp: 'OPEN 11 DAYS A WEEK', text: ["Open seven hours a day, eleven days a week. The shop's contents aren't like any we've seen.", 'The clerk does not answer questions. The Slurpee machine makes noises when nobody is pouring.'],
+    facts: ['Down the road from the guild hall', 'The clerk. Possibly cursed.', 'Open (somehow)'] },
   emporium: { no: '007', stamp: 'NO REFUNDS', text: ['A tarp, a folding table and six things for sale. The stock changes twice a day, at nine and nine.', 'The owner swears everything is authentic. The owner is Axazon.'],
-    facts: [['Location', 'Out past the shack'], ['Proprietor', 'Axazon'], ['Status', 'Haggling not permitted']] },
-  evidence: { no: '000', pol: 'pol_evidence.jpg', stamp: 'WHERE DOES IT LEAD?', text: ['The Evidence Locker. Every string on this board ends up in the same place.', 'Read the files. Find what is missing. Then look at the middle again.'], facts: [], go: false },
+    facts: ['Out past the shack', 'Axazon (the owner)', 'Haggling not permitted'] },
+  evidence: { no: '000', photo: 'cfp_evidence.jpg', cap: 'where does this all lead?', stamp: 'WHERE DOES IT LEAD?', text: ['The Evidence Locker. Every string on this board ends up in the same place.', 'Read the files. Find what is missing. Then look at the middle again.'],
+    facts: ['Right here. On this board.', 'Everyone', 'Ongoing'], goLabel: 'Read the files' },
 };
 const CLIP = '<svg class="clip" viewBox="0 0 34 82" aria-hidden="true"><path d="M10 74 V14 a7 7 0 0 1 14 0 V64 a4 4 0 0 1 -8 0 V22" fill="none" stroke="#9ca3af" stroke-width="3.2" stroke-linecap="round"/><path d="M10 74 V14 a7 7 0 0 1 14 0 V64" fill="none" stroke="#e5e7eb" stroke-width="1.2" stroke-linecap="round"/></svg>';
 function caseFile(p, extra) {
-  const c = CASES[p.id] || { no: '0??', stamp: 'OPEN', text: [p.hint || ''], facts: [] };
-  const pol = c.pol ? `<div class="pol">${CLIP}<img src="media/${c.pol}" alt=""></div>`
-                    : `<div class="pol made">${CLIP}<img src="media/board_${p.id}.jpg" alt=""><span></span></div>`;
-  dlg.className = 'case';
-  document.getElementById('dTitle').textContent = '';
-  const b = document.getElementById('dBody');
-  b.innerHTML = pol + `<div class="fileno">CASE FILE #${c.no}</div><h3></h3><div class="stamp2"></div>` + c.text.map(t => '<p></p>').join('') +
-    (c.facts.length ? '<ul class="facts">' + c.facts.map(() => '<li><b></b> <span></span></li>').join('') + '</ul>' : '') + (extra || '') +
-    `<div class="acts">${c.go === false ? '' : '<a class="goto"></a>'}<button type="button" onclick="dlg.close()">Close file</button></div>`;
-  b.querySelector('h3').textContent = p.title; b.querySelector('.stamp2').textContent = c.stamp;
-  const madeCap = b.querySelector('.pol.made span'); if (madeCap) madeCap.textContent = p.title;
-  b.querySelectorAll(':scope > p').forEach((el, i) => el.textContent = c.text[i]);
-  b.querySelectorAll('.facts li').forEach((li, i) => { li.querySelector('b').textContent = c.facts[i][0] + ':'; li.querySelector('span').textContent = c.facts[i][1]; });
-  const go = b.querySelector('.goto'); if (go) { go.href = p.href; go.textContent = 'Go there →'; }
+  const c = CASES[p.id] || { no: '0??', stamp: 'OPEN', text: [p.hint || ''], facts: ['Unknown', 'Unknown', 'Open'] };
+  dlg.className = 'case'; document.getElementById('dTitle').textContent = '';
   dlg.querySelector(':scope > button').style.display = 'none';
+  const b = document.getElementById('dBody');
+  b.innerHTML = `<div class="folder"><div class="photo"><img alt=""></div><div class="tape"></div>${CLIP}<div class="cap"></div><h3></h3><div class="fileno"></div><div class="stamp2"></div><div class="notes"></div>
+    <div class="fact" style="top:66.3%"></div><div class="fact" style="top:71.8%"></div><div class="fact" style="top:77.3%"></div>
+    <a class="hit go" style="left:59.7%;top:84.4%;width:16.7%;height:8.8%"></a><button class="hit" type="button" style="left:78.1%;top:84.4%;width:16.9%;height:8.8%" aria-label="Close file"></button></div>`;
+  const f = b.querySelector('.folder');
+  f.querySelector('.photo img').src = 'media/' + (c.photo || `board_${p.id}.jpg`);
+  f.querySelector('.cap').textContent = c.cap || p.title; f.querySelector('h3').textContent = p.title;
+  f.querySelector('.fileno').textContent = 'CASE FILE #' + c.no; f.querySelector('.stamp2').textContent = c.stamp;
+  c.text.forEach(t => { const el = document.createElement('p'); el.textContent = t; f.querySelector('.notes').appendChild(el); });
+  f.querySelectorAll('.fact').forEach((el, i) => el.textContent = c.facts[i] || '');
+  const go = f.querySelector('.go'); go.setAttribute('aria-label', c.goLabel || 'Go there');
+  if (extra) go.onclick = (e) => { e.preventDefault(); dlg.close(); show('Every case file so far', extra); };   // the Evidence Locker opens its file list
+  else go.href = p.href;
+  f.querySelector('button.hit').onclick = () => dlg.close();
   dlg.showModal(); dlg.scrollTop = 0;
   if (Math.random() < .6) setTimeout(() => clippy(pick(CLIPPY_CASE)), 500);
 }
@@ -270,9 +287,18 @@ function copArrives() {
   try { const v = parseFloat(localStorage.getItem('painWheelVolume')); const a = new Audio('media/audio_siren_cop1.mp3'); a.volume = .3 * (isNaN(v) ? .6 : Math.max(0, Math.min(1, v))); a.play().catch(() => {}); setTimeout(() => a.pause(), 2200); } catch (e) {}
   c.style.transition = 'transform 1.6s ease-out'; c.style.transform = 'translateX(14vw)';
   setTimeout(() => { say.innerHTML = '<b>Officer ChAoTiC:</b> '; say.append(pick(COP_LINES)); say.style.display = 'block'; }, 1700);
+  if (Math.random() < .5 && !dlg.open) setTimeout(() => pencil('I saw everything, officer.'), 4800);   // the witness speaks up
   setTimeout(() => { say.style.display = 'none'; c.style.transition = 'transform 2.2s ease-in'; c.style.transform = 'translateX(calc(100vw + 40px))'; }, 7600);
   setTimeout(() => { c.style.transition = 'none'; c.style.transform = 'translateX(-260px)'; copBusy = false; }, 10000);
 }
+// the pencil on the shelf by the board: it saw everything
+const PENCIL_LINES = ['I saw everything, officer.', 'I saw everything, officer. I wrote it all down. Then somebody sharpened me.', "I'm not saying who did it. I'm saying I was there. I'm a pencil. I'm always there.",
+  'Ask the eraser. He knows what he did.', 'Officer, I have a statement. ...I lost it. It was in pencil.'];
+const pencilBtn = document.createElement('button'); pencilBtn.className = 'pencil'; pencilBtn.type = 'button'; pencilBtn.setAttribute('aria-label', 'A pencil'); board.appendChild(pencilBtn);
+const pencilSay = document.createElement('div'); pencilSay.id = 'pencilSay'; board.appendChild(pencilSay);
+function pencil(t) { pencilSay.innerHTML = '<b>The pencil:</b> '; pencilSay.append(t || pick(PENCIL_LINES)); pencilSay.style.display = 'block'; clearTimeout(pencil.t); pencil.t = setTimeout(() => pencilSay.style.display = 'none', 5200); }
+pencilBtn.onclick = () => pencil();
+setInterval(() => { if (!document.hidden && !dlg.open && Math.random() < .25) pencil('I saw everything, officer.'); }, 95000);
 const _clippy = clippy;
 clippy = function (t) { _clippy(t); if (/authorities|stapler|hostage/i.test(t) && Math.random() < .7) setTimeout(copArrives, 2500); };
 document.getElementById('clippy').onclick = () => clippy(pick(CLIPPY_LINES));
