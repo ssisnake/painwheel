@@ -882,7 +882,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 1:38 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 1:44 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -9540,14 +9540,24 @@
         photo_pet_duck: ['Raid Duck', 'PHOTO_PET_DUCK', ['Quack. (it would like to know when raid is)', 'QUACK. (someone stood in fire)', '*squeak*']],
         photo_pet_slime: ['Slimothy', 'PHOTO_PET_SLIME', ['sup.', 'just calling. no reason. slimes get lonely.', '*slorp* sorry. ate the phone.']],
         photo_pet_piggy: ['Piggy Bank', 'PHOTO_PET_PIGGY', ['Time is money, friend. This call is costing you. Kidding. Unless...', 'Got a deal for you. Real limited. Call back later.', "Don't trust the ATM at the 8/11. I would know."]],
+        axazon: ["Axazon (Emporium)", 'media/axa_wave.png', ["Hello, it's me. Yes, me. I am literally writing this right now for you to read eventually. I put myself in this stupid game. *click*",
+            "Hello, I sell trash you might be interested in. I also dress like I forgot my meds today. *click*", "I may be a Degenerate Reject, but at least I'm not riddled with steel. *click*"]],
         photo_pet_skeleton: ['Bones', 'PHOTO_PET_SKELETON', ['Have you seen my brother? Big guy. Desert shack. Very bony.', "I'm not spending my token. Stop asking.", '*rattle rattle* (that is how skeletons laugh)']],
     };
-    function npcMet() { const m = store.get('painWheelMetNpcs', {}) || {}; return Object.keys(NPC_CALLERS).filter(k => k === 'clippy' || m[k]); }   // Clippy always has your number. Uwutek after your first hit, Gary once you've been on the yacht
+    function npcMet() { const m = store.get('painWheelMetNpcs', {}) || {}; return Object.keys(NPC_CALLERS).filter(k => k === 'clippy' || m[k] || (k === 'axazon' && store.get('painWheelEmporiumOpen', false))); }
+    // Axazon calls when his flea market restocks (9 AM and 9 PM Central), once per restock, if you've been let in
+    const AXA_RESTOCK = ["New stock's in. Don't tell anyone. *click*", "Fresh trash just dropped. Get here before Kevin touches it. *click*", "It's nine o'clock. You know what that means. New junk. Same no-refund policy. *click*"];
+    function empRotation() {
+        const o = {}; new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', hour12: false }).formatToParts(new Date()).forEach(x => o[x.type] = x.value);
+        let day = Date.UTC(+o.year, +o.month - 1, +o.day) / 864e5; const h = (+o.hour) % 24; let half; if (h >= 21) half = 1; else if (h >= 9) half = 0; else { day -= 1; half = 1; }
+        return day * 2 + half;
+    }   // Clippy always has your number. Uwutek after your first hit, Gary once you've been on the yacht
     let npcCallBox = null;
     function npcCall(force) {
         if (npcCallBox || strangerRinging) return;
         const who = force || pick(npcMet()), N = NPC_CALLERS[who]; if (!N) return;
-        const [name, imgK, lines, extra] = N, img = imgK ? window[imgK] || eval(imgK) : null;
+        const [name, imgK, lines0, extra] = N, img = !imgK ? null : imgK.startsWith('media/') ? imgK : (window[imgK] || eval(imgK));
+        const lines = (who === 'axazon' && npcCall.restock) ? AXA_RESTOCK : lines0; npcCall.restock = false;
         const box = npcCallBox = document.createElement('div');
         box.style.cssText = 'position:fixed;z-index:79;left:16px;bottom:84px;width:min(360px,calc(100vw - 32px));padding:12px 14px;border-radius:14px;border:2px solid #38bdf8;background:linear-gradient(170deg,#0f172a,#1e293b);color:#e2e8f0;box-shadow:0 12px 30px rgba(0,0,0,.6);font-size:16px';
         box.innerHTML = `<div style="display:flex;gap:10px;align-items:center"><div style="width:52px;height:52px;border-radius:50%;background:#0b1220;border:2px solid #38bdf8;display:flex;align-items:center;justify-content:center;overflow:hidden;flex:none;font-size:30px">${img ? `<img src="${img}" alt="" style="width:46px;height:46px;object-fit:contain;image-rendering:pixelated">` : '💀'}</div>
@@ -9575,6 +9585,7 @@
     }
     setInterval(() => {   // about every 30 minutes (only while the page is open; not in Forever, mid-spin or in the 8/11 shop frame)
         if (EMBED_SHOP || document.hidden || isSpinning || strangerRinging || npcCallBox || document.body.classList.contains('ghost-town')) return;
+        if (store.get('painWheelEmporiumOpen', false)) { const rot = empRotation(); if (store.get('painWheelAxaCalled', 0) !== rot) { store.set('painWheelAxaCalled', rot); npcCall.restock = true; npcCall('axazon'); return; } }
         const next = store.get('painWheelNpcCallNext', 0);
         if (!next) { store.set('painWheelNpcCallNext', Date.now() + (5 + Math.random() * 10) * 60000); return; }
         if (Date.now() < next) return;
@@ -9845,6 +9856,7 @@
             ['🦺', 'OSHA landings break things now: the rocket crashes, the banker trips, a slice falls off the wheel, a vehicle explodes, a pet trips, a top-bar button falls off (click it to bolt it back on), Clippy pokes his eye out, or the shack catches fire.'],
             ['📂', "The Board: clicking a place opens its case file first, with its own polaroid. Clippy has concerns."],
             ['🏷️', "Axazon's Emporium is open: a flea market with six items and new stock every 9 AM and 9 PM Central. Land on the Emporium slice to get in."],
+            ['📞', "Axazon calls now too, especially when his flea market restocks. He has things to say."],
             ['📞', "Your phone rings now. About every half hour, someone you've met calls to chat. You can let it ring."],
             ['🏪', "The shop opens right inside the 8/11 now. Click an aisle sign and you stay in the store. New shelves too."],
             ['⚡', 'Holding the spin button has a real charge-up sound now.'],
