@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/png" href="favicon.png">
+<title>Axazon's Emporium · The Wheel</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; background: #14110c; color: #fde68a; font-family: system-ui, sans-serif; display: flex; flex-direction: column; }
+  header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 16px; }
+  h1 { margin: 0; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(24px, 3.4vw, 36px); letter-spacing: .02em; color: #fcd34d; text-shadow: 0 2px 0 #3f2a12, 0 0 14px rgba(252,211,77,.35); }
+  #goldBox { font: 800 20px ui-monospace, monospace; color: #fde047; }
+  nav { display: flex; flex-wrap: wrap; gap: 10px; }
+  nav a { color: #1c1917; background: #f59e0b; font-weight: 800; font-size: 18px; text-decoration: none; padding: 8px 16px; border-radius: 8px; }
+  nav a.alt { background: #3f3a2e; color: #fde68a; }
+  .wrap { flex: 1; display: grid; place-items: center; padding: 0 12px 6px; }
+  .scroller { width: 100%; overflow-x: auto; display: grid; place-items: center; }
+  .scene { position: relative; width: min(2576px, 100%, calc((100vh - 150px) * 2576 / 1438)); aspect-ratio: 2576 / 1438; background: url(media/emporium_bg.jpg) 0 0 / 100% 100% no-repeat; border-radius: 10px; box-shadow: 0 0 0 3px #a16207, 0 20px 50px rgba(0,0,0,.7); container-type: inline-size; }
+  @media (max-width: 700px) { .scene { min-width: 640px; } .scroller { place-items: start; } }
+  /* the goods on the table: each sits above its paper tag */
+  .item { position: absolute; bottom: 30%; width: 8.4%; height: 13%; translate: -50% 0; padding: 0; border: 0; background: none; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; transition: transform .15s, filter .15s; z-index: 2; }
+  .item img { max-width: 100%; max-height: 100%; image-rendering: pixelated; pointer-events: none; filter: drop-shadow(0 .35cqw 0 rgba(0,0,0,.55)) drop-shadow(0 0 .5cqw var(--q)); }
+  .item .emo { font-size: 5.6cqw; line-height: 1; filter: drop-shadow(0 0 .5cqw var(--q)); pointer-events: none; }
+  .item:hover, .item:focus-visible { transform: translateY(-4%) scale(1.08); outline: none; z-index: 4; }
+  .item:hover img, .item:focus-visible img { filter: drop-shadow(0 .35cqw 0 rgba(0,0,0,.55)) drop-shadow(0 0 1.1cqw var(--q)) brightness(1.15); }
+  .item.sold { cursor: default; } .item.sold img, .item.sold .emo { opacity: .25; filter: grayscale(1); }
+  .item .new { position: absolute; top: -12%; right: -6%; padding: .15cqw .5cqw; border-radius: .4cqw; background: #dc2626; color: #fff; font: 900 .95cqw system-ui, sans-serif; letter-spacing: .04em; transform: rotate(8deg); box-shadow: 0 .2cqw 0 rgba(0,0,0,.5); }
+  /* price stickers on the hanging tags */
+  .tag { position: absolute; top: 75.4%; translate: -50% 0; min-width: 5.2%; padding: .3cqw .5cqw; border-radius: .35cqw; background: #fef3c7; color: #1c1917; border: .15cqw solid #78350f; text-align: center; font: 900 1.05cqw ui-monospace, monospace; line-height: 1.15; rotate: -3deg; box-shadow: 0 .3cqw .6cqw rgba(0,0,0,.5); pointer-events: none; z-index: 3; white-space: nowrap; }
+  .tag small { display: block; font: 800 .8cqw system-ui, sans-serif; color: var(--qd); }
+  .tag.sold { background: #7f1d1d; color: #fecaca; border-color: #450a0a; rotate: 6deg; }
+  .hs { position: absolute; padding: 0; border: 3px solid transparent; border-radius: 10px; background: transparent; cursor: pointer; }
+  .hs:hover, .hs:focus-visible { border-color: rgba(253,230,138,.6); box-shadow: 0 0 14px rgba(253,230,138,.5); outline: none; }
+  #say { position: absolute; left: 50%; top: 20%; transform: translateX(-50%); max-width: 70%; padding: 10px 18px; border-radius: 10px; background: rgba(28,20,10,.94); border: 2px solid #f59e0b; color: #fef3c7; font: 800 clamp(16px, 1.5vw, 26px)/1.35 system-ui, sans-serif; text-align: center; display: none; z-index: 8; box-shadow: 0 10px 30px rgba(0,0,0,.6); }
+  #say b { color: #fcd34d; }
+  .bar { display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: center; align-items: center; padding: 8px 12px 16px; font-size: 18px; color: #d6d3d1; text-align: center; }
+  .bar b { color: #fcd34d; }
+  #closed { position: absolute; inset: 0; z-index: 20; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 20px; text-align: center; background: rgba(12,9,5,.9); border-radius: 10px; }
+  #closed b { font-size: clamp(28px, 4vw, 48px); color: #f87171; letter-spacing: .06em; }
+  #closed p { margin: 0; font-size: 20px; color: #e7e5e4; max-width: 560px; line-height: 1.4; }
+  #closed a { font: 800 18px system-ui, sans-serif; padding: 9px 18px; border-radius: 10px; background: #f59e0b; color: #1c1917; text-decoration: none; }
+  dialog { width: min(520px, 92vw); border: 3px solid #a16207; border-radius: 14px; padding: 0; background: #1c1712; color: #f5f5f4; box-shadow: 0 20px 60px rgba(0,0,0,.8); }
+  dialog::backdrop { background: rgba(0,0,0,.6); }
+  .card { padding: 20px 22px; text-align: center; }
+  .card .pic { height: 140px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
+  .card .pic img { max-height: 140px; max-width: 70%; image-rendering: pixelated; filter: drop-shadow(0 0 14px var(--q)); }
+  .card .pic span { font-size: 90px; filter: drop-shadow(0 0 14px var(--q)); }
+  .card h2 { margin: 0; font-size: 26px; line-height: 1.2; color: var(--q); }
+  .card .ql { margin-top: 2px; font-size: 15px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--q); opacity: .85; }
+  .card .desc { margin: 10px 0 0; font-size: 18px; font-style: italic; color: #d6d3d1; }
+  .card .set { margin-top: 12px; padding: 10px 12px; border-radius: 10px; background: #292117; font-size: 16px; color: #e7e5e4; line-height: 1.4; }
+  .card .set b { color: #fcd34d; }
+  .card .price { margin-top: 14px; font: 900 26px ui-monospace, monospace; color: #fde047; }
+  .card .pct { font-size: 14px; color: #a8a29e; font-weight: 700; }
+  .card .row { display: flex; gap: 10px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
+  .card button { font: 900 19px system-ui, sans-serif; padding: 11px 22px; border-radius: 10px; border: 0; cursor: pointer; }
+  .card .buy { background: #16a34a; color: #fff; } .card .buy:disabled { background: #44403c; color: #a8a29e; cursor: not-allowed; }
+  .card .no { background: #44403c; color: #fff; }
+  .card .msg { margin-top: 10px; min-height: 24px; font-size: 17px; font-weight: 800; color: #fca5a5; }
+</style></head><body>
+<header><h1>🏷️ Axazon's Emporium</h1><span id="goldBox"></span><nav><a class="alt" href="./">📌 The Board</a><a class="alt" href="811.html">🏪 The 8/11</a><a href="wheel.html">🎡 Back to The Wheel</a></nav></header>
+<div class="wrap"><div class="scroller"><div class="scene" id="scene">
+  <button class="hs" data-hs="refund" style="left:62%;top:30.5%;width:12%;height:17.5%" aria-label="The no refunds sign"></button>
+  <button class="hs" data-hs="fish" style="left:79.5%;top:15%;width:17%;height:19%" aria-label="The mounted fish"></button>
+  <button class="hs" data-hs="pig" style="left:41.5%;top:50%;width:5.8%;height:9%" aria-label="The green piggy bank"></button>
+  <button class="hs" data-hs="console" style="left:43.3%;top:35%;width:11.2%;height:7.5%" aria-label="The old console"></button>
+  <button class="hs" data-hs="jar" style="left:24.5%;top:32%;width:4.3%;height:9%" aria-label="The jar on the shelf"></button>
+  <div id="goods"></div>
+  <div id="say" role="status"></div>
+  <div id="closed"><b>CLOSED</b><p>A tarp, a folding table and a hand-painted sign. Nobody's home.<br>Land on <b style="font-size:inherit;color:#e879f9">Axazon's Emporium</b> on the wheel and he'll open up for you.</p><a href="wheel.html">🎡 Go spin</a></div>
+</div></div></div>
+<div class="bar"><span id="rot"></span><span>Everyone sees the same stock. <b>One of each</b> per restock. <b>No refunds.</b> Ever.</span></div>
+<dialog id="dlg"><div class="card" id="card"></div></dialog>
+<script>
+const LOOT = {
+        poor: ["Reb's Empty Bottle", 'Half a Stale Cheeto', "Kevin's Participation Trophy", 'Broken Hearthstone', 'Soggy Croissant Crumb',
+            'Torn Discord Log', 'Jar of Sewer Pickle Juice', 'Frayed Leap of Faith Rope', 'Expired Healthstone'],
+        common: ['Linen Cloth (x3)', 'Conjured Mana Bun', 'Light Feather', "Kevin's Spare Keyboard", 'Six-Pack of Garage Beers', 'Glazed Donut', "Kevin's ROG Ally Battery"],
+        uncommon: ['Slurpee (Blue Raspberry)', 'Slurpee (Cherry)', 'Slurpee (Coke)', 'Slurpee (Mystery Flavor)', "Slurpee (Dr Pepper)", "Slurpee (Mountain Dew Code Red)", "Slurpee (Wild Cherry Pepsi)", "Slurpee (Half & Half Mix)", "Slurpee (Sugar Free, For Reb's Doctor)", 'Belt of Standing in Fire', 'Ret Paladin 6% Buff Coupon', 'Goblin Timeshare Brochure', "Platemage's Spare Plate",
+            'Murder Row Teleport Scroll', 'Road Beer (Still Cold)', "Axazon's Empty Heart Pill Bottle"],
+        rare: ["Biblehumping's Holy Lasso", "Axa's Defibrillator", 'Knob Creek Single Barrel', "ChAoTiC's Blown-Out Headset", 'M*A*S*H Medevac Voucher', "ChAoTiC's Last Nerve"],
+        epic: ['Shield of Kevin Avoidance', "Gammon's Saving Grace", "Clussy's Clown Nose of Doom", 'The Undermine Deed', "Uwutek's Pocket Lint", "Rubber Replica of Biblehumping's Finger"],
+        legendary: ['Ashbringer (Plastic Replica)', "Reb's Liver (Mint Condition)", "Uwutek's Fuzzy Ears", "The Wheel's Rigging Manual", 'Golden Chocolate Donut', "Corrinne's Platinum Achievement"]
+    };
+const ITEM_DESC = {
+        "Reb's Empty Bottle": 'Still smells like a Tuesday raid night.', 'Half a Stale Cheeto': 'The other half is in the keyboard.',
+        "Kevin's Participation Trophy": 'Awarded for showing up. Barely.', 'Broken Hearthstone': 'Cooldown: forever.',
+        'Soggy Croissant Crumb': 'The gnome missed one.', 'Torn Discord Log': 'Exhibit A.', 'Jar of Sewer Pickle Juice': 'Dalaran\'s finest.',
+        'Frayed Leap of Faith Rope': 'Used. Many times. On you.', 'Expired Healthstone': 'Best before Wrath of the Lich King.',
+        'Linen Cloth (x3)': 'Vendor price: an insult.', 'Conjured Mana Bun': 'Tastes like a mage\'s disappointment.', 'Light Feather': 'For when you fall off Murder Row.',
+        "Kevin's Spare Keyboard": 'Every key is bound to "stand in fire".', 'Six-Pack of Garage Beers': 'Best enjoyed at 10 AM.', 'Glazed Donut': 'Perfectly fine. Suspicious.',
+        'Belt of Standing in Fire': '+10 Fire Resistance. -100 Awareness.', 'Slurpee (Blue Raspberry)': 'Turns your tongue blue for 3 raid nights.',
+        'Slurpee (Lime)': 'Green. Aggressively green. Pairs well with regret.', 'Slurpee (Cherry)': 'Brain freeze on use. 30 second cooldown.', 'Slurpee (Coke)': 'The classic. Straight from the 8/11 by the guild hall.',
+        'Slurpee (Mystery Flavor)': 'Nobody knows. Not even 8/11.', "Slurpee (Dr Pepper)": '23 flavors, all of them frozen. Most requested in guild history.', "Slurpee (Mountain Dew Code Red)": 'Gamer fuel. +5% APM, -5% sleep.', "Slurpee (Wild Cherry Pepsi)": 'For when the 8/11 is out of Dr Pepper.', "Slurpee (Half & Half Mix)": 'Every flavor at once. The machine wept.', "Slurpee (Sugar Free, For Reb's Doctor)": 'Reb has never touched it.', 'Ret Paladin 6% Buff Coupon': 'Void where prohibited (everywhere).',
+        'Goblin Timeshare Brochure': 'Page 2 is just a bomb emoji.', "Platemage's Spare Plate": 'Not plate. Not a mage. A plate.',
+        'Murder Row Teleport Scroll': 'Not a rat. Strategically elsewhere.', 'Road Beer (Still Cold)': 'Do not drink and fly a gryphon.',
+        "Biblehumping's Holy Lasso": 'Yanks allies into danger with love.', "Axa's Defibrillator": 'CLEAR! (Batteries not included.)',
+        'Knob Creek Single Barrel': 'Reb would trade his guild bank for this.', "ChAoTiC's Blown-Out Headset": 'MEPHISTOOOOO (still echoing)',
+        'M*A*S*H Medevac Voucher': 'One free chopper ride out of a wipe.', 'Shield of Kevin Avoidance': 'Blocks 1 Kevin. Has never blocked a Kevin.',
+        "Gammon's Saving Grace": 'Gammon will save us. Allegedly.', "Clussy's Clown Nose of Doom": 'Honk.', 'The Undermine Deed': 'You own a sewer. Congrats.',
+        "Uwutek's Pocket Lint": 'Torn from the boss\'s pocket. It\'s fuzzy.', 'Ashbringer (Plastic Replica)': 'Made in Booty Bay. Still hits harder than Ret.',
+        "Reb's Liver (Mint Condition)": 'Somehow untouched. Science wants answers.', "Uwutek's Fuzzy Ears": 'The boss wants them back.',
+        "The Wheel's Rigging Manual": 'Chapter 1: Ask ChAoTiC.', 'Golden Chocolate Donut': "ChAoTiC's favorite. To protect and serve (with sprinkles).",
+        "Kevin's ROG Ally Battery": 'Lasts 40 minutes. Kevin spent all 40 in a loading screen.',
+        "Axazon's Empty Heart Pill Bottle": 'Refill pending. The wheel raised his blood pressure again.',
+        "ChAoTiC's Last Nerve": 'Frayed. Do not step on it. Kevin already did.',
+        "Rubber Replica of Biblehumping's Finger": 'Squeaks when you poke it. Still has a better grip than the original.',
+        "Corrinne's Platinum Achievement": "He is going to be SO pissed you stole this. He earned it. You did not."
+    };
+const LOOT_SETS = [
+        { id: 'bar', name: "🍺 Reb's Bar Tab", items: ["Reb's Empty Bottle", 'Six-Pack of Garage Beers', 'Road Beer (Still Cold)', 'Knob Creek Single Barrel', "Reb's Liver (Mint Condition)"],
+          perk: '+5% of your gold whenever you land Knob Creek, Road Beers or Garage Beers.' },
+        { id: 'kevin', name: '🤡 Kevin Insurance', items: ["Kevin's Participation Trophy", "Kevin's Spare Keyboard", 'Half a Stale Cheeto', 'Shield of Kevin Avoidance'],
+          perk: 'Kevin bets pay 4× instead of 3×, and every Kevin you land pays 0.5% of your gold in pity money.' },
+        { id: 'ret', name: '🔨 Ret Paladin Kit', items: ['Ret Paladin 6% Buff Coupon', 'Belt of Standing in Fire', "Platemage's Spare Plate", 'Ashbringer (Plastic Replica)'],
+          perk: 'Ret bets pay 20× instead of 15×, and every Ret you land pays 10% of your gold.' },
+        { id: 'priest', name: '🛐 Holy Priest Starter Pack', items: ['Frayed Leap of Faith Rope', 'Light Feather', 'Expired Healthstone', "Biblehumping's Holy Lasso"],
+          perk: 'Healer insurance: lose a bet and get 25% of it back.' },
+        { id: 'goblin', name: '💰 Goblin Portfolio', items: ['Linen Cloth (x3)', 'Conjured Mana Bun', 'Goblin Timeshare Brochure', 'The Undermine Deed'],
+          perk: 'Items sell for 50% more, and the timeshare HOA fee is waived.' },
+        { id: 'raid', name: '👹 Uwutek Raid Kit', items: ["Uwutek's Pocket Lint", "Uwutek's Fuzzy Ears", 'M*A*S*H Medevac Voucher', 'Murder Row Teleport Scroll', "Axa's Defibrillator"],
+          perk: 'Loot luck: items drop on about 45% of spins instead of 33%.' },
+        { id: 'shame', name: '🏛️ Guild Hall of Shame', items: ['Torn Discord Log', 'Jar of Sewer Pickle Juice', "ChAoTiC's Blown-Out Headset", "Clussy's Clown Nose of Doom", "Gammon's Saving Grace", "The Wheel's Rigging Manual"],
+          perk: 'Museum royalties: +1% of your gold every 10 minutes you have the wheel open.' },
+        { id: 'lostfound', name: '📦 Guild Lost & Found', items: ["Kevin's ROG Ally Battery", "Axazon's Empty Heart Pill Bottle", "ChAoTiC's Last Nerve", "Rubber Replica of Biblehumping's Finger", "Corrinne's Platinum Achievement"],
+          perk: 'Every 10 minutes a guildie "returns" something you lost: a free random item.' },
+        // not in the game yet: they show as locked teasers in the Sets tab
+        { id: 'irs', soon: true, name: '🧾 Goblin IRS Audit Defense', items: [], slots: 5, perk: 'Protection from the Goblin IRS. Coming soon...' },
+        { id: 'hex', soon: true, name: '🧿 Hex Insurance', items: [], slots: 5, perk: 'Protection from curses, cursed cookies and a certain voodoo doll. Coming soon...' }
+    ];
+const ITEM_ICON = { 'Golden Chocolate Donut': "media/photo_toy_donut.png?v=6ea2d469", 'Ret Paladin 6% Buff Coupon': "media/photo_item_coupon.png?v=b3ef1576", 'Ashbringer (Plastic Replica)': "media/photo_item_sword.png?v=55d3df90",
+        'Goblin Timeshare Brochure': "media/photo_item_brochure.png?v=14e29592", 'Knob Creek Single Barrel': "media/photo_item_barrel.png?v=1ead128c", 'Torn Discord Log': "media/photo_item_chatlog.png?v=bbaa2dd6", "Kevin's ROG Ally Battery": "media/photo_item_battery.png?v=ba703a5c",
+        "ChAoTiC's Blown-Out Headset": "media/photo_item_headset.png?v=fcda3409", 'Frayed Leap of Faith Rope': "media/photo_item_rope.png?v=27ad2ab7", 'Jar of Sewer Pickle Juice': "media/photo_item_pickles.png?v=64117ec0", 'Expired Healthstone': "media/photo_item_healthstone.png?v=9cc10eb7",
+        'Broken Hearthstone': "media/photo_item_hearthstone.png?v=04098f73", 'Half a Stale Cheeto': "media/photo_item_cheeto.png?v=5014fab4", 'Road Beer (Still Cold)': "media/photo_item_beer.png?v=6e999522", "Axazon's Empty Heart Pill Bottle": "media/photo_item_pills.png?v=3744a055",
+        "Biblehumping's Holy Lasso": "media/photo_item_lasso.png?v=f12b594c", "Rubber Replica of Biblehumping's Finger": "media/photo_item_finger.png?v=78b04efe", "Corrinne's Platinum Achievement": "media/photo_item_badge.png?v=b7832eda", "Kevin's Participation Trophy": "media/photo_item_trophy.png?v=74f92c51", "Reb's Liver (Mint Condition)": "media/photo_item_liver.png?v=008933cd" };
+const $ = (id) => document.getElementById(id);
+const pick = (a) => a[Math.floor(Math.random() * a.length)];
+const get = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } };
+const put = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const fmt = (n) => { n = Math.round(n); if (n < 1e15) return n.toLocaleString() + 'g'; const e = Math.floor(Math.log10(n)); return (n / Math.pow(10, e)).toFixed(2) + 'e' + e + 'g'; };
+const short = (n) => { n = Math.round(n); if (n < 1e4) return n.toLocaleString() + 'g'; const u = [[1e12, 'T'], [1e9, 'B'], [1e6, 'M'], [1e3, 'K']]; if (n >= 1e15) { const e = Math.floor(Math.log10(n)); return (n / Math.pow(10, e)).toFixed(1) + 'e' + e + 'g'; } for (const [v, s] of u) if (n >= v) return (n / v).toFixed(n / v < 10 ? 1 : 0) + s; return n + 'g'; };
+const say = (t, ms) => { const d = $('say'); d.innerHTML = '<b>Axazon:</b> ' + t; d.style.display = 'block'; clearTimeout(say.t); say.t = setTimeout(() => d.style.display = 'none', ms || 4200); };
+const gold = () => { const g = get('painWheelGold', 0); return typeof g === 'number' && isFinite(g) ? g : 0; };
+const showGold = () => { $('goldBox').textContent = '🪙 ' + fmt(gold()); };
+showGold();
+const isOpen = () => get('painWheelEmporiumOpen', false) || ((get('painWheelStats', {}) || {}).byType || {}).EMPORIUM > 0;
+
+// sound: the wheel's own clips at the wheel's volume
+let AC = null; const BUF = {};
+const vol = () => { const v = parseFloat(localStorage.getItem('painWheelVolume')); return isNaN(v) ? 0.6 : Math.max(0, Math.min(1, v)); };
+const sfx = (name, g) => { try { if (!vol()) return; AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+  const go = (b) => { const s = AC.createBufferSource(), gn = AC.createGain(); s.buffer = b; gn.gain.value = (g || .8) * vol(); s.connect(gn); gn.connect(AC.destination); s.start(); };
+  if (BUF[name]) return go(BUF[name]); fetch('media/' + name + '.mp3').then(r => r.arrayBuffer()).then(ab => AC.decodeAudioData(ab)).then(b => { BUF[name] = b; go(b); }).catch(() => {}); } catch (e) {} };
+
+/* ---------- the restock clock: 9 AM and 9 PM Central, same stock for everyone ---------- */
+function chicago(d) {
+  const o = {}; new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })
+    .formatToParts(d).forEach(x => o[x.type] = x.value);
+  return { y: +o.year, m: +o.month, d: +o.day, h: (+o.hour) % 24, mi: +o.minute, s: +o.second };
+}
+function rotation(now) {
+  const c = chicago(now || new Date()); let day = Date.UTC(c.y, c.m - 1, c.d) / 864e5, half;
+  if (c.h >= 21) half = 1; else if (c.h >= 9) half = 0; else { day -= 1; half = 1; }
+  const secs = c.h * 3600 + c.mi * 60 + c.s, nextAt = c.h < 9 ? 9 * 3600 : c.h < 21 ? 21 * 3600 : 33 * 3600;
+  return { id: day * 2 + half, left: (nextAt - secs) * 1000, next: c.h >= 9 && c.h < 21 ? '9 PM' : '9 AM' };
+}
+function rng(seed) { let a = (seed * 2654435761) >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+
+/* ---------- prices: a % of your gold by quality (a flea market markup over the vendor price as the floor) ---------- */
+const PCT = { poor: .005, common: .01, uncommon: .02, rare: .04, epic: .08, legendary: .15 };
+const FLOOR = { poor: 200, common: 400, uncommon: 1000, rare: 2400, epic: 6000, legendary: 20000 };   // 4x what the vendor pays
+const QCOL = { poor: '#9d9d9d', common: '#f5f5f4', uncommon: '#1eff00', rare: '#3b9cff', epic: '#b45cf0', legendary: '#ff8000' };
+const QDARK = { poor: '#57534e', common: '#44403c', uncommon: '#15803d', rare: '#1d4ed8', epic: '#7e22ce', legendary: '#c2410c' };
+const QEMO = { poor: '🧦', common: '📦', uncommon: '🎁', rare: '💎', epic: '🔮', legendary: '👑' };
+const priceOf = (q) => Math.max(FLOOR[q], Math.round(gold() * PCT[q]));
+const qualityOf = (n) => ['legendary', 'epic', 'rare', 'uncommon', 'common', 'poor'].find(q => LOOT[q].includes(n)) || 'poor';
+const setOf = (n) => LOOT_SETS.find(s => !s.soon && s.items.includes(n));
+const iconOf = (n) => ITEM_ICON[n] || (n.startsWith('Slurpee') ? 'media/photo_item_slurpee.png' : null);
+
+// six slots, cheap on the left to fancy on the right. The last one is the rare find (1 in 4 is legendary)
+const SLOTS = [['poor', 'common'], ['common', 'uncommon'], ['uncommon'], ['uncommon', 'rare'], ['rare', 'epic'], null];
+function stockFor(id) {
+  const r = rng(id + 7), out = [];
+  SLOTS.forEach(qs => {
+    const q = qs ? qs[Math.floor(r() * qs.length)] : (r() < .25 ? 'legendary' : 'epic');
+    const pool = LOOT[q].filter(n => !out.some(o => o.n === n));
+    const w = pool.map(n => (setOf(n) ? 3 : 1) * (iconOf(n) ? 1.5 : 1));   // set pieces and items with art show up more
+    let x = r() * w.reduce((a, b) => a + b, 0), n = pool[pool.length - 1];
+    for (let i = 0; i < pool.length; i++) { x -= w[i]; if (x <= 0) { n = pool[i]; break; } }
+    out.push({ n, q });
+  });
+  return out;
+}
+
+/* ---------- what you own: everything ever found, plus anything bought but not yet unpacked at the wheel ---------- */
+const pendingNames = () => (get('painWheelPendingLoot', []) || []).map(l => l[2]).filter(Boolean);
+const owned = (n) => !!(get('painWheelFound', {}) || {})[n] || pendingNames().includes(n);
+const myBuys = (id) => { const b = get('painWheelEmporium', {}) || {}; return b.rot === id ? (b.slots || []) : []; };
+
+const TAG_X = [15.0, 29.8, 43.3, 57.7, 71.2, 85.2];
+let ROT = rotation(), STOCK = stockFor(ROT.id);
+function render() {
+  const goods = $('goods'), bought = myBuys(ROT.id); goods.innerHTML = '';
+  STOCK.forEach((it, i) => {
+    const sold = bought.includes(i), ic = iconOf(it.n), b = document.createElement('button');
+    b.className = 'item' + (sold ? ' sold' : ''); b.style.left = TAG_X[i] + '%'; b.style.setProperty('--q', QCOL[it.q]);
+    b.title = sold ? `${it.n} (sold to you)` : `${it.n} (${it.q})`; b.setAttribute('aria-label', b.title);
+    b.innerHTML = ic ? `<img src="${ic}" alt="">` : `<span class="emo">${QEMO[it.q]}</span>`;
+    if (!sold && !owned(it.n)) b.insertAdjacentHTML('beforeend', '<span class="new">NEW!</span>');
+    b.onclick = () => sold ? say(pick(['That one\'s yours already. I don\'t do doubles. I barely do singles.', 'Sold. To you. Remember? No refunds.'])) : showItem(i);
+    goods.appendChild(b);
+    const t = document.createElement('div'); t.className = 'tag' + (sold ? ' sold' : ''); t.style.left = (TAG_X[i] + .1) + '%'; t.style.setProperty('--qd', QDARK[it.q]);
+    t.innerHTML = sold ? 'SOLD' : `${short(priceOf(it.q))}<small>${it.q}</small>`;
+    goods.appendChild(t);
+  });
+}
+function tick() {
+  const r = rotation();
+  if (r.id !== ROT.id) { ROT = r; STOCK = stockFor(r.id); render(); say('Fresh stock just came off the truck. Don\'t ask which truck.'); sfx('audio_door_chime'); }
+  const h = Math.floor(r.left / 36e5), m = Math.floor(r.left % 36e5 / 6e4);
+  $('rot').innerHTML = `🕘 New stock in <b>${h ? h + 'h ' : ''}${m}m</b> (${r.next} Central)`;
+}
+
+function showItem(i) {
+  const it = STOCK[i], ic = iconOf(it.n), st = setOf(it.n), price = priceOf(it.q), card = $('card');
+  card.style.setProperty('--q', QCOL[it.q]);
+  let setHtml = '';
+  if (st) { const have = st.items.filter(owned).length; setHtml = `<div class="set">Part of <b>${st.name}</b>: you have ${have} of ${st.items.length}.${owned(it.n) ? '' : have + 1 === st.items.length ? ' <b>This finishes the set!</b>' : ''}<br><span style="color:#a8a29e">${st.perk}</span></div>`; }
+  card.innerHTML = `<div class="pic">${ic ? `<img src="${ic}" alt="">` : `<span>${QEMO[it.q]}</span>`}</div><h2></h2><div class="ql">${it.q}${owned(it.n) ? ' · you have one' : ' · new for you'}</div>
+    <p class="desc"></p>${setHtml}<div class="price">${fmt(price)}</div><div class="pct">${Math.round(PCT[it.q] * 1000) / 10}% of your gold (at least ${fmt(FLOOR[it.q])})</div>
+    <div class="row"><button class="buy" type="button">🏷️ Buy it</button><button class="no" type="button">Just looking</button></div><div class="msg" role="status"></div>`;
+  card.querySelector('h2').textContent = it.n; card.querySelector('.desc').textContent = ITEM_DESC[it.n] ? '"' + ITEM_DESC[it.n] + '"' : 'Axazon swears it is authentic.';
+  const buy = card.querySelector('.buy');
+  if (gold() < price) { buy.disabled = true; card.querySelector('.msg').textContent = 'You can\'t afford it. Axazon can tell.'; }
+  buy.onclick = () => {
+    const p = priceOf(it.q), g = gold();
+    if (g < p) { card.querySelector('.msg').textContent = 'You can\'t afford it. Axazon can tell.'; return; }
+    if (myBuys(ROT.id).includes(i)) return;
+    put('painWheelGold', g - p);   // the wheel picks the new total up (and the item, next time it's open)
+    const q = get('painWheelPendingLoot', []) || []; q.push([it.q, "🏷️ Bought at Axazon's Emporium", it.n]); put('painWheelPendingLoot', q);
+    const b = get('painWheelEmporium', {}) || {}; put('painWheelEmporium', { rot: ROT.id, slots: (b.rot === ROT.id ? b.slots || [] : []).concat(i) });
+    const spent = get('painWheelEmporiumSpent', 0) || 0; put('painWheelEmporiumSpent', spent + 1);
+    sfx('audio_token'); showGold(); render(); $('dlg').close();
+    say(pick(BUY_LINES).replace('{item}', it.n), 5200);
+  };
+  card.querySelector('.no').onclick = () => { $('dlg').close(); if (Math.random() < .5) say(pick(LOOK_LINES)); };
+  $('dlg').showModal();
+}
+$('dlg').addEventListener('click', (e) => { if (e.target === $('dlg')) $('dlg').close(); });
+
+const HELLO = ['Welcome to the Emporium. Everything is authentic. Mostly. Some of it.', 'Look with your eyes. Then buy with your gold.', 'Fresh from the guild bank. Don\'t tell the guild bank.',
+  'Every item here fell off a gryphon. Legally.', 'You break it, you bought it. You look at it too long, you also bought it.', 'Back again? Good. Stock turns over at 9 and 9. Central. Like civilized people.'];
+const BUY_LINES = ['Pleasure doing business. The {item} is on its way to your bag.', 'SOLD. The {item} will be in your bag next time you\'re at the wheel.', 'Great choice. Terrible price. Great choice.',
+  'No refunds. Ever. I want that understood. Enjoy the {item}.', 'Wrapped it in a Discord log for you. Free of charge. This time.'];
+const LOOK_LINES = ['Looking is free. For now.', 'That price goes up every time you put it down.', 'Fine. It\'ll be here. Probably. Until 9.'];
+const JOKES = {
+  refund: ['Read the sign. Read it out loud. Good.', 'I gave a refund once. 2009. Never again.', 'Store credit? This is a tarp. There is no store.'],
+  fish: ['That\'s Gary\'s cousin. Steve. Steve is NOT for sale.', 'Don\'t tell Gary I have him. It\'s a whole thing.', 'He sings when the stock turns over. You have to be here at 9 to hear it.'],
+  pig: ['The piggy bank is the cash register. Don\'t shake it.', 'Hands off the pig. The pig is the bank. I am the bank.', '*oink* (it is full of copper. you can tell.)'],
+  console: ['That\'s a prototype WHEEL-2600. Not for sale. Not even for you.', 'Found it on a yacht. The VIP room. You didn\'t see that.', 'The cartridges are in the back. The back is also a tarp.'],
+  jar: ['Don\'t ask what\'s in the jar.', 'That jar has been on that shelf since before the shack. Before the desert.', 'Reb asked about the jar once. Reb doesn\'t ask anymore.']
+};
+document.querySelectorAll('.hs').forEach(h => h.onclick = () => say(pick(JOKES[h.dataset.hs])));
+
+if (!isOpen()) $('closed').style.display = 'flex';
+else { put('painWheelSeenEmporium', true); setTimeout(() => say(pick(HELLO), 4800), 700); addEventListener('pointerdown', () => sfx('audio_door_chime', .5), { once: true }); }
+addEventListener('storage', (e) => { if (e.key === 'painWheelGold') { showGold(); render(); } if (e.key === 'painWheelEmporium' || e.key === 'painWheelFound') render(); });
+render(); tick(); setInterval(tick, 15000);
+setInterval(() => { showGold(); }, 5000);
+</script>
+</body></html>
