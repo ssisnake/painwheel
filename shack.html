@@ -135,7 +135,12 @@ function openClaw() {
   ov.style.cssText = 'position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;padding:12px;background:rgba(12,10,9,.82);overflow:auto';
   ov.innerHTML = `<div style="position:relative;width:min(460px,100%,calc((100vh - 250px) * .65));text-align:center;font-family:system-ui,sans-serif">
       <button data-x style="position:absolute;right:-6px;top:-6px;z-index:5;width:40px;height:40px;border-radius:50%;background:#292524;color:#fff;font-size:22px;border:2px solid #78716c;cursor:pointer">✕</button>
-      <div style="position:relative;width:100%;aspect-ratio:460/708;background:url(media/photo_claw_cab.png) 0 0/100% 100% no-repeat;image-rendering:pixelated">
+      <div style="position:relative;width:100%;aspect-ratio:460/708;background:url(media/claw_cab_nostick.png) 0 0/100% 100% no-repeat;image-rendering:pixelated">
+        <img data-stick src="media/claw_stick.png" alt="" style="position:absolute;left:44.13%;top:58.62%;width:7.61%;transform-origin:50% 100%;image-rendering:pixelated;transition:transform .18s cubic-bezier(.3,1.6,.5,1);pointer-events:none;z-index:3">
+        <div data-joy role="slider" tabindex="0" aria-label="Joystick: drag left or right to move the claw" title="Grab the joystick" style="position:absolute;left:39.5%;top:56.5%;width:17%;height:12.5%;cursor:grab;touch-action:none;z-index:4;border-radius:12px"></div>
+        <div data-btnglow style="position:absolute;left:58.6%;top:64.3%;width:9.3%;height:3.8%;border-radius:50%;pointer-events:none;z-index:3;transition:background .08s"></div>
+        <button data-d aria-label="Drop the claw (1 casino token)" title="DROP (1 casino token)" style="position:absolute;left:57.5%;top:62.5%;width:11.5%;height:7.5%;border:0;background:none;cursor:pointer;border-radius:50%;z-index:4"></button>
+        <button data-chute aria-label="Collect your prize" title="Collect your prize!" style="position:absolute;left:43.5%;top:85.5%;width:22.2%;height:9.9%;border:0;background:none;padding:0;display:none;cursor:pointer;z-index:4;align-items:center;justify-content:center"></button>
         <div style="position:absolute;left:10.5%;top:25%;width:79%;height:35.5%;overflow:hidden">
           <div data-rope style="position:absolute;top:0;left:0;width:3px;height:6%;background:#57534e;transform:translateX(-50%)"></div>
           <img data-claw src="media/photo_claw.png" alt="" style="position:absolute;top:2%;left:0;width:19%;transform:translateX(-50%);transition:top 1.1s ease-in-out">
@@ -147,25 +152,17 @@ function openClaw() {
       <div data-msg style="color:#f5f5f4;font:700 17px/1.35 system-ui,sans-serif;min-height:48px"></div>
       <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center;margin-top:6px">
         <button data-buy style="white-space:nowrap;font-size:15px;font-weight:800;padding:10px 12px;border-radius:10px;background:#713f12;color:#fde68a;border:none;cursor:pointer">🎰 Buy token</button>
-        <div class="cpanel"><div data-joy class="joy" role="slider" aria-label="Joystick: drag left or right to move the claw" tabindex="0"><div class="jbase"></div><div data-stick class="jstick"><div class="jball"></div></div></div>
-        <button data-d class="dropbtn" aria-label="Drop the claw (1 casino token)"><span>DROP</span><small>1 🎰</small></button></div>
+        <span style="color:#d6d3d1;font:700 14px system-ui,sans-serif">Grab the joystick on the machine to move · hit the red button to drop</span>
       </div>
       <div style="margin-top:8px;color:#78716c;font-size:12px">THE WHEEL™ is not responsible for missing prizes, missing persons, or anything found during a federal investigation. No Refunds</div>
     </div>`;
   document.body.appendChild(ov);
   if (!document.getElementById('joyCss')) document.head.insertAdjacentHTML('beforeend', `<style id="joyCss">
-    .cpanel { display: flex; align-items: center; gap: 18px; padding: 8px 18px; border-radius: 14px; background: linear-gradient(#3f3a36, #1c1917); box-shadow: inset 0 2px 0 rgba(255,255,255,.12), 0 4px 10px rgba(0,0,0,.5); }
-    .joy { position: relative; width: 110px; height: 96px; cursor: grab; touch-action: none; user-select: none; outline: none; }
-    .joy:active { cursor: grabbing; } .joy:focus-visible .jbase { box-shadow: 0 0 0 3px #fde68a; }
-    .jbase { position: absolute; left: 50%; bottom: 4px; width: 84px; height: 26px; margin-left: -42px; border-radius: 50%; background: radial-gradient(ellipse at 50% 35%, #57534e, #0c0a09 70%); box-shadow: 0 4px 6px rgba(0,0,0,.6); }
-    .jstick { position: absolute; left: 50%; bottom: 16px; width: 12px; height: 62px; margin-left: -6px; border-radius: 6px; background: linear-gradient(90deg, #a8a29e, #e7e5e4 40%, #57534e); transform-origin: 50% 100%; transition: transform .18s cubic-bezier(.3,1.6,.5,1); }
-    .jball { position: absolute; left: 50%; top: -22px; width: 38px; height: 38px; margin-left: -19px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fecaca, #dc2626 45%, #7f1d1d 100%); box-shadow: 0 3px 6px rgba(0,0,0,.6); }
-    .joy.held .jstick { transition: none; }
-    .dropbtn { position: relative; width: 82px; height: 82px; border-radius: 50%; border: 0; cursor: pointer; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.05;
-      background: radial-gradient(circle at 40% 30%, #fca5a5, #dc2626 50%, #7f1d1d 100%); box-shadow: 0 7px 0 #450a0a, 0 10px 14px rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.35); transition: transform .08s, box-shadow .08s; }
-    .dropbtn span { font: 900 18px system-ui, sans-serif; text-shadow: 0 2px 0 rgba(0,0,0,.4); } .dropbtn small { font: 800 13px system-ui, sans-serif; opacity: .9; }
-    .dropbtn:active, .dropbtn.down { transform: translateY(6px); box-shadow: 0 1px 0 #450a0a, 0 3px 6px rgba(0,0,0,.5), inset 0 2px 0 rgba(255,255,255,.25); }
-    .dropbtn:focus-visible { outline: 3px solid #fde68a; outline-offset: 4px; }
+    #clawOv [data-joy]:hover, #clawOv [data-joy]:focus-visible { box-shadow: 0 0 0 2px rgba(253,230,138,.7), 0 0 14px rgba(253,230,138,.6); outline: none; }
+    #clawOv [data-d]:hover, #clawOv [data-d]:focus-visible { box-shadow: 0 0 14px rgba(252,165,165,.8); outline: none; }
+    #clawOv [data-btnglow].down { background: radial-gradient(ellipse, rgba(0,0,0,.45), rgba(0,0,0,.15) 70%, transparent); }
+    #clawOv [data-chute] { animation: chuteGlow 1s ease-in-out infinite; } #clawOv [data-chute] img { height: 85%; width: auto; image-rendering: pixelated; filter: drop-shadow(0 0 6px #fde68a); }
+    @keyframes chuteGlow { 50% { box-shadow: 0 0 18px #fde68a, inset 0 0 12px rgba(253,230,138,.6); } }
   </style>`);
   const q = (a) => ov.querySelector(`[data-${a}]`), claw = q('claw'), rope = q('rope'), msg = q('msg');
   const pile = left.map((c, i) => {   // back row first (higher, behind), front row on top
@@ -185,28 +182,34 @@ function openClaw() {
     setTimeout(() => { claw.style.transition = 'top 1.1s ease-in-out'; rope.style.transition = 'height 1.1s ease-in-out'; done(); }, 950);
   };
   const slogan = () => { q('slogan').textContent = CLAW_SLOGANS[sl++ % CLAW_SLOGANS.length]; }; slogan(); const st = setInterval(slogan, 3500);
-  const close = () => { clearInterval(st); clearInterval(joyLoop); removeEventListener('keydown', key, true); ov.remove(); };
+  const close = () => { collect(true); clearInterval(st); clearInterval(joyLoop); removeEventListener('keydown', key, true); ov.remove(); };
   const move = (d, quiet) => { if (busy) return; x = Math.max(8, Math.min(92, x + d)); place(); if (!quiet) sfx('audio_claw_motor', .16, 1.15); };
   const key = (e) => {
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { const d = e.key === 'ArrowLeft' ? -1 : 1; move(4 * d); tiltTo(d); clearTimeout(key.t); key.t = setTimeout(() => tiltTo(0), 180); e.preventDefault(); }
-    else if (e.key === ' ' || e.key === 'Enter') { const b = q('d'); b.classList.add('down'); setTimeout(() => b.classList.remove('down'), 140); drop(); e.preventDefault(); } else if (e.key === 'Escape') close();
+    else if (e.key === ' ' || e.key === 'Enter') { press(); e.preventDefault(); } else if (e.key === 'Escape') close();
   };
   addEventListener('keydown', key, true);
   q('x').onclick = close; ov.addEventListener('click', (e) => { if (e.target === ov) close(); });
   // the joystick: grab it and push. The farther you push, the faster the claw slides. Let go and it springs back
   const joy = q('joy'), stick = q('stick'); let tilt = 0, joyX = 0, joyLoop = null, lastHum = 0;
-  function tiltTo(t) { tilt = Math.max(-1, Math.min(1, t)); stick.style.transform = `rotate(${tilt * 28}deg)`; }
+  function tiltTo(t) { tilt = Math.max(-1, Math.min(1, t)); stick.style.transform = `rotate(${tilt * 30}deg)`; stick.style.transition = joy.classList.contains('held') ? 'none' : ''; }
   joy.addEventListener('pointerdown', (e) => {
-    joy.setPointerCapture(e.pointerId); joy.classList.add('held'); joyX = joy.getBoundingClientRect().left + joy.offsetWidth / 2; tiltTo((e.clientX - joyX) / 40);
+    joy.setPointerCapture(e.pointerId); joy.classList.add('held'); joy.style.cursor = 'grabbing'; joyX = joy.getBoundingClientRect().left + joy.offsetWidth / 2; tiltTo((e.clientX - joyX) / 40);
     clearInterval(joyLoop); joyLoop = setInterval(() => {
       if (Math.abs(tilt) < .15 || busy) return; move(tilt * 2.4, true);
       if (Date.now() - lastHum > 380) { lastHum = Date.now(); sfx('audio_claw_motor', .42, 1.05 + Math.abs(tilt) * .15); }   // motor hum while it moves
     }, 40);
   });
   joy.addEventListener('pointermove', (e) => { if (joy.hasPointerCapture(e.pointerId)) tiltTo((e.clientX - joyX) / 40); });
-  const letGo = () => { clearInterval(joyLoop); joyLoop = null; joy.classList.remove('held'); tiltTo(0); };
+  const letGo = () => { clearInterval(joyLoop); joyLoop = null; joy.classList.remove('held'); joy.style.cursor = 'grab'; tiltTo(0); };
   joy.addEventListener('pointerup', letGo); joy.addEventListener('pointercancel', letGo); joy.addEventListener('lostpointercapture', letGo);
-  q('d').onclick = drop;
+  const press = () => { const g = q('btnglow'); g.classList.add('down'); setTimeout(() => g.classList.remove('down'), 160); drop(); };
+  q('d').onclick = press;
+  // won prizes come out of the PRIZES door: click to collect (leaving collects it for you)
+  const chute = q('chute'); let waiting = null;
+  const collect = (auto) => { if (!waiting) return; const P = waiting; waiting = null; chute.style.display = 'none'; chute.innerHTML = ''; sfx('audio_token');
+    if (!auto) msg.textContent = `🎁 You grabbed ${P.won.replace(/^.*?YOU WON /, '').split('.')[0]} out of the chute. It's yours. Check your pets.`; };
+  chute.onclick = () => collect(false);
   q('buy').onclick = () => {   // the cashier cage: 5% of your gold (min 100g)
     const gold = get('painWheelGold', 0), c = Math.max(100, Math.round(gold * .05));
     if (gold < c) { msg.textContent = `The cashier wants ${fmt(c)}. You do not have ${fmt(c)}.`; return; }
@@ -238,6 +241,7 @@ function openClaw() {
           queueAch('clawwin'); if (CLAW_PRIZES.every(c => pets2[c.k])) queueAch('clawall');
           setTimeout(() => {
             prize.remove(); claw.style.transform = 'translateX(-50%)'; busy = false;
+            collect(true); waiting = P; chute.innerHTML = `<img src="${P.img}" alt="">`; chute.style.display = 'flex'; msg.textContent = P.won + '  👇 Grab it from the PRIZES door!';
             if (!pile.length) q('sold').style.display = 'flex';
           }, 2400);
         } else {
@@ -262,7 +266,7 @@ function startWind() {
   try {
     if (!vol()) return; AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (startWind.on) return; startWind.on = true;
     fetch('media/audio_wind.mp3').then(r => r.arrayBuffer()).then(ab => AC.decodeAudioData(ab)).then(buf => {
-      const master = AC.createGain(); master.gain.setValueAtTime(0, AC.currentTime); master.gain.linearRampToValueAtTime(.35 * vol(), AC.currentTime + 3); master.connect(AC.destination);
+      const master = AC.createGain(); master.gain.setValueAtTime(0, AC.currentTime); master.gain.linearRampToValueAtTime(.14 * vol(), AC.currentTime + 4); master.connect(AC.destination);
       [[1, 0, .7], [.81, 1.3, .5]].forEach(([rate, off, lvl], k) => {   // two layers drifting against each other
         const s = AC.createBufferSource(); s.buffer = buf; s.loop = true; s.loopStart = .06; s.loopEnd = buf.duration - .06; s.playbackRate.value = rate;
         const g = AC.createGain(); g.gain.value = lvl;
@@ -273,4 +277,5 @@ function startWind() {
   } catch (e) {}
 }
 addEventListener('pointerdown', startWind, { once: true });
-</script></body></html>
+</script><script>window.AXA_CAMEO = { id: 'shack', host: '#scene', x: 54.6, y: 30.5, w: 4.2, z: 1, filter: 'brightness(0) opacity(.75) drop-shadow(0 0 6px rgba(255,220,160,.6))', op: .85 };</script><script src="axa_cameo.js"></script>
+</body></html>

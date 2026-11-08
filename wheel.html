@@ -14,6 +14,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Wheel</title>
+    <script src="config.js"></script>
+    <script>try { if (!localStorage.getItem('painWheelBoardVisited') && !/embed=/.test(location.search) && !location.hash) location.replace('./'); } catch (e) {}</script>
     <link rel="icon" type="image/png" href="data:image/png;base64,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">
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@500;700;800&family=Pixelify+Sans:wght@400;500;600;700&family=Atkinson+Hyperlegible:wght@400;700&family=Silkscreen:wght@400;700&family=Nunito+Sans:wght@400;600;700;800;900&family=Barlow:wght@400;600;700;800;900&family=Pirata+One&family=Germania+One&family=Tiny5&family=Jersey+15&display=swap" rel="stylesheet">
@@ -882,7 +884,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 2:53 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 4:51 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -901,7 +903,9 @@
                 <button id="volTest" class="text-[11px] px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold shrink-0 cursor-pointer">Test</button>
             </div>
             <label class="flex items-center gap-3 mt-2 cursor-pointer select-none"><input id="musicToggle" type="checkbox" class="w-5 h-5 accent-amber-400 cursor-pointer" checked>
-                <span class="text-sm font-bold">🎵 Music</span><span class="text-xs text-slate-400">(songs only: the Board's music, waiting music, the cruiser's radio. Sound effects stay on.)</span></label>
+                <span class="text-sm font-bold">🎵 Music</span><span class="text-xs text-slate-400">(songs only. Sound effects stay on.)</span></label>
+            <div class="flex items-center gap-3 mt-2"><span class="text-xs font-bold uppercase tracking-wider text-slate-400 shrink-0 w-24">Music volume</span>
+                <input id="musicVol" type="range" min="0" max="100" step="1" value="50" class="flex-1 accent-fuchsia-400 cursor-pointer"><span id="musicVolLabel" class="mono text-xs text-fuchsia-300 w-10 text-right shrink-0">50%</span></div>
                 <p class="text-[11px] text-slate-500 mt-1">Click the speaker to mute or unmute.</p>
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mt-3 mb-2">Sound style</div>
                 <div id="sfxPicks" class="flex flex-wrap gap-2">
@@ -1425,7 +1429,6 @@
         </div>
     </div>
 
-    <script src="config.js"></script>
     <script>
     // the 8/11 page loads this page inside itself with ?embed=shop: only the shop shows, nothing else runs at you
     const EMBED_SHOP = new URLSearchParams(location.search).get('embed') === 'shop';
@@ -3859,9 +3862,29 @@
     const NEW_CLIPS = /^(doorslam|sink|fart1|fart2|rocketboom|achieve|fanfare|trombone|vcrash|crash|sqchirp|ufo|ufobeam|brickring|heli|doorchime|yachthorn|token)/;
     const MUSIC_CLIPS = /^(waiting|policesong)$/;   // songs, not sound effects: the Music toggle mutes these
     const musicOn = () => !store.get('painWheelMusicOff', false);
+    const musicVol = () => { const v = store.get('painWheelMusicVol', .5); return typeof v === 'number' ? Math.max(0, Math.min(1, v)) : .5; };
+    // ---------- background music (Pixabay: maksymmalko, tatamusic), crossfading, quiet, pauses when you leave the window ----------
+    const WHEEL_BGM = ['media/audio_bgm_wheel1.mp3', 'media/audio_bgm_wheel2.mp3'];
+    let bgmI = Math.floor(Math.random() * 2), bgmA = null, bgmDucked = false;
+    const bgmTarget = () => (EMBED_SHOP || !musicOn() || bgmDucked || document.hidden || !document.hasFocus() || document.body.classList.contains('ghost-town')) ? 0 : .5 * musicVol() * currentVolume;
+    function bgmRamp(a, to, ms, done) { const from = a.volume, t0 = performance.now(); (function st() { const k = Math.min(1, (performance.now() - t0) / ms); a.volume = Math.max(0, Math.min(1, from + (to - from) * k)); if (k < 1) requestAnimationFrame(st); else if (done) done(); })(); }
+    function bgmStart(i) {
+        if (EMBED_SHOP) return; bgmI = i % WHEEL_BGM.length; const a = new Audio(WHEEL_BGM[bgmI]); a.volume = 0;
+        const old = bgmA; bgmA = a; if (old) bgmRamp(old, 0, 4000, () => old.pause());
+        if (bgmTarget() > 0) a.play().then(() => bgmRamp(a, bgmTarget(), 3000)).catch(() => {});
+        a.addEventListener('timeupdate', function nx() { if (a.duration && a.currentTime > a.duration - 5 && bgmA === a) { a.removeEventListener('timeupdate', nx); bgmStart(bgmI + 1); } });
+        a.addEventListener('ended', () => { if (bgmA === a) bgmStart(bgmI + 1); });
+    }
+    function bgmApply() {   // follow the sliders, the Music switch, Forever, and whether you're looking at the page
+        if (!bgmA) return; const t = bgmTarget();
+        if (t > 0) { if (bgmA.paused) bgmA.play().catch(() => {}); bgmRamp(bgmA, t, 700); } else bgmRamp(bgmA, 0, 500, () => { if (bgmTarget() === 0) bgmA.pause(); });
+    }
+    addEventListener('pointerdown', () => { if (!bgmA) bgmStart(bgmI); }, { once: true });
+    document.addEventListener('visibilitychange', bgmApply); addEventListener('blur', bgmApply); addEventListener('focus', bgmApply);
     function playClip(name, dataUrl, fallback) {
         if (!soundOn()) return;
         if (MUSIC_CLIPS.test(name) && !musicOn()) return;
+        if (MUSIC_CLIPS.test(name)) { bgmDucked = true; bgmApply(); clearTimeout(playClip.duck); playClip.duck = setTimeout(() => { bgmDucked = false; bgmApply(); }, 40000); }   // the background music steps aside for a song
         if (sfxStyle === 'classic' && NEW_CLIPS.test(name)) { if (fallback) fallback(); return; }
         ensureAudio();
         const start = (buf) => {
@@ -4496,6 +4519,7 @@
         if (typeof power !== 'number') power = 0.35 + Math.random() * 0.55; // hub button / Spin Again: random strength
         power = Math.min(1, Math.max(0.05, power));
         isSpinning = true; document.body.classList.add('is-spinning');
+        if (window.__fingerOn && Math.random() < (power > .85 ? .3 : .08)) setTimeout(fingerEscape, 150);   // a hard spin can send Biblehumping's finger flying
         if (typeof hearthCancel === 'function') hearthCancel('🪨 You moved. Hearthstone interrupted.');
         spinBtn.disabled = true; spinBtn.classList.add('opacity-60');
         closeModal();
@@ -5937,13 +5961,17 @@
             try { modalVideo.volume = Math.min(1, v * 0.75); } catch (e) {}
             if (v > 0) lastNonZero = v;
             if (save) { try { localStorage.setItem('painWheelVolume', String(v)); } catch (e) {} }
+            if (typeof bgmApply === 'function') bgmApply();
         }
         apply(currentVolume, false);
         slider.addEventListener('input', () => apply(slider.value / 100, true));
         icon.addEventListener('click', () => apply(currentVolume > 0 ? 0 : lastNonZero, true));
         $('volTest').addEventListener('click', () => playWinSound());
         const mt = $('musicToggle'); mt.checked = musicOn();   // shared with the Board's music paper
-        mt.addEventListener('change', () => { store.set('painWheelMusicOff', !mt.checked); if (!mt.checked) ['waiting', 'policesong'].forEach(n => { try { clipSources[n] && clipSources[n].stop(); } catch (e) {} }); });
+        mt.addEventListener('change', () => { store.set('painWheelMusicOff', !mt.checked); if (!mt.checked) ['waiting', 'policesong'].forEach(n => { try { clipSources[n] && clipSources[n].stop(); } catch (e) {} }); bgmApply(); });
+        const mv = $('musicVol'), mvl = $('musicVolLabel'); const showMv = () => { mv.value = Math.round(musicVol() * 100); mvl.textContent = mv.value + '%'; }; showMv();
+        mv.addEventListener('input', () => { store.set('painWheelMusicVol', mv.value / 100); mvl.textContent = mv.value + '%'; bgmApply(); });
+        mv.addEventListener('keydown', (e) => { if (e.code === 'Space') e.preventDefault(); }); mv.addEventListener('pointerup', () => mv.blur());
         const renderSfx = () => document.querySelectorAll('#sfxPicks [data-sfx]').forEach(b => { const on = b.dataset.sfx === sfxStyle; b.className = 'px-3 py-1.5 rounded border text-sm font-bold cursor-pointer ' + (on ? 'bg-amber-500 text-black border-amber-400' : 'bg-slate-800 text-slate-200 border-slate-600'); });
         document.querySelectorAll('#sfxPicks [data-sfx]').forEach(b => b.addEventListener('click', () => { sfxStyle = b.dataset.sfx; store.set('painWheelSfx', sfxStyle); renderSfx(); playTickSound(true); setTimeout(() => playTickSound(false), 140); }));
         renderSfx();
@@ -7112,7 +7140,7 @@
     // ---------- loot ----------
     const LOOT = {
         poor: ["Reb's Empty Bottle", 'Half a Stale Cheeto', "Kevin's Participation Trophy", 'Broken Hearthstone', 'Soggy Croissant Crumb',
-            'Torn Discord Log', 'Jar of Sewer Pickle Juice', 'Frayed Leap of Faith Rope', 'Expired Healthstone'],
+            'Torn Discord Log', 'Jar of Sewer Pickle Juice', 'Frayed Leap of Faith Rope', 'Expired Healthstone', "The Shack's Broken Internet Dish"],
         common: ['Linen Cloth (x3)', 'Conjured Mana Bun', 'Light Feather', "Kevin's Spare Keyboard", 'Six-Pack of Garage Beers', 'Glazed Donut', "Kevin's ROG Ally Battery"],
         uncommon: ['Slurpee (Blue Raspberry)', 'Slurpee (Cherry)', 'Slurpee (Coke)', 'Slurpee (Mystery Flavor)', "Slurpee (Dr Pepper)", "Slurpee (Mountain Dew Code Red)", "Slurpee (Wild Cherry Pepsi)", "Slurpee (Half & Half Mix)", "Slurpee (Sugar Free, For Reb's Doctor)", 'Belt of Standing in Fire', 'Ret Paladin 6% Buff Coupon', 'Goblin Timeshare Brochure', "Platemage's Spare Plate",
             'Murder Row Teleport Scroll', 'Road Beer (Still Cold)', "Axazon's Empty Heart Pill Bottle"],
@@ -7127,7 +7155,7 @@
         "Reb's Empty Bottle": 'Still smells like a Tuesday raid night.', 'Half a Stale Cheeto': 'The other half is in the keyboard.',
         "Kevin's Participation Trophy": 'Awarded for showing up. Barely.', 'Broken Hearthstone': 'Cooldown: forever.',
         'Soggy Croissant Crumb': 'The gnome missed one.', 'Torn Discord Log': 'Exhibit A.', 'Jar of Sewer Pickle Juice': 'Dalaran\'s finest.',
-        'Frayed Leap of Faith Rope': 'Used. Many times. On you.', 'Expired Healthstone': 'Best before Wrath of the Lich King.',
+        'Frayed Leap of Faith Rope': 'Used. Many times. On you.', 'Expired Healthstone': 'Best before Wrath of the Lich King.', "The Shack's Broken Internet Dish": 'Two bars. In 1987. The skeleton is still waiting on a download.',
         'Linen Cloth (x3)': 'Vendor price: an insult.', 'Conjured Mana Bun': 'Tastes like a mage\'s disappointment.', 'Light Feather': 'For when you fall off Murder Row.',
         "Kevin's Spare Keyboard": 'Every key is bound to "stand in fire".', 'Six-Pack of Garage Beers': 'Best enjoyed at 10 AM.', 'Glazed Donut': 'Perfectly fine. Suspicious.',
         'Belt of Standing in Fire': '+10 Fire Resistance. -100 Awareness.', 'Slurpee (Blue Raspberry)': 'Turns your tongue blue for 3 raid nights.',
@@ -8226,6 +8254,14 @@
         setTimeout(() => nickFetch(x, CHUTE_LINE, () => setTimeout(() => f.remove(), 900)), 1700);
         return true;
     }
+    function playWhoosh() {   // a quick airy swoosh (filtered noise sweep)
+        if (!soundOn()) return;
+        try { ensureAudio(); const t = audioCtx.currentTime, n = audioCtx.sampleRate * .9, b = audioCtx.createBuffer(1, n, audioCtx.sampleRate), d = b.getChannelData(0); for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+            const s = audioCtx.createBufferSource(), f = audioCtx.createBiquadFilter(), g = audioCtx.createGain(); s.buffer = b; f.type = 'bandpass'; f.Q.value = 2.2;
+            f.frequency.setValueAtTime(350, t); f.frequency.exponentialRampToValueAtTime(2600, t + .35); f.frequency.exponentialRampToValueAtTime(500, t + .85);
+            g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(.32, t + .18); g.gain.exponentialRampToValueAtTime(0.0001, t + .85);
+            s.connect(f); f.connect(g); g.connect(outGain); s.start(t); s.stop(t + .9); } catch (e) {}
+    }
     function fingerEscape() {   // the finger on the SPIN button goes flying when you spin, or tries to crawl away
         const home = $('nickFinger'); if (!home || home.style.display === 'none' || home.style.visibility === 'hidden') return;
         const r = home.getBoundingClientRect(); if (!r.width) return;
@@ -8234,8 +8270,9 @@
         home.style.visibility = 'hidden'; document.body.appendChild(f);
         const back = (msg) => { f.remove(); home.style.visibility = ''; if (msg) moveToast(msg); };
         if (Math.random() < 0.5) {   // FLY
-            const dx = (Math.random() < 0.5 ? -1 : 1) * (200 + Math.random() * 300), floor = innerHeight - r.top - r.height - 10;
-            f.style.pointerEvents = 'none';
+            const dx = (Math.random() < 0.5 ? -1 : 1) * (260 + Math.random() * 340), floor = innerHeight - r.top - r.height - 10;
+            f.style.pointerEvents = 'none'; f.style.height = (r.height * 1.6) + 'px'; f.style.filter = 'drop-shadow(0 0 12px #fde68a) drop-shadow(0 6px 8px rgba(0,0,0,.6))'; playWhoosh();
+            floatBubble(pick(['🖐️ THE FINGER!', '🖐️ FINGER LAUNCHED', '🖐️ there it goes']), r.left + r.width / 2, r.top - 20, 1800);
             f.animate([{ transform: 'translate(0,0) rotate(0)' }, { transform: `translate(${dx * 0.5}px,-240px) rotate(540deg)`, offset: 0.4 }, { transform: `translate(${dx}px,${floor}px) rotate(1080deg)` }], { duration: 1600, easing: 'ease-out', fill: 'forwards' });
             chatBurst(['THE FINGER', 'it launched the finger', 'FINGER OVERBOARD', 'nick is going to be so mad'], 3, 900);
             setTimeout(() => nickFetch(r.left + dx, pick(['Every. Single. Spin. Stop spinning so hard, eh.', 'Got it. That is the third time today. Fourth if you count the chute.', 'You could put a lid on the button. Just saying.']), () => setTimeout(() => back(), 700)), 1700);
@@ -8346,7 +8383,7 @@
     function isForeverWeek(d) { d = d || new Date(); return d.getMonth() === 10 && d.getDate() >= 4 && d.getDate() <= 10; }   // WoW Forever launched Nov 4: the whole guild "leaves" that week every year
     let foreverPrankBusy = false;
     let foreverSaved = null;
-    function toggleForever() {
+    function toggleForever() { setTimeout(() => { if (typeof bgmApply === 'function') bgmApply(); }, 50);   // Forever is a ghost town: no music
         const on = !document.body.classList.contains('ghost-town');
         if (foreverPrankBusy) return;
         if (!on && !store.get('painWheelForeverPrank', false)) {   // the first time you try to leave Forever, the button just... leaves. No explanation.
@@ -9863,6 +9900,8 @@
             ['🦺', 'OSHA landings break things now: the rocket crashes, the banker trips, a slice falls off the wheel, a vehicle explodes, a pet trips, a top-bar button falls off (click it to bolt it back on), Clippy pokes his eye out, or the shack catches fire.'],
             ['📂', "The Board: clicking a place opens its case file first, with its own polaroid. Clippy has concerns."],
             ['🏷️', "Axazon's Emporium is open: a flea market with six items and new stock every 9 AM and 9 PM Central. Land on the Emporium slice to get in."],
+            ['🎶', "The wheel has background music now, with its own Music volume slider in Settings. It pauses when you click away."],
+            ['🖐️', "Biblehumping's finger really does fly off on a hard spin now. You'll hear it go."],
             ['🎵', "Settings has a Music switch now: turn off the songs and keep the sound effects. The Board has one too."],
             ['📞', "Axazon calls now too, especially when his flea market restocks. He has things to say."],
             ['📞', "Your phone rings now. About every half hour, someone you've met calls to chat. You can let it ring."],
