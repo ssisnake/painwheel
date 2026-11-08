@@ -877,7 +877,7 @@
                     <div class="text-sm font-black uppercase tracking-wider text-amber-300">🎨 Your look &amp; sound</div>
                     <button type="button" id="looksShop" class="px-3 py-1 rounded bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold cursor-pointer">🛒 Buy more in the Shop</button>
                 </div>
-                <p class="text-[11px] text-slate-500 mb-2">Everything you buy in the Shop (themes, needles, spin sounds, titles) gets switched here.</p>
+                <p class="text-[11px] text-slate-500 mb-2">Everything you buy in the Shop (themes, needles, spin sounds, titles, pets) gets switched here.</p>
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Theme</div>
                 <select id="themePicker" class="hidden"></select>
                 <div id="themeGrid" class="cls-grid"></div>
@@ -888,12 +888,15 @@
                 <div id="packGrid" class="cls-grid"></div>
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mt-4 mb-2">Title <span class="normal-case font-normal text-slate-500">(on the guild leaderboard)</span></div>
                 <div id="titleGrid" class="cls-grid"></div>
+                <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mt-4 mb-1">🐾 Pets out on the wheel <span id="petCount" class="normal-case font-normal text-slate-500"></span></div>
+                <p class="text-[11px] text-slate-500 mb-2">Tap a pet to send it out or put it away. Clippy doesn't count. Clippy is not optional.</p>
+                <div id="petGrid" class="cls-grid"></div>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800">
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 5:42 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 5:45 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -9927,6 +9930,7 @@
             ['🦺', 'OSHA landings break things now: the rocket crashes, the banker trips, a slice falls off the wheel, a vehicle explodes, a pet trips, a top-bar button falls off (click it to bolt it back on), Clippy pokes his eye out, or the shack catches fire.'],
             ['📂', "The Board: clicking a place opens its case file first, with its own polaroid. Clippy has concerns."],
             ['🏷️', "Axazon's Emporium is open: a flea market with six items and new stock every 9 AM and 9 PM Central. Land on the Emporium slice to get in."],
+            ['🐾', "Pick which pets are out from ⚙️ Settings now (under Your look & sound), not the Shop."],
             ['🕯️', "Biblehumping is dead. John Blizzard banned the name. After Nick PAID for a name change. Long live Bibledaddy. Same finger. Same ambulance."],
             ['🎶', "The wheel has background music now, with its own Music volume slider in Settings. It pauses when you click away."],
             ['🖐️', "Bibledaddy's finger really does fly off on a hard spin now. You'll hear it go."],
@@ -10331,7 +10335,7 @@
                 accountant: `<img src="${PHOTO_GIZ_GRIN}" alt="" style="display:inline-block;height:34px;vertical-align:middle">`, volley: `<img src="${PHOTO_VOLLEY}" alt="" style="display:inline-block;height:28px;vertical-align:middle">` };
             ['spinny', 'gerald', 'needle', 'kevjr', 'duck', 'bones', 'slimothy', 'piggy'].forEach(k => { PET_ICON[k] = `<img src="${PETS[k].img}" alt="" style="display:inline-block;height:30px;vertical-align:middle;image-rendering:pixelated">`; });
             add(shopRow(`<img src="${PHOTO_CLAW}" alt="" style="display:inline-block;height:30px;vertical-align:middle">`, 'Claw & Disorder', 'THE WHEEL™ claw machine at Little St. Jeff\'s Prize Island, in the corner of the desert shack. New pets live inside. Nobody gets what they came for. Usually.', `Play: 1 🎰 token (you have ${tokens})`, () => { closeShop(); location.href = 'shack.html#claw'; }));
-            { const n = document.createElement('div'); n.className = 'text-sm text-slate-300'; n.textContent = `Up to ${PET_LIMIT} pets can be out at once (${activePets().length}/${PET_LIMIT} now). Clippy doesn't count. Clippy is not a pet. Clippy is a consequence.`; add(n); }
+            { const n = document.createElement('div'); n.className = 'text-sm text-slate-300'; n.textContent = `Up to ${PET_LIMIT} pets can be out at once (${activePets().length}/${PET_LIMIT} now). Switch which ones are out in ⚙️ Settings. Clippy doesn't count. Clippy is not a pet. Clippy is a consequence.`; add(n); }
             Object.entries(PETS).forEach(([k, p0]) => {
                 const p = PET_ICON[k] ? Object.assign({}, p0, { e: PET_ICON[k] }) : p0;
                 if (p.secret && !clippyUnlocked && !pets[k]) return;
@@ -10571,6 +10575,24 @@
     function equipTitle(t) { titleChoice = t; store.set('painWheelTitle', t); renderTitle(); renderShop(); renderLooks(); sendEvent({ k: 'title' }); }
     // ---------- Settings: switch what you bought (themes, needles, spin sounds, titles) ----------
     const HOLIDAY_SPR = () => ({ halloween: PHOTO_DRIFT_PUMPKIN, veterans: PHOTO_DRIFT_MEDAL, thanksgiving: PHOTO_DRIFT_TURKEY });
+    function renderPetPicker() {   // every pet you own, in Settings: tap to show or hide (up to PET_LIMIT out, Clippy is always out)
+        const g = $('petGrid'); if (!g) return; g.innerHTML = '';
+        const owned = Object.keys(PETS).filter(k => pets[k]);
+        { const act = activePets(), sh = store.get('painWheelPetsShown', {}); let ch = false;   // anything past the limit is really away: say so, so hiding one pet doesn't let another sneak out
+          owned.forEach(k => { if (k !== 'clippy' && !act.includes(k) && sh[k] !== false) { sh[k] = false; ch = true; } }); if (ch) store.set('painWheelPetsShown', sh); }
+        $('petCount').textContent = `(${activePets().length}/${PET_LIMIT} out)`;
+        if (!owned.length) { g.innerHTML = '<p class="text-[12px] text-slate-500">No pets yet. Adopt some in the 🛒 Shop, or win them at the claw machine in the desert shack.</p>'; return; }
+        owned.forEach(k => {
+            const p = PETS[k], on = petShown(k), icon = p.img ? `<img src="${p.img}" alt="" style="image-rendering:pixelated">` : (spriteFor(p.e, 40) || p.e);
+            lookTile(g, on && k !== 'clippy' ? true : k === 'clippy', p.name + (k === 'clippy' ? ' (always)' : on ? '' : ' (away)'), icon, () => {
+                if (k === 'clippy') { moveToast("📎 Clippy can't be put away. Clippy is forever. (Maybe a favor will do it someday.)"); return; }
+                const sh = store.get('painWheelPetsShown', {});
+                if (!on && activePets().length >= PET_LIMIT) { moveToast(`🐾 Only ${PET_LIMIT} pets out at once. Put one away first. The screen has a fire code.`); return; }
+                sh[k] = !on; store.set('painWheelPetsShown', sh); renderPets(); renderPetPicker();
+            }, on ? 'Out on the wheel. Tap to put away.' : 'Put away. Tap to send out.');
+            if (!on && k !== 'clippy') g.lastChild.style.opacity = '.55';
+        });
+    }
     function lookTile(grid, on, label, icon, onPick, title) {
         const t = document.createElement('button'); t.type = 'button'; t.className = 'cls-tile bg-slate-950 border border-slate-700 rounded-lg' + (on ? ' on' : '');
         t.title = title || label;
@@ -10597,6 +10619,7 @@
         Object.entries(NEEDLES).filter(([k]) => ownedNeedles[k]).forEach(([k, n]) => lookTile(ng, needleChoice === k, n.name.replace(/\s*👇/, ''), needleIcon(n), () => equipNeedle(k)));
         const pg = $('packGrid'); pg.innerHTML = '';
         Object.entries(TICK_PACKS).filter(([k]) => ownedPacks[k]).forEach(([k, p]) => lookTile(pg, tickPack === k, p.name, PACK_ICON()[k], () => equipPack(k), p.name + ' (click to hear it)'));
+        renderPetPicker();
         const tl = $('titleGrid'); tl.innerHTML = '';
         lookTile(tl, !titleChoice, 'No title', '🚫', () => equipTitle(''));
         TITLES.filter(([t]) => ownedTitles[t]).forEach(([t]) => lookTile(tl, titleChoice === t, t, '🏷️', () => equipTitle(t)));
