@@ -868,7 +868,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 2:21 AM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 2:22 AM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -5640,9 +5640,21 @@
         spinBtn.style.transform = p >= 1 ? `translate(${(Math.random() - 0.5) * 3}px, ${(Math.random() - 0.5) * 3}px)` : '';
         requestAnimationFrame(drawCharge);
     }
-    let chargeHum = null;   // a soft rising whine while you hold (synth until a real one is recorded)
+    const AUDIO_CHARGE = "media/audio_charge.mp3?v=acef86ed";
+    let chargeHum = null;   // the charge-up sound while you hold (synth whine if the clip can't load or classic sounds are on)
     function chargeSoundStart() {
         if (!soundOn()) return;
+        if (sfxStyle !== 'classic') {
+            ensureAudio();
+            const go = (buf) => {
+                if (!charging) return;
+                try { const src = audioCtx.createBufferSource(), g = audioCtx.createGain(); src.buffer = buf; src.playbackRate.value = 1.1;   // ~2s of build-up, matches FULL_CHARGE_MS
+                    g.gain.value = 1; src.connect(g); g.connect(masterGain); src.start(); chargeHum = { g, nodes: [src] }; } catch (e) {}
+            };
+            if (clipBuffers.charge) { go(clipBuffers.charge); return; }
+            loadBytes(AUDIO_CHARGE).then(ab => new Promise((res, rej) => audioCtx.decodeAudioData(ab, res, rej))).then(buf => { clipBuffers.charge = buf; go(buf); }).catch(() => {});
+            return;
+        }
         try {
             ensureAudio(); const t = audioCtx.currentTime, o = audioCtx.createOscillator(), o2 = audioCtx.createOscillator(), g = audioCtx.createGain(), f = audioCtx.createBiquadFilter();
             o.type = 'sawtooth'; o2.type = 'triangle'; f.type = 'lowpass'; f.frequency.setValueAtTime(700, t); f.frequency.linearRampToValueAtTime(2600, t + FULL_CHARGE_MS / 1000);
@@ -9747,6 +9759,7 @@
             ['🫀', "Reb's liver is becoming a guild-wide boss: every drink anyone takes hurts it. Buy it water, or take a double and hurt everyone. If it survives the week, everyone who didn't wreck it gets paid."],
             ['🛡️', "New slices: Taunting (Casimir would never; the untaunted add goes for Reb's liver), Can't Park There (repair bill included) and Forever Depends. 185 slices."],
             ['🦺', 'OSHA landings break things now: the rocket crashes, the banker trips, a slice falls off the wheel, a vehicle explodes, a pet trips, a top-bar button falls off (click it to bolt it back on), Clippy pokes his eye out, or the shack catches fire.'],
+            ['⚡', 'Holding the spin button has a real charge-up sound now.'],
             ['🕹️', "The claw machine is fully stocked: every prize you haven't won sits inside at once. Line up on whichever one you want."],
             ['📈', "Fixed: the stock market box vanished for anyone who had it minimized. It's back, and the — button works again."],
             ['🌵', 'New Forever button: WoW Forever is out and everyone left. Tumbleweeds, a sign on the door, and Clippy. Clippy never leaves.'],
