@@ -95,7 +95,11 @@ const CLAW_PRIZES = [
   { k: 'spinny', img: 'media/photo_pet_spinny.png', won: "🎡 YOU WON LIL' SPINNY. It has not stopped spinning since you picked it up." },
   { k: 'gerald', img: 'media/photo_pet_gerald.png', won: '🐹 YOU WON GERALD. He says he powers The Wheel. He wants a raise.' },
   { k: 'needle', img: 'media/photo_pet_needle.png', won: '📍 YOU WON THE NEEDLE. It is pointing at you. It will keep doing that.' },
-  { k: 'kevjr', img: 'media/photo_pet_kevjr.png', won: '🍕 YOU WON KEVIN JR. Congratulations? You have more Kevin now.' }];
+  { k: 'kevjr', img: 'media/photo_pet_kevjr.png', won: '🍕 YOU WON KEVIN JR. Congratulations? You have more Kevin now.' },
+  { k: 'duck', img: 'media/photo_pet_duck.png', won: '🦆 YOU WON RAID DUCK. It squeaked once and wiped the claw machine.' },
+  { k: 'bones', img: 'media/photo_pet_skeleton.png', won: '💀 YOU WON BONES. He brought his own token. He is not sharing it. (The skeleton in the corner says that is his little brother.)' },
+  { k: 'slimothy', img: 'media/photo_pet_slime.png', won: '🟢 YOU WON SLIMOTHY. The sunglasses stayed on the whole time.' },
+  { k: 'piggy', img: 'media/photo_pet_piggy.png', won: '🐷 YOU WON THE GOBLIN PIGGY BANK. It already wants your gold.' }];
 const fmt = (n) => { n = Math.round(n); if (n < 1e15) return n.toLocaleString() + 'g'; const e = Math.floor(Math.log10(n)); return (n / Math.pow(10, e)).toFixed(2) + 'e' + e + 'g'; };
 const queueAch = (id) => { const q = get('painWheelPendingAch', []); if (!q.includes(id)) q.push(id); put('painWheelPendingAch', q); };
 // sound: the real claw motor / token / crash files, at the wheel's volume

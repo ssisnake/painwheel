@@ -89,6 +89,11 @@ else {
   sfx('audio_door_chime'); addEventListener('pointerdown', () => { if (AC && AC.state === 'suspended') { AC.resume(); } }, { once: true });
 }
 
+// the dying fluorescent tube buzzes when it flickers (the CSS flicker runs on a 6.5s loop; it cuts out at 42% and 78%)
+const sfxQuiet = (name, g) => { try { if (!vol() || !AC || AC.state !== 'running') return; const go = (b) => { const s = AC.createBufferSource(), gn = AC.createGain(); s.buffer = b; gn.gain.value = g * vol(); s.connect(gn); gn.connect(AC.destination); s.start(); };
+  if (BUF[name]) return go(BUF[name]); fetch('media/' + name + '.mp3').then(r => r.arrayBuffer()).then(ab => AC.decodeAudioData(ab)).then(b => { BUF[name] = b; go(b); }).catch(() => {}); } catch (e) {} };
+setTimeout(function buzz() { if (!document.hidden) sfxQuiet('audio_flicker', .35); setTimeout(buzz, 6500); }, .41 * 6500);
+addEventListener('pointerdown', () => { if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} } }, { once: true });
 // ---- the store: aisle signs open that shop tab on the wheel, the clerk points, the rest is jokes ----
 const AISLES = [
   ['PETS', 'photo_811_sign_pets', 43, 26.6, 7.4, 'pets', 'Pets. They bite. The claw machine is in the desert shack.'],
@@ -140,6 +145,10 @@ const REGULARS = [
   ['photo_pet_gerald', 5.5, ['Reading the magazines. Not buying any. Classic me.', 'I power The Wheel, you know. Twelve-hour shifts. I am here for the coffee.', 'They will not let me pay in sunflower seeds. Unions have fallen for less.', 'Do not tell The Wheel I took a break.']],
   ['photo_pet_kevjr', 5.5, ['I want a lottery ticket! I have a Monopoly dollar!', "Dad says don't stand in fire. I don't know what that means. Dad doesn't either.", 'Can I have a hot dog? Can I have two? Can I have the roller?', 'I pulled the fire alarm. Like dad pulls bosses.']],
   ['photo_pet_needle', 4, ['*The Needle points at the CURSES aisle.*', '*The Needle points at you. Then at the Slurpee machine. Then back at you.*', '*The Needle points at the security camera. Huh.*', '*The Needle spins once and points at the door. Rude.*']],
+  ['photo_pet_duck', 5, ['Quack. (Raid Duck is buying a raid helmet. Another one.)', 'Quack quack. (It wants to know if the Slurpee counts as a flask.)', '*squeak* (it stood in the spill)']],
+  ['photo_pet_slime', 5.5, ['sup.', 'i am here for the Slurpees. we are related.', 'the lights are too bright. the glasses stay on.', '*slorp* (it ate a hot dog. whole.)']],
+  ['photo_pet_piggy', 6, ['Time is money, friend. Buy something.', 'I am not shoplifting. I am collecting.', 'The ATM is broken. I may have had something to do with that.']],
+  ['photo_pet_skeleton', 5, ['One token. I have one token left. I am NOT spending it here.', 'My brother is in the desert shack. Say hi. Do not play the claw.', '*rattles at the lottery tickets*']],
   ['photo_uwu_icon', 6, ['Forty energy drinks. Raid tonight.', 'Do not tell the guild you saw me here. I have a reputation.', 'The clerk gave me the boss discount. It is 0%.', 'I could wipe this whole store. I am choosing not to. Today.']]];
 const [rImg, rW, rLines] = pick(REGULARS), rx = 60 + Math.random() * 10; let rN = 0;
 const reg = add(`<button type="button" class="prop" id="customer" title="A regular" aria-label="A regular" style="left:${rx}%;width:${rW}%"><img src="media/${rImg}.png" alt=""></button>`);

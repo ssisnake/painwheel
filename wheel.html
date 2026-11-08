@@ -205,6 +205,17 @@
         /* shop */
         .shop-tab { background: #1e293b; color: #cbd5e1; border: 1px solid #334155; }
         .shop-tab-on { background: #f59e0b; color: #111; border-color: #fbbf24; }
+        /* shop window art kit (riveted iron + gold): tabs, item rows, BUY / OWNED / EQUIPPED, the close button */
+        #shopPanel .shop-tab { border: 9px solid transparent; border-image: var(--ui-tab) 22 fill stretch; background: none; color: #f5f5f4; border-radius: 0; padding: 0 6px; text-shadow: 0 1px 0 #000; }
+        #shopPanel .shop-tab:hover { filter: brightness(1.2); }
+        #shopPanel .shop-tab-on { border-image: var(--ui-tabon) 30 fill stretch; color: #fef3c7; }
+        #shopPanel .shop-row { border-style: solid; border-color: transparent; border-width: 8px 9px 8px 52px; border-image: var(--ui-row) 20 20 20 94 fill stretch; background: none; border-radius: 0; padding: 4px 6px 4px 26px !important; }
+        #shopPanel .shop-row > div:first-child > span:first-child { display: inline-flex; justify-content: center; width: 38px; margin-left: -72px; margin-right: 34px; vertical-align: middle; }
+        #shopPanel .ui-btn { background: none !important; padding: 0 !important; border: 0; display: inline-flex; align-items: center; gap: 4px; }
+        #shopPanel .ui-btn img { height: 30px; width: auto; display: block; image-rendering: pixelated; }
+        #shopPanel .ui-btn:not(:disabled):hover img { filter: brightness(1.15); }
+        #shopPanel .ui-price { display: inline-flex; align-items: center; height: 30px; padding: 0 10px; background: var(--ui-tag) 0 0 / 100% 100% no-repeat; color: #1c1917; font-weight: 900; font-size: calc(12px * var(--ts, 1)); white-space: nowrap; }
+        #shopPanel .shop-title { background: var(--ui-header) 0 0 / 100% 100% no-repeat; padding: 8px 18px 6px; color: #fcd34d; text-shadow: 0 2px 0 #000; }
         .scratch-cell { width: 48px; height: 48px; border-radius: 8px; border: 2px solid #b45309; display: flex; align-items: center; justify-content: center; font-size: 26px;
             background: repeating-linear-gradient(45deg,#a16207 0 6px,#ca8a04 6px 12px); }
         .scratch-cell.open { background: #0f172a; border-color: #f59e0b; animation: scratchPop .35s ease-out both; }
@@ -857,7 +868,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 12:03 AM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 1:46 AM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -1052,7 +1063,7 @@
     <div id="shopPanel" style="z-index: 72" class="fixed inset-0 hidden items-center justify-center bg-slate-950/90 p-4">
         <div class="w-full max-w-2xl flex flex-col rounded-2xl p-5 shadow-2xl border-2 border-amber-500" style="max-height:90vh;max-width:42rem;background: linear-gradient(170deg,#1c1402,#0f172a 45%,#052e16);">
             <div class="flex items-center justify-between mb-2">
-                <div class="text-lg font-black uppercase tracking-tight text-amber-300"><img class="hdr-ico" data-ico="SHOP" alt=""> The Goblin Shop</div>
+                <div class="shop-title text-lg font-black uppercase tracking-tight text-amber-300"><img class="hdr-ico" data-ico="SHOP" alt=""> The Goblin Shop</div>
                 <div class="flex items-center gap-3"><span id="shopGold" class="mono text-yellow-300 font-bold text-sm"></span><a id="shopBack811" href="811.html" class="hidden px-2.5 py-1 rounded-md font-extrabold" style="background:#f59e0b;color:#1c1917;font-size:calc(14px * var(--ts, 1));text-decoration:none">🏪 Back to the 8/11</a><button id="shopClose" class="text-slate-400 hover:text-white text-sm font-bold cursor-pointer">✕</button></div>
             </div>
             <div id="shopTabs" class="flex flex-wrap gap-1.5 mb-2"></div>
@@ -1624,10 +1635,10 @@
     const PHOTO_FAMILY_50S = "media/photo_family_50s.jpg?v=14e49b4c";
     const PHOTO_DYLAN_ROAD = "media/photo_dylan_road.jpg?v=ec785aa5";
     const PHOTO_DYLAN_DRONES = "media/photo_dylan_drones.jpg?v=7da22f8d";
-    const PHOTO_PET_SPINNY = "media/photo_pet_spinny.png?v=3792bf8d";
-    const PHOTO_PET_GERALD = "media/photo_pet_gerald.png?v=3d65edb9";
-    const PHOTO_PET_NEEDLE = "media/photo_pet_needle.png?v=a6485c9b";
-    const PHOTO_PET_KEVJR = "media/photo_pet_kevjr.png?v=91e218a5";
+    const PHOTO_PET_SPINNY = "media/photo_pet_spinny.png?v=714f2c95";
+    const PHOTO_PET_GERALD = "media/photo_pet_gerald.png?v=2affa731";
+    const PHOTO_PET_NEEDLE = "media/photo_pet_needle.png?v=76c75fa9";
+    const PHOTO_PET_KEVJR = "media/photo_pet_kevjr.png?v=cd77ac19";
     const PHOTO_BTN_HEARTH = "media/photo_btn_hearth.png?v=ef63b87f";
     const PHOTO_H_BTN_HEARTH = "media/photo_h_btn_hearth.png?v=29a5446c";
     const PHOTO_BTN_TOYS = "media/photo_btn_toys.png?v=eceb0f6d";
@@ -4903,12 +4914,62 @@
     const AUDIO_SINK = "media/audio_sink.mp3?v=257665dd";
     const AUDIO_FART_1 = "media/audio_fart_1.mp3?v=cbf8270a";
     const AUDIO_FART_2 = "media/audio_fart_2.mp3?v=0295a50c";
+    const PHOTO_ITEM_BADGE = "media/photo_item_badge.png?v=b7832eda";
+    const PHOTO_ITEM_BARREL = "media/photo_item_barrel.png?v=1ead128c";
+    const PHOTO_ITEM_BATTERY = "media/photo_item_battery.png?v=ba703a5c";
+    const PHOTO_ITEM_BEER = "media/photo_item_beer.png?v=6e999522";
+    const PHOTO_ITEM_BILLBOARD = "media/photo_item_billboard.png?v=6461f96d";
+    const PHOTO_ITEM_BROCHURE = "media/photo_item_brochure.png?v=14e29592";
+    const PHOTO_ITEM_CHARGER = "media/photo_item_charger.png?v=26f4e9b3";
+    const PHOTO_ITEM_CHATLOG = "media/photo_item_chatlog.png?v=bbaa2dd6";
+    const PHOTO_ITEM_CHEETO = "media/photo_item_cheeto.png?v=5014fab4";
+    const PHOTO_ITEM_COUPON = "media/photo_item_coupon.png?v=b3ef1576";
+    const PHOTO_ITEM_CUFFS = "media/photo_item_cuffs.png?v=5ce03f6b";
+    const PHOTO_ITEM_FINGER = "media/photo_item_finger.png?v=78b04efe";
+    const PHOTO_ITEM_GOLDBAR = "media/photo_item_goldbar.png?v=b0f5d96a";
+    const PHOTO_ITEM_HEADSET = "media/photo_item_headset.png?v=fcda3409";
+    const PHOTO_ITEM_HEALTHSTONE = "media/photo_item_healthstone.png?v=9cc10eb7";
+    const PHOTO_ITEM_HEARTHSTONE = "media/photo_item_hearthstone.png?v=04098f73";
+    const PHOTO_ITEM_HOTDOG = "media/photo_item_hotdog.png?v=107fc00d";
+    const PHOTO_ITEM_ICE = "media/photo_item_ice.png?v=0af7d741";
+    const PHOTO_ITEM_IRSGOBLIN = "media/photo_item_irsgoblin.png?v=5d440d0c";
+    const PHOTO_ITEM_LASSO = "media/photo_item_lasso.png?v=f12b594c";
+    const PHOTO_ITEM_MEGAPHONE = "media/photo_item_megaphone.png?v=170cd542";
+    const PHOTO_ITEM_MINIWHEEL = "media/photo_item_miniwheel.png?v=80e0d796";
+    const PHOTO_ITEM_MUG = "media/photo_item_mug.png?v=7d39a3f1";
+    const PHOTO_ITEM_PICKLES = "media/photo_item_pickles.png?v=64117ec0";
+    const PHOTO_ITEM_PILLS = "media/photo_item_pills.png?v=3744a055";
+    const PHOTO_ITEM_RADAR = "media/photo_item_radar.png?v=fb0fff34";
+    const PHOTO_ITEM_ROPE = "media/photo_item_rope.png?v=27ad2ab7";
+    const PHOTO_ITEM_SCRATCHER = "media/photo_item_scratcher.png?v=2c5048a6";
+    const PHOTO_ITEM_SKATEBOARD = "media/photo_item_skateboard.png?v=77f87196";
+    const PHOTO_ITEM_SLURPEE = "media/photo_item_slurpee.png?v=0f9b0e11";
+    const PHOTO_ITEM_SWORD = "media/photo_item_sword.png?v=55d3df90";
+    const PHOTO_ITEM_TOKEN = "media/photo_item_token.png?v=3f421924";
+    const PHOTO_ITEM_TROPHY = "media/photo_item_trophy.png?v=74f92c51";
+    const PHOTO_ITEM_VAULT = "media/photo_item_vault.png?v=ff3a2f35";
+    const PHOTO_ITEM_WELDMASK = "media/photo_item_weldmask.png?v=5fa9b7e2";
+    const PHOTO_ITEM_WHISTLE = "media/photo_item_whistle.png?v=7eecff48";
+    const PHOTO_PET_DUCK = "media/photo_pet_duck.png?v=59adb7ed";
+    const PHOTO_PET_PIGGY = "media/photo_pet_piggy.png?v=ab81346d";
+    const PHOTO_PET_SKELETON = "media/photo_pet_skeleton.png?v=22e234fe";
+    const PHOTO_PET_SLIME = "media/photo_pet_slime.png?v=23891045";
+    const PHOTO_UI_BUY = "media/photo_ui_buy.png?v=7c731a83";
+    const PHOTO_UI_CLOSE = "media/photo_ui_close.png?v=6fc22997";
+    const PHOTO_UI_EQUIPPED = "media/photo_ui_equipped.png?v=b706c1db";
+    const PHOTO_UI_HEADER = "media/photo_ui_header.png?v=93b01a7f";
+    const PHOTO_UI_OWNED = "media/photo_ui_owned.png?v=303f8473";
+    const PHOTO_UI_ROW = "media/photo_ui_row.png?v=a521e3b8";
+    const PHOTO_UI_TAB = "media/photo_ui_tab.png?v=adce01fe";
+    const PHOTO_UI_TABON = "media/photo_ui_tabon.png?v=d1bc7fed";
+    const PHOTO_UI_TAG = "media/photo_ui_tag.png?v=3b3da8d7";
+    const AUDIO_FLICKER = "media/audio_flicker.mp3?v=798123a0";   // the 8/11's dying light (used on 811.html)
     const SPRITE_OF = { '📞': PHOTO_TOY_PHONE, '🖐️': PHOTO_FINGER, '🍪': PHOTO_COOKIE_GOLD, '🍩': PHOTO_TOY_DONUT, '🧸': PHOTO_TOYBOX, '🚀': PHOTO_ROCKET,
         '🏐': PHOTO_VOLLEY, '🐔': PHOTO_CHICKEN, '🛸': PHOTO_UFO, '🧮': PHOTO_GIZ_GRIN, '🪙': PHOTO_COIN_1, '🫀': PHOTO_CLS_LIVER, '🥳': PHOTO_PARTY_HAT,
         '🛒': PHOTO_ICO_SHOP, '⚙️': PHOTO_ICO_SETTINGS, '📊': PHOTO_ICO_STATS, '🎒': PHOTO_ICO_BAG, '🏚️': PHOTO_HOUSE_0, '🛖': PHOTO_HOUSE_1, '🏠': PHOTO_HOUSE_2,
         '🏡': PHOTO_HOUSE_3, '🏘️': PHOTO_HOUSE_4, '🏰': PHOTO_HOUSE_5, '🛥️': PHOTO_YACHT_BIG, '🐾': PHOTO_CHICKEN, '🧿': PHOTO_TOY_DOLL, '🌾': PHOTO_CHICKEN,
         '🚗': PHOTO_COP_ICON, '🚓': PHOTO_COP_ICON, '🚑': PHOTO_AMB_ICON, '🐉': PHOTO_WHELP, '📎': PHOTO_CLIPPY, '👹': PHOTO_UWU_ICON, '🪩': PHOTO_DISCO, '🧊': PHOTO_ICEBERG,
-        '🚜': PHOTO_COMBINE, '🏜️': PHOTO_SHACK, '🔷': PHOTO_TOY_HEARTH, '🎡': PHOTO_PET_SPINNY, '🐹': PHOTO_PET_GERALD, '🌵': PHOTO_TUMBLEWEED, '🎨': PHOTO_811_PALETTE, '🧪': PHOTO_811_POTION, '🎟️': PHOTO_811_TICKET };
+        '🚜': PHOTO_COMBINE, '🏜️': PHOTO_SHACK, '🔷': PHOTO_TOY_HEARTH, '🎡': PHOTO_PET_SPINNY, '🐹': PHOTO_PET_GERALD, '🌵': PHOTO_TUMBLEWEED, '🎨': PHOTO_811_PALETTE, '🧪': PHOTO_811_POTION, '🎟️': PHOTO_811_TICKET, '🎰': PHOTO_ITEM_TOKEN, '🏦': PHOTO_ITEM_VAULT, '📣': PHOTO_ITEM_MEGAPHONE };
     const spriteFor = (e, h) => SPRITE_OF[e] ? sprImg(SPRITE_OF[e], h) : null;
     // ---------- ⚔️ favorite class (shows next to your name) ----------
     const WOW_CLASSES = [['warrior', 'Warrior', '⚔️', '#C69B6D'], ['paladin', 'Paladin', '🔨', '#F48CBA'], ['hunter', 'Hunter', '🏹', '#AAD372'], ['rogue', 'Rogue', '🗡️', '#FFF468'],
@@ -7139,7 +7200,12 @@
         else if (e.key === 'painWheelStats' && v && typeof v === 'object') { Object.assign(stats, v); }
         else if (e.key === 'painWheelAllTimeSpins') { const n = parseInt(e.newValue, 10); if (n > allTimeSpins) { allTimeSpins = n; updateSpinBadge(); } }
     });
-    const ITEM_ICON = { 'Golden Chocolate Donut': PHOTO_TOY_DONUT };
+    const ITEM_ICON = { 'Golden Chocolate Donut': PHOTO_TOY_DONUT, 'Ret Paladin 6% Buff Coupon': PHOTO_ITEM_COUPON, 'Ashbringer (Plastic Replica)': PHOTO_ITEM_SWORD,
+        'Goblin Timeshare Brochure': PHOTO_ITEM_BROCHURE, 'Knob Creek Single Barrel': PHOTO_ITEM_BARREL, 'Torn Discord Log': PHOTO_ITEM_CHATLOG, "Kevin's ROG Ally Battery": PHOTO_ITEM_BATTERY,
+        "ChAoTiC's Blown-Out Headset": PHOTO_ITEM_HEADSET, 'Frayed Leap of Faith Rope': PHOTO_ITEM_ROPE, 'Jar of Sewer Pickle Juice': PHOTO_ITEM_PICKLES, 'Expired Healthstone': PHOTO_ITEM_HEALTHSTONE,
+        'Broken Hearthstone': PHOTO_ITEM_HEARTHSTONE, 'Half a Stale Cheeto': PHOTO_ITEM_CHEETO, 'Road Beer (Still Cold)': PHOTO_ITEM_BEER, "Axazon's Empty Heart Pill Bottle": PHOTO_ITEM_PILLS,
+        "Biblehumping's Holy Lasso": PHOTO_ITEM_LASSO, "Rubber Replica of Biblehumping's Finger": PHOTO_ITEM_FINGER, "Corrinne's Platinum Achievement": PHOTO_ITEM_BADGE, "Kevin's Participation Trophy": PHOTO_ITEM_TROPHY };
+    const itemIcon = (name) => ITEM_ICON[name] || (String(name).startsWith('Slurpee') ? PHOTO_ITEM_SLURPEE : null);
     function renderBag() {
         const g = $('bagGrid'); g.innerHTML = '';
         const items = Object.entries(bag).sort((a, b) => Q_ORDER.indexOf(a[1].q) - Q_ORDER.indexOf(b[1].q) || a[0].localeCompare(b[0]));
@@ -7149,7 +7215,7 @@
             const d = document.createElement('div'); d.className = `bg-slate-950/70 border rounded-lg px-3 py-1.5 cursor-pointer q-${v.q}`;
             const top = document.createElement('div'); top.className = 'flex items-center justify-between gap-2';
             const a = document.createElement('span'); a.className = 'font-bold'; a.textContent = `[${name}]`;
-            if (ITEM_ICON[name]) { const im = document.createElement('img'); im.src = ITEM_ICON[name]; im.alt = ''; im.style.cssText = 'display:inline-block;height:22px;width:auto;vertical-align:middle;margin-right:6px'; a.prepend(im); }
+            if (itemIcon(name)) { const im = document.createElement('img'); im.src = itemIcon(name); im.alt = ''; im.style.cssText = 'display:inline-block;height:22px;width:auto;vertical-align:middle;margin-right:6px'; a.prepend(im); }
             const b = document.createElement('span'); b.className = 'text-slate-400 text-xs mono shrink-0'; b.textContent = `${v.q} ×${v.n}`;
             top.append(a, b); d.appendChild(top);
             if (bagOpenItem === name) {
@@ -7665,12 +7731,24 @@
         say: (t) => t === 'KEVIN' ? pick(['I POINTED AT KEVIN AGAIN. I AM SO SORRY.', 'do not blame me. i only point. the wheel decides.']) : pick(['*points at you*', '*points at your gold* hm.', 'i have pointed at Kevin 40,000 times', 'i am not rigged. i am VERY rigged.', 'i see what you did there. i am pointing at it.', '*points at the exit*', 'stop looking at me. i am looking at you.']) };
     PETS.kevjr = { e: '🍕', img: PHOTO_PET_KEVJR, w: 32, name: 'Kevin Jr.', cost: 0, claw: true, desc: 'One single Kevin slice that got loose. He is the smallest Kevin. He is still Kevin.',
         say: (t) => t === 'KEVIN' ? pick(['DAD?!', 'that is my dad. that is ALL my dads.', 'family reunion!!']) : pick(['i am Kevin (small)', 'can i have some gold. kevin wants some gold.', 'i am 1/150th of a Kevin', 'dad says hi', 'i was on the wheel once. now i am free.', 'which way to the boss? (i am the boss)']) };
+    PETS.duck = { e: '🦆', img: PHOTO_PET_DUCK, w: 34, name: 'Raid Duck', cost: 0, claw: true, desc: 'A rubber duck in a raid helmet. Has wiped more raids than Kevin. Squeaks when it stands in fire (always).',
+        say: (t) => t === 'KEVIN' ? pick(['QUACK. (that is duck for "not again")', 'i pulled the boss. kevin pulled the boss. we are the same.']) : pick(['quack (that means "pull")', 'i have the raid helmet. i do not have the raid', '*squeak* i stood in it', 'flask? i am a duck', 'quack quack (bloodlust when?)', 'i float. the raid does not.']) };
+    PETS.bones = { e: '💀', img: PHOTO_PET_SKELETON, w: 32, name: 'Bones', cost: 0, claw: true, desc: "The shack skeleton's little brother. Still hugging his last casino token. He is NOT giving it to you.",
+        say: (t) => t === 'KEVIN' ? pick(['my brother died waiting for the claw. you landed on Kevin. who is worse off', 'kevin. figures.']) : pick(['this token is mine. MINE.', 'one more play. just one more.', 'my brother says hi. from the shack. he cannot leave.', 'the claw is rigged. i would know.', '*rattles*', 'i am not dead. i am just very, very patient.']) };
+    PETS.slimothy = { e: '🟢', img: PHOTO_PET_SLIME, w: 34, name: 'Slimothy', cost: 0, claw: true, desc: 'A slime in sunglasses. Too cool for the claw machine. Got grabbed anyway. Has not taken the glasses off since.',
+        say: (t) => t === 'KEVIN' ? pick(['kevin. cool. cool cool cool. (not cool)', '*slides away from the Kevin*']) : pick(['sup.', 'i am not sticky. you are sticky.', '*slorp*', 'the sun is not out. the glasses stay on.', 'i was a slurpee once. long story.', 'too cool to spin. spin me anyway.']) };
+    PETS.piggy = { e: '🐷', img: PHOTO_PET_PIGGY, w: 38, name: 'Goblin Piggy Bank', cost: 0, claw: true, desc: 'A goblin-shaped piggy bank. Feed it gold. It will never, ever give any back. Very on brand.',
+        say: (t) => t === 'KEVIN' ? pick(['Kevin owes me 40 gold. I am still waiting.', 'no refunds. especially for Kevin.']) : pick(['feed me gold.', 'time is money, friend.', 'there is no slot on the bottom. there never was.', '*coins jingle* (yours. now mine.)', 'interest rate: yes', 'i am saving for a yacht. YOUR yacht.']) };
     const CLAW_PRIZES = [
         { k: 'volley', img: PHOTO_VOLLEY, won: '🏐 YOU WON VOLLEY McBALLFACE. He is yours now. He does not explain the handprint.', fun: '🏐 VOLLEY McBALLFACE HAS BEEN RESCUED FROM THE CLAW', hi: 'IT IS SO NICE TO BE OUT OF THE CLAW' },
         { k: 'spinny', img: PHOTO_PET_SPINNY, won: "🎡 YOU WON LIL' SPINNY. It has not stopped spinning since you picked it up.", fun: "🎡 LIL' SPINNY ESCAPED THE CLAW (STILL SPINNING)", hi: 'wheeeeee. i am out. wheeeee.' },
         { k: 'gerald', img: PHOTO_PET_GERALD, won: '🐹 YOU WON GERALD. He says he powers The Wheel. He wants a raise.', fun: '🐹 GERALD IS FREE. WHO IS POWERING THE WHEEL NOW?', hi: 'i am free. who is running the wheel? not me. union rules.' },
         { k: 'needle', img: PHOTO_PET_NEEDLE, won: '📍 YOU WON THE NEEDLE. It is pointing at you. It will keep doing that.', fun: '📍 THE NEEDLE HAS LEFT THE WHEEL. THE WHEEL IS POINTLESS NOW.', hi: '*points at you* found you.' },
-        { k: 'kevjr', img: PHOTO_PET_KEVJR, won: '🍕 YOU WON KEVIN JR. Congratulations? You have more Kevin now.', fun: '🍕 A KEVIN SLICE ESCAPED. IT IS SMALL. IT IS STILL KEVIN.', hi: 'hi dad. wait you are not dad.' }];
+        { k: 'kevjr', img: PHOTO_PET_KEVJR, won: '🍕 YOU WON KEVIN JR. Congratulations? You have more Kevin now.', fun: '🍕 A KEVIN SLICE ESCAPED. IT IS SMALL. IT IS STILL KEVIN.', hi: 'hi dad. wait you are not dad.' },
+        { k: 'duck', img: PHOTO_PET_DUCK, won: '🦆 YOU WON RAID DUCK. It squeaked once and wiped the claw machine.', fun: '🦆 RAID DUCK ESCAPED THE CLAW (IT PULLED EARLY)', hi: 'quack. (that means "pull")' },
+        { k: 'bones', img: PHOTO_PET_SKELETON, won: '💀 YOU WON BONES. He brought his own token. He is not sharing it.', fun: '💀 BONES GOT OUT. HIS BROTHER IS STILL IN THE SHACK.', hi: 'finally. do NOT touch my token.' },
+        { k: 'slimothy', img: PHOTO_PET_SLIME, won: '🟢 YOU WON SLIMOTHY. The sunglasses stayed on the whole time.', fun: '🟢 SLIMOTHY SLID OUT OF THE CLAW. TOO COOL.', hi: 'sup.' },
+        { k: 'piggy', img: PHOTO_PET_PIGGY, won: '🐷 YOU WON THE GOBLIN PIGGY BANK. It already wants your gold.', fun: '🐷 THE GOBLIN PIGGY BANK IS LOOSE. HIDE YOUR GOLD.', hi: 'feed me. gold. now.' }];
     const PET_LIMIT = 4;   // pets on screen at once (the rest wait in the shop)
     const petShown = (k) => k === 'clippy' || store.get('painWheelPetsShown', {})[k] !== false;   // Clippy can't be hidden (someday: a favor)
     const activePets = () => Object.keys(PETS).filter(k => k !== 'clippy' && pets[k] && petShown(k)).slice(0, PET_LIMIT);   // Clippy doesn't count: he's less a pet, more a punishment
@@ -8004,7 +8082,7 @@
         em.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(-25deg) translateY(-6px)' }, { transform: 'rotate(95deg) translateY(4px)' }], { duration: 450, easing: 'ease-in', fill: 'forwards' });
         playCrash();
         const sign = document.createElement('div'); sign.textContent = '🚧'; sign.style.cssText = `position:fixed;z-index:77;left:${r.right + 4}px;top:${r.bottom - 46}px;font-size:40px;line-height:1;pointer-events:none`; document.body.appendChild(sign);
-        const ow = { murloc: 'MRGLGL!! (my fin!)', accountant: 'I am billing the floor for this.', chicken: 'BAWK! (worker\'s comp)', whelp: '*sad little smoke puff*', volley: 'i am a ball. how did i trip.', spinny: 'i rolled. i am a wheel. that is just rolling.', gerald: 'my wheel threw me. betrayal.', needle: 'i fell. i am pointing at the floor now. guilty.', kevjr: 'i fell on my point. kevin sad.' }[k] || 'OW.';
+        const ow = { murloc: 'MRGLGL!! (my fin!)', accountant: 'I am billing the floor for this.', chicken: 'BAWK! (worker\'s comp)', whelp: '*sad little smoke puff*', volley: 'i am a ball. how did i trip.', spinny: 'i rolled. i am a wheel. that is just rolling.', gerald: 'my wheel threw me. betrayal.', needle: 'i fell. i am pointing at the floor now. guilty.', kevjr: 'i fell on my point. kevin sad.', duck: '*SQUEAK* (that was the whole health bar)', bones: '*clatter* ...i am fine. the token is fine.', slimothy: '*splat* ...still cool.', piggy: '*coins everywhere* NOBODY TOUCH THOSE' }[k] || 'OW.';
         setTimeout(() => petSay(k, ow), 400);
         setTimeout(() => oshaSay(pick(['Wet floor, no sign. The sign showed up AFTER. Classic.', 'Pet-related slip-and-fall. Third one this week.', 'Floor is rated for zero (0) pets.']), r.left + r.width / 2, r.top - 40), 1300);
         setTimeout(() => { em.animate([{ transform: 'rotate(95deg) translateY(4px)' }, { transform: 'rotate(0)' }], { duration: 500, fill: 'forwards' }).onfinish = () => { em.getAnimations().forEach(a => a.cancel()); }; w._talking = false; }, 4200);
@@ -9680,6 +9758,9 @@
             ['🥃', "Pouring Reb a double only hurts the liver 1% now (it was 30%), and the liver got a fresh start. The weekly liver reward and Uwutek kill rewards now count your vault gold too."],
             ['🕹️', 'The claw machine is stingier: lined up is a 15% grab now, so it does not get cleaned out on day one.'],
             ['📈', 'Fixed: during WoW Forever week the fake $0.00 screen blocked stonks. It has a Trade anyway button now.'],
+            ['🎒', 'Real pixel art for most bag items, the casino token, the Goblin Vault, and the Paid Shoutout and Goblin IRS profile pictures.'],
+            ['🕹️', "The claw machine has 4 new prizes: Raid Duck, Bones (the shack skeleton's little brother), Slimothy and the Goblin Piggy Bank. Lil' Spinny, Gerald, The Needle and Kevin Jr. have real art now."],
+            ['🛒', 'The shop got a makeover: riveted iron tabs and rows, real BUY / OWNED / EQUIPPED buttons.'],
             ['🍀', 'The 8/11 bad-luck protection is stronger: +6% per spin (up to 90%) until you land it.'],
             ['⏳', 'WoW Forever mode only turns on when YOU press the Forever button now. It no longer switches itself on during launch week.'],
             ['💳', 'Goblin Express has card tiers: Red when you sign up, Platinum after 10 charges, Black after 50. Same 400% APR either way.'],
@@ -9891,7 +9972,7 @@
     var guildPlayers = [];
     function shopRow(icon, name, desc, btnLabel, onClick, state) {   // state: 'buy' | 'owned' | 'equip' | 'equipped'
         const row = document.createElement('div');
-        row.className = 'flex items-center justify-between gap-2 bg-slate-950/60 border border-slate-700 rounded-lg px-3 py-1.5 text-sm';
+        row.className = 'shop-row flex items-center justify-between gap-2 bg-slate-950/60 border border-slate-700 rounded-lg px-3 py-1.5 text-sm';
         const left = document.createElement('div'); left.className = 'min-w-0';
         left.innerHTML = '<span style="font-size:20px"></span> <b></b><div class="text-[11px] text-slate-400"></div>';
         const spr = String(icon)[0] === '<' ? icon : spriteFor(icon, 28);
@@ -9901,6 +9982,10 @@
         const cls = { buy: 'bg-emerald-700 hover:bg-emerald-600 text-white', equip: 'bg-sky-700 hover:bg-sky-600 text-white', equipped: 'bg-amber-500 text-black', owned: 'bg-slate-700 text-slate-300' }[state || 'buy'];
         b.className = 'shrink-0 px-2.5 py-1 rounded text-xs font-bold cursor-pointer ' + cls;
         b.textContent = btnLabel; b.disabled = state === 'owned' || state === 'equipped';
+        {   // the art-kit buttons: BUY (with a gold price tag), OWNED, EQUIPPED
+            const art = state === 'buy' && /^Buy: /.test(btnLabel) ? PHOTO_UI_BUY : state === 'owned' && btnLabel === 'Owned' ? PHOTO_UI_OWNED : state === 'equipped' && btnLabel === 'Equipped' ? PHOTO_UI_EQUIPPED : null;
+            if (art) { b.className = 'shrink-0 ui-btn cursor-pointer'; b.innerHTML = (art === PHOTO_UI_BUY ? '<span class="ui-price"></span>' : '') + `<img src="${art}" alt="${btnLabel}">`; if (art === PHOTO_UI_BUY) b.querySelector('.ui-price').textContent = btnLabel.slice(5); b.title = btnLabel; }
+        }
         b.addEventListener('click', (e) => { e.stopPropagation(); payWith = 'wallet'; onClick && onClick(); });
         // when there's more than one way to pay: wallet gold, vault gold, or the Goblin Express card
         const extra = [];
@@ -9924,7 +10009,7 @@
     function shopHead(text) { const h = document.createElement('div'); h.className = 'text-xs font-bold uppercase tracking-wider text-slate-400 mt-2'; h.textContent = text; return h; }
     function renderShop() {
         const body = $('shopBody'); if (!body) return;
-        $('shopGold').innerHTML = sprImg(PHOTO_COIN_1, 18) + ' ' + fmt(gold) + (vaultGold() > 0 ? '  ·  🏦 ' + fmt(vaultGold()) : '') + (hasGoblinCard() ? '  ·  ' + sprImg(cardImg(), 16) + ' ' + fmt(cardAvailable()) + ' credit' : '');
+        $('shopGold').innerHTML = sprImg(PHOTO_COIN_1, 18) + ' ' + fmt(gold) + (vaultGold() > 0 ? '  ·  ' + sprImg(PHOTO_ITEM_VAULT, 16) + ' ' + fmt(vaultGold()) : '') + (hasGoblinCard() ? '  ·  ' + sprImg(cardImg(), 16) + ' ' + fmt(cardAvailable()) + ' credit' : '');
         $('shopTabs').querySelectorAll('button').forEach(b => b.classList.toggle('shop-tab-on', b.dataset.tab === shopTab));
         body.innerHTML = '';
         const add = (el) => body.appendChild(el);
@@ -10011,7 +10096,7 @@
             const PET_ICON = { murloc: `<span style="display:inline-block;width:30px;height:27px;vertical-align:middle;background:url(${PHOTO_MURLOC_SHEET}) 0 0 / 600% 100% no-repeat"></span>`,
                 chicken: `<img src="${PHOTO_CHICKEN}" alt="" style="display:inline-block;height:28px;vertical-align:middle">`, whelp: `<img src="${PHOTO_WHELP}" alt="" style="display:inline-block;height:28px;vertical-align:middle">`,
                 accountant: `<img src="${PHOTO_GIZ_GRIN}" alt="" style="display:inline-block;height:34px;vertical-align:middle">`, volley: `<img src="${PHOTO_VOLLEY}" alt="" style="display:inline-block;height:28px;vertical-align:middle">` };
-            ['spinny', 'gerald', 'needle', 'kevjr'].forEach(k => { PET_ICON[k] = `<img src="${PETS[k].img}" alt="" style="display:inline-block;height:30px;vertical-align:middle;image-rendering:pixelated">`; });
+            ['spinny', 'gerald', 'needle', 'kevjr', 'duck', 'bones', 'slimothy', 'piggy'].forEach(k => { PET_ICON[k] = `<img src="${PETS[k].img}" alt="" style="display:inline-block;height:30px;vertical-align:middle;image-rendering:pixelated">`; });
             add(shopRow(`<img src="${PHOTO_CLAW}" alt="" style="display:inline-block;height:30px;vertical-align:middle">`, 'Claw & Disorder', 'THE WHEEL™ claw machine at Little St. Jeff\'s Prize Island, in the corner of the desert shack. New pets live inside. Nobody gets what they came for. Usually.', `Play: 1 🎰 token (you have ${tokens})`, () => { closeShop(); location.href = 'shack.html#claw'; }));
             { const n = document.createElement('div'); n.className = 'text-sm text-slate-300'; n.textContent = `Up to ${PET_LIMIT} pets can be out at once (${activePets().length}/${PET_LIMIT} now). Clippy doesn't count. Clippy is not a pet. Clippy is a consequence.`; add(n); }
             Object.entries(PETS).forEach(([k, p0]) => {
@@ -10340,6 +10425,8 @@
         $('shopBtn').addEventListener('click', () => { open811(); $('shopBtn').blur(); });   // the 8/11 IS the shop now
         lockShopBtn();
         $('shopClose').addEventListener('click', closeShop);
+        $('shopClose').innerHTML = `<img src="${PHOTO_UI_CLOSE}" alt="Close" style="width:34px;height:auto;display:block">`;
+        [['--ui-tab', PHOTO_UI_TAB], ['--ui-tabon', PHOTO_UI_TABON], ['--ui-row', PHOTO_UI_ROW], ['--ui-tag', PHOTO_UI_TAG], ['--ui-header', PHOTO_UI_HEADER]].forEach(([v, u]) => document.documentElement.style.setProperty(v, `url("${u}")`));
         $('hpShopBtn').addEventListener('click', () => { $('houseClose').click(); openShop('scratch'); });
         $('hpPetBtn').addEventListener('click', () => { $('houseClose').click(); openShop('pets'); });
     })();
@@ -10439,6 +10526,7 @@
         chicken: ['BAWK BAWK BAWK (in rhythm)', '*does the chicken dance*', 'bok bok 🕺'], whelp: ['*hic* 🔥 *hic* 🔥 (on beat)', 'RAWR 🎶', '*breathes a little fire on the dance floor*'],
         spinny: ['wheeeeeee (dancing is just spinning)', 'i was BORN for this'], gerald: ['this is just running but with music', 'overtime pay for dancing?'],
         needle: ['*points at the dance floor*', '*points at Clippy* no.'], kevjr: ['kevin dance!!', 'dad would be so proud'],
+        duck: ['*squeak squeak* (dancing)', 'quack 🕺'], bones: ['*rattle rattle* (in rhythm)', 'the token dances with me'], slimothy: ['*wobbles to the beat*', 'too cool to dance. dancing anyway.'], piggy: ['*jingles*', 'dancing costs 5 gold'],
         volley: ['*bobs to the beat*', 'I HAVE NOT DANCED SINCE THE ISLAND', 'the handprint is doing the robot'],
         clippy: ["It looks like you're trying to dance. Would you like help?", '*paperclip worm*', 'I have been waiting ' + CLIPPY_AGE + ' years for this. My joints have not.'] };
     const PARTY_VEH_LINES = ['🚑 Biblehumping: Is this a party or a mass casualty event? Asking for work.', '🚓 ChAoTiC: Noise complaint. I am the noise complaint.', '🚑 Biblehumping: I am on call. This is how I am on call.',
@@ -10739,7 +10827,7 @@
     const SQ_PIC = { elan: SQ_IMG(PHOTO_ROCKET), vince: SQ_IMG(PHOTO_TOY_PHONE),
         kevin: SQ_PHOTO(PHOTO_AV_KEVIN), casimir: SQ_PHOTO(PHOTO_AV_CASIMIR), grandma: SQ_IMG(PHOTO_COOKIE_GOLD),   // Grandma is still a temp
         alt: () => `<span style="display:grid;place-items:center;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b"><img src="${PHOTO_COP_ICON}" alt="" style="width:30px;height:30px;object-fit:contain;filter:hue-rotate(150deg) saturate(1.4)"></span>`,
-        reb: SQ_IMG(PHOTO_CLS_LIVER), goblinx: SQ_PHOTO(PHOTO_GX_AV), shack: SQ_IMG(PHOTO_SHACK), yacht: SQ_IMG(GIF_YACHT), uwutek: SQ_IMG(PHOTO_UWU_ICON), chaotic: () => `<span style="display:block;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b;display:grid;place-items:center">${copSprite(false, 0.5)}</span>`,
+        reb: SQ_IMG(PHOTO_CLS_LIVER), goblinx: SQ_PHOTO(PHOTO_GX_AV), shout: SQ_IMG(PHOTO_ITEM_MEGAPHONE), irs: SQ_IMG(PHOTO_ITEM_IRSGOBLIN), shack: SQ_IMG(PHOTO_SHACK), yacht: SQ_IMG(GIF_YACHT), uwutek: SQ_IMG(PHOTO_UWU_ICON), chaotic: () => `<span style="display:block;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b;display:grid;place-items:center">${copSprite(false, 0.5)}</span>`,
         bible: () => `<span style="display:block;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b;display:grid;place-items:center">${ambSprite(false, 0.5)}</span>` };
     const SQ_AMBIENT = [
         ['kevin', 'just landed on myself again. this wheel is RIGGED. who do i report this to'], ['casimir', 'me'],
