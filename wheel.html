@@ -550,12 +550,13 @@
         .lp-status { margin-top: 8px; font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 12px; color: #4ade80; }
         .lp-status.busy { color: #fb923c; }
         .lp-stats { margin-top: 4px; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #cbd5e1; line-height: 1.5; }
-        .lp-site { position: relative; width: 210px; height: 162px; flex: none; }
+        .lp-site { position: relative; width: 190px; height: 200px; flex: none; }
+        .lp-padimg { position: absolute; left: 0; bottom: 0; width: 190px; height: auto; pointer-events: none; image-rendering: pixelated; }
         .lp-gantry { position: absolute; left: 34px; bottom: 18px; width: 22px; height: 128px; border: 2px solid #f97316; border-bottom: 0;
             background: repeating-linear-gradient(45deg, transparent 0 9px, #f97316 9px 11px), repeating-linear-gradient(-45deg, transparent 0 9px, #f97316 9px 11px); }
         .lp-beacon { position: absolute; left: 50%; top: -9px; width: 9px; height: 9px; margin-left: -4.5px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 10px #ef4444; animation: lpBeacon 2.4s ease-in-out infinite; }
         @keyframes lpBeacon { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
-        .lp-rocket { position: absolute; left: 66px; bottom: 18px; font-size: 92px; line-height: 1; background: none; border: 0; padding: 0; cursor: pointer; transform: none; transform-origin: 50% 100%;
+        .lp-rocket { position: absolute; left: 99px; translate: -50% 0; bottom: 58px; font-size: 92px; line-height: 1; background: none; border: 0; padding: 0; cursor: pointer; transform: none; transform-origin: 50% 100%;
             filter: drop-shadow(0 0 14px rgba(250,204,21,.35)); animation: lpIdle 2.8s ease-in-out infinite; transition: opacity .3s; }
         .lp-rocket:hover { filter: drop-shadow(0 0 22px rgba(250,204,21,.8)); }
         @keyframes lpIdle { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(0, -3px) rotate(.6deg); } }
@@ -564,12 +565,14 @@
         .lp-base { position: absolute; left: 10px; right: 10px; bottom: 0; height: 18px; border-radius: 4px 4px 0 0; border-top: 2px solid #475569;
             background: repeating-linear-gradient(135deg, #facc15 0 12px, #111827 12px 24px); }
         .lp-steam { position: absolute; bottom: 14px; width: 46px; height: 30px; border-radius: 50%; background: radial-gradient(closest-side, rgba(226,232,240,.75), transparent); animation: lpSteam 3s ease-out infinite; pointer-events: none; }
-        .lp-steam.s1 { left: 48px; } .lp-steam.s2 { left: 122px; animation-delay: 1.5s; }
+        .lp-steam { bottom: 50px !important; } .lp-steam.s1 { left: 52px; } .lp-steam.s2 { left: 110px; animation-delay: 1.5s; }
         @keyframes lpSteam { 0% { transform: translate(0, 0) scale(.4); opacity: 0; } 25% { opacity: .9; } 100% { transform: translate(var(--dx, -26px), -30px) scale(1.6); opacity: 0; } }
         .lp-steam.s2 { --dx: 26px; }
         .lp-go { position: relative; align-self: center; padding-bottom: 14px; text-align: center; }
-        .lp-btn { position: relative; cursor: pointer; padding: 12px 22px; border-radius: 12px; border: 2px solid #fecaca; background: linear-gradient(180deg, #ef4444, #b91c1c); color: #fff; font-weight: 900; font-size: 18px; letter-spacing: .12em; }
-        .lp-btn::after { content: ""; position: absolute; inset: -2px; border-radius: 12px; border: 3px solid rgba(239,68,68,.7); pointer-events: none; animation: lpPulse 2.2s ease-out infinite; will-change: transform, opacity; }
+        .lp-btn { position: relative; cursor: pointer; padding: 0; border: 0; background: none; color: #fde68a; font-weight: 900; font-size: 14px; letter-spacing: .1em; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; width: 120px; height: 150px; }
+        .lp-btn img { width: 120px; height: auto; display: block; image-rendering: pixelated; filter: drop-shadow(0 4px 6px rgba(0,0,0,.6)); }
+        .lp-btn span { margin-top: 2px; }
+
         .lp-btn:hover { filter: brightness(1.12); }
         .lp-btn:disabled { opacity: .5; cursor: default; filter: grayscale(.5); }
         .lp-btn:disabled::after { animation: none; opacity: 0; }
@@ -854,7 +857,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 8:17 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 8:48 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -1277,12 +1280,11 @@
                         <div id="lpStats" class="lp-stats"></div>
                     </div>
                     <div class="lp-site">
-                        <div class="lp-gantry"><div class="lp-beacon"></div></div>
-                        <button id="padRocket" class="lp-rocket" title="Click to launch"><img id="padRocketImg" alt="🚀" style="display:block;height:120px;width:auto"></button>
+                        <img id="lpPadImg" class="lp-padimg" alt="">
+                        <button id="padRocket" class="lp-rocket" title="Click to launch"><img id="padRocketImg" alt="🚀" style="display:block;height:96px;width:auto"></button>
                         <div class="lp-steam s1"></div><div class="lp-steam s2"></div>
-                        <div class="lp-base"></div>
                     </div>
-                    <div class="lp-go"><button id="lpLaunch" class="lp-btn">LAUNCH</button><div id="lpHint" class="lp-hint">Where will it land? Nobody knows.</div></div>
+                    <div class="lp-go"><button id="lpLaunch" class="lp-btn" aria-label="Launch"><img id="lpBtnImg" alt=""><span id="lpBtnTxt">LAUNCH</span></button><div id="lpHint" class="lp-hint">Where will it land? Nobody knows.</div></div>
                 </div>
             </div>
         </div>
@@ -3546,7 +3548,7 @@
         lullaby: { play: () => playLullabySound(),     cooldownMin: 0 },
         honk:    { play: () => AUDIO_CLUSSY ? playClip('clussy', AUDIO_CLUSSY, playHonkSound) : playHonkSound(), cooldownMin: 0 },  // Clussy
         buzz:    { play: () => VIDEO_BUZZ ? null : AUDIO_BUZZ ? playClip('buzz', AUDIO_BUZZ, playWinSound) : playWinSound(), cooldownMin: 0 },  // Buzz
-        fart:    { play: () => playFartSound(),        cooldownMin: 0 },
+        fart:    { play: () => { const i = Math.random() < .5 ? 1 : 2; playClip('fart' + i, i === 1 ? AUDIO_FART_1 : AUDIO_FART_2, playFartSound); }, cooldownMin: 0 },
         ekg:     { play: () => playDefibSound(),       cooldownMin: 0 },  // Axa's heart
         croissant: { play: () => {}, cooldownMin: 0 },  
         holy:    { play: () => playHolySound(),        cooldownMin: 0 },  // Ret Paladin choir + bell
@@ -3833,7 +3835,7 @@
     // Plays an embedded mp3 clip through the master volume (decoded once, then cached).
     const clipBuffers = {}, clipSources = {};
     // Sound style: 'classic' skips the new recorded sounds and uses the original synth ones
-    const NEW_CLIPS = /^(rocketboom|achieve|fanfare|trombone|vcrash|crash|sqchirp|ufo|ufobeam|brickring|heli|doorchime|yachthorn|token)/;
+    const NEW_CLIPS = /^(doorslam|sink|fart1|fart2|rocketboom|achieve|fanfare|trombone|vcrash|crash|sqchirp|ufo|ufobeam|brickring|heli|doorchime|yachthorn|token)/;
     function playClip(name, dataUrl, fallback) {
         if (!soundOn()) return;
         if (sfxStyle === 'classic' && NEW_CLIPS.test(name)) { if (fallback) fallback(); return; }
@@ -4881,6 +4883,18 @@
     const PHOTO_811_SIGN_COSMETICS = "media/photo_811_sign_cosmetics.png?v=bf14007c";
     const PHOTO_811_SIGN_THEMES = "media/photo_811_sign_themes.png?v=19a4124f";
     const PHOTO_811_SIGN_CURSES = "media/photo_811_sign_curses.png?v=46025d23";
+    const PHOTO_GX_RED = "media/photo_gx_red.png?v=6c1ec91f";
+    const PHOTO_GX_PLAT = "media/photo_gx_plat.png?v=533825b8";
+    const PHOTO_GX_BLACK = "media/photo_gx_black.png?v=50336c4e";
+    const PHOTO_LP_CLOSED = "media/photo_lp_closed.png?v=43e13a14";
+    const PHOTO_LP_OPEN = "media/photo_lp_open.png?v=ece9012c";
+    const PHOTO_LP_PRESSED = "media/photo_lp_pressed.png?v=529f48e0";
+    const PHOTO_LP_PAD = "media/photo_lp_pad.png?v=34314877";
+    const PHOTO_GX_AV = "media/photo_gx_av.jpg?v=fffa6d94";
+    const AUDIO_DOOR_SLAM = "media/audio_door_slam.mp3?v=fa544964";
+    const AUDIO_SINK = "media/audio_sink.mp3?v=257665dd";
+    const AUDIO_FART_1 = "media/audio_fart_1.mp3?v=cbf8270a";
+    const AUDIO_FART_2 = "media/audio_fart_2.mp3?v=0295a50c";
     const SPRITE_OF = { '📞': PHOTO_TOY_PHONE, '🖐️': PHOTO_FINGER, '🍪': PHOTO_COOKIE_GOLD, '🍩': PHOTO_TOY_DONUT, '🧸': PHOTO_TOYBOX, '🚀': PHOTO_ROCKET,
         '🏐': PHOTO_VOLLEY, '🐔': PHOTO_CHICKEN, '🛸': PHOTO_UFO, '🧮': PHOTO_GIZ_GRIN, '🪙': PHOTO_COIN_1, '🫀': PHOTO_CLS_LIVER, '🥳': PHOTO_PARTY_HAT,
         '🛒': PHOTO_ICO_SHOP, '⚙️': PHOTO_ICO_SETTINGS, '📊': PHOTO_ICO_STATS, '🎒': PHOTO_ICO_BAG, '🏚️': PHOTO_HOUSE_0, '🛖': PHOTO_HOUSE_1, '🏠': PHOTO_HOUSE_2,
@@ -7689,7 +7703,8 @@
     // ---------- 🐸 the murloc attacks the yacht now and then; 🐉 the whelp chases the falling holiday stuff ----------
     const onView = (r) => r && r.width > 0 && r.bottom > 60 && r.top < innerHeight - 20 && r.right > 0 && r.left < innerWidth;
     const AUDIO_YACHT_HORN = "media/audio_yacht_horn.mp3?v=381604f6";
-    function yachtHorn() { if (soundOn()) playClip('yachthorn', AUDIO_YACHT_HORN); }   // the yacht in distress: iceberg, rocket, murloc raid
+    function yachtHorn() { if (soundOn()) playClip('yachthorn', AUDIO_YACHT_HORN); }
+    function yachtSink() { if (soundOn()) playClip('sink', AUDIO_SINK); }   // glug glug (iceberg and rocket hits)   // the yacht in distress: iceberg, rocket, murloc raid
     function murlocRaid() {
         const w = $('pet-murloc'), house = $('houseEmoji'); if (!w || !house || houseLevel !== HOUSE_LEVELS.length - 1 || $('timeshareHouse').classList.contains('hidden')) return false;
         const r = house.getBoundingClientRect(); if (!onView(r)) return false;
@@ -8409,7 +8424,7 @@
         floatBubble("🛥️ Lookout: ICEBERG, RIGHT AHEAD!", r.left + r.width / 2, r.top - 10, 2600);
         requestAnimationFrame(() => requestAnimationFrame(() => { ice.style.transform = `translateX(${Math.round(r.right - 26)}px)`; }));
         setTimeout(() => {   // CRUNCH
-            playVehicleCrash(); setTimeout(yachtHorn, 900);
+            playVehicleCrash(); setTimeout(yachtHorn, 900); setTimeout(yachtSink, 2600);
             house.style.transition = 'transform 1.8s ease-in'; house.style.transformOrigin = '50% 100%'; house.style.transform = 'rotate(-14deg) translateY(14px)';
             funEvent("🧊 GALLYWIX'S YACHT HIT AN ICEBERG 🧊", 4000);
             chatBurst(['ICEBERG', 'IN THE DESERT??', 'the yacht is sinking', 'women and goblins first', 'not the swordfish', 'Gary is free', 'this ship is unsinkable they said'], 6, 3000);
@@ -8531,15 +8546,31 @@
             if (!hasGoblinCard()) return false;
             if (cost > cardAvailable()) { shopMsg('💳 ' + pick(CARD_DECLINES) + ` (Available credit: ${fmt(cardAvailable())})`); return false; }
             goblinDebt += cost; store.set('painWheelDebt', goblinDebt); renderGold();
+            { const was = cardTier(); store.set('painWheelCardCharges', store.get('painWheelCardCharges', 0) + 1); const now = cardTier();
+              if (now !== was) setTimeout(() => showCard(now, now === 'black' ? '🖤 UPGRADED: GOBLIN EXPRESS BLACK' : '🪙 UPGRADED: GOBLIN EXPRESS PLATINUM', now === 'black' ? 'Fifty charges. The goblins are so proud. Your debt is not.' : 'Ten charges! Same 400% APR, shinier card. Membership has its penalties.'), 900); }
             shopMsg(`💳 Charged ${fmt(cost)} to your Goblin Express. You now owe ${fmt(goblinDebt)} at 400% APR. Membership has its penalties.`);
             return true;
         }
         if (gold < cost) { shopMsg(`You need ${(cost - gold).toLocaleString()}g more for ${what}.`); return false; }
         setGold(gold - cost); return true;
     }
+    // card tiers: everyone starts on Red; 10 charges = Platinum, 50 charges = Black. Cosmetic only (the limit and APR don't change)
+    const GX_TIERS = { red: ['Goblin Express Red', PHOTO_GX_RED], plat: ['Goblin Express Platinum', PHOTO_GX_PLAT], black: ['Goblin Express Black', PHOTO_GX_BLACK] };
+    const cardTier = () => { const n = store.get('painWheelCardCharges', 0); return n >= 50 ? 'black' : n >= 10 ? 'plat' : 'red'; };
+    const cardImg = () => GX_TIERS[cardTier()][1];
+    function showCard(tier, title, sub) {
+        const old = $('gxShow'); if (old) old.remove();
+        const d = document.createElement('div'); d.id = 'gxShow';
+        d.style.cssText = 'position:fixed;inset:0;z-index:90;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(2,6,23,.6);cursor:pointer;padding:16px';
+        d.innerHTML = `<div style="font:900 calc(24px * var(--ts, 1))/1.2 system-ui,sans-serif;color:#fde68a;text-align:center;text-shadow:0 2px 0 #000"></div><img src="${GX_TIERS[tier][1]}" alt="" style="width:min(440px,85vw);height:auto;filter:drop-shadow(0 18px 30px rgba(0,0,0,.7));animation:gxIn .6s cubic-bezier(.2,.9,.3,1.3)"><div style="font:700 calc(16px * var(--ts, 1))/1.35 system-ui,sans-serif;color:#e2e8f0;text-align:center;max-width:520px"></div>`;
+        d.firstChild.textContent = title; d.lastChild.textContent = sub || '';
+        if (!$('gxKf')) { const st = document.createElement('style'); st.id = 'gxKf'; st.textContent = '@keyframes gxIn { from { transform: translateY(60px) rotate(-18deg) scale(.6); opacity: 0 } to { transform: none; opacity: 1 } }'; document.head.appendChild(st); }
+        d.onclick = () => d.remove(); document.body.appendChild(d); setTimeout(() => d.remove(), 5200);
+    }
     function getGoblinCard() {
         if (hasGoblinCard()) { moveToast("💳 You already have a Goblin Express card. They sent you a second one anyway. It's the same card."); return; }
         store.set('painWheelGoblinCard', true); unlock('goblincard');
+        setTimeout(() => showCard('red', '💳 APPROVED: GOBLIN EXPRESS RED', 'You applied for Platinum. You got Red. Charge 10 things to earn Platinum. Charge 50 for the Black card.'), 600);
         funEvent('💳 APPROVED: GOBLIN EXPRESS PLATINUM', 4500);
         moveToast(`💳 Your Goblin Express card has arrived. Limit: ${fmt(cardLimit())} (half your net worth, "based on vibes"). Look for the 💳 Card button in the shop. Charges go on your goblin debt at 400% APR.`);
         chatBurst(['HE GOT THE CARD', 'credit card arc', '400% APR LMAO', 'financial ruin speedrun', 'membership has its penalties', 'goblin express W?'], 5);
@@ -9126,7 +9157,7 @@
             chatBurst(toWheel ? ['uh oh', 'IT IS HEADING FOR THE WHEEL', 'NOT THE WHEEL', 'who aimed this'] : ['wrong way', 'THAT IS NOT THE SHACK', 'NOT THE YACHT', 'gps recalculating'], 3, 1200);
         }, 1800);
         setTimeout(() => {
-            clearInterval(smoke); r.remove(); playRocketBoom(3); setTimeout(yachtHorn, 1400);
+            clearInterval(smoke); r.remove(); playRocketBoom(3); setTimeout(yachtHorn, 1400); setTimeout(yachtSink, 3200);
             const boom = boomEl();
             boom.style.cssText = `position:fixed;z-index:80;left:${tx}px;top:${ty}px;font-size:34px;pointer-events:none;transform:translate(-50%,-50%) scale(.4);transition:transform .35s ease-out,opacity .8s .8s`;
             document.body.appendChild(boom); requestAnimationFrame(() => { boom.style.transform = `translate(-50%,-50%) scale(${toWheel ? 6 : 3.6})`; });
@@ -9433,7 +9464,7 @@
         if (!padBusy) {
             $('lpStatus').className = 'lp-status' + (owned ? '' : ' busy');
             $('lpStatus').textContent = owned ? 'STATUS: GO FOR LAUNCH' : 'STATUS: NO ROCKET ON THE PAD';
-            $('lpLaunch').disabled = false; $('lpLaunch').textContent = owned ? 'LAUNCH' : 'BUY A ROCKET';
+            $('lpLaunch').disabled = false; $('lpBtnTxt').textContent = owned ? 'LAUNCH' : 'BUY A ROCKET'; lpBtn('closed');
             r.classList.remove('gone');
         }
         $('lpHint').textContent = owned ? pick(PAD_HINTS) : 'SpaceZ Rocket: 10B gold in the Shop (Garage tab).';
@@ -9447,7 +9478,7 @@
         setTimeout(() => padDrawer(false), 450);
     }
     function padState(busyFor, label) {   // the pad shows liftoff, then debris recovery, then it's ready again
-        padBusy = true; $('padRocket').classList.add('gone'); $('lpLaunch').disabled = true; $('lpLaunch').textContent = 'T+';
+        padBusy = true; $('padRocket').classList.add('gone'); $('lpLaunch').disabled = true; $('lpBtnTxt').textContent = 'T+'; lpBtn('pressed'); setTimeout(() => padBusy && lpBtn('closed'), 900);
         $('lpStatus').className = 'lp-status busy'; $('lpStatus').textContent = 'STATUS: 🔥 LIFTOFF';
         rocketStats.launches++; store.set('painWheelRocketStats', rocketStats); renderPad();
         setTimeout(() => { $('lpStatus').textContent = 'STATUS: ' + label; }, 3200);
@@ -9469,7 +9500,12 @@
     $('padRocket').addEventListener('click', padLaunch); $('lpLaunch').addEventListener('click', padLaunch);
     // the pad lives in a drawer on the right edge: click the tab to slide it out, click anywhere else (or launch) to put it away
     document.body.appendChild($('launchPad'));   // out of the page flow so position:fixed is relative to the screen
-    $('lpTabImg').src = PHOTO_ROCKET;
+    $('lpTabImg').src = PHOTO_ROCKET; $('lpPadImg').src = PHOTO_LP_PAD;
+    function lpBtn(state) { $('lpBtnImg').src = state === 'open' ? PHOTO_LP_OPEN : state === 'pressed' ? PHOTO_LP_PRESSED : PHOTO_LP_CLOSED; }   // the cover flips open on hover, the button sinks when you press it
+    lpBtn('closed');
+    $('lpLaunch').addEventListener('pointerenter', () => { if (!$('lpLaunch').disabled) lpBtn('open'); });
+    $('lpLaunch').addEventListener('pointerleave', () => { if (!$('lpLaunch').disabled) lpBtn('closed'); });
+    $('lpLaunch').addEventListener('pointerdown', () => { if (!$('lpLaunch').disabled) lpBtn('pressed'); });
     const padDrawer = (open) => { $('launchPad').classList.toggle('open', open); if (open) renderPad(); };
     $('lpTab').addEventListener('click', (e) => { e.stopPropagation(); padDrawer(!$('launchPad').classList.contains('open')); });
     document.addEventListener('pointerdown', (e) => { if ($('launchPad').classList.contains('open') && !$('launchPad').contains(e.target)) padDrawer(false); });
@@ -9595,7 +9631,10 @@
             ['🐟', 'Gary (who is not named Gary) is mounted on The Board. Click him for a sea shanty.'],
             ['🐦', 'Kevin and Casimir have real Squawkr profile pictures. Sorry I\'m Busy Skinning has its picture.'],
             ['🏪', 'The 8/11 is the shop now. The Shop button walks you in: click an aisle sign (Pets, Toys, Snacks & Potions, Cosmetics, Themes, Curses), the scratch-off rack, or the pet carriers. Slurpees are still 1 gold, right from the machine. The whole catalog button is still there too.'],
-            ['🏆', 'The yacht trophy room has real trophies now. Locked ones sit on the shelf as a mystery trophy.']
+            ['🏆', 'The yacht trophy room has real trophies now. Locked ones sit on the shelf as a mystery trophy.'],
+            ['💳', 'Goblin Express has card tiers: Red when you sign up, Platinum after 10 charges, Black after 50. Same 400% APR either way.'],
+            ['🚀', 'The SpaceZ pad has a real launch pad, and the LAUNCH button has a safety cover that flips open when you reach for it.'],
+            ['🔊', 'New sounds: real farts for Gambled on a Fart, the yacht sinks (glug) after the iceberg and rocket hits, and the 8/11 door slams behind you.']
         ]
     };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
@@ -9835,7 +9874,7 @@
     function shopHead(text) { const h = document.createElement('div'); h.className = 'text-xs font-bold uppercase tracking-wider text-slate-400 mt-2'; h.textContent = text; return h; }
     function renderShop() {
         const body = $('shopBody'); if (!body) return;
-        $('shopGold').innerHTML = sprImg(PHOTO_COIN_1, 18) + ' ' + fmt(gold) + (vaultGold() > 0 ? '  ·  🏦 ' + fmt(vaultGold()) : '') + (hasGoblinCard() ? '  ·  💳 ' + fmt(cardAvailable()) + ' credit' : '');
+        $('shopGold').innerHTML = sprImg(PHOTO_COIN_1, 18) + ' ' + fmt(gold) + (vaultGold() > 0 ? '  ·  🏦 ' + fmt(vaultGold()) : '') + (hasGoblinCard() ? '  ·  ' + sprImg(cardImg(), 16) + ' ' + fmt(cardAvailable()) + ' credit' : '');
         $('shopTabs').querySelectorAll('button').forEach(b => b.classList.toggle('shop-tab-on', b.dataset.tab === shopTab));
         body.innerHTML = '';
         const add = (el) => body.appendChild(el);
@@ -10611,7 +10650,7 @@
     const SQ_PIC = { elan: SQ_IMG(PHOTO_ROCKET), vince: SQ_IMG(PHOTO_TOY_PHONE),
         kevin: SQ_PHOTO(PHOTO_AV_KEVIN), casimir: SQ_PHOTO(PHOTO_AV_CASIMIR), grandma: SQ_IMG(PHOTO_COOKIE_GOLD),   // Grandma is still a temp
         alt: () => `<span style="display:grid;place-items:center;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b"><img src="${PHOTO_COP_ICON}" alt="" style="width:30px;height:30px;object-fit:contain;filter:hue-rotate(150deg) saturate(1.4)"></span>`,
-        reb: SQ_IMG(PHOTO_CLS_LIVER), shack: SQ_IMG(PHOTO_SHACK), yacht: SQ_IMG(GIF_YACHT), uwutek: SQ_IMG(PHOTO_UWU_ICON), chaotic: () => `<span style="display:block;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b;display:grid;place-items:center">${copSprite(false, 0.5)}</span>`,
+        reb: SQ_IMG(PHOTO_CLS_LIVER), goblinx: SQ_PHOTO(PHOTO_GX_AV), shack: SQ_IMG(PHOTO_SHACK), yacht: SQ_IMG(GIF_YACHT), uwutek: SQ_IMG(PHOTO_UWU_ICON), chaotic: () => `<span style="display:block;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b;display:grid;place-items:center">${copSprite(false, 0.5)}</span>`,
         bible: () => `<span style="display:block;width:34px;height:34px;border-radius:50%;overflow:hidden;background:#1e293b;display:grid;place-items:center">${ambSprite(false, 0.5)}</span>` };
     const SQ_AMBIENT = [
         ['kevin', 'just landed on myself again. this wheel is RIGGED. who do i report this to'], ['casimir', 'me'],
@@ -10975,7 +11014,7 @@
             b.onclick = () => k === 'door' ? close811() : s811Say(pick(S811_JOKES[k]), 3400);
         });
     }
-    function close811() { const m = $('store811'); m.classList.add('hidden'); m.classList.remove('flex'); }
+    function close811() { if (!$('store811').classList.contains('hidden') && soundOn()) playClip('doorslam', AUDIO_DOOR_SLAM); const m = $('store811'); m.classList.add('hidden'); m.classList.remove('flex'); }
     function buy811(f) {
         if (s811Busy) return; const cost = 1;   // a nod to the cheap 7-11 drink: always 1 gold
         if (gold < cost) return s811Say("You can't afford ONE gold. That's a new low.");
