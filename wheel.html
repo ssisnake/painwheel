@@ -461,6 +461,11 @@
         /* your name on a carved wooden nameplate (the art stretches to fit long names and titles) */
         .nameplate { border-style: solid; border-color: transparent; border-width: 15px 16px 11px; border-image: url(media/nameplate.png) 56 56 40 56 fill stretch; background: none; padding: 1px 10px 0; color: #3b1d0a; text-shadow: 0 1px 0 rgba(255,255,255,.35); min-height: 46px; }
         .nameplate #titleShow { color: #9a3412 !important; text-shadow: 0 1px 0 rgba(255,255,255,.3); }
+        .nameplate-input { display: block; max-width: 440px; margin: 0 auto; font: 800 calc(20px * var(--ts, 1)) system-ui, sans-serif; min-height: 64px; border-width: 20px 22px 15px; outline: none; }
+        .nameplate-input::placeholder { color: rgba(59,29,10,.45); } .nameplate-input:focus { filter: drop-shadow(0 0 8px rgba(251,191,36,.7)); }
+        #titleGrid > * { border-style: solid !important; border-color: transparent !important; border-width: 12px 13px 9px !important; border-image: url(media/nameplate.png) 56 56 40 56 fill stretch !important; background: none !important; color: #3b1d0a !important; border-radius: 0 !important; box-shadow: none !important; }
+        #titleGrid > * * { color: #3b1d0a !important; }
+        #titleGrid > .on, #titleGrid > [aria-pressed="true"], #titleGrid > .ring-2 { filter: drop-shadow(0 0 7px #fbbf24) brightness(1.08); }
         .nameplate:hover { filter: brightness(1.08) drop-shadow(0 0 6px rgba(251,191,36,.6)); }
         .plate-btn { background: none; border: 0; padding: 0; line-height: 0; border-radius: 8px; transition: transform .12s, filter .12s; }
         .plate-btn:hover { transform: translateY(-1px); filter: brightness(1.15); } .plate-btn:active { transform: translateY(1px); }
@@ -855,7 +860,7 @@
                 <button id="settingsClose" class="text-slate-400 hover:text-white text-sm font-bold cursor-pointer">✕</button>
             </div>
             <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🪪 Your name</div>
-            <input id="playerName" type="text" maxlength="20" placeholder="Your name" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-base text-slate-100 placeholder:text-slate-600">
+            <input id="playerName" type="text" maxlength="20" placeholder="Your name" class="nameplate nameplate-input w-full text-center">
             <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mt-4 mb-2">⚔️ Favorite class</div>
             <select id="settingsClass" class="class-pick w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-base text-slate-100 cursor-pointer"></select>
             <p class="text-[11px] text-slate-500 mt-1">This is the name on the guild leaderboard. Change it here and it asks to bring your stats along. Your title comes from the 🛒 Shop.</p>
@@ -888,7 +893,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 5:38 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 5:42 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>

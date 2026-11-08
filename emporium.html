@@ -319,4 +319,16 @@ setInterval(() => { showGold(); }, 5000);
   window.cobra = rise;
 })();
 </script>
+<script>
+// very, very rarely: Bibledaddy's finger is lying in the dirt behind the cobra basket. Nobody knows how it got out here
+(() => {
+  if (Math.random() > .03) return; const scene = document.getElementById('scene'); if (!scene) return;
+  const f = document.createElement('button'); f.type = 'button'; f.setAttribute('aria-label', 'Something behind the basket');
+  f.style.cssText = 'position:absolute;left:82.6%;top:89.5%;width:4.6%;padding:0;border:0;background:none;cursor:pointer;z-index:1;transform:rotate(-70deg)';
+  f.innerHTML = '<img src="media/photo_finger.png" alt="" style="display:block;width:100%;height:auto;filter:brightness(.8) drop-shadow(0 2px 2px rgba(0,0,0,.6))">';
+  scene.appendChild(f);
+  f.onclick = () => { if (typeof say === 'function') say(["Is that... Bibledaddy's finger? Don't look at me. I found it like that. It's not for sale. ...It's for sale.", "That finger has been trying to leave the wheel for weeks. It got this far. Respect.", "Finders keepers. That's not a store policy, that's a life policy."][Math.floor(Math.random() * 3)], 6000);
+    f.style.transition = 'transform .6s, opacity .6s'; f.style.transform = 'rotate(-70deg) translateX(-60%)'; f.style.opacity = '0'; setTimeout(() => f.remove(), 700); };
+})();
+</script>
 </body></html>
