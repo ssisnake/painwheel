@@ -59,10 +59,17 @@ const SKELETON = ["Day 4,012. Still waiting for the claw to pay out. One more to
   "I tried calling Vince for help. The brick phone had 20 minutes of battery. I had less.", "Every 20th play is rigged in your favor. I'm on play 19. Forever.",
   "I knew the wheel would spin without me. I just didn't think it would spin THIS long."];
 function metNpc(k) { try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || {}; if (!m[k]) { m[k] = Date.now(); localStorage.setItem('painWheelMetNpcs', JSON.stringify(m)); } } catch (e) {} }   // he'll call you on the wheel now
+const FLEA_HINTS = ["Looking for Axazon? Out the side window. Follow the smell of fishnet and bad decisions.", "Some guy in a halo set up a table out back. Through that window. He sold me this chair. It was already mine.",
+  "The flea market's out the window on my right. Bring gold. Lots of it. He doesn't do refunds. I asked. I've been waiting for the answer since 1987.", "See that window? Climb out of it. Keep walking until the shoulders start looking at you."];
 const SKELETON_HINTS = ["I was working on something before the claw got me. It's all on my map. Somewhere in here.", "Don't touch my stuff. Especially not what's on the table. Especially not that.",
   "Every photo on that board is a place. Every place is hiding something. I found the first one. Then I found this claw machine.", "The coffee mug on my table is holding something down. I couldn't remember what. I've had a lot of time to think about it."];
 const ACT = {
-  skel: () => metNpc('skeleton') || say('💀 ' + (!(get('painWheelClues', {}) || {}).map && Math.random() < .55 ? pick(SKELETON_HINTS) : pick(SKELETON)), 5200),
+  skel: () => {
+    metNpc('skeleton');
+    const emp = get('painWheelEmporiumOpen', false) || ((get('painWheelStats', {}) || {}).byType || {}).EMPORIUM > 0;
+    if (emp && !get('painWheelSeenEmporium', false) && Math.random() < .7) return say('💀 ' + pick(FLEA_HINTS), 5600);   // he points new customers out the window
+    say('💀 ' + (!(get('painWheelClues', {}) || {}).map && Math.random() < .55 ? pick(SKELETON_HINTS) : emp && Math.random() < .15 ? pick(FLEA_HINTS) : pick(SKELETON)), 5200);
+  },
   sign: () => { const sc = document.getElementById('scene'); sc.classList.add('dim'); setTimeout(() => sc.classList.remove('dim'), 1200); say(pick(['bzzzt.', 'The sign flickers. It does that.', 'THE WH  L. Then THE WHEEL again.']), 2000); },
   table: () => {
     const clues = get('painWheelClues', {}); const first = !clues.map; clues.map = true; put('painWheelClues', clues);

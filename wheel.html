@@ -882,7 +882,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 1:44 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 1:48 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -10621,8 +10621,8 @@
         d.innerHTML = `<div style="max-width:560px;width:100%;border-radius:16px;overflow:hidden;border:3px solid #a16207;background:#1c1712;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.8)">
             <img src="media/emporium_bg.jpg" alt="" style="display:block;width:100%;height:auto">
             <div style="padding:16px"><div style="font:900 calc(26px * var(--ts, 1))/1.2 Georgia,serif;color:#fcd34d">🏷️ AXAZON'S EMPORIUM IS OPEN</div>
-            <div style="margin-top:6px;font:700 calc(17px * var(--ts, 1))/1.4 system-ui,sans-serif;color:#e7e5e4">A flea market out in the desert. Six items, new stock every 9 AM and 9 PM Central. Good place to finish a set. No refunds. Ever.</div>
-            <div style="margin-top:12px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><a href="emporium.html" style="padding:10px 20px;border-radius:10px;background:#f59e0b;color:#1c1917;font:900 calc(18px * var(--ts, 1)) system-ui,sans-serif;text-decoration:none">🏷️ Go browse</a>
+            <div style="margin-top:6px;font:700 calc(17px * var(--ts, 1))/1.4 system-ui,sans-serif;color:#e7e5e4">A flea market out in the desert, somewhere past the shack. Nobody knows the way except the skeleton. Go ask him. He's not going anywhere.</div>
+            <div style="margin-top:12px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><a href="shack.html" style="padding:10px 20px;border-radius:10px;background:#f59e0b;color:#1c1917;font:900 calc(18px * var(--ts, 1)) system-ui,sans-serif;text-decoration:none">💀 Ask the skeleton</a>
             <button type="button" data-x style="padding:10px 20px;border-radius:10px;background:#334155;color:#fff;font:800 calc(18px * var(--ts, 1)) system-ui,sans-serif;border:0;cursor:pointer">Later</button></div></div></div>`;
         d.querySelector('[data-x]').onclick = () => d.remove(); d.onclick = (e) => { if (e.target === d) d.remove(); };
         document.body.appendChild(d); funEvent("🏷️ AXAZON'S EMPORIUM IS OPEN", 3000);
@@ -11415,7 +11415,7 @@
         if (type === 'EMPORIUM') {   // Axazon's flea market opens for good on your first landing
             store.set('painWheelEmporiumOpen', true);
             if (!store.get('painWheelEmporiumWelcomed', false)) afterModal(welcomeEmporium);
-            else setTimeout(() => moveToast("🏷️ Axazon's Emporium restocks at 9 AM and 9 PM Central. It's on the Board."), 1800);
+            else setTimeout(() => moveToast("🏷️ Axazon's Emporium restocks at 9 AM and 9 PM Central. The skeleton in the shack knows the way."), 1800);
         }
         if (type === 'SEVEN_ELEVEN') {
             if (!store.get('painWheel811Welcomed', false)) afterModal(welcome811);
