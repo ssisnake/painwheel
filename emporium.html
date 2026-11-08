@@ -61,7 +61,7 @@
   .card .no { background: #44403c; color: #fff; }
   .card .msg { margin-top: 10px; min-height: 24px; font-size: 17px; font-weight: 800; color: #fca5a5; }
 </style></head><body>
-<header><h1>🏷️ Axazon's Emporium</h1><span id="goldBox"></span><nav><a class="alt" href="./">📌 The Board</a><a class="alt" href="shack.html">🏜️ The Shack</a><a class="alt" href="811.html">🏪 The 8/11</a><a href="wheel.html">🎡 Back to The Wheel</a></nav></header>
+<header><h1>🏷️ Axazon's Emporium</h1><span id="goldBox"></span><nav><a class="alt" href="./"><img src="media/board_icon.png" alt="" style="height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a><a class="alt" href="shack.html">🏜️ The Shack</a><a class="alt" href="811.html">🏪 The 8/11</a><a href="wheel.html">🎡 Back to The Wheel</a></nav></header>
 <div class="wrap"><div class="scroller"><div class="scene" id="scene">
   <button class="hs" data-hs="refund" style="left:62%;top:30.5%;width:12%;height:17.5%" aria-label="The no refunds sign"></button>
   <button class="hs" data-hs="fish" style="left:79.5%;top:15%;width:17%;height:19%" aria-label="The mounted fish"></button>
@@ -69,6 +69,7 @@
   <button class="hs" data-hs="console" style="left:43.3%;top:35%;width:11.2%;height:7.5%" aria-label="The old console"></button>
   <button class="hs" data-hs="jar" style="left:24.5%;top:32%;width:4.3%;height:9%" aria-label="The jar on the shelf"></button>
   <button id="axa" type="button" aria-label="Axazon"><img id="axaImg" src="media/axa_crossed.png" alt=""></button>
+  <button id="cobra" type="button" aria-label="A wicker basket" style="position:absolute;left:84.5%;top:79%;width:7.6%;padding:0;border:0;background:none;cursor:pointer;z-index:2"><img src="media/cobra_still.png" alt="" style="display:block;width:100%;height:auto;image-rendering:pixelated;filter:drop-shadow(0 .3cqw .3cqw rgba(0,0,0,.5))"></button>
   <div id="goods"></div>
   <div id="say" role="status"></div>
   <div id="closed"><b>CLOSED</b><p>A tarp, a folding table and a hand-painted sign. Nobody's home.<br>Land on <b style="font-size:inherit;color:#e879f9">Axazon's Emporium</b> on the wheel and he'll open up for you.</p><a href="wheel.html">🎡 Go spin</a></div>
@@ -132,13 +133,6 @@ const LOOT_SETS = [
         { id: 'irs', soon: true, name: '🧾 Goblin IRS Audit Defense', items: [], slots: 5, perk: 'Protection from the Goblin IRS. Coming soon...' },
         { id: 'hex', soon: true, name: '🧿 Hex Insurance', items: [], slots: 5, perk: 'Protection from curses, cursed cookies and a certain voodoo doll. Coming soon...' }
     ];
-    (function renameBible() {   // Nick's toon got renamed (Biblehumping -> Bibledaddy): move his items in everyone's bag so nothing is lost
-        const MAP = { "Biblehumping's Holy Lasso": "Bibledaddy's Holy Lasso", "Rubber Replica of Biblehumping's Finger": "Rubber Replica of Bibledaddy's Finger" };
-        ['painWheelBag', 'painWheelFound'].forEach(k => { const o = store.get(k, null); if (!o || typeof o !== 'object' || Array.isArray(o)) return; let ch = false;
-            Object.keys(MAP).forEach(a => { if (o[a] !== undefined) { if (k === 'painWheelBag' && o[MAP[a]]) o[MAP[a]].n = (o[MAP[a]].n || 0) + (o[a].n || 0); else o[MAP[a]] = o[a]; delete o[a]; ch = true; } });
-            if (ch) store.set(k, o); });
-        const q = store.get('painWheelPendingLoot', []); if (Array.isArray(q) && q.some(l => MAP[l[2]])) store.set('painWheelPendingLoot', q.map(l => MAP[l[2]] ? [l[0], l[1], MAP[l[2]]] : l));
-    })();
 const ITEM_ICON = { 'Golden Chocolate Donut': "media/photo_toy_donut.png?v=6ea2d469", 'Ret Paladin 6% Buff Coupon': "media/photo_item_coupon.png?v=b3ef1576", 'Ashbringer (Plastic Replica)': "media/photo_item_sword.png?v=55d3df90",
         'Goblin Timeshare Brochure': "media/photo_item_brochure.png?v=14e29592", 'Knob Creek Single Barrel': "media/photo_item_barrel.png?v=1ead128c", 'Torn Discord Log': "media/photo_item_chatlog.png?v=bbaa2dd6", "Kevin's ROG Ally Battery": "media/photo_item_battery.png?v=ba703a5c",
         "ChAoTiC's Blown-Out Headset": "media/photo_item_headset.png?v=fcda3409", 'Frayed Leap of Faith Rope': "media/photo_item_rope.png?v=27ad2ab7", 'Jar of Sewer Pickle Juice': "media/photo_item_pickles.png?v=64117ec0", 'Expired Healthstone': "media/photo_item_healthstone.png?v=9cc10eb7",
@@ -308,6 +302,21 @@ setInterval(() => { showGold(); }, 5000);
   const apply = () => { if (!cur) return; const t = target(); if (t > 0) { cur.play().catch(() => {}); ramp(cur, t, 900); } else ramp(cur, 0, 600, () => { if (!target()) cur.pause(); }); };
   addEventListener('pointerdown', () => { if (!cur) next(); }, { once: true });
   document.addEventListener('visibilitychange', apply); addEventListener('wfchange', apply);
+})();
+</script>
+<script>
+// the cobra basket: every great once in a while the lid lifts and a cobra says hi
+(() => {
+  const b = document.getElementById('cobra'); if (!b) return; const img = b.querySelector('img'); let busy = false, n = 0;
+  const LINES = ["Don't open the basket. That's Steve's brother. Also Steve.", "That's not for sale. That's security.", "The basket came with the stall. The cobra came with the basket. No refunds on either.", 'He bites. Mostly Kevin.'];
+  function rise(talk) {
+    if (busy) return; busy = true; img.src = 'media/cobra_anim.webp?n=' + (++n);   // a fresh copy so it plays from the start
+    if (talk && typeof say === 'function') setTimeout(() => say(LINES[Math.floor(Math.random() * LINES.length)], 4200), 900);
+    setTimeout(() => { img.src = 'media/cobra_still.png'; busy = false; }, 2500);
+  }
+  b.onclick = () => rise(true);
+  setInterval(() => { if (!document.hidden && Math.random() < .12) rise(false); }, 60000);   // about once every 8 minutes, on its own
+  window.cobra = rise;
 })();
 </script>
 </body></html>

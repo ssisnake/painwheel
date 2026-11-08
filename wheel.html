@@ -694,7 +694,7 @@
             <button id="playerTag" title="Change your name in ⚙️ Settings" class="px-2.5 py-1 rounded-md bg-slate-900 border border-slate-700 text-slate-200 font-bold cursor-pointer flex items-center gap-1.5">
                 <span id="classShow">🪪</span><span id="playerShow"></span><span id="titleShow" class="text-amber-300 italic"></span>
             </button>
-                <a href="./" title="Back to the conspiracy board (it's all connected)" style="font-size:calc(16px * var(--ts, 1))" class="px-2.5 py-0.5 rounded-md bg-amber-500/15 border border-amber-500/60 font-extrabold text-amber-300 hover:text-amber-100 hover:bg-amber-500/25 no-underline whitespace-nowrap">📌 Back to The Board</a>
+                <a href="./" title="Back to the conspiracy board (it's all connected)" style="font-size:calc(16px * var(--ts, 1))" class="px-2.5 py-0.5 rounded-md bg-amber-500/15 border border-amber-500/60 font-extrabold text-amber-300 hover:text-amber-100 hover:bg-amber-500/25 no-underline whitespace-nowrap"><img src="media/board_icon.png" alt="" style="height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">Back to The Board</a>
             </div>
             <button id="statsBtn" class="plate-btn cursor-pointer" title="My Stats" aria-label="My Stats"><img class="plate-img" data-plate="STATS" alt="My Stats"></button>
             <button id="settingsBtn" class="plate-btn cursor-pointer" title="Settings" aria-label="Settings"><img class="plate-img" data-plate="SETTINGS" alt="Settings"></button>
@@ -766,7 +766,7 @@
             <button id="s811All" class="px-4 py-2 rounded-lg font-extrabold" style="background:#f59e0b;color:#1c1917;font-size:calc(17px * var(--ts, 1))">🛒 The whole catalog</button>
           </div>
           <div id="s811Price" class="text-slate-300" style="font-size:calc(16px * var(--ts, 1))"></div>
-          <div class="flex flex-wrap justify-center gap-2"><button id="s811Close" class="px-5 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white font-bold" style="font-size:calc(16px * var(--ts, 1))">Thank you, come again</button><a href="./" class="px-5 py-2 rounded-lg font-extrabold text-amber-300 border border-amber-500/60 bg-amber-500/15 hover:bg-amber-500/25 no-underline" style="font-size:calc(16px * var(--ts, 1))">📌 The Board</a></div>
+          <div class="flex flex-wrap justify-center gap-2"><button id="s811Close" class="px-5 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white font-bold" style="font-size:calc(16px * var(--ts, 1))">Thank you, come again</button><a href="./" class="px-5 py-2 rounded-lg font-extrabold text-amber-300 border border-amber-500/60 bg-amber-500/15 hover:bg-amber-500/25 no-underline" style="font-size:calc(16px * var(--ts, 1))"><img src="media/board_icon.png" alt="" style="height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a></div>
         </div>
       </div>
     </div>
@@ -883,8 +883,8 @@
             <div class="mt-5 pt-4 border-t border-slate-800">
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
-                <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 5:29 PM CT</span>
+                <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 5:35 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -7143,6 +7143,13 @@
     document.querySelectorAll('[data-ks]').forEach(b => b.addEventListener('click', () => { sellKnob(b.dataset.ks === 'all' ? 'all' : +b.dataset.ks); b.blur(); }));
 
     // ---------- loot ----------
+    (function renameBible() {   // Nick's toon got renamed (Biblehumping -> Bibledaddy): move his items in everyone's bag so nothing is lost
+        const MAP = { "Biblehumping's Holy Lasso": "Bibledaddy's Holy Lasso", "Rubber Replica of Biblehumping's Finger": "Rubber Replica of Bibledaddy's Finger" };
+        ['painWheelBag', 'painWheelFound'].forEach(k => { const o = store.get(k, null); if (!o || typeof o !== 'object' || Array.isArray(o)) return; let ch = false;
+            Object.keys(MAP).forEach(a => { if (o[a] !== undefined) { if (k === 'painWheelBag' && o[MAP[a]]) o[MAP[a]].n = (o[MAP[a]].n || 0) + (o[a].n || 0); else o[MAP[a]] = o[a]; delete o[a]; ch = true; } });
+            if (ch) store.set(k, o); });
+        const q = store.get('painWheelPendingLoot', []); if (Array.isArray(q) && q.some(l => MAP[l[2]])) store.set('painWheelPendingLoot', q.map(l => MAP[l[2]] ? [l[0], l[1], MAP[l[2]]] : l));
+    })();
     const LOOT = {
         poor: ["Reb's Empty Bottle", 'Half a Stale Cheeto', "Kevin's Participation Trophy", 'Broken Hearthstone', 'Soggy Croissant Crumb',
             'Torn Discord Log', 'Jar of Sewer Pickle Juice', 'Frayed Leap of Faith Rope', 'Expired Healthstone', "The Shack's Broken Internet Dish"],
@@ -7203,13 +7210,6 @@
         { id: 'irs', soon: true, name: '🧾 Goblin IRS Audit Defense', items: [], slots: 5, perk: 'Protection from the Goblin IRS. Coming soon...' },
         { id: 'hex', soon: true, name: '🧿 Hex Insurance', items: [], slots: 5, perk: 'Protection from curses, cursed cookies and a certain voodoo doll. Coming soon...' }
     ];
-    (function renameBible() {   // Nick's toon got renamed (Biblehumping -> Bibledaddy): move his items in everyone's bag so nothing is lost
-        const MAP = { "Biblehumping's Holy Lasso": "Bibledaddy's Holy Lasso", "Rubber Replica of Biblehumping's Finger": "Rubber Replica of Bibledaddy's Finger" };
-        ['painWheelBag', 'painWheelFound'].forEach(k => { const o = store.get(k, null); if (!o || typeof o !== 'object' || Array.isArray(o)) return; let ch = false;
-            Object.keys(MAP).forEach(a => { if (o[a] !== undefined) { if (k === 'painWheelBag' && o[MAP[a]]) o[MAP[a]].n = (o[MAP[a]].n || 0) + (o[a].n || 0); else o[MAP[a]] = o[a]; delete o[a]; ch = true; } });
-            if (ch) store.set(k, o); });
-        const q = store.get('painWheelPendingLoot', []); if (Array.isArray(q) && q.some(l => MAP[l[2]])) store.set('painWheelPendingLoot', q.map(l => MAP[l[2]] ? [l[0], l[1], MAP[l[2]]] : l));
-    })();
     let foundItems = store.get('painWheelFound', null);
     if (foundItems && (typeof foundItems !== 'object' || Array.isArray(foundItems))) foundItems = null;
     const hasPerk = (id) => { const st = LOOT_SETS.find(x => x.id === id); return !!st && !st.soon && st.items.every(n => foundItems[n]); };
@@ -7464,7 +7464,7 @@
               <button data-d style="white-space:nowrap;font-size:20px;font-weight:900;padding:10px 18px;border-radius:10px;background:#b91c1c;color:#fff;border:none;cursor:pointer">DROP (1 🎰)</button>
               <button data-r style="font-size:22px;padding:10px 20px;border-radius:10px;background:#334155;color:#fff;border:none;cursor:pointer">▶</button>
             </div>
-            <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center"><a href="shack.html" style="padding:6px 14px;border-radius:8px;background:#44403c;color:#fde68a;font-weight:800;font-size:15px;text-decoration:none">🏜️ Back to the Shack</a><a href="./" style="padding:6px 14px;border-radius:8px;background:rgba(245,158,11,.18);border:1px solid rgba(245,158,11,.6);color:#fcd34d;font-weight:800;font-size:15px;text-decoration:none">📌 The Board</a></div>
+            <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center"><a href="shack.html" style="padding:6px 14px;border-radius:8px;background:#44403c;color:#fde68a;font-weight:800;font-size:15px;text-decoration:none">🏜️ Back to the Shack</a><a href="./" style="padding:6px 14px;border-radius:8px;background:rgba(245,158,11,.18);border:1px solid rgba(245,158,11,.6);color:#fcd34d;font-weight:800;font-size:15px;text-decoration:none"><img src="media/board_icon.png" alt="" style="height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a></div>
             <div style="margin-top:8px;color:#64748b;font-size:12px">THE WHEEL™ is not responsible for missing prizes, missing persons, or anything found during a federal investigation. © Exxon-Hawkeyes Wheel Division · All Rights Denied · No Refunds</div>
           </div>`;
         document.body.appendChild(ov);
