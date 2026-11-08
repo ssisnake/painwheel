@@ -621,6 +621,12 @@
         @media (prefers-reduced-motion: reduce) { #partyLights .beam, body.party-on #partyLights .ball, #partyLights .speck, .dance-slot > * { animation: none; } }
       .s811-tap { position:absolute; width:19%; height:36%; border-radius:12px; background:transparent; border:3px solid transparent; cursor:pointer; }
   .s811-tap:hover, .s811-tap:focus-visible { border-color:#fde68a; box-shadow:0 0 18px #fde68a; outline:none; }
+  .s811-prop { position:absolute; display:block; padding:0; border:0; background:none; cursor:pointer; transition:transform .15s, filter .15s; }
+  .s811-prop img { display:block; width:100%; height:auto; image-rendering:pixelated; pointer-events:none; }
+  .s811-prop:hover, .s811-prop:focus-visible { transform:scale(1.07); filter:drop-shadow(0 0 10px #fde68a); outline:none; z-index:2; }
+  .s811-deco { position:absolute; pointer-events:none; image-rendering:pixelated; }
+  .s811-hs { position:absolute; padding:0; border:3px solid transparent; border-radius:10px; background:transparent; cursor:pointer; }
+  .s811-hs:hover, .s811-hs:focus-visible { border-color:#fde68a; box-shadow:0 0 14px #fde68a; outline:none; }
   @keyframes s811wob { 0%,100% { transform:rotate(0) } 25% { transform:rotate(-6deg) } 75% { transform:rotate(6deg) } }
 </style>
 </head>
@@ -713,22 +719,21 @@
     <!-- Hourly popup ad (rotates between several fake ads) -->
     <div id="store811" class="fixed inset-0 z-[66] hidden items-center justify-center bg-black/75 p-3">
       <div class="w-full rounded-xl overflow-hidden border-2 border-orange-500 shadow-2xl bg-slate-950" style="max-width:1100px">
-        <div id="s811Scene" class="relative w-full" style="aspect-ratio:2000/849;background-size:100% 100%">
-          <div id="s811Machine" style="position:absolute;left:10.5%;top:13%;width:23.6%;height:50%;border-radius:10px;overflow:hidden;box-shadow:0 0 0 3px #1f2937,0 10px 30px rgba(0,0,0,.7)">
-            <video id="s811Vid" muted loop playsinline preload="none" style="display:block;width:100%;height:100%;object-fit:cover"></video>
-            <button class="s811-tap" data-f="Blue Raspberry" style="left:10%;top:38%" title="Blue Raspberry"></button>
-            <button class="s811-tap" data-f="Cherry" style="left:41%;top:38%" title="Cherry"></button>
-            <button class="s811-tap" data-f="Lime" style="left:71.5%;top:38%" title="Lime"></button>
-            <img id="s811Cup" alt="" class="hidden absolute" style="left:40%;top:72%;height:28%;image-rendering:pixelated;transition:transform .3s">
-          </div>
+        <div id="s811Scene" class="relative w-full" style="aspect-ratio:2576/1438;background-size:100% 100%">
+            <button class="s811-tap" data-f="Blue Raspberry" style="left:3%;top:33%;width:10.5%;height:27%" title="Blue Raspberry Slurpee (1 gold)"></button>
+            <button class="s811-tap" data-f="Cherry" style="left:13.5%;top:33%;width:5.3%;height:27%" title="Cherry Slurpee (1 gold)"></button>
+            <button class="s811-tap" data-f="Lime" style="left:18.8%;top:33%;width:4.4%;height:27%" title="Lime Slurpee (1 gold)"></button>
+            <div id="s811Props"></div>
+            <img id="s811Cup" alt="" class="hidden absolute" style="left:16%;top:56%;height:10%;translate:-50% 0;image-rendering:pixelated;transition:transform .3s;pointer-events:none;z-index:3">
           <div id="s811Say" class="hidden absolute left-1/2 -translate-x-1/2 top-[6%] px-4 py-2 rounded-lg bg-slate-950/90 border border-orange-400 text-orange-100 font-bold text-center" style="font-size:calc(18px * var(--ts, 1));max-width:80%"></div>
         </div>
         <div class="p-4 flex flex-col items-center gap-3 text-center">
-          <div class="font-black text-orange-300" style="font-size:calc(24px * var(--ts, 1))">🏪 Welcome to the 8/11. Pick a flavor.</div>
+          <div class="font-black text-orange-300" style="font-size:calc(24px * var(--ts, 1))">🏪 Welcome to the 8/11. Grab a Slurpee, or shop the aisles.</div>
           <div class="flex flex-wrap justify-center gap-2" id="s811Btns">
             <button data-f="Cherry" class="px-4 py-2 rounded-lg font-bold text-white" style="background:#dc2626;font-size:calc(17px * var(--ts, 1))">🍒 Cherry</button>
             <button data-f="Blue Raspberry" class="px-4 py-2 rounded-lg font-bold text-white" style="background:#0284c7;font-size:calc(17px * var(--ts, 1))">🫐 Blue Raspberry</button>
             <button data-f="Lime" class="px-4 py-2 rounded-lg font-bold text-white" style="background:#16a34a;font-size:calc(17px * var(--ts, 1))">🍈 Lime</button>
+            <button id="s811All" class="px-4 py-2 rounded-lg font-extrabold" style="background:#f59e0b;color:#1c1917;font-size:calc(17px * var(--ts, 1))">🛒 The whole catalog</button>
           </div>
           <div id="s811Price" class="text-slate-300" style="font-size:calc(16px * var(--ts, 1))"></div>
           <div class="flex flex-wrap justify-center gap-2"><button id="s811Close" class="px-5 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white font-bold" style="font-size:calc(16px * var(--ts, 1))">Thank you, come again</button><a href="./" class="px-5 py-2 rounded-lg font-extrabold text-amber-300 border border-amber-500/60 bg-amber-500/15 hover:bg-amber-500/25 no-underline" style="font-size:calc(16px * var(--ts, 1))">📌 The Board</a></div>
@@ -849,7 +854,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected">📌 The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 8:06 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 7, 8:17 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -4858,12 +4863,30 @@
     const sprImg = (src, h) => `<img src="${src}" alt="" class="spr-ico" style="height:${h || 24}px">`;
     const PHOTO_COP_ICON = "media/photo_cop_icon.png?v=b6d61402";
     const PHOTO_AMB_ICON = "media/photo_amb_icon.png?v=a8913e25";
+    const PHOTO_811_CLERK = "media/photo_811_clerk.png?v=3bff4ff5";
+    const PHOTO_811_CLERK_POINT = "media/photo_811_clerk_point.png?v=94b315d2";
+    const PHOTO_811_HOTDOG = "media/photo_811_hotdog.png?v=542e58bb";
+    const PHOTO_811_LOTTERY = "media/photo_811_lottery.png?v=e19fae10";
+    const PHOTO_811_CARRIER1 = "media/photo_811_carrier1.png?v=807fc34b";
+    const PHOTO_811_CARRIER2 = "media/photo_811_carrier2.png?v=9fd013dd";
+    const PHOTO_811_SALE = "media/photo_811_sale.png?v=b9e2dafc";
+    const PHOTO_811_PRICETAG = "media/photo_811_pricetag.png?v=15991b93";
+    const PHOTO_811_PALETTE = "media/photo_811_palette.png?v=554697b3";
+    const PHOTO_811_POTION = "media/photo_811_potion.png?v=aa16d92f";
+    const PHOTO_811_SPRAY = "media/photo_811_spray.png?v=cff422d7";
+    const PHOTO_811_TICKET = "media/photo_811_ticket.png?v=6d36c0b1";
+    const PHOTO_811_SIGN_PETS = "media/photo_811_sign_pets.png?v=d2b38564";
+    const PHOTO_811_SIGN_TOYS = "media/photo_811_sign_toys.png?v=b67ae48d";
+    const PHOTO_811_SIGN_SNACKS = "media/photo_811_sign_snacks.png?v=06f4aad6";
+    const PHOTO_811_SIGN_COSMETICS = "media/photo_811_sign_cosmetics.png?v=bf14007c";
+    const PHOTO_811_SIGN_THEMES = "media/photo_811_sign_themes.png?v=19a4124f";
+    const PHOTO_811_SIGN_CURSES = "media/photo_811_sign_curses.png?v=46025d23";
     const SPRITE_OF = { '📞': PHOTO_TOY_PHONE, '🖐️': PHOTO_FINGER, '🍪': PHOTO_COOKIE_GOLD, '🍩': PHOTO_TOY_DONUT, '🧸': PHOTO_TOYBOX, '🚀': PHOTO_ROCKET,
         '🏐': PHOTO_VOLLEY, '🐔': PHOTO_CHICKEN, '🛸': PHOTO_UFO, '🧮': PHOTO_GIZ_GRIN, '🪙': PHOTO_COIN_1, '🫀': PHOTO_CLS_LIVER, '🥳': PHOTO_PARTY_HAT,
         '🛒': PHOTO_ICO_SHOP, '⚙️': PHOTO_ICO_SETTINGS, '📊': PHOTO_ICO_STATS, '🎒': PHOTO_ICO_BAG, '🏚️': PHOTO_HOUSE_0, '🛖': PHOTO_HOUSE_1, '🏠': PHOTO_HOUSE_2,
         '🏡': PHOTO_HOUSE_3, '🏘️': PHOTO_HOUSE_4, '🏰': PHOTO_HOUSE_5, '🛥️': PHOTO_YACHT_BIG, '🐾': PHOTO_CHICKEN, '🧿': PHOTO_TOY_DOLL, '🌾': PHOTO_CHICKEN,
         '🚗': PHOTO_COP_ICON, '🚓': PHOTO_COP_ICON, '🚑': PHOTO_AMB_ICON, '🐉': PHOTO_WHELP, '📎': PHOTO_CLIPPY, '👹': PHOTO_UWU_ICON, '🪩': PHOTO_DISCO, '🧊': PHOTO_ICEBERG,
-        '🚜': PHOTO_COMBINE, '🏜️': PHOTO_SHACK, '🔷': PHOTO_TOY_HEARTH, '🎡': PHOTO_PET_SPINNY, '🐹': PHOTO_PET_GERALD, '🌵': PHOTO_TUMBLEWEED };
+        '🚜': PHOTO_COMBINE, '🏜️': PHOTO_SHACK, '🔷': PHOTO_TOY_HEARTH, '🎡': PHOTO_PET_SPINNY, '🐹': PHOTO_PET_GERALD, '🌵': PHOTO_TUMBLEWEED, '🎨': PHOTO_811_PALETTE, '🧪': PHOTO_811_POTION, '🎟️': PHOTO_811_TICKET };
     const spriteFor = (e, h) => SPRITE_OF[e] ? sprImg(SPRITE_OF[e], h) : null;
     // ---------- ⚔️ favorite class (shows next to your name) ----------
     const WOW_CLASSES = [['warrior', 'Warrior', '⚔️', '#C69B6D'], ['paladin', 'Paladin', '🔨', '#F48CBA'], ['hunter', 'Hunter', '🏹', '#AAD372'], ['rogue', 'Rogue', '🗡️', '#FFF468'],
@@ -9570,7 +9593,9 @@
             ['🥤', 'The 8/11 Slurpee machine actually runs now, and you watch your cup fill under the tap.'],
             ['🏚️', 'Shack secrets: the skeleton talks, the barrel has a daily casino token, the toolbox tightens the claw for one strong grab a day, and the map on the table is the first clue toward the basement (it gets pinned to The Board). The sign flickers. It does that.'],
             ['🐟', 'Gary (who is not named Gary) is mounted on The Board. Click him for a sea shanty.'],
-            ['🐦', 'Kevin and Casimir have real Squawkr profile pictures. Sorry I\'m Busy Skinning has its picture.']
+            ['🐦', 'Kevin and Casimir have real Squawkr profile pictures. Sorry I\'m Busy Skinning has its picture.'],
+            ['🏪', 'The 8/11 is the shop now. The Shop button walks you in: click an aisle sign (Pets, Toys, Snacks & Potions, Cosmetics, Themes, Curses), the scratch-off rack, or the pet carriers. Slurpees are still 1 gold, right from the machine. The whole catalog button is still there too.'],
+            ['🏆', 'The yacht trophy room has real trophies now. Locked ones sit on the shelf as a mystery trophy.']
         ]
     };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
@@ -10212,7 +10237,7 @@
         const tabs = $('shopTabs');
         SHOP_TABS.forEach(([id, label]) => {
             const b = document.createElement('button'); b.dataset.tab = id; b.textContent = label;
-            { const e0 = label.split(' ')[0], sp = spriteFor(e0, 18); if (sp) b.innerHTML = sp + ' ' + label.slice(e0.length + 1).replace(/</g, '&lt;'); }
+            { const e0 = label.split(' ')[0], sp = id === 'cosmetics' ? sprImg(PHOTO_811_SPRAY, 18) : spriteFor(e0, 18); if (sp) b.innerHTML = sp + ' ' + label.slice(e0.length + 1).replace(/</g, '&lt;'); }
             b.className = 'shop-tab px-2.5 py-1 rounded-md text-xs font-bold cursor-pointer';
             if (id === 'irs') {   // not open yet
                 b.style.position = 'relative'; b.style.overflow = 'hidden';
@@ -10222,7 +10247,7 @@
             }
             b.addEventListener('click', () => { shopTab = id; renderShop(); }); tabs.appendChild(b);
         });
-        $('shopBtn').addEventListener('click', () => { openShop(); $('shopBtn').blur(); });
+        $('shopBtn').addEventListener('click', () => { open811(); $('shopBtn').blur(); });   // the 8/11 IS the shop now
         $('shopClose').addEventListener('click', closeShop);
         $('hpShopBtn').addEventListener('click', () => { $('houseClose').click(); openShop('scratch'); });
         $('hpPetBtn').addEventListener('click', () => { $('houseClose').click(); openShop('pets'); });
@@ -10891,12 +10916,11 @@
             });
         } catch (e) {}
     }
-    const PHOTO_STORE811 = "media/photo_store811.jpg?v=a82807f6";
+    const PHOTO_STORE811 = "media/photo_store811.jpg?v=ebd87ab5";
     const PHOTO_CUP_EMPTY = "media/photo_cup_empty.png?v=ba50d8f6";
     const PHOTO_CUP_POUR = "media/photo_cup_pour.png?v=b6129448";
     const PHOTO_CUP_FULL = "media/photo_cup_full.png?v=0740b576";
     const PHOTO_SPILL = "media/photo_spill.png?v=38525d35";
-    const VIDEO_SLURPEE = "media/video_slurpee.mp4?v=86412ce7";
     const S811_HUE = { 'Cherry': '', 'Blue Raspberry': 'hue-rotate(215deg) saturate(1.3)', 'Lime': 'hue-rotate(110deg) saturate(1.2)' };   // the art pours cherry; tint it for the others
     const S811_LINES = { 'Cherry': ['Cherry. A classic. Like Kevin pulling.', 'Red. Like the raid frames.'], 'Blue Raspberry': ["Blue raspberry. Raspberries aren't blue. Don't think about it.", 'Your tongue is blue for three raid nights.'],
         'Lime': ['Lime. Bold choice. Wrong, but bold.', 'Green, like the pull timer Kevin ignored.'] };
@@ -10907,25 +10931,63 @@
     function open811() {
         store.set('painWheelSeen811', true);
         if (soundOn()) playClip('doorchime', AUDIO_DOOR_CHIME);   // ding-dong, welcome to the 8/11
-        const m = $('store811'); $('s811Scene').style.background = `url(${PHOTO_STORE811}) 0 0 / 100% 100% no-repeat`;
-        $('s811Price').textContent = 'Every Slurpee costs 1 gold. Like the old days.';
+        const m = $('store811'); $('s811Scene').style.background = `url(${PHOTO_STORE811}) 0 0 / 100% 100% no-repeat`; build811();
+        $('s811Price').textContent = 'Click a Slurpee drum (1 gold), or click a sign to shop that aisle.';
         $('s811Cup').classList.add('hidden'); m.classList.remove('hidden'); m.classList.add('flex');
-        const v = $('s811Vid'); if (!v.src) v.src = VIDEO_SLURPEE; v.play().catch(() => {});
-        s811Say(pick(['Open 7 hours a day, 11 days a week.', "We're open. Don't ask which days.", 'The hot dogs have been rolling since 2019. The Slurpees are fresh. Probably.']));
+        s811Say(pick(['Open 7 hours a day, 11 days a week.', "We're open. Don't ask which days.", 'The hot dogs have been rolling since 2019. The Slurpees are fresh. Probably.', 'Welcome to the 8/11. Touch nothing. Buy everything.']));
     }
-    function close811() { try { $('s811Vid').pause(); } catch (e) {} const m = $('store811'); m.classList.add('hidden'); m.classList.remove('flex'); }
+    // the store is the shop now: aisle signs open that shop tab, the clerk points, the rest is jokes
+    const S811_AISLES = [
+        ['PETS', PHOTO_811_SIGN_PETS, 43, 26.6, 7.4, 'pets', 'Pets. They bite. The claw machine is in the desert shack.'],
+        ['TOYS', PHOTO_811_SIGN_TOYS, 51.8, 26.6, 7, 'garage', 'Toys. And cars. And a rocket. Do not ask where we keep the rocket.'],
+        ['SNACKS & POTIONS', PHOTO_811_SIGN_SNACKS, 60.6, 25.4, 7.4, 'consumables', 'Snacks and potions. Same shelf. Same expiration date.'],
+        ['COSMETICS', PHOTO_811_SIGN_COSMETICS, 69.3, 26.6, 8.6, 'cosmetics', 'Cosmetics. Make the needle pretty. Switch them in Settings.'],
+        ['THEMES', PHOTO_811_SIGN_THEMES, 33.4, 21.5, 8, 'themes', 'Themes. New paint for the whole wheel. Switch them in Settings.'],
+        ['CURSES', PHOTO_811_SIGN_CURSES, 88.4, 25, 7.8, 'curses', 'Curses. Aim them at a guildmate. We are not liable.'] ];
+    const S811_PROPS = [
+        [PHOTO_811_HOTDOG, 24.6, 51.6, 9.2, 'hotdog', 'Hot dog roller'], [PHOTO_811_LOTTERY, 34, 47.8, 7.6, 'scratch', 'Scratch-offs'],
+        [PHOTO_811_CARRIER1, 44.5, 74, 6.2, 'pets', 'Pets'], [PHOTO_811_CARRIER2, 51.4, 75, 5.8, 'pets', 'Pets'] ];
+    const S811_JOKES = {
+        hotdog: ['That hot dog has been rolling since 2019. It is not for sale. It is load-bearing.', 'The hot dogs are free. Nobody has ever taken one. Ever.', "Kevin ate one in 2021. He doesn't talk about it."],
+        atm: ['OUT OF ORDER. Has been since the Cataclysm.', 'The ATM charges a 1% fee to tell you it is out of order.', 'Try the Guild Bank Vault on the yacht. This thing eats cards.'],
+        open: ['Open 7 hours a day, 11 days a week. Do the math. We did not.', 'Closed on days that end in Y.'],
+        door: null };
+    let s811Built = false;
+    function clerkPoint(ms) { const c = $('s811Clerk'); if (!c) return; c.src = PHOTO_811_CLERK_POINT; c.style.width = '11.4%'; clearTimeout(clerkPoint.t); clerkPoint.t = setTimeout(() => { c.src = PHOTO_811_CLERK; c.style.width = '10.4%'; }, ms || 1400); }
+    function build811() {
+        if (s811Built) return; s811Built = true;
+        const box = $('s811Props');
+        const add = (html) => { box.insertAdjacentHTML('beforeend', html); return box.lastElementChild; };
+        add(`<img id="s811Clerk" class="s811-deco" src="${PHOTO_811_CLERK}" alt="" style="right:5.4%;bottom:37.6%;width:10.4%;z-index:1">`);
+        S811_AISLES.forEach(([name, img, l, t, w, tab, line]) => {
+            const b = add(`<button type="button" class="s811-prop" title="${name}" aria-label="Shop: ${name}" style="left:${l}%;top:${t}%;width:${w}%"><img src="${img}" alt=""></button>`);
+            b.onmouseenter = b.onfocus = () => clerkPoint(1800);
+            b.onclick = () => { clerkPoint(1200); s811Say(line, 2600); setTimeout(() => openShop(tab), 450); };
+        });
+        add(`<img class="s811-deco" src="${PHOTO_811_SALE}" alt="" style="left:93.4%;top:22.4%;width:4%;transform:rotate(14deg);z-index:2">`);
+        S811_PROPS.forEach(([img, l, t, w, act, name]) => {
+            const b = add(`<button type="button" class="s811-prop" title="${name}" aria-label="${name}" style="left:${l}%;top:${t}%;width:${w}%"><img src="${img}" alt=""></button>`);
+            b.onclick = () => { if (S811_JOKES[act]) s811Say(pick(S811_JOKES[act]), 3400); else { clerkPoint(1200); setTimeout(() => openShop(act), 350); } };
+        });
+        add(`<img class="s811-deco" src="${PHOTO_811_PRICETAG}" alt="" style="left:30.2%;top:57.6%;width:3%;transform:rotate(-8deg)">`);
+        [['atm', 'The ATM', 34.4, 42.5, 6, 18], ['open', 'The sign', 80.2, 29.5, 5.6, 11], ['door', 'Leave', 24.4, 21, 6.4, 28]].forEach(([k, name, l, t, w, h]) => {
+            const b = add(`<button type="button" class="s811-hs" title="${name}" aria-label="${name}" style="left:${l}%;top:${t}%;width:${w}%;height:${h}%"></button>`);
+            b.onclick = () => k === 'door' ? close811() : s811Say(pick(S811_JOKES[k]), 3400);
+        });
+    }
+    function close811() { const m = $('store811'); m.classList.add('hidden'); m.classList.remove('flex'); }
     function buy811(f) {
         if (s811Busy) return; const cost = 1;   // a nod to the cheap 7-11 drink: always 1 gold
         if (gold < cost) return s811Say("You can't afford ONE gold. That's a new low.");
         s811Busy = true; setGold(gold - cost);
-        const cup = $('s811Cup'), taps = { 'Blue Raspberry': 18.7, 'Cherry': 50, 'Lime': 80.5 };   // tap centers in the machine video
-        cup.style.filter = ''; cup.style.top = '76%'; cup.style.height = '24%'; cup.style.left = (taps[f] - 9) + '%'; cup.style.animation = ''; cup.src = PHOTO_CUP_EMPTY; cup.classList.remove('hidden');
-        s811Say('*machine noises*', 1200);
-        setTimeout(() => { cup.src = PHOTO_CUP_POUR; cup.style.filter = S811_HUE[f]; cup.style.top = '68%'; cup.style.height = '32%'; cup.style.left = (taps[f] - 6) + '%'; }, 700);
+        const cup = $('s811Cup'), taps = { 'Blue Raspberry': 11.6, 'Cherry': 16.4, 'Lime': 21 };   // tap centers in the store art (percent)
+        cup.style.filter = ''; cup.style.top = '56.5%'; cup.style.height = '9.5%'; cup.style.left = taps[f] + '%'; cup.style.animation = ''; cup.src = PHOTO_CUP_EMPTY; cup.classList.remove('hidden');
+        s811Say('*machine noises*', 1200); clerkPoint(1600);
+        setTimeout(() => { cup.src = PHOTO_CUP_POUR; cup.style.filter = S811_HUE[f]; cup.style.top = '53%'; cup.style.height = '13%'; }, 700);
         setTimeout(() => { cup.src = PHOTO_CUP_FULL; cup.style.animation = 's811wob .4s 2'; }, 1600);
         setTimeout(() => {
             if (Math.random() < .12) {
-                cup.src = PHOTO_SPILL; cup.style.height = '36%'; cup.style.top = '64%'; cup.style.left = (taps[f] - 7) + '%'; cup.style.animation = '';
+                cup.src = PHOTO_SPILL; cup.style.height = '14%'; cup.style.top = '80%'; cup.style.animation = '';
                 s811Say(pick(S811_SPILL), 3800); chat(pick(['CLEAN UP AISLE 8', 'he dropped the slurpee KEKW', 'RIP slurpee', 'F']));
             } else {
                 cup.style.animation = '';
@@ -10940,6 +11002,7 @@
         }, 2300);
     }
     document.querySelectorAll('#store811 [data-f]').forEach(b => b.onclick = () => buy811(b.dataset.f));
+    $('s811All').onclick = () => { clerkPoint(1200); openShop(); };
     $('s811Close').onclick = close811; $('store811').onclick = (e) => { if (e.target.id === 'store811') close811(); };
     function newSliceFx(type) {
         const ws = $('whistlethyScene');
