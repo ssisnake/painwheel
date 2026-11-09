@@ -241,8 +241,8 @@ function showEvidence() {
 // "Detective Documentary" by leberch, "Time Lapse" by kulakovka (credited in the roll). Starts on your first click (browsers wait for one)
 const BGM = ['media/audio_bgm_detective.mp3', 'media/audio_bgm_timelapse.mp3', 'media/audio_bgm_dark.mp3'];
 (() => { if (window.__wfSet) return; window.__wfSet = true; window.__wf = window.__wf;   // our own record of whether this window has focus (more reliable than asking during the blur event)
-  addEventListener('blur', () => { window.__wf = false; setTimeout(() => { if (document.activeElement && document.activeElement.tagName === 'IFRAME') window.__wf = true; dispatchEvent(new Event('wfchange')); }, 0); }, true);
-  addEventListener('focus', () => { window.__wf = true; dispatchEvent(new Event('wfchange')); }, true);
+  addEventListener('blur', (e) => { if (e.target !== window) return; window.__wf = false; setTimeout(() => { if (document.activeElement && document.activeElement.tagName === 'IFRAME') window.__wf = true; dispatchEvent(new Event('wfchange')); }, 0); }, true);
+  addEventListener('focus', (e) => { if (e.target !== window) return; window.__wf = true; dispatchEvent(new Event('wfchange')); }, true);
   addEventListener('pointerdown', () => { if (!window.__wf) { window.__wf = true; dispatchEvent(new Event('wfchange')); } }, true);   // clicking the page means you're here
   document.addEventListener('visibilitychange', () => dispatchEvent(new Event('wfchange'))); })();
 const musicOff = () => { try { return JSON.parse(localStorage.getItem('painWheelMusicOff')) === true; } catch (e) { return false; } };   // the Music switch (also in the wheel's Settings)

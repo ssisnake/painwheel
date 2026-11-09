@@ -127,8 +127,8 @@ const sfx = (name, dur, rate) => {
 };
 // ---- arcade music while you're at the claw machine (Pixabay: atlasaudio, mfcc), crossfading; the wind ducks under it ----
 (() => { if (window.__wfSet) return; window.__wfSet = true; window.__wf = window.__wf;   // our own record of whether this window has focus (more reliable than asking during the blur event)
-  addEventListener('blur', () => { window.__wf = false; setTimeout(() => { if (document.activeElement && document.activeElement.tagName === 'IFRAME') window.__wf = true; dispatchEvent(new Event('wfchange')); }, 0); }, true);
-  addEventListener('focus', () => { window.__wf = true; dispatchEvent(new Event('wfchange')); }, true);
+  addEventListener('blur', (e) => { if (e.target !== window) return; window.__wf = false; setTimeout(() => { if (document.activeElement && document.activeElement.tagName === 'IFRAME') window.__wf = true; dispatchEvent(new Event('wfchange')); }, 0); }, true);
+  addEventListener('focus', (e) => { if (e.target !== window) return; window.__wf = true; dispatchEvent(new Event('wfchange')); }, true);
   addEventListener('pointerdown', () => { if (!window.__wf) { window.__wf = true; dispatchEvent(new Event('wfchange')); } }, true);   // clicking the page means you're here
   document.addEventListener('visibilitychange', () => dispatchEvent(new Event('wfchange'))); })();
 const CLAW_BGM = [1, 2, 3, 4, 5].map(n => `media/audio_bgm_claw${n}.mp3`);
