@@ -87,6 +87,11 @@ const LOOT = {
         epic: ['Shield of Kevin Avoidance', "Gammon's Saving Grace", "Clussy's Clown Nose of Doom", 'The Undermine Deed', "Uwutek's Pocket Lint", "Rubber Replica of Bibledaddy's Finger"],
         legendary: ['Ashbringer (Plastic Replica)', "Reb's Liver (Mint Condition)", "Uwutek's Fuzzy Ears", "The Wheel's Rigging Manual", 'Golden Chocolate Donut', "Corrinne's Platinum Achievement"]
     };
+    // the location sets + the Guild set (Nov 2026 loot overhaul): new pieces join the quality pools
+    Object.entries({ 'Miniature The Wheel': 'rare', 'Wheel Slice Flag': 'uncommon', 'Goblin Gold Bar': 'epic', 'Murloc Scale': 'uncommon', 'Iceberg Ice Shards': 'common',
+        'WHEEL-2600 Console': 'epic', "The Skeleton's Coffee Mug": 'rare', 'Used Scratcher': 'poor', 'Moldy Hot Dog': 'poor', "ChAoTiC's Fuzzy Cuffs": 'rare',
+        "Platemage's RAW MOVES Skateboard": 'epic', "Tsukaar's Whistlethy": 'epic', "Dylan's Welding Mask": 'rare', "Vinny's Brick Phone Charger": 'uncommon',
+        "Hawkeyes' Sponsorship Billboard": 'legendary', "ChAoTiC's Radar Gun": 'rare' }).forEach(([n, q]) => { if (!LOOT[q].includes(n)) LOOT[q].push(n); });
 const ITEM_DESC = {
         "Reb's Empty Bottle": 'Still smells like a Tuesday raid night.', 'Half a Stale Cheeto': 'The other half is in the keyboard.',
         "Kevin's Participation Trophy": 'Awarded for showing up. Barely.', 'Broken Hearthstone': 'Cooldown: forever.',
@@ -112,32 +117,59 @@ const ITEM_DESC = {
         "Rubber Replica of Bibledaddy's Finger": 'Squeaks when you poke it. Still has a better grip than the original.',
         "Corrinne's Platinum Achievement": "He is going to be SO pissed you stole this. He earned it. You did not."
     };
+    Object.assign(ITEM_DESC, {
+        'Miniature The Wheel': 'It has 185 slices. Every one of them is Kevin.', 'Wheel Slice Flag': 'A single slice of the wheel, on a stick. Guess which slice.',
+        'Goblin Gold Bar': "Gallywix's. He counts them every night. He'll notice.", 'Murloc Scale': 'Mrgl. (It still smells like the lake.)', 'Iceberg Ice Shards': 'From the iceberg the yacht hit. In the desert. Still cold.',
+        'WHEEL-2600 Console': 'Plays one game. The game is a wheel. Inside a wheel.', "The Skeleton's Coffee Mug": 'Still a little warm. That cannot be right.',
+        'Used Scratcher': 'One more ticket away. Always one more ticket away.', 'Moldy Hot Dog': 'Load-bearing. Rolled since 2019. Now it has a beard.',
+        "ChAoTiC's Fuzzy Cuffs": "Pink. Fuzzy. Department issue. Don't ask what department.", "Platemage's RAW MOVES Skateboard": 'RAW MOVES. Platemage has never landed a kickflip. Platemage has landed on plenty of bosses.',
+        "Tsukaar's Whistlethy": 'The most turtly whistle to ever exist. Evelyn made it. Handle with care.', "Dylan's Welding Mask": 'Best Canadian welder NA. Still cannot hunt.',
+        "Vinny's Brick Phone Charger": 'Charges the brick phone in 9 hours. Lasts 20 minutes. Worth it.', "Hawkeyes' Sponsorship Billboard": 'This raid brought to you by Hawkeyes. He paid for the repairs. Again.',
+        "ChAoTiC's Radar Gun": 'Clocked the wheel doing 88 in a 25. No ticket. Sellable.'
+    });
 const LOOT_SETS = [
-        { id: 'bar', name: "🍺 Reb's Bar Tab", items: ["Reb's Empty Bottle", 'Six-Pack of Garage Beers', 'Road Beer (Still Cold)', 'Knob Creek Single Barrel', "Reb's Liver (Mint Condition)"],
+        { id: 'wheel', name: '🎡 The Wheel', items: ['Miniature The Wheel', 'Ret Paladin 6% Buff Coupon', "Rubber Replica of Bibledaddy's Finger", 'Ashbringer (Plastic Replica)', 'Wheel Slice Flag'],
+          perk: "Uwutek kills and Reb's weekly liver reward pay 25% more." },
+        { id: 'yacht', name: "🛥️ Gallywix's Yacht", items: ['Goblin Gold Bar', 'Murloc Scale', 'Iceberg Ice Shards', 'Goblin Timeshare Brochure', 'Knob Creek Single Barrel'],
+          perk: 'Rent pays 1.5×.' },
+        { id: 'vip', name: '🖥️ The VIP Room', items: ['Torn Discord Log', 'WHEEL-2600 Console', "Kevin's ROG Ally Battery", "ChAoTiC's Blown-Out Headset"],
+          perk: 'The WHEEL-2600 pays out real gold. And the console keeps humming about a 200th slice...' },
+        { id: 'shack', name: '🏜️ The Shack', items: ['Frayed Leap of Faith Rope', 'Jar of Sewer Pickle Juice', 'Expired Healthstone', 'Broken Hearthstone', "The Skeleton's Coffee Mug"],
+          perk: "Claw odds go from 15% to 25%, and the skeleton's stock tips are right 85% of the time." },
+        { id: 's811', name: '🏪 The 8/11', items: ['Slurpee (any flavor)', 'Half a Stale Cheeto', 'Road Beer (Still Cold)', 'Used Scratcher', 'Moldy Hot Dog'],
+          perk: '10% off everything in the shop.' },
+        { id: 'guild', name: '🛡️ Degenerate Rejects', items: ["Axazon's Empty Heart Pill Bottle", "Bibledaddy's Holy Lasso", "ChAoTiC's Fuzzy Cuffs", "Reb's Liver (Mint Condition)", "Platemage's RAW MOVES Skateboard",
+            "Corrinne's Platinum Achievement", "Kevin's Participation Trophy", "Tsukaar's Whistlethy", "Dylan's Welding Mask", "Vinny's Brick Phone Charger", "Hawkeyes' Sponsorship Billboard"],
+          perk: 'Every other set perk is 50% stronger, the title «Degenerate Reject», and your name glows.' },
+        { id: 'irs', soon: true, name: '🧾 Goblin IRS', items: [], slots: 5, perk: 'Story set. Coming soon...' },
+        { id: 'casino', soon: true, name: "🎰 Chief Kick a Bitch's Casino", items: [], slots: 5, perk: 'Casino luck. Coming soon...' },
+        // the original 8 sets, retired: a permanent LEGACY bonus for the people who helped build The Wheel (unlocked with a personal code)
+
+        { id: 'bar', legacy: true, name: "🍺 Reb's Bar Tab", items: ["Reb's Empty Bottle", 'Six-Pack of Garage Beers', 'Road Beer (Still Cold)', 'Knob Creek Single Barrel', "Reb's Liver (Mint Condition)"],
           perk: '+5% of your gold whenever you land Knob Creek, Road Beers or Garage Beers.' },
-        { id: 'kevin', name: '🤡 Kevin Insurance', items: ["Kevin's Participation Trophy", "Kevin's Spare Keyboard", 'Half a Stale Cheeto', 'Shield of Kevin Avoidance'],
+        { id: 'kevin', legacy: true, name: '🤡 Kevin Insurance', items: ["Kevin's Participation Trophy", "Kevin's Spare Keyboard", 'Half a Stale Cheeto', 'Shield of Kevin Avoidance'],
           perk: 'Kevin bets pay 4× instead of 3×, and every Kevin you land pays 0.5% of your gold in pity money.' },
-        { id: 'ret', name: '🔨 Ret Paladin Kit', items: ['Ret Paladin 6% Buff Coupon', 'Belt of Standing in Fire', "Platemage's Spare Plate", 'Ashbringer (Plastic Replica)'],
+        { id: 'ret', legacy: true, name: '🔨 Ret Paladin Kit', items: ['Ret Paladin 6% Buff Coupon', 'Belt of Standing in Fire', "Platemage's Spare Plate", 'Ashbringer (Plastic Replica)'],
           perk: 'Ret bets pay 20× instead of 15×, and every Ret you land pays 10% of your gold.' },
-        { id: 'priest', name: '🛐 Holy Priest Starter Pack', items: ['Frayed Leap of Faith Rope', 'Light Feather', 'Expired Healthstone', "Bibledaddy's Holy Lasso"],
+        { id: 'priest', legacy: true, name: '🛐 Holy Priest Starter Pack', items: ['Frayed Leap of Faith Rope', 'Light Feather', 'Expired Healthstone', "Bibledaddy's Holy Lasso"],
           perk: 'Healer insurance: lose a bet and get 25% of it back.' },
-        { id: 'goblin', name: '💰 Goblin Portfolio', items: ['Linen Cloth (x3)', 'Conjured Mana Bun', 'Goblin Timeshare Brochure', 'The Undermine Deed'],
+        { id: 'goblin', legacy: true, name: '💰 Goblin Portfolio', items: ['Linen Cloth (x3)', 'Conjured Mana Bun', 'Goblin Timeshare Brochure', 'The Undermine Deed'],
           perk: 'Items sell for 50% more, and the timeshare HOA fee is waived.' },
-        { id: 'raid', name: '👹 Uwutek Raid Kit', items: ["Uwutek's Pocket Lint", "Uwutek's Fuzzy Ears", 'M*A*S*H Medevac Voucher', 'Murder Row Teleport Scroll', "Axa's Defibrillator"],
+        { id: 'raid', legacy: true, name: '👹 Uwutek Raid Kit', items: ["Uwutek's Pocket Lint", "Uwutek's Fuzzy Ears", 'M*A*S*H Medevac Voucher', 'Murder Row Teleport Scroll', "Axa's Defibrillator"],
           perk: 'Loot luck: items drop on about 45% of spins instead of 33%.' },
-        { id: 'shame', name: '🏛️ Guild Hall of Shame', items: ['Torn Discord Log', 'Jar of Sewer Pickle Juice', "ChAoTiC's Blown-Out Headset", "Clussy's Clown Nose of Doom", "Gammon's Saving Grace", "The Wheel's Rigging Manual"],
+        { id: 'shame', legacy: true, name: '🏛️ Guild Hall of Shame', items: ['Torn Discord Log', 'Jar of Sewer Pickle Juice', "ChAoTiC's Blown-Out Headset", "Clussy's Clown Nose of Doom", "Gammon's Saving Grace", "The Wheel's Rigging Manual"],
           perk: 'Museum royalties: +1% of your gold every 10 minutes you have the wheel open.' },
-        { id: 'lostfound', name: '📦 Guild Lost & Found', items: ["Kevin's ROG Ally Battery", "Axazon's Empty Heart Pill Bottle", "ChAoTiC's Last Nerve", "Rubber Replica of Bibledaddy's Finger", "Corrinne's Platinum Achievement"],
-          perk: 'Every 10 minutes a guildie "returns" something you lost: a free random item.' },
-        // not in the game yet: they show as locked teasers in the Sets tab
-        { id: 'irs', soon: true, name: '🧾 Goblin IRS Audit Defense', items: [], slots: 5, perk: 'Protection from the Goblin IRS. Coming soon...' },
-        { id: 'hex', soon: true, name: '🧿 Hex Insurance', items: [], slots: 5, perk: 'Protection from curses, cursed cookies and a certain voodoo doll. Coming soon...' }
+        { id: 'lostfound', legacy: true, name: '📦 Guild Lost & Found', items: ["Kevin's ROG Ally Battery", "Axazon's Empty Heart Pill Bottle", "ChAoTiC's Last Nerve", "Rubber Replica of Bibledaddy's Finger", "Corrinne's Platinum Achievement"],
+          perk: 'Every 10 minutes a guildie "returns" something you lost: a free random item.' }
     ];
 const ITEM_ICON = { 'Golden Chocolate Donut': "media/photo_toy_donut.png?v=6ea2d469", 'Ret Paladin 6% Buff Coupon': "media/photo_item_coupon.png?v=b3ef1576", 'Ashbringer (Plastic Replica)': "media/photo_item_sword.png?v=55d3df90",
         'Goblin Timeshare Brochure': "media/photo_item_brochure.png?v=14e29592", 'Knob Creek Single Barrel': "media/photo_item_barrel.png?v=1ead128c", 'Torn Discord Log': "media/photo_item_chatlog.png?v=bbaa2dd6", "Kevin's ROG Ally Battery": "media/photo_item_battery.png?v=ba703a5c",
         "ChAoTiC's Blown-Out Headset": "media/photo_item_headset.png?v=fcda3409", 'Frayed Leap of Faith Rope': "media/photo_item_rope.png?v=27ad2ab7", 'Jar of Sewer Pickle Juice': "media/photo_item_pickles.png?v=64117ec0", 'Expired Healthstone': "media/photo_item_healthstone.png?v=9cc10eb7",
         'Broken Hearthstone': "media/photo_item_hearthstone.png?v=04098f73", 'Half a Stale Cheeto': "media/photo_item_cheeto.png?v=5014fab4", 'Road Beer (Still Cold)': "media/photo_item_beer.png?v=6e999522", "Axazon's Empty Heart Pill Bottle": "media/photo_item_pills.png?v=3744a055",
-        "Bibledaddy's Holy Lasso": "media/photo_item_lasso.png?v=f12b594c", "Rubber Replica of Bibledaddy's Finger": "media/photo_item_finger.png?v=78b04efe", "Corrinne's Platinum Achievement": "media/photo_item_badge.png?v=b7832eda", "Kevin's Participation Trophy": "media/photo_item_trophy.png?v=74f92c51", "Reb's Liver (Mint Condition)": "media/photo_item_liver.png?v=008933cd" };
+        "Bibledaddy's Holy Lasso": "media/photo_item_lasso.png?v=f12b594c", "Rubber Replica of Bibledaddy's Finger": "media/photo_item_finger.png?v=78b04efe", "Corrinne's Platinum Achievement": "media/photo_item_badge.png?v=b7832eda", "Kevin's Participation Trophy": "media/photo_item_trophy.png?v=74f92c51", "Reb's Liver (Mint Condition)": "media/photo_item_liver.png?v=008933cd" , 'Miniature The Wheel': "media/photo_item_miniwheel.png?v=80e0d796", 'Wheel Slice Flag': "media/photo_item_flag.png?v=4ecc8573", 'Goblin Gold Bar': "media/photo_item_goldbar.png?v=b0f5d96a", 'Murloc Scale': "media/photo_item_scale.png?v=9faa7710",
+        'Iceberg Ice Shards': "media/photo_item_ice.png?v=0af7d741", 'WHEEL-2600 Console': "media/photo_item_console.png?v=3adcc14a", "The Skeleton's Coffee Mug": "media/photo_item_mug.png?v=7d39a3f1", 'Used Scratcher': "media/photo_item_scratcher.png?v=2c5048a6", 'Moldy Hot Dog': "media/photo_item_hotdog.png?v=107fc00d",
+        "ChAoTiC's Fuzzy Cuffs": "media/photo_item_cuffs.png?v=5ce03f6b", "Platemage's RAW MOVES Skateboard": "media/photo_item_skateboard.png?v=2da893ac", "Tsukaar's Whistlethy": "media/photo_item_whistle.png?v=7eecff48", "Dylan's Welding Mask": "media/photo_item_weldmask.png?v=5fa9b7e2",
+        "Vinny's Brick Phone Charger": "media/photo_item_charger.png?v=26f4e9b3", "Hawkeyes' Sponsorship Billboard": "media/photo_item_billboard.png?v=6461f96d", "ChAoTiC's Radar Gun": "media/photo_item_radar.png?v=fb0fff34", 'Slurpee (any flavor)': "media/photo_item_slurpee.png?v=0f9b0e11" };
 const $ = (id) => document.getElementById(id);
 const pick = (a) => a[Math.floor(Math.random() * a.length)];
 const get = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } };
@@ -182,7 +214,8 @@ const QDARK = { poor: '#57534e', common: '#44403c', uncommon: '#15803d', rare: '
 const QEMO = { poor: '🧦', common: '📦', uncommon: '🎁', rare: '💎', epic: '🔮', legendary: '👑' };
 const priceOf = (q) => Math.max(FLOOR[q], Math.round(gold() * PCT[q]));
 const qualityOf = (n) => ['legendary', 'epic', 'rare', 'uncommon', 'common', 'poor'].find(q => LOOT[q].includes(n)) || 'poor';
-const setOf = (n) => LOOT_SETS.find(s => !s.soon && s.items.includes(n));
+const slotMatch = (slot, n) => slot === n || (slot === 'Slurpee (any flavor)' && String(n).startsWith('Slurpee'));
+const setOf = (n) => LOOT_SETS.find(s => !s.soon && !s.legacy && s.items.some(slot => slotMatch(slot, n)));
 const iconOf = (n) => ITEM_ICON[n] || (n.startsWith('Slurpee') ? 'media/photo_item_slurpee.png' : null);
 
 // six slots, cheap on the left to fancy on the right. The last one is the rare find (1 in 4 is legendary)
@@ -233,7 +266,7 @@ function showItem(i) {
   const it = STOCK[i], ic = iconOf(it.n), st = setOf(it.n), price = priceOf(it.q), card = $('card');
   card.style.setProperty('--q', QCOL[it.q]);
   let setHtml = '';
-  if (st) { const have = st.items.filter(owned).length; setHtml = `<div class="set">Part of <b>${st.name}</b>: you have ${have} of ${st.items.length}.${owned(it.n) ? '' : have + 1 === st.items.length ? ' <b>This finishes the set!</b>' : ''}<br><span style="color:#a8a29e">${st.perk}</span></div>`; }
+  if (st) { const have = st.items.filter(slot => slot === 'Slurpee (any flavor)' ? Object.keys(get('painWheelFound', {}) || {}).some(k => k.startsWith('Slurpee')) || pendingNames().some(k => String(k).startsWith('Slurpee')) : owned(slot)).length; setHtml = `<div class="set">Part of <b>${st.name}</b>: you have ${have} of ${st.items.length}.${owned(it.n) ? '' : have + 1 === st.items.length ? ' <b>This finishes the set!</b>' : ''}<br><span style="color:#a8a29e">${st.perk}</span></div>`; }
   card.innerHTML = `<div class="pic">${ic ? `<img src="${ic}" alt="">` : `<span>${QEMO[it.q]}</span>`}</div><h2></h2><div class="ql">${it.q}${owned(it.n) ? ' · you have one' : ' · new for you'}</div>
     <p class="desc"></p>${setHtml}<div class="price">${fmt(price)}</div><div class="pct">${Math.round(PCT[it.q] * 1000) / 10}% of your gold (at least ${fmt(FLOOR[it.q])})</div>
     <div class="row"><button class="buy" type="button">🏷️ Buy it</button><button class="no" type="button">Just looking</button></div><div class="msg" role="status"></div>`;

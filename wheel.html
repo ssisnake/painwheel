@@ -463,6 +463,8 @@
         .nameplate #titleShow { color: #9a3412 !important; text-shadow: 0 1px 0 rgba(255,255,255,.3); }
         .nameplate-input { display: block; max-width: 440px; margin: 0 auto; font: 800 calc(20px * var(--ts, 1)) system-ui, sans-serif; min-height: 64px; border-width: 20px 22px 15px; outline: none; }
         .nameplate-input::placeholder { color: rgba(59,29,10,.45); } .nameplate-input:focus { filter: drop-shadow(0 0 8px rgba(251,191,36,.7)); }
+        .nameplate.name-glow #playerShow { color: #7c2d12; text-shadow: 0 0 8px #fde047, 0 0 16px #f59e0b; animation: nameGlow 2.4s ease-in-out infinite; }
+        @keyframes nameGlow { 50% { text-shadow: 0 0 14px #fde047, 0 0 26px #f59e0b; } }
         .nameplate:hover { filter: brightness(1.08) drop-shadow(0 0 6px rgba(251,191,36,.6)); }
         .plate-btn { background: none; border: 0; padding: 0; line-height: 0; border-radius: 8px; transition: transform .12s, filter .12s; }
         .plate-btn:hover { transform: translateY(-1px); filter: brightness(1.15); } .plate-btn:active { transform: translateY(1px); }
@@ -893,7 +895,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 11:01 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 11:21 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -913,6 +915,9 @@
             </div>
             <label class="flex items-center gap-3 mt-2 cursor-pointer select-none"><input id="musicToggle" type="checkbox" class="w-5 h-5 accent-amber-400 cursor-pointer" checked>
                 <span class="text-sm font-bold">🎵 Music</span><span class="text-xs text-slate-400">(songs only. Sound effects stay on.)</span></label>
+            <div class="flex flex-wrap items-center gap-2 mt-3"><span class="text-xs font-bold uppercase tracking-wider text-slate-400">🏅 Have a code?</span>
+                <input id="codeInput" type="text" maxlength="40" placeholder="ALPHA-..." class="flex-1 min-w-[160px] bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-sm mono text-slate-100 uppercase">
+                <button id="codeBtn" type="button" class="px-3 py-1.5 rounded-lg bg-violet-700 hover:bg-violet-600 text-white text-sm font-bold cursor-pointer">Redeem</button><span id="codeMsg" class="text-xs w-full"></span></div>
             <label class="flex items-center gap-3 mt-2 cursor-pointer select-none"><input id="callsToggle" type="checkbox" class="w-5 h-5 accent-amber-400 cursor-pointer" checked>
                 <span class="text-sm font-bold">📞 Phone calls</span><span class="text-xs text-slate-400">(NPCs and strangers calling you now and then)</span></label>
             <div class="flex items-center gap-3 mt-2"><span class="text-xs font-bold uppercase tracking-wider text-slate-400 shrink-0 w-24">Music volume</span>
@@ -5990,6 +5995,15 @@
         $('volTest').addEventListener('click', () => playWinSound());
         const mt = $('musicToggle'); mt.checked = musicOn();   // shared with the Board's music paper
         mt.addEventListener('change', () => { store.set('painWheelMusicOff', !mt.checked); if (!mt.checked) ['waiting', 'policesong'].forEach(n => { try { clipSources[n] && clipSources[n].stop(); } catch (e) {} }); bgmApply(); });
+        const showLegacy = () => { const L = store.get('painWheelLegacy', null); $('codeMsg').textContent = L ? `🏅 Legacy unlocked for ${L.who}: all 8 original set perks, forever.` : ''; $('codeMsg').className = 'text-xs w-full text-violet-300 font-bold'; }; showLegacy();
+        $('codeBtn').addEventListener('click', async () => {
+            const code = $('codeInput').value.trim().toUpperCase(); if (!code) return;
+            let h = ''; try { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(code)); h = [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); } catch (e) {}
+            const who = LEGACY_CODES[h];
+            if (!who) { $('codeMsg').textContent = "That code doesn't work. Axazon hands these out personally."; $('codeMsg').className = 'text-xs w-full text-red-300'; return; }
+            store.set('painWheelLegacy', { who, at: Date.now() }); $('codeInput').value = ''; showLegacy(); renderBag(); syncPerks();
+            funEvent(`🏅 LEGACY UNLOCKED: THANK YOU, ${who.toUpperCase()}`, 5000); chatBurst(['LEGACY', 'og helper W', 'respect', 'built different', 'alpha tester o7'], 4, 2500);
+        });
         const ct = $('callsToggle'); ct.checked = !store.get('painWheelNoCalls', false); ct.addEventListener('change', () => store.set('painWheelNoCalls', !ct.checked));
         const mv = $('musicVol'), mvl = $('musicVolLabel'); const showMv = () => { mv.value = Math.round(musicVol() * 100); mvl.textContent = mv.value + '%'; }; showMv();
         mv.addEventListener('input', () => { store.set('painWheelMusicVol', mv.value / 100); mvl.textContent = mv.value + '%'; bgmApply(); });
@@ -7075,7 +7089,7 @@
         pet: .10, toy: .10, rocket: .25, curse: .0025, shout: .0025, kana: .05, repel: .01, hex: .01, aotc: .10, tsuk: .10, rikers: .25, feed: .0025, mystery: .0777, winrar: .02999 };
     const HOUSE_PCT = [0, .15, .20, .25, .30, .35, .40];            // house levels climb
     const SOCIETY_PCT = [.15, .20, .25, .30, .35, .40];              // so do the secret societies
-    const priceOf = (pct, min) => Math.max(min == null ? 100 : min, Math.round(gold * pct));
+    const priceOf = (pct, min) => Math.round(Math.max(min == null ? 100 : min, Math.round(gold * pct)) * (typeof hasPerk === 'function' && hasPerk('s811') ? 1 - .10 * perkMult() : 1));   // 8/11 set: shop discount
     const rewardOf = (pct, min) => Math.max(min == null ? 1000 : min, Math.round(gold * pct));
     const rewardTotal = (pct, min) => Math.max(min == null ? 1000 : min, Math.round((gold + vaultGold()) * pct));   // the big guild rewards (weekly liver, boss kills) count your vault too
     function renderGold() {
@@ -7190,6 +7204,11 @@
         epic: ['Shield of Kevin Avoidance', "Gammon's Saving Grace", "Clussy's Clown Nose of Doom", 'The Undermine Deed', "Uwutek's Pocket Lint", "Rubber Replica of Bibledaddy's Finger"],
         legendary: ['Ashbringer (Plastic Replica)', "Reb's Liver (Mint Condition)", "Uwutek's Fuzzy Ears", "The Wheel's Rigging Manual", 'Golden Chocolate Donut', "Corrinne's Platinum Achievement"]
     };
+    // the location sets + the Guild set (Nov 2026 loot overhaul): new pieces join the quality pools
+    Object.entries({ 'Miniature The Wheel': 'rare', 'Wheel Slice Flag': 'uncommon', 'Goblin Gold Bar': 'epic', 'Murloc Scale': 'uncommon', 'Iceberg Ice Shards': 'common',
+        'WHEEL-2600 Console': 'epic', "The Skeleton's Coffee Mug": 'rare', 'Used Scratcher': 'poor', 'Moldy Hot Dog': 'poor', "ChAoTiC's Fuzzy Cuffs": 'rare',
+        "Platemage's RAW MOVES Skateboard": 'epic', "Tsukaar's Whistlethy": 'epic', "Dylan's Welding Mask": 'rare', "Vinny's Brick Phone Charger": 'uncommon',
+        "Hawkeyes' Sponsorship Billboard": 'legendary', "ChAoTiC's Radar Gun": 'rare' }).forEach(([n, q]) => { if (!LOOT[q].includes(n)) LOOT[q].push(n); });
     const Q_ORDER = ['legendary', 'epic', 'rare', 'uncommon', 'common', 'poor'];
     const Q_WEIGHT = { poor: 40, common: 25, uncommon: 20, rare: 10, epic: 4, legendary: 1 };
     const Q_SELL = { poor: 50, common: 100, uncommon: 250, rare: 600, epic: 1500, legendary: 5000 };
@@ -7218,32 +7237,75 @@
         "Rubber Replica of Bibledaddy's Finger": 'Squeaks when you poke it. Still has a better grip than the original.',
         "Corrinne's Platinum Achievement": "He is going to be SO pissed you stole this. He earned it. You did not."
     };
+    Object.assign(ITEM_DESC, {
+        'Miniature The Wheel': 'It has 185 slices. Every one of them is Kevin.', 'Wheel Slice Flag': 'A single slice of the wheel, on a stick. Guess which slice.',
+        'Goblin Gold Bar': "Gallywix's. He counts them every night. He'll notice.", 'Murloc Scale': 'Mrgl. (It still smells like the lake.)', 'Iceberg Ice Shards': 'From the iceberg the yacht hit. In the desert. Still cold.',
+        'WHEEL-2600 Console': 'Plays one game. The game is a wheel. Inside a wheel.', "The Skeleton's Coffee Mug": 'Still a little warm. That cannot be right.',
+        'Used Scratcher': 'One more ticket away. Always one more ticket away.', 'Moldy Hot Dog': 'Load-bearing. Rolled since 2019. Now it has a beard.',
+        "ChAoTiC's Fuzzy Cuffs": "Pink. Fuzzy. Department issue. Don't ask what department.", "Platemage's RAW MOVES Skateboard": 'RAW MOVES. Platemage has never landed a kickflip. Platemage has landed on plenty of bosses.',
+        "Tsukaar's Whistlethy": 'The most turtly whistle to ever exist. Evelyn made it. Handle with care.', "Dylan's Welding Mask": 'Best Canadian welder NA. Still cannot hunt.',
+        "Vinny's Brick Phone Charger": 'Charges the brick phone in 9 hours. Lasts 20 minutes. Worth it.', "Hawkeyes' Sponsorship Billboard": 'This raid brought to you by Hawkeyes. He paid for the repairs. Again.',
+        "ChAoTiC's Radar Gun": 'Clocked the wheel doing 88 in a 25. No ticket. Sellable.'
+    });
     // Collect every item in a set (ever found, selling doesn't undo it) to unlock its perk for good
+    // Collect every piece of a set (ever found; selling doesn't undo it) to unlock its perk for good. One set per place, plus the Guild set.
     const LOOT_SETS = [
-        { id: 'bar', name: "🍺 Reb's Bar Tab", items: ["Reb's Empty Bottle", 'Six-Pack of Garage Beers', 'Road Beer (Still Cold)', 'Knob Creek Single Barrel', "Reb's Liver (Mint Condition)"],
+        { id: 'wheel', name: '🎡 The Wheel', items: ['Miniature The Wheel', 'Ret Paladin 6% Buff Coupon', "Rubber Replica of Bibledaddy's Finger", 'Ashbringer (Plastic Replica)', 'Wheel Slice Flag'],
+          perk: "Uwutek kills and Reb's weekly liver reward pay 25% more." },
+        { id: 'yacht', name: "🛥️ Gallywix's Yacht", items: ['Goblin Gold Bar', 'Murloc Scale', 'Iceberg Ice Shards', 'Goblin Timeshare Brochure', 'Knob Creek Single Barrel'],
+          perk: 'Rent pays 1.5×.' },
+        { id: 'vip', name: '🖥️ The VIP Room', items: ['Torn Discord Log', 'WHEEL-2600 Console', "Kevin's ROG Ally Battery", "ChAoTiC's Blown-Out Headset"],
+          perk: 'The WHEEL-2600 pays out real gold. And the console keeps humming about a 200th slice...' },
+        { id: 'shack', name: '🏜️ The Shack', items: ['Frayed Leap of Faith Rope', 'Jar of Sewer Pickle Juice', 'Expired Healthstone', 'Broken Hearthstone', "The Skeleton's Coffee Mug"],
+          perk: "Claw odds go from 15% to 25%, and the skeleton's stock tips are right 85% of the time." },
+        { id: 's811', name: '🏪 The 8/11', items: ['Slurpee (any flavor)', 'Half a Stale Cheeto', 'Road Beer (Still Cold)', 'Used Scratcher', 'Moldy Hot Dog'],
+          perk: '10% off everything in the shop.' },
+        { id: 'guild', name: '🛡️ Degenerate Rejects', items: ["Axazon's Empty Heart Pill Bottle", "Bibledaddy's Holy Lasso", "ChAoTiC's Fuzzy Cuffs", "Reb's Liver (Mint Condition)", "Platemage's RAW MOVES Skateboard",
+            "Corrinne's Platinum Achievement", "Kevin's Participation Trophy", "Tsukaar's Whistlethy", "Dylan's Welding Mask", "Vinny's Brick Phone Charger", "Hawkeyes' Sponsorship Billboard"],
+          perk: 'Every other set perk is 50% stronger, the title «Degenerate Reject», and your name glows.' },
+        { id: 'irs', soon: true, name: '🧾 Goblin IRS', items: [], slots: 5, perk: 'Story set. Coming soon...' },
+        { id: 'casino', soon: true, name: "🎰 Chief Kick a Bitch's Casino", items: [], slots: 5, perk: 'Casino luck. Coming soon...' },
+        // the original 8 sets, retired: a permanent LEGACY bonus for the people who helped build The Wheel (unlocked with a personal code)
+
+        { id: 'bar', legacy: true, name: "🍺 Reb's Bar Tab", items: ["Reb's Empty Bottle", 'Six-Pack of Garage Beers', 'Road Beer (Still Cold)', 'Knob Creek Single Barrel', "Reb's Liver (Mint Condition)"],
           perk: '+5% of your gold whenever you land Knob Creek, Road Beers or Garage Beers.' },
-        { id: 'kevin', name: '🤡 Kevin Insurance', items: ["Kevin's Participation Trophy", "Kevin's Spare Keyboard", 'Half a Stale Cheeto', 'Shield of Kevin Avoidance'],
+        { id: 'kevin', legacy: true, name: '🤡 Kevin Insurance', items: ["Kevin's Participation Trophy", "Kevin's Spare Keyboard", 'Half a Stale Cheeto', 'Shield of Kevin Avoidance'],
           perk: 'Kevin bets pay 4× instead of 3×, and every Kevin you land pays 0.5% of your gold in pity money.' },
-        { id: 'ret', name: '🔨 Ret Paladin Kit', items: ['Ret Paladin 6% Buff Coupon', 'Belt of Standing in Fire', "Platemage's Spare Plate", 'Ashbringer (Plastic Replica)'],
+        { id: 'ret', legacy: true, name: '🔨 Ret Paladin Kit', items: ['Ret Paladin 6% Buff Coupon', 'Belt of Standing in Fire', "Platemage's Spare Plate", 'Ashbringer (Plastic Replica)'],
           perk: 'Ret bets pay 20× instead of 15×, and every Ret you land pays 10% of your gold.' },
-        { id: 'priest', name: '🛐 Holy Priest Starter Pack', items: ['Frayed Leap of Faith Rope', 'Light Feather', 'Expired Healthstone', "Bibledaddy's Holy Lasso"],
+        { id: 'priest', legacy: true, name: '🛐 Holy Priest Starter Pack', items: ['Frayed Leap of Faith Rope', 'Light Feather', 'Expired Healthstone', "Bibledaddy's Holy Lasso"],
           perk: 'Healer insurance: lose a bet and get 25% of it back.' },
-        { id: 'goblin', name: '💰 Goblin Portfolio', items: ['Linen Cloth (x3)', 'Conjured Mana Bun', 'Goblin Timeshare Brochure', 'The Undermine Deed'],
+        { id: 'goblin', legacy: true, name: '💰 Goblin Portfolio', items: ['Linen Cloth (x3)', 'Conjured Mana Bun', 'Goblin Timeshare Brochure', 'The Undermine Deed'],
           perk: 'Items sell for 50% more, and the timeshare HOA fee is waived.' },
-        { id: 'raid', name: '👹 Uwutek Raid Kit', items: ["Uwutek's Pocket Lint", "Uwutek's Fuzzy Ears", 'M*A*S*H Medevac Voucher', 'Murder Row Teleport Scroll', "Axa's Defibrillator"],
+        { id: 'raid', legacy: true, name: '👹 Uwutek Raid Kit', items: ["Uwutek's Pocket Lint", "Uwutek's Fuzzy Ears", 'M*A*S*H Medevac Voucher', 'Murder Row Teleport Scroll', "Axa's Defibrillator"],
           perk: 'Loot luck: items drop on about 45% of spins instead of 33%.' },
-        { id: 'shame', name: '🏛️ Guild Hall of Shame', items: ['Torn Discord Log', 'Jar of Sewer Pickle Juice', "ChAoTiC's Blown-Out Headset", "Clussy's Clown Nose of Doom", "Gammon's Saving Grace", "The Wheel's Rigging Manual"],
+        { id: 'shame', legacy: true, name: '🏛️ Guild Hall of Shame', items: ['Torn Discord Log', 'Jar of Sewer Pickle Juice', "ChAoTiC's Blown-Out Headset", "Clussy's Clown Nose of Doom", "Gammon's Saving Grace", "The Wheel's Rigging Manual"],
           perk: 'Museum royalties: +1% of your gold every 10 minutes you have the wheel open.' },
-        { id: 'lostfound', name: '📦 Guild Lost & Found', items: ["Kevin's ROG Ally Battery", "Axazon's Empty Heart Pill Bottle", "ChAoTiC's Last Nerve", "Rubber Replica of Bibledaddy's Finger", "Corrinne's Platinum Achievement"],
-          perk: 'Every 10 minutes a guildie "returns" something you lost: a free random item.' },
-        // not in the game yet: they show as locked teasers in the Sets tab
-        { id: 'irs', soon: true, name: '🧾 Goblin IRS Audit Defense', items: [], slots: 5, perk: 'Protection from the Goblin IRS. Coming soon...' },
-        { id: 'hex', soon: true, name: '🧿 Hex Insurance', items: [], slots: 5, perk: 'Protection from curses, cursed cookies and a certain voodoo doll. Coming soon...' }
+        { id: 'lostfound', legacy: true, name: '📦 Guild Lost & Found', items: ["Kevin's ROG Ally Battery", "Axazon's Empty Heart Pill Bottle", "ChAoTiC's Last Nerve", "Rubber Replica of Bibledaddy's Finger", "Corrinne's Platinum Achievement"],
+          perk: 'Every 10 minutes a guildie "returns" something you lost: a free random item.' }
     ];
     let foundItems = store.get('painWheelFound', null);
     if (foundItems && (typeof foundItems !== 'object' || Array.isArray(foundItems))) foundItems = null;
-    const hasPerk = (id) => { const st = LOOT_SETS.find(x => x.id === id); return !!st && !st.soon && st.items.every(n => foundItems[n]); };
-    const LIVE_SETS = () => LOOT_SETS.filter(x => !x.soon);
+    const slotHas = (n) => n === 'Slurpee (any flavor)' ? Object.keys(foundItems).some(k => k.startsWith('Slurpee')) : !!foundItems[n];   // any Slurpee fills the 8/11 slot
+    const slotMatch = (slot, n) => slot === n || (slot === 'Slurpee (any flavor)' && String(n).startsWith('Slurpee'));
+    const LEGACY_CODES = {"20992c48ea4d2eac41b934d5adc9cf042d898da1b18e6b1bd29b8a66bc403f66": "Axazon", "197120fbf9747adbb59ed7661a95cd3d6aec56e47b307fd15f08f60e639baf32": "Platemage", "3218789c5ea18b2f8dbe4864d6be2be080d4047bf9ed6d6ee7fe116637066c4d": "Casimir", "47f61dff6747cb046a49406e2c62901bcaf94da6d80a53344c6c2f968d314920": "Bibledaddy", "e165ea72ac1a9678f11d85c04faa1f6537437beef9b4103eee35988d3871d91b": "Reb", "54919082b4f0819f64e23fe2c0660272ad408675720b23f843392ea93ff0fdf5": "Vinny", "896a3882021b0ed9e69f07e6c6716e5d25ed9b8e53b9026b76c97e7d2f161b1e": "Hawkeyes", "519ecb92babd57ce1bc363849bd97f74fd767736787c8d9e4af45b30b322fdc0": "Kevin", "8889e77a8297b872f3a01e3a15e2cd61189ba16d9d6ab654480e735a907591da": "ChAoTiC", "9d1a8903548b64387f7fe136da7bc96205f4653d816efc5f56d6f1bd83bc6e45": "Dylan", "c443c8765e752ea7eef5811dbde2cdd27c94e8a48e222b61ad916538d929088a": "Tsukaar"};   // sha-256 of each helper's personal code
+    const legacyOn = () => !!store.get('painWheelLegacy', null);
+    const hasPerk = (id) => { const st = LOOT_SETS.find(x => x.id === id); if (!st || st.soon) return false; if (st.legacy) return legacyOn(); return st.items.every(slotHas); };
+    const LIVE_SETS = () => LOOT_SETS.filter(x => !x.soon && !x.legacy);
+    const setOfItem = (n) => LIVE_SETS().find(x => x.items.some(slot => slotMatch(slot, n)));
+    const SET_ITEMS = new Set(LIVE_SETS().flatMap(x => x.items));
+    const perkMult = () => hasPerk('guild') ? 1.5 : 1;   // the Guild set boosts every other perk
+    function syncPerks() {   // other pages (shack, yacht) read these
+        store.set('painWheelPerks', { shack: hasPerk('shack') ? perkMult() : 0, vip: hasPerk('vip') ? perkMult() : 0 });
+        const tag = $('playerTag'); if (tag) tag.classList.toggle('name-glow', hasPerk('guild'));
+    }
+    function rollSetItem(setId) {   // a set piece: 60% of the time one you're missing
+        const pool = setId ? LOOT_SETS.find(x => x.id === setId).items : LIVE_SETS().flatMap(x => x.items), miss = pool.filter(n => !slotHas(n));
+        let n = miss.length && Math.random() < .6 ? pick(miss) : pick(pool);
+        if (n === 'Slurpee (any flavor)') n = pick(LOOT.uncommon.filter(x => x.startsWith('Slurpee')));
+        return n;
+    }
+    function giveSetItem(why, setId) { const n = rollSetItem(setId); return giveLoot(itemQuality(n), why || '✨ SET PIECE', n); }
     const itemQuality = (name) => Q_ORDER.find(q => LOOT[q].includes(name)) || 'poor';
     const sellPrice = (q) => Math.round(Q_SELL[q] * (hasPerk('goblin') ? 1.5 : 1));
     let bag = store.get('painWheelBag', {});
@@ -7255,8 +7317,9 @@
         return allowed[allowed.length - 1];
     }
     if (!foundItems) { foundItems = {}; Object.keys(bag).forEach(n => foundItems[n] = true); store.set('painWheelFound', foundItems); }
+    setTimeout(syncPerks, 0);
     function giveLoot(q, why, forced) {
-        const name = forced || pick(LOOT[q]);
+        const trash = LOOT[q].filter(n => !SET_ITEMS.has(n)), name = forced || pick(trash.length ? trash : LOOT[q]);
         if (name === 'Golden Chocolate Donut') unlock('golddonut');
         if (name === "Corrinne's Platinum Achievement") setTimeout(() => chatBurst(['CORRINNE IS GOING TO BE SO MAD', 'you STOLE that', 'he earned that', 'give it back', 'ninja looted a platinum KEKW'], 4), 1200);
         if (name === "ChAoTiC's Last Nerve") setTimeout(() => chatBurst(['that was his LAST one', 'do NOT step on it', 'kevin is already stepping on it'], 3), 1200);
@@ -7316,7 +7379,10 @@
         'Goblin Timeshare Brochure': PHOTO_ITEM_BROCHURE, 'Knob Creek Single Barrel': PHOTO_ITEM_BARREL, 'Torn Discord Log': PHOTO_ITEM_CHATLOG, "Kevin's ROG Ally Battery": PHOTO_ITEM_BATTERY,
         "ChAoTiC's Blown-Out Headset": PHOTO_ITEM_HEADSET, 'Frayed Leap of Faith Rope': PHOTO_ITEM_ROPE, 'Jar of Sewer Pickle Juice': PHOTO_ITEM_PICKLES, 'Expired Healthstone': PHOTO_ITEM_HEALTHSTONE,
         'Broken Hearthstone': PHOTO_ITEM_HEARTHSTONE, 'Half a Stale Cheeto': PHOTO_ITEM_CHEETO, 'Road Beer (Still Cold)': PHOTO_ITEM_BEER, "Axazon's Empty Heart Pill Bottle": PHOTO_ITEM_PILLS,
-        "Bibledaddy's Holy Lasso": PHOTO_ITEM_LASSO, "Rubber Replica of Bibledaddy's Finger": PHOTO_ITEM_FINGER, "Corrinne's Platinum Achievement": PHOTO_ITEM_BADGE, "Kevin's Participation Trophy": PHOTO_ITEM_TROPHY, "Reb's Liver (Mint Condition)": PHOTO_ITEM_LIVER };
+        "Bibledaddy's Holy Lasso": PHOTO_ITEM_LASSO, "Rubber Replica of Bibledaddy's Finger": PHOTO_ITEM_FINGER, "Corrinne's Platinum Achievement": PHOTO_ITEM_BADGE, "Kevin's Participation Trophy": PHOTO_ITEM_TROPHY, "Reb's Liver (Mint Condition)": PHOTO_ITEM_LIVER , 'Miniature The Wheel': PHOTO_ITEM_MINIWHEEL, 'Wheel Slice Flag': PHOTO_ITEM_FLAG, 'Goblin Gold Bar': PHOTO_ITEM_GOLDBAR, 'Murloc Scale': PHOTO_ITEM_SCALE,
+        'Iceberg Ice Shards': PHOTO_ITEM_ICE, 'WHEEL-2600 Console': PHOTO_ITEM_CONSOLE, "The Skeleton's Coffee Mug": PHOTO_ITEM_MUG, 'Used Scratcher': PHOTO_ITEM_SCRATCHER, 'Moldy Hot Dog': PHOTO_ITEM_HOTDOG,
+        "ChAoTiC's Fuzzy Cuffs": PHOTO_ITEM_CUFFS, "Platemage's RAW MOVES Skateboard": PHOTO_ITEM_SKATEBOARD, "Tsukaar's Whistlethy": PHOTO_ITEM_WHISTLE, "Dylan's Welding Mask": PHOTO_ITEM_WELDMASK,
+        "Vinny's Brick Phone Charger": PHOTO_ITEM_CHARGER, "Hawkeyes' Sponsorship Billboard": PHOTO_ITEM_BILLBOARD, "ChAoTiC's Radar Gun": PHOTO_ITEM_RADAR, 'Slurpee (any flavor)': PHOTO_ITEM_SLURPEE };
     const itemIcon = (name) => ITEM_ICON[name] || (String(name).startsWith('Slurpee') ? PHOTO_ITEM_SLURPEE : null);
     function renderBag() {
         const g = $('bagGrid'); g.innerHTML = '';
@@ -7333,7 +7399,7 @@
             if (bagOpenItem === name) {
                 const info = document.createElement('div'); info.className = 'mt-1.5 pt-1.5 border-t border-slate-800 text-slate-300 text-xs';
                 const desc = document.createElement('div'); desc.className = 'italic text-slate-400'; desc.textContent = ITEM_DESC[name] || '';
-                const set = LOOT_SETS.find(x => x.items.includes(name));
+                const set = setOfItem(name);
                 const setLine = document.createElement('div'); setLine.className = 'text-slate-500 mt-0.5';
                 setLine.textContent = set ? `Part of ${set.name}` : 'Not part of any set. Pure vendor fodder.';
                 const row = document.createElement('div'); row.className = 'flex flex-wrap items-center gap-2 mt-2';
@@ -7351,13 +7417,19 @@
         const g = $('setGrid'); g.innerHTML = '';
         let done = 0;
         LOOT_SETS.forEach(st => {
+            if (st.legacy && !legacyOn()) return;   // legacy sets only show for the people who earned them
+            if (st.legacy) {
+                const d = document.createElement('div'); d.className = 'rounded-lg border border-violet-400 bg-violet-950/40 p-3';
+                d.innerHTML = '<div class="flex justify-between items-center font-black"><span></span><span class="text-xs mono text-violet-300">🏅 LEGACY</span></div><div class="mt-2 text-xs text-violet-200 font-bold"></div>';
+                d.querySelector('span').textContent = st.name; d.lastChild.textContent = 'Perk: ' + st.perk; g.appendChild(d); return;
+            }
             if (st.soon) {   // coming soon: a locked teaser card
                 const d = document.createElement('div'); d.className = 'rounded-lg border border-dashed border-slate-600 bg-slate-950/50 p-3 opacity-80';
                 d.innerHTML = '<div class="flex justify-between items-center font-black"><span></span><span class="text-xs mono text-fuchsia-300">🔒 COMING SOON</span></div>'
                     + '<div class="mt-1.5 space-y-0.5 text-xs text-slate-600">' + '<div>✗ ???</div>'.repeat(st.slots) + '</div><div class="mt-2 text-xs text-slate-400"></div>';
                 d.querySelector('span').textContent = st.name; d.lastChild.textContent = 'Perk: ' + st.perk; g.appendChild(d); return;
             }
-            const have = st.items.filter(n => foundItems[n]).length, complete = have === st.items.length;
+            const have = st.items.filter(slotHas).length, complete = have === st.items.length;
             if (complete) done++;
             const d = document.createElement('div');
             d.className = 'rounded-lg border p-3 ' + (complete ? 'border-amber-400 bg-amber-950/40' : 'border-slate-700 bg-slate-950/70');
@@ -7366,7 +7438,7 @@
             h.firstChild.textContent = st.name; d.appendChild(h);
             const ul = document.createElement('div'); ul.className = 'mt-1.5 space-y-0.5 text-xs';
             st.items.forEach(n => {
-                const li = document.createElement('div'); const got = !!foundItems[n];
+                const li = document.createElement('div'); const got = slotHas(n);
                 li.className = got ? `q-${itemQuality(n)}` : 'text-slate-600';
                 li.textContent = got ? `✓ [${n}]` : '✗ ???';
                 ul.appendChild(li);
@@ -7379,7 +7451,8 @@
     }
     function checkSets(newName) {
         LOOT_SETS.forEach(st => {
-            if (!st.items.includes(newName) || !hasPerk(st.id)) return;
+            if (st.legacy || st.soon || !st.items.some(slot => slotMatch(slot, newName)) || !hasPerk(st.id)) return;
+            syncPerks(); if (st.id === 'guild') { ownedTitles['Degenerate Reject'] = true; store.set('painWheelTitles', ownedTitles); equipTitle('Degenerate Reject'); }
             unlock('collector1');
             if (LIVE_SETS().every(x => hasPerk(x.id))) unlock('collectorall');
             funEvent(`📚 SET COMPLETE: ${st.name}! Perk unlocked.`, 4000);
@@ -7661,8 +7734,9 @@
                         const lv = k.level || 1, kPct = lv === 1 ? .10 : lv === 2 ? .20 : Math.min(.75, .35 + .05 * (lv - 3));
                         const kFloor = lv === 1 ? 1e9 : lv === 2 ? 1e20 : Math.min(1e100, 1e40 * Math.pow(1e5, lv - 3));
                         const rank = (k.top || []).findIndex(x => String(x[0]).toLowerCase() === playerName.toLowerCase());
-                        const bonusPct = [1, 0.75, 0.5, 0.35, 0.2][rank] || 0, pay = Math.round(rewardTotal(kPct, kFloor) * (1 + bonusPct));
+                        const bonusPct = [1, 0.75, 0.5, 0.35, 0.2][rank] || 0, pay = Math.round(rewardTotal(kPct, kFloor) * (1 + bonusPct) * (hasPerk('wheel') ? 1 + .25 * perkMult() : 1));
                         setGold(gold + pay);
+                        if (Math.random() < 1 / 3) setTimeout(() => giveSetItem('☠️ The boss dropped a piece of the wheel', 'wheel'), 3000);
                         giveLoot(Math.random() < 0.2 ? 'legendary' : 'epic', `☠️ ${k.name} defeated! +${fmt(pay)}${rank >= 0 ? ` (#${rank + 1} damage bonus +${Math.round(bonusPct * 100)}%)` : ''} and`);
                         chatBurst(['BOSS DOWN', 'GG GG GG', 'UWUTEK DOWN', 'loot loot loot', 'EZ Clap', 'PAYDAY'], 5);
                     }
@@ -7696,7 +7770,7 @@
     store.set('painWheelShackSeparate', true);
     function houseInfo() { return HOUSE_LEVELS[houseLevel]; }
     const RENT_PCT = [0, .005, .01, .02, .03, .05, .10];   // rent: % of your gold every 10 minutes, climbing with the house (the yacht pays 10%)
-    const rentNow = (h) => rewardOf(RENT_PCT[HOUSE_LEVELS.indexOf(h)] || 0, Math.max(1, h.rent));
+    const rentNow = (h) => Math.round(rewardOf(RENT_PCT[HOUSE_LEVELS.indexOf(h)] || 0, Math.max(1, h.rent)) * (hasPerk('yacht') ? 1 + .5 * perkMult() : 1));
     const GIF_YACHT = "media/gif_yacht.gif?v=24983ac3";
     // the yacht gets its animated pixel sprite; the other houses are still emoji for now
     function houseHTML(h, px) { if (h.img) return `<img src="${h.img}" alt="${h.e}" width="${Math.round(px * 1.35)}" style="display:inline-block;height:auto;max-width:none;margin:-${Math.round(px * .22)}px -${Math.round(px * .1)}px -${Math.round(px * .12)}px;filter:drop-shadow(0 4px 6px rgba(0,0,0,.5))">`;
@@ -7787,7 +7861,7 @@
     setInterval(() => {   // every 10 minutes: HOA fee on the timeshare, rent once you've upgraded
         if (!store.get('painWheelTimeshare', false) || document.hidden) return;
         const h = houseInfo();
-        if (h.rent > 0) { const r = rentNow(h); setGold(gold + r); houseSay(`Rent collected: +${fmt(r)}`); return; }
+        if (h.rent > 0) { const r = rentNow(h); setGold(gold + r); houseSay(`Rent collected: +${fmt(r)}`); if (Math.random() < 1 / 30) setTimeout(() => giveSetItem('🛥️ A tenant paid in valuables', 'yacht'), 900); return; }
         if (hasPerk('goblin')) { houseSay('HOA fee waived (Goblin Portfolio)'); return; }
         setGold(gold - 25); houseSay('HOA fee: -25g');
     }, 10 * 60 * 1000);
@@ -8752,7 +8826,8 @@
         if (lw && lw.week && store.get('painWheelLiverClaim', '') !== lw.week && playerName) {   // last week's verdict, once
             store.set('painWheelLiverClaim', lw.week);
             const me = (lw.wreckers || []).some(w => w.toLowerCase() === playerName.toLowerCase());
-            if (lw.survived && !me) { const rw = rewardTotal(.05); setGold(gold + rw); funEvent("🫀 REB'S LIVER SURVIVED THE WEEK: +" + fmt(rw), 5000); chatBurst(['REB LIVES', 'the liver made it', 'teamwork', 'water gang'], 4, 2500); }
+            if (lw.survived && !me) { const rw = Math.round(rewardTotal(.05) * (hasPerk('wheel') ? 1 + .25 * perkMult() : 1));
+                if (Math.random() < .5) setTimeout(() => giveSetItem("🫀 Reb's liver survived. The guild left you something"), 5200); setGold(gold + rw); funEvent("🫀 REB'S LIVER SURVIVED THE WEEK: +" + fmt(rw), 5000); chatBurst(['REB LIVES', 'the liver made it', 'teamwork', 'water gang'], 4, 2500); }
             else if (lw.survived) moveToast("🫀 Reb's liver survived the week. Everyone got 5% of their gold. You poured a double, so you got a lecture.");
             else moveToast("💀 Reb's liver did not make it last week. Nobody got paid. Somebody poured one too many.");
         }
@@ -8852,7 +8927,7 @@
     function favoriteLabel() { const f = favoriteType(); return f ? TYPE[f].pill : ''; }
 
     // ---------- titles ----------
-    const TITLES = [
+    const TITLES = [['Degenerate Reject', 1e308],
         ['the Kevin-Touched', 1000], ['Ret Enjoyer', 2500], ['Liver Donor', 5000], ['of the Murder Row', 10000], ['Certified Degenerate', 25000],
         ['the Unbuffed', 50000], ['Goblin Tycoon', 100000], ['Patron of Reb', 250000], ['the Lobbyist', 1000000], ['Wheel Emperor', 10000000]
     ];
@@ -9662,7 +9737,7 @@
             box.querySelector('[data-b]').remove(); const l = box.querySelector('[data-l]'); l.style.display = ''; l.textContent = '"' + pickFresh(lines) + '"';
             clearInterval(ring); clearTimeout(miss);
             if (extra === 'tip' && typeof STOCKS !== 'undefined' && STOCKS.length) setTimeout(() => {   // the skeleton watches the market from the desert. He's right more often than Vince
-                const st = pick(STOCKS), good = Math.random() < 0.7;
+                const st = pick(STOCKS), good = Math.random() < (hasPerk('shack') ? Math.min(.95, .7 + .15 * perkMult()) : 0.7);
                 exMove(st, good ? 0.06 : -0.05, good ? 'A tip from the desert shack' : 'A tip from the desert shack. The skeleton blames the sand');
                 store.set('painWheelStockPrices2', exPrice); exRender();
                 box.querySelector('[data-t]').textContent = good ? `📈 "Psst. $${st.sym}." It went up 6%.` : `📉 "Psst. $${st.sym}." It went down 5%. *rattle*`;
@@ -9950,6 +10025,8 @@
             ['🦺', 'OSHA landings break things now: the rocket crashes, the banker trips, a slice falls off the wheel, a vehicle explodes, a pet trips, a top-bar button falls off (click it to bolt it back on), Clippy pokes his eye out, or the shack catches fire.'],
             ['📂', "The Board: clicking a place opens its case file first, with its own polaroid. Clippy has concerns."],
             ['🏷️', "Axazon's Emporium is open: a flea market with six items and new stock every 9 AM and 9 PM Central. Land on the Emporium slice to get in."],
+            ['🎒', "LOOT OVERHAUL: one set per place (the Wheel, the Yacht, the VIP Room, the Shack, the 8/11) plus the Degenerate Rejects guild set. Set pieces are RARE now: about 1 in 60 spins, plus boss kills, the liver, rent and the 8/11. Everything else is trash you can sell or hoard. Check your Sets tab."],
+            ['🏅', "The original 8 sets are retired. The people who helped build The Wheel get them back forever with a personal code (Settings → Have a code?)."],
             ['🏆', "No One is now You're Winner ! (Big Rigs fans know.)"],
             ['📞', "Don't want phone calls? Turn them off in Settings."],
             ['📎', "Ret Vision curses everything now except Clippy. He has thoughts about that."],
@@ -10297,7 +10374,7 @@
                 () => equipPack(k))));
             add(shopHead('🏷️ Titles (shown on the guild leaderboard)'));
             add(ownRow('<img src="media/nameplate.png" alt="" style="display:inline-block;height:22px;width:auto;vertical-align:middle">', 'No title', 'Humble. Suspicious.', 0, true, !titleChoice, null, () => equipTitle('')));
-            TITLES.forEach(([t, c]) => add(ownRow('<img src="media/nameplate.png" alt="" style="display:inline-block;height:22px;width:auto;vertical-align:middle">', t, `${playerName || 'You'}, ${t}`, c, ownedTitles[t], titleChoice === t,
+            TITLES.filter(([t]) => t !== 'Degenerate Reject' || ownedTitles[t]).forEach(([t, c]) => add(ownRow('<img src="media/nameplate.png" alt="" style="display:inline-block;height:22px;width:auto;vertical-align:middle">', t, `${playerName || 'You'}, ${t}`, c, ownedTitles[t], titleChoice === t,
                 () => { if (!spend(c, t)) return; ownedTitles[t] = true; store.set('painWheelTitles', ownedTitles); unlock('drip'); equipTitle(t); },
                 () => equipTitle(t))));
             add(shopRow('📞', "Vince's 1980s Brick Phone", "A genuine 1983 car phone from Vince the stock broker. Four pounds. Twenty minutes of battery. It sits in the bottom-left corner. Click it and Vince calls with a stock tip (he's right about 60% of the time). Note: comes lightly dusted with a white powder Vince insists is \"just baby powder\" and an alarming amount of stripper glitter. Do not ask Vince about either.", garage.phone ? 'Owned ✓' : `Buy: ${fmt(priceOf(PCT.toy))}`, () => {
@@ -11990,6 +12067,8 @@
         const flask = flaskLoot > 0; if (flask) { flaskLoot--; store.set('painWheelFlask', flaskLoot); }
         if (s.type === 'DONUT' && Math.random() < 0.15) setTimeout(() => giveLoot('legendary', "🍩 ChAoTiC's dream came true", 'Golden Chocolate Donut'), 1400);
         else if (minQ || flask || Math.random() < (hasPerk('raid') ? 0.45 : 0.33)) setTimeout(() => giveLoot(rollQuality(minQ), flask ? '🧪 Flask of Loot' : undefined), 1400);
+        if (Math.random() < 1 / 60) setTimeout(() => giveSetItem('✨ A set piece fell out of the wheel'), 2600);   // rare on purpose: sets should take a while
+        else if (s.type === 'SEVEN_ELEVEN' && Math.random() < 1 / 12) setTimeout(() => giveSetItem('🏪 Found behind the 8/11 counter', 's811'), 2600);
         newSliceFx(s.type); exOnLand(s.type);
         if (s.type === 'AOTC' && fair) unlock('aotclegit');   // only a natural landing counts
         if (s.type === 'LOWER_DPS') uwuKeyboardCheck();

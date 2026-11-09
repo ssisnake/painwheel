@@ -792,7 +792,9 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
             }
             return;
         }
-        if (label === '+1 GOLD') { gold = Math.min(1e300, gold + 1); saveGold(); sfx.coins(); $('miniRes').textContent = '+1 gold! It\'s a tiny wheel. What did you expect.'; return; }
+        const vipPerk = (S.get('painWheelPerks', {}) || {}).vip || 0;   // the VIP Room set: the console pays real gold
+        if (label === '+1 GOLD') { if (vipPerk) { const g = Math.max(100, Math.round(gold * .02 * vipPerk)); gold = Math.min(1e300, gold + g); saveGold(); sfx.coins(); $('miniRes').textContent = `+${g.toLocaleString()} gold! The console hums. It's been counting toward a 200th slice.`; return; }
+            gold = Math.min(1e300, gold + 1); saveGold(); sfx.coins(); $('miniRes').textContent = '+1 gold! It\'s a tiny wheel. What did you expect.'; return; }
         tone(660, 0, .15, 'triangle', .07); tone(880, .12, .2, 'triangle', .07);
         $('miniRes').textContent = line();
     }
