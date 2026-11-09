@@ -426,8 +426,7 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
 
     // ---------- leaving ----------
     function goBack() {
-        try { if (document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1) { history.back(); return; } } catch (e) {}
-        location.href = 'wheel.html';
+        location.href = 'wheel.html';   // always the wheel (going 'back' could land you on The Board, which has its own button)
     }
     $('rotateOk').addEventListener('click', () => $('rotateTip').classList.add('gone'));
     $('backBtn').addEventListener('click', goBack); $('gateBack').addEventListener('click', goBack);
@@ -643,7 +642,7 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
         $('vipScene').classList.remove('zoom'); $('mini').classList.remove('open'); $('vipBar').style.display = '';
         $('vip').classList.add('open'); sfx.clunk();
     }
-    function closeVip() { $('vip').classList.remove('open'); miniSpinning = false; }
+    function closeVip() { $('vip').classList.remove('open'); $('mini').classList.remove('open'); $('vipScene').classList.remove('zoom'); miniSpinning = false; }   // shut the WHEEL-2600 too, or its music keeps going
     $('vipLeave').addEventListener('click', () => { closeVip(); say('🚪 You back out slowly. The monitors keep spinning without you.'); });
     function sitDown() {
         if ($('vipScene').classList.contains('zoom')) return;
@@ -831,7 +830,7 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
     let i; do { i = Math.floor(Math.random() * SONGS.length); } while (SONGS.length > 1 && i === last); last = i;
     const a = new Audio(SONGS[i]); a.volume = 0; const old = cur; cur = a; if (old) ramp(old, 0, 3000, () => old.pause());
     if (target() > 0) a.play().then(() => ramp(a, target(), 2500)).catch(() => {});
-    a.addEventListener('timeupdate', function nx() { if (a.duration && a.currentTime > a.duration - 4 && cur === a) { a.removeEventListener('timeupdate', nx); next(); } });
+    a.addEventListener('timeupdate', function nx() { if (a.duration && a.currentTime > a.duration - 4 && cur === a && !/claw/.test(a.src)) { a.removeEventListener('timeupdate', nx); next(); } });
     a.addEventListener('ended', () => { if (cur === a) next(); });
   }
   const apply = () => { if (!cur) return; const t = target(); if (t > 0) { cur.play().catch(() => {}); ramp(cur, t, 900); } else ramp(cur, 0, 600, () => { if (!target()) cur.pause(); }); };
