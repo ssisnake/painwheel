@@ -139,10 +139,9 @@ const clawTarget = () => (!clawOn || musicOff() || document.hidden || !window.__
 function ramp(a, to, ms, done) { const f = a.volume, t0 = performance.now(); (function st() { const k = Math.min(1, (performance.now() - t0) / ms); a.volume = Math.max(0, Math.min(1, f + (to - f) * k)); if (k < 1) requestAnimationFrame(st); else if (done) done(); })(); }
 function clawSong(i) {
   clawI = i % CLAW_BGM.length; const a = new Audio(CLAW_BGM[clawI]); a.volume = 0; const old = clawA; clawA = a;
-  if (old) ramp(old, 0, 3000, () => old.pause());
-  if (clawTarget() > 0) a.play().then(() => ramp(a, clawTarget(), 1500)).catch(() => {});
-  a.addEventListener('timeupdate', function nx() { if (a.duration && a.currentTime > a.duration - 4 && clawA === a) { a.removeEventListener('timeupdate', nx); clawSong((clawI + 1 + Math.floor(Math.random() * Math.max(1, CLAW_BGM.length - 1))) % CLAW_BGM.length); } });
-  a.addEventListener('ended', () => { if (clawA === a) clawSong((clawI + 1 + Math.floor(Math.random() * Math.max(1, CLAW_BGM.length - 1))) % CLAW_BGM.length); });
+  if (old) ramp(old, 0, 600, () => old.pause());
+  if (clawTarget() > 0) a.play().then(() => ramp(a, clawTarget(), 400)).catch(() => {});
+  a.addEventListener('ended', () => { if (clawA === a) setTimeout(() => { if (clawA === a) clawSong((clawI + 1 + Math.floor(Math.random() * Math.max(1, CLAW_BGM.length - 1))) % CLAW_BGM.length); }, 700); });   // let the song finish, a beat of quiet, then the next
 }
 // ---- the shack's own music (Pixabay: tunetank, mickeyscat): western and old-film ragtime, under the wind; steps aside for the arcade ----
 const SHACK_BGM = ['media/audio_bgm_shack1.mp3', 'media/audio_bgm_shack2.mp3'];
