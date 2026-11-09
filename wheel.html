@@ -893,7 +893,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 6:08 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 11:01 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -913,6 +913,8 @@
             </div>
             <label class="flex items-center gap-3 mt-2 cursor-pointer select-none"><input id="musicToggle" type="checkbox" class="w-5 h-5 accent-amber-400 cursor-pointer" checked>
                 <span class="text-sm font-bold">🎵 Music</span><span class="text-xs text-slate-400">(songs only. Sound effects stay on.)</span></label>
+            <label class="flex items-center gap-3 mt-2 cursor-pointer select-none"><input id="callsToggle" type="checkbox" class="w-5 h-5 accent-amber-400 cursor-pointer" checked>
+                <span class="text-sm font-bold">📞 Phone calls</span><span class="text-xs text-slate-400">(NPCs and strangers calling you now and then)</span></label>
             <div class="flex items-center gap-3 mt-2"><span class="text-xs font-bold uppercase tracking-wider text-slate-400 shrink-0 w-24">Music volume</span>
                 <input id="musicVol" type="range" min="0" max="100" step="1" value="50" class="flex-1 accent-fuchsia-400 cursor-pointer"><span id="musicVolLabel" class="mono text-xs text-fuchsia-300 w-10 text-right shrink-0">50%</span></div>
                 <p class="text-[11px] text-slate-500 mt-1">Click the speaker to mute or unmute.</p>
@@ -1561,6 +1563,7 @@
     const VIDEO_ASMON = "media/video_asmon.mp4?v=78682d89";
     const GIF_LOST = "media/gif_lost.gif?v=0694f342";      // Enron Ethics Handbook
     const PHOTO_DOUBLE_ENDER = "media/photo_double_ender.jpg?v=436a5e85";
+    const PHOTO_YOURE_WINNER = "media/photo_youre_winner.jpg?v=e0513303";
     const PHOTO_TAUNTING = "media/photo_taunting.jpg?v=c74c9a2c";
     const PHOTO_BUSY_SKINNING = "media/photo_busy_skinning.jpg?v=8ce49238";
     const PHOTO_NICKS_MOM = "media/photo_nicks_mom.jpg?v=bd3c018a";
@@ -1766,8 +1769,8 @@
     const TYPES = [
         { id: "KEVIN", n: 0, label: "Kevin", pill: "KEVIN(eww)", bg: "#b91c1c", text: "#ffffff", border: "#1e293b", color: "text-red-500", glow: "bg-red-600", key: "1", rig: "KVN",
           win: { title: "KEVIN REPORT", size: SIZE.tiny, my: "my-3", glowOpacity: "opacity-35", sub: () => pickFresh(kevinJokesAndRants) } },
-        { id: "NO_ONE", n: 1, fixed: 0, label: "No One", pill: "NO ONE", bg: "#06b6d4", text: "#020617", border: "#67e8f9", color: "text-cyan-400", glow: "bg-cyan-500", key: "2", rig: "NUL",
-          win: { title: "YOU WON AGAINST ALL ODDS", size: SIZE.big, sub: () => "Close the tab while you still can." } },
+        { id: "NO_ONE", n: 1, fixed: 0, label: "🏆 You're Winner 🏆", pill: "YOU'RE WINNER", bg: "#06b6d4", text: "#020617", border: "#67e8f9", color: "text-cyan-400", glow: "bg-cyan-500", key: "2", rig: "NUL",
+          win: { title: "🏆 YOU'RE WINNER ! 🏆", size: SIZE.big, media: { src: PHOTO_YOURE_WINNER, fallback: null, caption: "🚚 BIG RIGS: OVER THE ROAD RACING (2003) · GAME OF THE YEAR" }, sub: () => pick(["You're winner. Against all odds. Close the tab while you still can.", "1 slice out of the whole wheel. Your truck went backwards the entire race and still won.", "Congratulation. You're winner. The other trucks never left the start line."]) } },
         { id: "PENIS", n: 1, fixed: Math.floor(TOTAL_SLICES / 2), label: "Penis", pill: "PENIS", bg: "#d946ef", text: "#020617", border: "#f0abfc", color: "text-fuchsia-400", glow: "bg-fuchsia-500", key: "3", rig: "PNS",
           win: { size: SIZE.huge, sub: (s) => `1-IN-${TOTAL_SLICES} JACKPOT! Landed directly on the lone "PENIS" slice (#${s})!` } },
         { id: "RET_PALADIN", n: 8, label: "Buff Ret Paladin 6%", pill: "BUFF RET 6%", bg: "#F48CBA", text: "#090a0f", border: "#ffd700", color: "text-[#F48CBA]", glow: "bg-[#F48CBA]", key: "4", rig: "RET",
@@ -1793,7 +1796,8 @@
           win: { title: "🤡🤡🤡 CLUSSY 🤡🤡🤡", size: SIZE.big, extra: "drop-shadow-[0_0_18px_rgba(250,204,21,0.8)]", sound: "honk", confetti: true, shake: true,
                  sub: (s, o) => `HONK HONK! 🎈🎪 Landed on Clussy (Slice #${s} • ${o} odds)! Nobody leaves this circus unchanged.` } },
         { id: "NICKS_MOM", n: 2, label: "📸 Nick's Mom 💖", pill: "NICK'S MOM", bg: "#ff1493", text: "#ffffff", border: "#ffffff", portrait: true, color: "text-[#ff1493]", glow: "bg-[#ff1493]", key: "9", rig: "MOM",
-          win: { size: SIZE.big, extra: "drop-shadow-[0_0_18px_rgba(255,20,147,0.8)]", sub: (s, o) => `NEON PINK JACKPOT! Landed on one of the 2 "Nick's Mom" photo slices (#${s} • ${o} odds)!`,
+          win: { size: SIZE.big, extra: "drop-shadow-[0_0_18px_rgba(255,20,147,0.8)]", sub: (s, o) => pick([`NEON PINK JACKPOT! Landed on one of the 2 "Nick's Mom" photo slices (#${s} • ${o} odds)!`, "Nick's mom: the village bicycle. Everybody's had a turn. (She's actually lovely. Hi Mrs. B.)",
+                   "Nick's mom is like the village bicycle: older than the village, and the whole guild has been on her. (She's actually really nice. Sorry Mrs. B.)", "Ride's free, no helmet required. (Nick's mom is a sweetheart. Nick, put the defibrillator down.)"]),
                  media: { src: PHOTO_NICKS_MOM, fallback: null, caption: "💖 HOW YOU DOIN', NICK'S MOM 💖" } } },
         { id: "HIYO_RAGED", n: 2, label: "Hiyo raged at me during a key, womp womp", pill: "HIYO RAGED", bg: "#ea580c", text: "#ffffff", border: "#fed7aa", color: "text-orange-400", glow: "bg-orange-600", key: "h", rig: "HYO",
           win: { size: SIZE.small, sub: (s, o) => `WOMP WOMP! (Slice #${s} • ${o} odds) — Hiyo raged at you during a key!` } },
@@ -2495,7 +2499,7 @@
         "COURT RULES 'I WAS LAGGING' INADMISSIBLE AS A DEFENSE IN ONGOING WIPE TRIAL",
         "REPORT: HEALTHSTONES REMAIN UNEATEN IN 94% OF WIPES; WARLOCKS 'NOT MAD, JUST DISAPPOINTED'",
         "KEVIN HOSPITALIZED AFTER FEL RUSHING INTO A WALL IN REAL LIFE; DOCTORS SAY HE'S FINE, THE WALL IS NOT",
-        "EXPERTS CONFIRM 'NO ONE' SLICE IS THE ONLY OUTCOME WHERE NOBODY BLAMED THE HEALER",
+        "EXPERTS CONFIRM 'YOU'RE WINNER' SLICE IS THE ONLY OUTCOME WHERE NOBODY BLAMED THE HEALER",
         "WEATHER: HEAVY CLOWN ACTIVITY OVER THE GUILD HALL. RESIDENTS ADVISED TO SHELTER IN CONFETTI-PROOF ROOMS.",
         "SCIENCE: STUDY FINDS 2 TON TONYA HAS A LARGER GRAVITATIONAL PULL THAN ANY BOSS AGGRO RADIUS",
         "MILITARY: VIETNAM SLICE TREES ARE STILL WATCHING. PENTAGON SAYS IT IS 'AWARE OF THE SITUATION.'",
@@ -4702,7 +4706,7 @@
         { id: 'kevin3',     name: 'Triple Kevin',             desc: 'Land on Kevin 3 times in a row.' },
         { id: 'kevin5',     name: 'Kevin Is My Main Now',     desc: 'Land on Kevin 5 times in a row.' },
         { id: 'kevin50',    name: 'Kevin Collector',          desc: 'Land on Kevin 50 times.' },
-        { id: 'noone',      name: 'Against All Odds',         desc: 'Land on No One.' },
+        { id: 'noone',      name: "You're Winner !",          desc: "Land on You're Winner." },
         { id: 'penis',      name: 'Jackpot (Unfortunately)', desc: 'Land on the one slice nobody wants to explain.', secret: true },
         { id: 'ret',        name: 'The Light Provides',       desc: 'Land on Buff Ret Paladin.' },
         { id: 'retmax',     name: 'Fully Buffed',             desc: 'Max out a Ret Paladin slice (+30%).' },
@@ -4883,7 +4887,7 @@
         const tiles = [['Spins (this browser)', stats.spins.toLocaleString()], ...(LEADERBOARD_URL && playerName ? [['Spins (all devices)', guildSpinsNow() ? guildSpinsNow().toLocaleString() : '—']] : []),
             ['Gold (with vault)', sciGold(gold + vaultGold())], ['Kevins', kev.toLocaleString()],
             ['Kevin rate', stats.spins ? Math.round(kev / stats.spins * 100) + '%' : '—'], ['Best Kevin streak', stats.bestKevinStreak],
-            ['Ret buffs', stats.byType.RET_PALADIN || 0], ['No One', stats.byType.NO_ONE || 0],
+            ['Ret buffs', stats.byType.RET_PALADIN || 0], ["You're Winner", stats.byType.NO_ONE || 0],
             ['Different slices', Object.keys(stats.byType).length + ' / ' + TYPES.length], ['Spinning since', stats.firstSpin ? new Date(stats.firstSpin).toLocaleDateString() : '—']];
         const grid = $('statsGrid'); grid.innerHTML = '';
         tiles.forEach(([k, v]) => {
@@ -5158,7 +5162,7 @@
             table.innerHTML = '';
             const head = document.createElement('tr'); head.className = 'text-[10px] uppercase tracking-wider text-slate-500';
             head.className = 'text-xs uppercase tracking-wider text-slate-400';
-            ['#', 'Name', 'Spins', '💰 Gold', 'Kevins', 'Best Kevin streak', 'Ret buffs', 'No One', '🏆', '⭐ Fave'].forEach((h, i) => {
+            ['#', 'Name', 'Spins', '💰 Gold', 'Kevins', 'Best Kevin streak', 'Ret buffs', "You're Winner", '🏆', '⭐ Fave'].forEach((h, i) => {
                 const th = document.createElement('th'); th.textContent = h; th.className = 'py-1.5 px-2 font-bold ' + (i < 2 ? 'text-left' : 'text-right'); head.appendChild(th);
             });
             table.appendChild(head);
@@ -5986,6 +5990,7 @@
         $('volTest').addEventListener('click', () => playWinSound());
         const mt = $('musicToggle'); mt.checked = musicOn();   // shared with the Board's music paper
         mt.addEventListener('change', () => { store.set('painWheelMusicOff', !mt.checked); if (!mt.checked) ['waiting', 'policesong'].forEach(n => { try { clipSources[n] && clipSources[n].stop(); } catch (e) {} }); bgmApply(); });
+        const ct = $('callsToggle'); ct.checked = !store.get('painWheelNoCalls', false); ct.addEventListener('change', () => store.set('painWheelNoCalls', !ct.checked));
         const mv = $('musicVol'), mvl = $('musicVolLabel'); const showMv = () => { mv.value = Math.round(musicVol() * 100); mvl.textContent = mv.value + '%'; }; showMv();
         mv.addEventListener('input', () => { store.set('painWheelMusicVol', mv.value / 100); mvl.textContent = mv.value + '%'; bgmApply(); });
         mv.addEventListener('keydown', (e) => { if (e.code === 'Space') e.preventDefault(); }); mv.addEventListener('pointerup', () => mv.blur());
@@ -6151,6 +6156,18 @@
     let themeChoice = 'auto';
     try { themeChoice = localStorage.getItem('painWheelTheme') || 'auto'; } catch (e) {}
     // ---------- Shop themes: bought with gold, never turn on by themselves ----------
+    // Veterans Day: a joke from the guild's own military folks, then the thank you (once per visit)
+    const VET_JOKES = [["Why is the sky blue?", "Because God loves the infantry!"], ["What makes the grass grow?", "Blood! Blood! Blood! (Green! Green! Green!)"],
+        ["How does a Marine greet a cow?", "Moo-rah!"], ["What do you call a dog who joins the Navy?", "A subwoofer."],
+        ["Why does the Air Force have the best coffee?", "Because their idea of 'deploying' is a hotel without room service."],
+        ["What's the difference between a Marine and a puppy?", "The puppy eventually grows up and stops eating crayons."],
+        ["Why did the soldier bring a ladder to the briefing?", "He wanted to reach the high standards the drill sergeant kept talking about."],
+        ["How do you know you're in the Navy?", "Six months in a room with 100 people and the only name you know is 'Hey, shipmate!'"]];
+    function vetJoke() {
+        if (vetJoke.done) return; vetJoke.done = true; const el = $('tagline'), [q, a] = pick(VET_JOKES);
+        el.textContent = q; setTimeout(() => el.textContent = q + ' ' + a, 3500);
+        setTimeout(() => el.textContent = 'Honoring Our Veterans • Thank You For Your Service', 10000);
+    }
     function shopTheme(id, name, cost, group, c1, c2, pain, badge, kevin, kevinLabel, drift, tagline, ads, news, callouts) {
         return { id, name, cost, group, shop: true, when: () => false,
             tint: `radial-gradient(ellipse at 50% 0%, ${c1}, transparent 60%), radial-gradient(ellipse at 50% 100%, ${c2}, transparent 60%)`,
@@ -6295,6 +6312,7 @@
         $('themeBadgeL').innerHTML = th ? badgeHTML(th.badge[0]) : '';
         $('themeBadgeR').innerHTML = th ? badgeHTML(th.badge[1]) : '';
         $('tagline').textContent = th ? th.tagline : 'High-Precision Decision Engine • 4x Live Optic Zoom';
+        if (th && /Thank You For Your Service/.test(th.tagline || '')) vetJoke();
         slices.forEach(sl => {
             if (sl.type !== 'KEVIN') return;
             sl.label = th ? th.kevinLabel : TYPE.KEVIN.label;
@@ -6863,7 +6881,7 @@
     const CHAT_LAND = {
         KEVIN: ['KEVIN AGAIN LUL', 'kevin diff', 'Kevin main btw', 'KEKW', 'of course', 'unlucky', 'Kevin is 30% of this wheel KEKW', 'L', 'pin him', 'KEVIN STRIKES', 'unsurprising', 'kevin moment', 'the doll felt that', 'kevin diff again'],
         RET_PALADIN: ['RET BUFF POG', 'blizz pls', '6% EZ Clap', 'The Light provides', 'still not enough', 'Light be praised', 'AXA POG', 'ret W'],
-        NO_ONE: ['NO ONE??? POG', 'CLIP IT', 'RIGGED', 'HOLY', 'actually insane'],
+        NO_ONE: ["YOU'RE WINNER !", 'BIG RIGS POG', 'CLIP IT', 'the truck went backwards and WON', 'congratulation'],
         PENIS: ['LMAOOO', 'KEKW', 'mods??', 'PENIS POG', 'not on stream'],
         AOTC: ['AOTC??????', 'HOLY', 'CLIP IT CLIP IT', 'NO WAY', '1 IN 1000', 'WE ARE WITNESSING HISTORY'],
         MEPHIST: ['MY EARS', 'monkaS', 'turn him DOWN', 'MEPHISTOOOOO', 'deaf now, thanks'],
@@ -9343,7 +9361,7 @@
         ['ChAoTiC', 'I am writing the wheel a ticket for spinning under the influence.'], ['Bibledaddy', 'Kevin is fine. Kevin was the one who aimed it.'],
         ['ChAoTiC', 'Casimir says this is a feature.'], ['Bibledaddy', 'Stop, drop and roll. The wheel only knows how to roll.'],
         ['ChAoTiC', "I'm confiscating this wheel. ...Okay, one more spin first."], ['Bibledaddy', 'I can save the wheel. I cannot save the Kevin slices.'],
-        ['ChAoTiC', 'I rigged it to land on No One. The rocket un-rigged it.'], ['Bibledaddy', 'Good news: no farmers on the wheel. I checked twice.'],
+        ['ChAoTiC', "I rigged it to land on You're Winner. The rocket un-rigged it."], ['Bibledaddy', 'Good news: no farmers on the wheel. I checked twice.'],
         ['ChAoTiC', 'Somebody call the fire department. Not my alt. The real one.'], ['Bibledaddy', 'The wheel is now medium rare.'],
         ['Bibledaddy', "Sorry, sorry, sorry. I'll put it out. Sorry. Anyone want a Timbit?"], ['ChAoTiC', 'Fire on the wheel! Can someone else handle this? I have Grounded 2 loaded.']];
     function rocketImg(px) { return `<img src="${PHOTO_ROCKET_FLY}" alt="🚀" width="${px}" height="${px}" style="display:block;width:${px}px;height:${px}px">`; }
@@ -9562,7 +9580,9 @@
     }
 
     let strangerRinging = false, strangerRingIv = 0, strangerTimeout = 0;
+    const callsOn = () => !store.get('painWheelNoCalls', false);   // Settings: people can turn phone calls off
     function strangerRing() {   // the brick phone rings by itself; pick it up (click the phone) or it goes to a missed call
+        if (!callsOn() || (typeof npcCallBox !== 'undefined' && npcCallBox)) return;   // one call at a time
         const btn = document.querySelector('#garageDock [data-k="phone"]');
         if (!garage.phone || !btn || !toyOpen) { playBrickRing(); return setTimeout(strangerCall, 1500); }   // no phone handy: it's ringing in your pocket, you answer
         strangerRinging = true; btn.classList.add('phone-ringing'); playBrickRing();
@@ -9622,7 +9642,7 @@
     }   // Clippy always has your number. Uwutek after your first hit, Gary once you've been on the yacht
     let npcCallBox = null;
     function npcCall(force) {
-        if (npcCallBox || strangerRinging) return;
+        if (npcCallBox || strangerRinging || (!force && !callsOn())) return;
         const who = force || pick(npcMet()), N = NPC_CALLERS[who]; if (!N) return;
         const [name, imgK, lines0, extra] = N, img = !imgK ? null : imgK.startsWith('media/') ? imgK : (window[imgK] || eval(imgK));
         const lines = (who === 'axazon' && npcCall.restock) ? AXA_RESTOCK : lines0; npcCall.restock = false;
@@ -9930,6 +9950,8 @@
             ['🦺', 'OSHA landings break things now: the rocket crashes, the banker trips, a slice falls off the wheel, a vehicle explodes, a pet trips, a top-bar button falls off (click it to bolt it back on), Clippy pokes his eye out, or the shack catches fire.'],
             ['📂', "The Board: clicking a place opens its case file first, with its own polaroid. Clippy has concerns."],
             ['🏷️', "Axazon's Emporium is open: a flea market with six items and new stock every 9 AM and 9 PM Central. Land on the Emporium slice to get in."],
+            ['🏆', "No One is now You're Winner ! (Big Rigs fans know.)"],
+            ['📞', "Don't want phone calls? Turn them off in Settings."],
             ['📎', "Ret Vision curses everything now except Clippy. He has thoughts about that."],
             ['🐾', "Pick which pets are out from ⚙️ Settings now (under Your look & sound), not the Shop."],
             ['🕯️', "Biblehumping is dead. John Blizzard banned the name. After Nick PAID for a name change. Long live Bibledaddy. Same finger. Same ambulance."],

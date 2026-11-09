@@ -104,14 +104,14 @@ setTimeout(function buzz() { if (!document.hidden) sfxQuiet('audio_flicker', .35
 addEventListener('pointerdown', () => { if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} } }, { once: true });
 // ---- the store: aisle signs open that shop tab on the wheel, the clerk points, the rest is jokes ----
 const AISLES = [
-  ['PETS', 'photo_811_sign_pets', 43, 26.6, 7.4, 'pets', 'Pets. They bite. The claw machine is in the desert shack.'],
+  ['PETS', 'photo_811_sign_pets', 29.4, 66.6, 5.2, 'pets', 'Pets. They bite. The claw machine is in the desert shack.'],
   ['TOYS', 'photo_811_sign_toys', 51.8, 26.6, 7, 'garage', 'Toys. And cars. And a rocket. Do not ask where we keep the rocket.'],
   ['SNACKS & POTIONS', 'photo_811_sign_snacks', 60.6, 25.4, 7.4, 'consumables', 'Snacks and potions. Same shelf. Same expiration date.'],
   ['COSMETICS', 'photo_811_sign_cosmetics', 69.3, 26.6, 8.6, 'cosmetics', 'Cosmetics. Make the needle pretty. Switch them in Settings.'],
   ['THEMES', 'photo_811_sign_themes', 33.4, 21.5, 8, 'themes', 'Themes. New paint for the whole wheel. Switch them in Settings.'],
-  ['CURSES', 'photo_811_sign_curses', 88.4, 25, 7.8, 'curses', 'Curses. Aim them at a guildmate. We are not liable.'] ];
+  ['CURSES', 'photo_811_sign_curses', 43, 26.6, 7.4, 'curses', 'Curses. Aim them at a guildmate. We are not liable.'] ];
 const PROPS = [['photo_811_hotdog', 24.6, 51.6, 9.2, 'hotdog', 'Hot dog roller'], ['photo_811_lottery', 34, 47.8, 7.6, 'scratch', 'Scratch-offs'],
-  ['photo_811_carrier1', 44.5, 74, 6.2, 'pets', 'Pets'], ['photo_811_carrier2', 51.4, 75, 5.8, 'pets', 'Pets']];
+  ['photo_811_carrier1', 26.6, 74.6, 5, 'pets', 'Pets'], ['photo_811_carrier2', 32.4, 75.4, 4.6, 'pets', 'Pets']];
 const JOKES = {
   hotdog: ['That hot dog has been rolling since 2019. It is not for sale. It is load-bearing.', 'The hot dogs are free. Nobody has ever taken one. Ever.', "Kevin ate one in 2021. He doesn't talk about it."],
   atm: ['OUT OF ORDER. Has been since the Cataclysm.', 'The ATM charges a 1% fee to tell you it is out of order.', 'Try the Guild Bank Vault on the yacht. This thing eats cards.'],
@@ -142,7 +142,7 @@ AISLES.forEach(([name, img, l, t, w, tab, line]) => {
   b.onmouseenter = b.onfocus = () => point(1800);
   b.onclick = () => { say(line, 2600); goShop(tab); };
 });
-add('<img class="deco" src="media/photo_811_sale.png" alt="" style="left:93.4%;top:22.4%;width:4%;transform:rotate(14deg);z-index:2">');
+add('<img class="deco" src="media/photo_811_sale.png" alt="" style="left:47.6%;top:24.2%;width:3.6%;transform:rotate(14deg);z-index:2">');
 PROPS.forEach(([img, l, t, w, act, name]) => {
   const b = add(`<button type="button" class="prop" title="${name}" aria-label="${name}" style="left:${l}%;top:${t}%;width:${w}%"><img src="media/${img}.png" alt=""></button>`);
   b.onclick = () => JOKES[act] ? say(pick(JOKES[act]), 3400) : goShop(act);
