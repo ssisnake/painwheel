@@ -486,6 +486,7 @@
         .plate-img { height: 58px; width: auto; image-rendering: pixelated; }
         .hdr-ico { display: inline-block; height: 1.9em; width: auto; vertical-align: middle; margin: -.3em .25em -.2em 0; image-rendering: pixelated; }
         .spr-ico { display: inline-block; width: auto; vertical-align: middle; image-rendering: pixelated; }
+        img.spr-ico[src*="photo_ico_"] { image-rendering: auto; }   /* the painted icon sheet: smooth, not blocky */
         .cls-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; }
         .cls-tile { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 7px 4px; font-size: 13px; font-weight: 800; line-height: 1.15; text-align: center; cursor: pointer; transition: transform .1s; }
         .cls-tile:hover { transform: translateY(-1px); }
@@ -895,7 +896,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 11:21 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 11:39 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -3590,7 +3591,7 @@
        To add a cooldown to a future slice's sound, just add a line below. */
     const SLICE_SOUNDS = {
         ranger:  { play: () => playRangerSound(),      cooldownMin: 0 },
-        lullaby: { play: () => playLullabySound(),     cooldownMin: 0 },
+        lullaby: { play: () => AUDIO_LULLABY ? playClip('lullaby', AUDIO_LULLABY, playLullabySound) : playLullabySound(), cooldownMin: 0 },  // Go to bed Evelyn
         honk:    { play: () => AUDIO_CLUSSY ? playClip('clussy', AUDIO_CLUSSY, playHonkSound) : playHonkSound(), cooldownMin: 0 },  // Clussy
         buzz:    { play: () => VIDEO_BUZZ ? null : AUDIO_BUZZ ? playClip('buzz', AUDIO_BUZZ, playWinSound) : playWinSound(), cooldownMin: 0 },  // Buzz
         fart:    { play: () => { const i = Math.random() < .5 ? 1 : 2; playClip('fart' + i, i === 1 ? AUDIO_FART_1 : AUDIO_FART_2, playFartSound); }, cooldownMin: 0 },
@@ -3886,7 +3887,7 @@
   addEventListener('focus', (e) => { if (e.target !== window) return; window.__wf = true; dispatchEvent(new Event('wfchange')); }, true);
   addEventListener('pointerdown', () => { if (!window.__wf) { window.__wf = true; dispatchEvent(new Event('wfchange')); } }, true);   // clicking the page means you're here
   document.addEventListener('visibilitychange', () => dispatchEvent(new Event('wfchange'))); })();
-    const MUSIC_CLIPS = /^(waiting|policesong)$/;   // songs, not sound effects: the Music toggle mutes these
+    const MUSIC_CLIPS = /^(waiting|policesong|lullaby)$/;   // songs, not sound effects: the Music toggle mutes these
     const musicOn = () => !store.get('painWheelMusicOff', false);
     const musicVol = () => { const v = store.get('painWheelMusicVol', .5); return typeof v === 'number' ? Math.max(0, Math.min(1, v)) : .5; };
     // ---------- background music (Pixabay: maksymmalko, tatamusic), crossfading, quiet, pauses when you leave the window ----------
@@ -5041,13 +5042,37 @@
     const PHOTO_SIREN_1 = "media/photo_siren_1.png?v=3ed3735c";
     const PHOTO_SIREN_2 = "media/photo_siren_2.png?v=c8988e96";
     const PHOTO_SIREN_3 = "media/photo_siren_3.png?v=a4dc9666";
-    const SPRITE_OF = { '📌': PHOTO_PIN_LEFT, '📞': PHOTO_TOY_PHONE, '🖐️': PHOTO_FINGER, '🍪': PHOTO_COOKIE_GOLD, '🍩': PHOTO_TOY_DONUT, '🧸': PHOTO_TOYBOX, '🚀': PHOTO_ROCKET,
+const PHOTO_ICO_FLASK = "media/photo_ico_flask.png?v=679d8d67";
+const PHOTO_ICO_SCROLL = "media/photo_ico_scroll.png?v=40f99205";
+const PHOTO_ICO_BOTTLE = "media/photo_ico_bottle.png?v=0b4fa6fc";
+const PHOTO_ICO_TV = "media/photo_ico_tv.png?v=8a2a4c7b";
+const PHOTO_ICO_SHIELD = "media/photo_ico_shield.png?v=116053c1";
+const PHOTO_ICO_PYRAMID = "media/photo_ico_pyramid.png?v=6d50e3c5";
+const PHOTO_ICO_BRIEFCASE = "media/photo_ico_briefcase.png?v=ef771857";
+const PHOTO_ICO_TAXFORM = "media/photo_ico_taxform.png?v=df029b83";
+const PHOTO_ICO_MURLOC = "media/photo_ico_murloc.png?v=4b6448a5";
+const PHOTO_ICO_BUBBLES = "media/photo_ico_bubbles.png?v=e40bb798";
+const PHOTO_ICO_HONK = "media/photo_ico_honk.png?v=e051abae";
+const PHOTO_ICO_IDCARD = "media/photo_ico_idcard.png?v=9a238f93";
+const PHOTO_ICO_MOONSUN = "media/photo_ico_moonsun.png?v=477894a5";
+const PHOTO_ICO_PALETTE = "media/photo_ico_palette.png?v=a8a3cd6d";
+const PHOTO_ICO_QUILL = "media/photo_ico_quill.png?v=564eff8e";
+const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
+    const SPRITE_OF = { '📌': PHOTO_PIN_LEFT, '📜': PHOTO_ICO_SCROLL, '🥃': PHOTO_ICO_BOTTLE, '📺': PHOTO_ICO_TV, '🛡️': PHOTO_ICO_SHIELD, '🔺': PHOTO_ICO_PYRAMID, '🇺🇸': PHOTO_ICO_BRIEFCASE, '🧾': PHOTO_ICO_TAXFORM, '🪪': PHOTO_ICO_IDCARD, '🌗': PHOTO_ICO_MOONSUN, '🔎': PHOTO_ICO_TEXTSIZE, '📞': PHOTO_TOY_PHONE, '🖐️': PHOTO_FINGER, '🍪': PHOTO_COOKIE_GOLD, '🍩': PHOTO_TOY_DONUT, '🧸': PHOTO_TOYBOX, '🚀': PHOTO_ROCKET,
         '🏐': PHOTO_VOLLEY, '🐔': PHOTO_CHICKEN, '🛸': PHOTO_UFO, '🧮': PHOTO_GIZ_GRIN, '🪙': PHOTO_COIN_1, '🫀': PHOTO_CLS_LIVER, '🥳': PHOTO_PARTY_HAT,
         '🛒': PHOTO_ICO_SHOP, '⚙️': PHOTO_ICO_SETTINGS, '📊': PHOTO_ICO_STATS, '🎒': PHOTO_ICO_BAG, '🏚️': PHOTO_HOUSE_0, '🛖': PHOTO_HOUSE_1, '🏠': PHOTO_HOUSE_2,
         '🏡': PHOTO_HOUSE_3, '🏘️': PHOTO_HOUSE_4, '🏰': PHOTO_HOUSE_5, '🛥️': PHOTO_YACHT_BIG, '🐾': PHOTO_CHICKEN, '🧿': PHOTO_TOY_DOLL, '🌾': PHOTO_CHICKEN,
         '🚗': PHOTO_COP_ICON, '🚓': PHOTO_COP_ICON, '🚑': PHOTO_AMB_ICON, '🐉': PHOTO_WHELP, '📎': PHOTO_CLIPPY, '👹': PHOTO_UWU_ICON, '🪩': PHOTO_DISCO, '🧊': PHOTO_ICEBERG,
-        '🚜': PHOTO_COMBINE, '🏜️': PHOTO_SHACK, '🔷': PHOTO_TOY_HEARTH, '🎡': PHOTO_PET_SPINNY, '🐹': PHOTO_PET_GERALD, '🌵': PHOTO_TUMBLEWEED, '🎨': PHOTO_811_PALETTE, '🧪': PHOTO_811_POTION, '🎟️': PHOTO_811_TICKET, '🎰': PHOTO_TOKEN_FRONT, '🏦': PHOTO_ITEM_VAULT, '📣': PHOTO_ITEM_MEGAPHONE };
+        '🚜': PHOTO_COMBINE, '🏜️': PHOTO_SHACK, '🔷': PHOTO_TOY_HEARTH, '🎡': PHOTO_PET_SPINNY, '🐹': PHOTO_PET_GERALD, '🌵': PHOTO_TUMBLEWEED, '🎨': PHOTO_811_PALETTE, '🧪': PHOTO_ICO_FLASK, '🎟️': PHOTO_811_TICKET, '🎰': PHOTO_TOKEN_FRONT, '🏦': PHOTO_ITEM_VAULT, '📣': PHOTO_ITEM_MEGAPHONE };
     const spriteFor = (e, h) => SPRITE_OF[e] ? sprImg(SPRITE_OF[e], h) : null;
+    (function settingsIcons() {   // the little painted icons on the Settings headers
+        const MAP = { '🪪': PHOTO_ICO_IDCARD, '🌗': PHOTO_ICO_MOONSUN, '🔎': PHOTO_ICO_TEXTSIZE, '📜': PHOTO_ICO_QUILL };
+        document.querySelectorAll('div.uppercase.tracking-wider').forEach(d => {
+            if (d.children.length) return; const t = d.textContent.trim(), e0 = t.split(' ')[0];
+            if (MAP[e0]) d.innerHTML = sprImg(MAP[e0], 26) + ' ' + t.slice(e0.length + 1).replace(/</g, '&lt;');
+            else if (t === 'Theme') d.innerHTML = sprImg(PHOTO_ICO_PALETTE, 26) + ' Theme';
+        });
+    })();
     // ---------- ⚔️ favorite class (shows next to your name) ----------
     const WOW_CLASSES = [['warrior', 'Warrior', '⚔️', '#C69B6D'], ['paladin', 'Paladin', '🔨', '#F48CBA'], ['hunter', 'Hunter', '🏹', '#AAD372'], ['rogue', 'Rogue', '🗡️', '#FFF468'],
         ['priest', 'Priest', '✨', '#FFFFFF'], ['shaman', 'Shaman', '⚡', '#0070DD'], ['mage', 'Mage', '❄️', '#3FC7EB'], ['warlock', 'Warlock', '🔮', '#8788EE'], ['monk', 'Monk', '👊', '#00FF98'],
@@ -10028,6 +10053,8 @@
             ['🎒', "LOOT OVERHAUL: one set per place (the Wheel, the Yacht, the VIP Room, the Shack, the 8/11) plus the Degenerate Rejects guild set. Set pieces are RARE now: about 1 in 60 spins, plus boss kills, the liver, rent and the 8/11. Everything else is trash you can sell or hoard. Check your Sets tab."],
             ['🏅', "The original 8 sets are retired. The people who helped build The Wheel get them back forever with a personal code (Settings → Have a code?)."],
             ['🏆', "No One is now You're Winner ! (Big Rigs fans know.)"],
+            ['🌙', "Go to Bed Evelyn plays a real lullaby now."],
+            ['🖼️', "New painted icons all over the Shop and Settings. The Shack and the Emporium got their own polaroids and case file photos on The Board."],
             ['📞', "Don't want phone calls? Turn them off in Settings."],
             ['📎', "Ret Vision curses everything now except Clippy. He has thoughts about that."],
             ['🐾', "Pick which pets are out from ⚙️ Settings now (under Your look & sound), not the Shop."],
@@ -10705,7 +10732,7 @@
         return `<svg viewBox="0 0 46 54" width="${Math.round((h || 40) * 46 / 54)}" height="${h || 40}" style="display:inline-block;vertical-align:middle"><defs><linearGradient id="ndlRbS" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ef4444"/><stop offset=".33" stop-color="#facc15"/><stop offset=".66" stop-color="#22c55e"/><stop offset="1" stop-color="#3b82f6"/></linearGradient></defs>
             <circle cx="23" cy="14" r="10" fill="#1E293B" stroke="#F8FAFC" stroke-width="3"/><path d="M13 18L23 50L33 18H13Z" fill="${String(n.fill).startsWith('url') ? 'url(#ndlRbS)' : n.fill}" stroke="${n.stroke}" stroke-width="2" stroke-linejoin="round"/><circle cx="23" cy="14" r="4" fill="${String(n.fill).startsWith('url') ? '#facc15' : n.fill}"/></svg>`;
     }
-    const PACK_ICON = () => ({ classic: PHOTO_PET_SPINNY, murloc: '🐸', coins: PHOTO_COIN_1, bubbles: '🫧', chip: PHOTO_CLAW_CAB, honk: '🤡' });
+    const PACK_ICON = () => ({ classic: PHOTO_PET_SPINNY, murloc: PHOTO_ICO_MURLOC, coins: PHOTO_COIN_1, bubbles: PHOTO_ICO_BUBBLES, chip: PHOTO_CLAW_CAB, honk: PHOTO_ICO_HONK });
     function renderLooks() {
         const tg = $('themeGrid'); if (!tg) return; tg.innerHTML = '';
         const auto = autoTheme();
@@ -11528,7 +11555,8 @@
     const S811_SPILL = ['Clean up on aisle 8. Your gold is gone. So is your Slurpee.', 'Dropped it. The 8/11 has a no-refund policy. And no floor mop.', 'Kevin bumped you. Kevin says he did not bump you.', 'It hit the floor before the lid did. Gravity: 1, you: 0.'];
     let s811Busy = false;
     function s811Say(t, ms) { const d = $('s811Say'); d.textContent = t; d.classList.remove('hidden'); clearTimeout(s811Say.t); s811Say.t = setTimeout(() => d.classList.add('hidden'), ms || 3200); }
-    const AUDIO_DOOR_CHIME = "media/audio_door_chime.mp3?v=34de5993";
+    const AUDIO_LULLABY = "media/audio_lullaby.mp3?v=f58fe7fe";   // "Lofi Lullaby" by marlowemusic (Pixabay), first 26s, faded out
+const AUDIO_DOOR_CHIME = "media/audio_door_chime.mp3?v=34de5993";
     function open811() {   // the 8/11 is its own page now (811.html); this old in-page store is kept only as a fallback
         if (!has811()) { moveToast('🔒 The shop is inside the 8/11, and the 8/11 is closed. Land on 8/11 on the wheel to open it.'); return; }
         location.href = '811.html'; return;

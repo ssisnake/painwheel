@@ -6,7 +6,7 @@
   if (Math.random() > (seen[spot.id] ? .25 : .45)) return;   // not every visit. You have to be paying attention
   const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', 'Something in the background');
   b.style.cssText = `position:absolute;left:${spot.x}%;top:${spot.y}%;width:${spot.w}%;padding:0;border:0;background:none;cursor:pointer;z-index:${spot.z || 1};opacity:0;transition:opacity 2.5s, transform .6s;${spot.clip ? 'clip-path:' + spot.clip + ';' : ''}`;
-  b.innerHTML = `<img src="media/axa_peek.png" alt="" style="display:block;width:100%;height:auto;image-rendering:pixelated;filter:${spot.filter || 'brightness(.55) saturate(.6)'}">`;
+  b.innerHTML = `<img src="media/axa_peek.png" alt="" style="display:block;width:100%;height:auto;image-rendering:pixelated;${spot.flip ? 'transform:scaleX(-1);' : ''}filter:${spot.filter || 'brightness(.55) saturate(.6)'}">`;
   new Image().src = 'media/axa_duck.png';   // the ducking frame, ready
   host.appendChild(b); setTimeout(() => b.style.opacity = String(spot.op || .9), 1500);
   const LINES = ["...you didn't see me.", 'Nothing to see here. Keep investigating. Not me though.', "I'm not here. I'm at the flea market. Ask anyone.", 'Shh. I am a background character.', 'Was it me this whole time? ...Maybe.', 'Wrong guy. Totally different halo.'];

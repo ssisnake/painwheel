@@ -327,7 +327,8 @@ addEventListener('pointerdown', startWind, { once: true });
   st.textContent = `.dust { position:absolute; pointer-events:none; z-index:1; opacity:0; transition:opacity .5s; image-rendering:auto; }
     .mote { position:absolute; pointer-events:none; z-index:1; opacity:.55; animation: drift 14s ease-in-out infinite; }
     @keyframes drift { 0% { transform: translate(0,0); } 25% { transform: translate(1.2vw,1.5vh); } 50% { transform: translate(-.6vw,3vh); } 75% { transform: translate(.8vw,1.2vh); } 100% { transform: translate(0,0); } }
-    .lizard { position:absolute; z-index:3; width:9%; cursor:pointer; border:0; padding:0; background:none; transition: left linear; }
+    .liz-lane { position:absolute; left:0; top:0; width:74%; height:100%; overflow:hidden; pointer-events:none; z-index:3; }   /* ends at the sand pile: he walks in behind it */
+    .lizard { position:absolute; width:12.16%; cursor:pointer; border:0; padding:0; background:none; pointer-events:auto; }
     .lizard img { display:block; width:100%; height:auto; filter: drop-shadow(0 4px 3px rgba(0,0,0,.5)); }`;
   document.head.appendChild(st);
   // motes hanging in the light from the doorway and the roof cracks
@@ -342,18 +343,26 @@ addEventListener('pointerdown', startWind, { once: true });
   })();
   // the lizard: very rare, crosses the floor and leaves
   const LIZ = ['The lizard does not care about your problems.', 'The lizard looks at you. The lizard has seen better gamers.', 'It is just passing through. It has places to be.', 'The lizard was here before the shack. It will be here after.'];
-  function lizard() {
+  function lizard() {   // along the bottom boards, then up the drift and behind the sand pile
     if (document.hidden || scene.querySelector('.lizard')) return;
+    const lane = document.createElement('div'); lane.className = 'liz-lane';
     const b = document.createElement('button'); b.type = 'button'; b.className = 'lizard'; b.setAttribute('aria-label', 'A lizard'); b.innerHTML = '<img src="media/lizard.webp" alt="">';
-    b.style.left = '-10%'; b.style.top = (84 + Math.random() * 5) + '%'; scene.appendChild(b);
+    lane.appendChild(b); scene.appendChild(lane);
+    const X = (x) => (x / .74) + '%', y0 = 93.5 + Math.random() * 1.2;   // scene % -> lane %
     const ms = 15000 + Math.random() * 6000;
-    requestAnimationFrame(() => requestAnimationFrame(() => { b.style.transitionDuration = ms + 'ms'; b.style.left = '102%'; }));
-    b.onclick = (e) => { e.stopPropagation(); if (typeof say === 'function') say('🦎 ' + LIZ[Math.floor(Math.random() * LIZ.length)], 3600); b.style.transitionDuration = '1200ms'; b.style.left = '104%'; };
-    setTimeout(() => b.remove(), ms + 500);
+    const KF = [{ left: X(-10), top: y0 + '%' }, { left: X(58), top: y0 + '%', offset: .82 }, { left: X(66), top: (y0 - 1.2) + '%', offset: .92 }, { left: X(75), top: (y0 - 2.6) + '%' }];
+    let anim = b.animate(KF, { duration: ms, easing: 'linear', fill: 'forwards' });
+    anim.onfinish = () => lane.remove();
+    b.onclick = (e) => {
+      e.stopPropagation(); if (typeof say === 'function') say('🦎 ' + LIZ[Math.floor(Math.random() * LIZ.length)], 3600);
+      const cs = getComputedStyle(b), from = { left: cs.left, top: cs.top }; anim.cancel();
+      anim = b.animate([from, { left: X(66), top: (y0 - 1.2) + '%' }, { left: X(75), top: (y0 - 2.6) + '%' }], { duration: 1400, easing: 'ease-in', fill: 'forwards' });
+      anim.onfinish = () => lane.remove();
+    };
   }
   if (Math.random() < .08) setTimeout(lizard, 4000 + Math.random() * 8000);
   setInterval(() => { if (Math.random() < .05) lizard(); }, 90000);
   window.lizard = lizard;
 })();
-</script><script>window.AXA_CAMEO = { id: 'shack', host: '#scene', x: 49.6, y: 38, w: 3.6, z: 1, filter: 'brightness(.62) sepia(.35)', op: 1 };</script><script src="axa_cameo.js"></script>
+</script><script>window.AXA_CAMEO = { id: 'shack', host: '#scene', x: 46.1, y: 40, w: 2.5, z: 1, flip: true, filter: 'brightness(.62) sepia(.35)', op: .5 };</script><script src="axa_cameo.js"></script>
 </body></html>
