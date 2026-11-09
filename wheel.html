@@ -893,7 +893,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 5:48 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 8, 5:59 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -1561,6 +1561,7 @@
     const VIDEO_ASMON = "media/video_asmon.mp4?v=78682d89";
     const GIF_LOST = "media/gif_lost.gif?v=0694f342";      // Enron Ethics Handbook
     const PHOTO_DOUBLE_ENDER = "media/photo_double_ender.jpg?v=436a5e85";
+    const PHOTO_TAUNTING = "media/photo_taunting.jpg?v=c74c9a2c";
     const PHOTO_BUSY_SKINNING = "media/photo_busy_skinning.jpg?v=8ce49238";
     const PHOTO_NICKS_MOM = "media/photo_nicks_mom.jpg?v=bd3c018a";
     const PHOTO_PARDNER_HELP = "media/photo_pardner_help.jpg?v=75fab1d8";
@@ -1749,6 +1750,8 @@
     })();
     const SLICE_ANGLE = (Math.PI * 2) / TOTAL_SLICES;
 
+    const PHOTO_PIN_LEFT = "media/pin_left.png";   // the red pushpin points left: Axa is left-handed
+    const PIN_IMG = '<img src="media/pin_left.png" alt="📌" style="display:inline-block;height:1.05em;width:auto;vertical-align:-.15em;image-rendering:pixelated">';
     const SIZE = {
         huge: "text-5xl md:text-6xl",
         big: "text-4xl md:text-5xl",
@@ -1864,7 +1867,7 @@
                  'The house cost $9,000. The kids say "yes sir." The TV has three channels and one of them is Uwutek.', '"Pass the peas, Margaret. The Russians have the bomb." "Yes, dear."']),
                  media: { src: PHOTO_FAMILY_50S, fallback: null, caption: '🏡 TYPICAL 1950s NUCLEAR FAMILY • UWUTEK ON CHANNEL 3' } } },
         { id: "TAUNTING", n: 1, label: "🛡️ Taunting 🛡️", pill: "TAUNTING", bg: "#475569", text: "#f1f5f9", border: "#cbd5e1", color: "text-slate-300", glow: "bg-slate-600", key: "_", rig: "TNT",
-          win: { title: "🛡️ TAUNTING 🛡️", size: SIZE.mid, sub: () => pick(["Casimir would never. Not once. Not even when he was a Protection Paladin, when it was literally his job.", "Casimir doesn't taunt. He lets the boss make its own decisions.",
+          win: { title: "🛡️ TAUNTING 🛡️", size: SIZE.mid, media: { src: PHOTO_TAUNTING, fallback: null, caption: "💤 TAUNT: ON COOLDOWN SINCE 2019" }, sub: () => pick(["Casimir would never. Not once. Not even when he was a Protection Paladin, when it was literally his job.", "Casimir doesn't taunt. He lets the boss make its own decisions.",
                  "The add has been taunted. By the warlock's imp. Casimir is very proud of him.", "Taunt was on Casimir's bars. Taunt was never pressed. Taunt is still on cooldown from 2019.", "Casimir prefers to tank with positive reinforcement."]) } },
         { id: "CANT_PARK", n: 1, label: "🅿️ Can't Park There 🅿️", pill: "CAN'T PARK", bg: "#1d4ed8", text: "#ffffff", border: "#facc15", color: "text-blue-300", glow: "bg-blue-700", key: "", rig: "CPT",
           win: { title: "🅿️ CAN'T PARK THERE 🅿️", size: SIZE.mid, sub: () => pick(CANT_PARK_LINES) + " (A repair bill for the wipe is in your bills.)" } },
@@ -5029,7 +5032,7 @@
     const PHOTO_SIREN_1 = "media/photo_siren_1.png?v=3ed3735c";
     const PHOTO_SIREN_2 = "media/photo_siren_2.png?v=c8988e96";
     const PHOTO_SIREN_3 = "media/photo_siren_3.png?v=a4dc9666";
-    const SPRITE_OF = { '📞': PHOTO_TOY_PHONE, '🖐️': PHOTO_FINGER, '🍪': PHOTO_COOKIE_GOLD, '🍩': PHOTO_TOY_DONUT, '🧸': PHOTO_TOYBOX, '🚀': PHOTO_ROCKET,
+    const SPRITE_OF = { '📌': PHOTO_PIN_LEFT, '📞': PHOTO_TOY_PHONE, '🖐️': PHOTO_FINGER, '🍪': PHOTO_COOKIE_GOLD, '🍩': PHOTO_TOY_DONUT, '🧸': PHOTO_TOYBOX, '🚀': PHOTO_ROCKET,
         '🏐': PHOTO_VOLLEY, '🐔': PHOTO_CHICKEN, '🛸': PHOTO_UFO, '🧮': PHOTO_GIZ_GRIN, '🪙': PHOTO_COIN_1, '🫀': PHOTO_CLS_LIVER, '🥳': PHOTO_PARTY_HAT,
         '🛒': PHOTO_ICO_SHOP, '⚙️': PHOTO_ICO_SETTINGS, '📊': PHOTO_ICO_STATS, '🎒': PHOTO_ICO_BAG, '🏚️': PHOTO_HOUSE_0, '🛖': PHOTO_HOUSE_1, '🏠': PHOTO_HOUSE_2,
         '🏡': PHOTO_HOUSE_3, '🏘️': PHOTO_HOUSE_4, '🏰': PHOTO_HOUSE_5, '🛥️': PHOTO_YACHT_BIG, '🐾': PHOTO_CHICKEN, '🧿': PHOTO_TOY_DOLL, '🌾': PHOTO_CHICKEN,
@@ -6899,7 +6902,7 @@
         const c = $('chatCard'); chatState.pop = p && !IS_PHONE();
         if (chatState.pop) { document.body.appendChild(c); c.classList.add('chat-float'); chatPlace(); }
         else { $('chatHome').after(c); c.classList.remove('chat-float'); c.style.transform = ''; }
-        $('chatPop').textContent = chatState.pop ? '📌' : '⧉'; $('chatPop').title = chatState.pop ? 'Dock chat back in the page' : 'Pop chat out into its own window';
+        $('chatPop').innerHTML = chatState.pop ? PIN_IMG : '⧉'; $('chatPop').title = chatState.pop ? 'Dock chat back in the page' : 'Pop chat out into its own window';
         $('chatPop').style.display = IS_PHONE() ? 'none' : '';
         store.set('painWheelChatPos', chatState); $('chatLog').scrollTop = $('chatLog').scrollHeight;
     }
@@ -6931,7 +6934,7 @@
             st.pop = p && !IS_PHONE();
             if (st.pop) { document.body.appendChild(card); card.classList.add('card-float'); place(); }
             else { home.after(card); card.classList.remove('card-float'); card.style.transform = ''; }
-            btn.textContent = st.pop ? '📌' : '⧉'; btn.title = st.pop ? `Dock ${label} back in the page` : `Pop ${label} out into its own window`;
+            btn.innerHTML = st.pop ? PIN_IMG : '⧉'; btn.title = st.pop ? `Dock ${label} back in the page` : `Pop ${label} out into its own window`;
             btn.style.display = IS_PHONE() ? 'none' : '';
             store.set(key, st);
         };
@@ -11185,7 +11188,7 @@
         const w = $('squawkWin'); sqState.docked = d && !IS_PHONE();
         if (sqState.docked) { $('sqDock').appendChild(w); w.classList.add('sq-docked'); w.style.transform = ''; }
         else { document.body.appendChild(w); w.classList.remove('sq-docked'); sqPlace(); }
-        $('sqPop').textContent = sqState.docked ? '⧉' : '📌'; $('sqPop').title = sqState.docked ? 'Pop Squawkr out into a window you can drag' : 'Dock Squawkr back under the chat';
+        $('sqPop').innerHTML = sqState.docked ? '⧉' : PIN_IMG; $('sqPop').title = sqState.docked ? 'Pop Squawkr out into a window you can drag' : 'Dock Squawkr back under the chat';
         $('sqPop').style.display = IS_PHONE() ? 'none' : '';
         sqSaveState();
     }
