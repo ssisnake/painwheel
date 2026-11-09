@@ -131,7 +131,7 @@ const sfx = (name, dur, rate) => {
   addEventListener('focus', (e) => { if (e.target !== window) return; window.__wf = true; dispatchEvent(new Event('wfchange')); }, true);
   addEventListener('pointerdown', () => { if (!window.__wf) { window.__wf = true; dispatchEvent(new Event('wfchange')); } }, true);   // clicking the page means you're here
   document.addEventListener('visibilitychange', () => dispatchEvent(new Event('wfchange'))); })();
-const CLAW_BGM = [1, 2, 3, 4, 5].map(n => `media/audio_bgm_clawbroke${n}.mp3`);   // same songs through the cabinet's dying speaker (WHEEL-2600 keeps the clean ones)
+const CLAW_BGM = [1, 2, 3, 4, 5].map(n => `media/audio_bgm_clawbusted${n}.mp3`);   // same songs through the cabinet's dying speaker (WHEEL-2600 keeps the clean ones)
 let clawA = null, clawI = Math.floor(Math.random() * 5), clawOn = false;
 const musicOff = () => get('painWheelMusicOff', false) === true;
 const musicVol = () => { const v = get('painWheelMusicVol', .5); return typeof v === 'number' ? Math.max(0, Math.min(1, v)) : .5; };
