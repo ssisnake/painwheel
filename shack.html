@@ -48,6 +48,10 @@
 <dialog id="dlg"><h3 id="dT"></h3><div id="dB"></div><button onclick="dlg.close()">Close</button></dialog>
 <script>
 try { localStorage.setItem('painWheelSeenClaw', 'true'); } catch (e) {}
+// the claw broke: you need a joystick, a claw and a coin mech from Gnome Depot. Anyone who already played it keeps a working one
+const clawState = () => { try { let st = JSON.parse(localStorage.getItem('painWheelClawState')); if (!st) { st = (Number(JSON.parse(localStorage.getItem('painWheelClawPlays'))) || 0) > 0 ? 'grand' : 'broken'; localStorage.setItem('painWheelClawState', JSON.stringify(st)); } return st; } catch (e) { return 'grand'; } };
+const CLAW_BROKEN = ["OUT OF ORDER. The joystick is gone, the claw is gone, and the coin slot is full of sand.", "The claw machine is busted. The skeleton says Gnome Depot has parts. Next to the 8/11. Bring gold. Bring patience.",
+  "Somebody stripped the claw machine for parts. Probably the skeleton. He says it wasn't him. He has a joystick-shaped tan line."];
 const say = (t, ms) => { const d = document.getElementById('say'); d.textContent = t; d.style.display = 'block'; clearTimeout(say.t); say.t = setTimeout(() => d.style.display = 'none', ms || 3400); };
 const pick = (a) => a[Math.floor(Math.random() * a.length)];
 const get = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } };
@@ -67,6 +71,7 @@ const ACT = {
   skel: () => {
     metNpc('skeleton');
     const emp = get('painWheelEmporiumOpen', false) || ((get('painWheelStats', {}) || {}).byType || {}).EMPORIUM > 0;
+    if (clawState() === 'broken' && Math.random() < .6) return say('💀 ' + pick(["The claw? Broke it myself. Tried to win my brother back. Parts are at Gnome Depot, next to the 8/11. Ask for Karen. Actually, don't.", "Joystick, claw, coin mech. Gnome Depot has all three. The gnome there yelled at me. I don't have ears and I still heard it.", "Fix the claw and I'll watch you lose. It's the only fun I have. Gnome Depot. By the 8/11."]), 6400);
     if (emp && !get('painWheelSeenEmporium', false) && Math.random() < .7) return say('💀 ' + pick(FLEA_HINTS), 5600);   // he points new customers out the window
     say('💀 ' + (!(get('painWheelClues', {}) || {}).map && Math.random() < .55 ? pick(SKELETON_HINTS) : emp && Math.random() < .15 ? pick(FLEA_HINTS) : pick(SKELETON)), 5200);
   },
@@ -176,6 +181,7 @@ function clawMusic(on) {
 }
 addEventListener('wfchange', () => clawOn && clawMusic(true));
 function openClaw() {
+  if (clawState() === 'broken') { say('🔧 ' + pick(CLAW_BROKEN), 6000); return; }   // parts first (Gnome Depot)
   clawMusic(true);
   if (document.getElementById('clawOv')) return;
   put('painWheelSeenClaw', true);

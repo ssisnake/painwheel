@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/png" href="favicon.png">
+<title>Gnome Depot · The Wheel</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; background: #140c06; color: #fed7aa; font-family: system-ui, sans-serif; display: flex; flex-direction: column; }
+  header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 16px; }
+  h1 { margin: 0; font-size: clamp(24px, 3.4vw, 36px); letter-spacing: .03em; color: #fb923c; text-shadow: 0 2px 0 #431407, 0 0 14px rgba(251,146,60,.4); }
+  #goldBox { font: 800 20px ui-monospace, monospace; color: #fde047; }
+  nav { display: flex; flex-wrap: wrap; gap: 10px; }
+  nav a { color: #1c1917; background: #f59e0b; font-weight: 800; font-size: 18px; text-decoration: none; padding: 8px 16px; border-radius: 8px; }
+  nav a.alt { background: #7c2d12; color: #fed7aa; }
+  .wrap { flex: 1; display: grid; place-items: center; padding: 0 12px 16px; }
+  .scroller { width: 100%; overflow-x: auto; display: grid; place-items: center; }
+  .scene { position: relative; container-type: inline-size; width: min(2560px, 100%, calc((100vh - 120px) * 16 / 9)); aspect-ratio: 16 / 9; background: url(media/gnome_bg.jpg) 0 0 / 100% 100% no-repeat; border-radius: 10px; box-shadow: 0 0 0 3px #ea580c, 0 20px 60px rgba(0,0,0,.7); overflow: hidden; }
+  @media (max-width: 700px) { .scene { min-width: 640px; } .scroller { place-items: start; } }
+  /* the hanging aisle signs are blank in the art: the words are ours */
+  .aisle { position: absolute; display: flex; align-items: center; justify-content: center; padding: 0; border: 0; background: none; cursor: pointer; font-family: Impact, 'Arial Black', system-ui, sans-serif; color: #431407; letter-spacing: .04em; line-height: 1; text-align: center; white-space: nowrap; }
+  .aisle:hover, .aisle:focus-visible { color: #c2410c; outline: none; text-shadow: 0 0 .6cqw #fde68a; }
+  .hs { position: absolute; padding: 0; border: 3px solid transparent; border-radius: 10px; background: transparent; cursor: pointer; }
+  .hs:hover, .hs:focus-visible { border-color: #fde68a; box-shadow: 0 0 14px #fde68a; outline: none; }
+  #karen { position: absolute; z-index: 3; padding: 0; border: 0; background: none; cursor: pointer; }
+  #karen img { display: block; width: 100%; height: auto; image-rendering: pixelated; filter: drop-shadow(0 .3cqw .4cqw rgba(0,0,0,.45)); transform-origin: 50% 100%; animation: huff 3.2s ease-in-out infinite; }
+  @keyframes huff { 50% { transform: scaleY(1.015); } }
+  #karen:hover img, #karen:focus-visible img { filter: drop-shadow(0 0 .7cqw #fde68a); } #karen:focus-visible { outline: none; }
+  #say { position: absolute; left: 50%; top: 3%; transform: translateX(-50%); max-width: 82%; padding: 10px 18px; border-radius: 10px; background: rgba(20,12,6,.94); border: 2px solid #ea580c; color: #ffedd5; font: 800 19px/1.35 system-ui, sans-serif; text-align: center; display: none; z-index: 9; }
+  #say b { color: #fb923c; }
+  /* the claw machine parts counter */
+  #parts { position: fixed; inset: 0; z-index: 70; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.62); padding: 16px; }
+  #parts.open { display: flex; }
+  #parts .box { width: min(560px, 100%); max-height: 92vh; overflow: auto; background: #1c1209; border: 4px solid #ea580c; border-radius: 14px; padding: 18px; color: #ffedd5; box-shadow: 0 20px 60px rgba(0,0,0,.6); }
+  #parts h2 { margin: 0 0 4px; font-size: 26px; color: #fb923c; }
+  #parts .muted { color: #d6d3d1; font-size: 17px; line-height: 1.4; margin: 0 0 12px; }
+  .part { display: grid; grid-template-columns: 52px 1fr auto; gap: 12px; align-items: center; padding: 10px 12px; margin-top: 8px; border-radius: 10px; background: #2a1a0c; border: 2px solid #7c2d12; }
+  .part .ic { font-size: 40px; text-align: center; }
+  .part b { display: block; font-size: 19px; } .part small { color: #d6d3d1; font-size: 15px; }
+  .part button, #parts .close { font: 800 18px system-ui, sans-serif; padding: 9px 16px; border-radius: 9px; border: 0; cursor: pointer; background: #22c55e; color: #052e16; white-space: nowrap; }
+  .part button:disabled { background: #57534e; color: #d6d3d1; cursor: default; }
+  .part.got { border-color: #15803d; } .part.got button { background: #14532d; color: #bbf7d0; }
+  #parts .close { display: block; margin: 14px auto 0; background: #f59e0b; color: #1c1917; }
+  #partsMsg { min-height: 1.4em; margin-top: 10px; text-align: center; font-weight: 800; color: #fde68a; }
+  #shopFrame { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; z-index: 60; background: transparent; opacity: 0; transition: opacity .2s; }
+  #shopWait { position: fixed; inset: 0; z-index: 59; display: flex; align-items: center; justify-content: center; background: rgba(2,6,23,.55); color: #fde68a; font: 800 22px system-ui, sans-serif; text-shadow: 0 2px 0 #000; }
+</style></head><body>
+<header><h1>🔨 Gnome Depot</h1><span id="goldBox"></span><nav><a class="alt" href="./"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a><a class="alt" href="811.html">🏪 The 8/11</a><a href="wheel.html">🎡 Back to The Wheel</a></nav></header>
+<div class="wrap"><div class="scroller"><div class="scene" id="scene">
+  <button class="aisle" data-go="paint" style="left:41.9%;top:15%;width:14.1%;height:7.4%;font-size:1.5cqw" title="Paint (Themes)">PAINT &amp; THEMES</button>
+  <button class="aisle" data-go="house" style="left:46.4%;top:28.9%;width:7.6%;height:4.6%;font-size:1.15cqw" title="Houses">HOUSES</button>
+  <button class="aisle" data-go="claw" style="left:48.8%;top:37.3%;width:5%;height:3.3%;font-size:.6cqw" title="Claw parts">CLAW PARTS</button>
+  <button class="aisle" data-go="returns" style="left:50.2%;top:42.8%;width:3.5%;height:2.3%;font-size:.48cqw" title="Returns">RETURNS</button>
+  <button class="hs" data-go="paint" title="Paint chips (Themes)" aria-label="Paint chips: Themes" style="left:.5%;top:59.5%;width:19%;height:18.5%"></button>
+  <button class="hs" data-go="cans" title="Paint cans" aria-label="Paint cans" style="left:.5%;top:36.5%;width:12.4%;height:23%"></button>
+  <button class="hs" data-go="claw" title="Claw machine parts" aria-label="Claw machine parts" style="left:61.3%;top:52.5%;width:19.2%;height:22.5%"></button>
+  <button class="hs" data-go="house" title="Lumber (Houses)" aria-label="Lumber: house upgrades" style="left:81%;top:27%;width:18.6%;height:29%"></button>
+  <button class="hs" data-go="motto" title="The sign" aria-label="The sign" style="left:84%;top:6.5%;width:15.4%;height:20.5%"></button>
+  <button class="hs" data-go="logo" title="Gnome Depot" aria-label="Gnome Depot sign" style="left:6%;top:1.5%;width:15.4%;height:29%"></button>
+  <button class="hs" data-go="bell" title="The bell" aria-label="The bell" style="left:16.6%;top:32.5%;width:2.6%;height:11.5%"></button>
+  <button class="hs" data-go="door" title="Back to the 8/11" aria-label="Back to the 8/11" style="left:9.6%;top:31%;width:10.6%;height:31%"></button>
+  <button class="hs" data-go="register" title="The register" aria-label="The register" style="left:80.6%;top:58.5%;width:9.8%;height:16.5%"></button>
+  <button id="karen" type="button" aria-label="Karen Sprocketknockers"><img id="karenImg" src="media/gnome_karen_crossed.png" alt=""></button>
+  <div id="say" role="status"></div>
+</div></div></div>
+<div id="parts" role="dialog" aria-modal="true" aria-label="Claw machine parts"><div class="box">
+  <h2>🦾 Claw Machine Parts</h2>
+  <p class="muted" id="partsLede"></p>
+  <div id="partList"></div>
+  <div id="partsMsg"></div>
+  <button class="close" id="partsClose">Done</button>
+</div></div>
+<script>
+const $ = (id) => document.getElementById(id);
+const pick = (a) => a[Math.floor(Math.random() * a.length)];
+const get = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } };
+const put = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const fmt = (n) => { n = Math.round(n); if (n < 1e15) return n.toLocaleString() + 'g'; const e = Math.floor(Math.log10(n)); return (n / Math.pow(10, e)).toFixed(2) + 'e' + e + 'g'; };
+const gold = () => Math.max(0, Number(get('painWheelGold', 0)) || 0);
+const showGold = () => { $('goldBox').textContent = '🪙 ' + fmt(gold()); };
+showGold(); addEventListener('storage', (e) => { if (e.key === 'painWheelGold') showGold(); });
+const say = (t, ms) => { const d = $('say'); d.innerHTML = '<b>Karen:</b> ' + t; d.style.display = 'block'; clearTimeout(say.t); say.t = setTimeout(() => d.style.display = 'none', ms || 4200); };
+const note = (t, ms) => { const d = $('say'); d.textContent = t; d.style.display = 'block'; clearTimeout(say.t); say.t = setTimeout(() => d.style.display = 'none', ms || 3400); };
+put('painWheelSeenGnome', true);
+
+// sound: the wheel's own clips, at the wheel's volume
+let AC = null; const BUF = {};
+const vol = () => { const v = parseFloat(localStorage.getItem('painWheelVolume')); return isNaN(v) ? 0.6 : Math.max(0, Math.min(1, v)); };
+const sfx = (name, g) => { try { if (!vol()) return; AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+  const go = (b) => { const s = AC.createBufferSource(), gn = AC.createGain(); s.buffer = b; gn.gain.value = (g || .8) * vol(); s.connect(gn); gn.connect(AC.destination); s.start(); };
+  if (BUF[name]) return go(BUF[name]); fetch('media/' + name + '.mp3').then(r => r.arrayBuffer()).then(ab => AC.decodeAudioData(ab)).then(b => { BUF[name] = b; go(b); }).catch(() => {}); } catch (e) {} };
+addEventListener('pointerdown', () => { if (AC && AC.state === 'suspended') AC.resume(); }, { once: true });
+
+// ---------- Karen Sprocketknockers: behind the register, arms crossed, already annoyed ----------
+const KAREN_NUDGE = { left: 94.1, bottom: 28.6, width: 10.6 };   // % of the store: tweak to move her (bottom = up from the floor of the picture)
+const k = $('karen'); Object.assign(k.style, { left: KAREN_NUDGE.left + '%', bottom: KAREN_NUDGE.bottom + '%', width: KAREN_NUDGE.width + '%', translate: '-50% 0' });
+function pose(p, ms) { $('karenImg').src = 'media/gnome_karen_' + p + '.png'; clearTimeout(pose.t); if (p !== 'crossed') pose.t = setTimeout(() => { $('karenImg').src = 'media/gnome_karen_crossed.png'; }, ms || 2600); }
+const HELLO_FIRST = ["Oh. A customer. Wonderful. I was having a nice day.", "Welcome to Gnome Depot, where the gnomes are short and so is my patience."];
+const HELLO = ["Shoes. Wipe them. I just mopped that in 2019.", "Oh, it's YOU again.", "We close in five minutes. We always close in five minutes.", "If you're here to return something, the answer is no. If you're here to ask a question, also no.",
+  "Don't touch the paint chips. You'll get your fingerprints on Kevin Beige.", "Can I help you? That was rhetorical.", "Ugh. Fine. Browse. Quietly."];
+const KAREN = ["My name tag? It's fine. The rest of my name is on the tape. It is NOT a big deal.", "I want to speak to YOUR manager. Who manages you? Bring them here.", "I've worked here 340 years. I have never once been helpful. I'm not starting now.",
+  "Sprocketknockers. Sprocket. Knockers. Say it wrong one more time.", "The 8/11 guy? He owes me a hot dog. From 2019. He knows.", "I don't do refunds. I don't do exchanges. I barely do sales.",
+  "Goblin Express? Oh, honey. No.", "That's not a sale price. That's the price. The sale is that I'm talking to you.", "Do I look like I'm on break? I'm ALWAYS on break. Ask me anyway. I dare you.",
+  "My hair is not 'a lot'. It's VOLUME. Gnomes need height.", "You break it, you bought it. You look at it funny, you also bought it.", "The claw parts are in the bin. No, I won't get them for you. Your arms work."];
+$('karen').onclick = () => { pose('point'); say(pick(KAREN)); };
+setTimeout(() => { pose('point', 3000); say(get('painWheelGnomeVisits', 0) ? pick(HELLO) : pick(HELLO_FIRST), 4800); put('painWheelGnomeVisits', get('painWheelGnomeVisits', 0) + 1); sfx('audio_door_chime', .6); }, 900);
+
+// ---------- the shop opens right here (the wheel's shop in a frame, like the 8/11) ----------
+function goShop(tab) {
+  if ($('shopFrame')) return;
+  const w = document.createElement('div'); w.id = 'shopWait'; w.textContent = 'Karen is looking for the price gun. Slowly.'; document.body.appendChild(w);
+  const f = document.createElement('iframe'); f.id = 'shopFrame'; f.title = 'Gnome Depot';
+  f.src = 'wheel.html?embed=shop' + (tab ? '#go=shop_' + tab : ''); document.body.appendChild(f);
+  setTimeout(() => { if ($('shopWait')) closeShopFrame(); }, 20000);
+}
+function closeShopFrame() { const f = $('shopFrame'), w = $('shopWait'); if (f) f.remove(); if (w) w.remove(); showGold(); }
+addEventListener('message', (e) => {
+  if (e.origin !== location.origin || !e.data || !e.data.shop) return;
+  if (e.data.shop === 'ready') { const f = $('shopFrame'), w = $('shopWait'); if (f) { f.style.opacity = '1'; try { f.focus(); } catch (err) {} } if (w) w.remove(); }
+  else if (e.data.shop === 'close') closeShopFrame();
+  else if (e.data.shop === 'go' && /^wheel\.html#go=\w+$/.test(e.data.href || '')) location.href = e.data.href;
+});
+
+// ---------- claw machine parts: the claw in the desert shack needs all three ----------
+// state: painWheelClawState = 'broken' | 'fixed' | 'grand' (already used the claw before it broke: keeps working)
+function clawState() {
+  let s = get('painWheelClawState', null);
+  if (!s) { s = (Number(get('painWheelClawPlays', 0)) || 0) > 0 ? 'grand' : 'broken'; put('painWheelClawState', s); }
+  return s;
+}
+const PARTS = [
+  { id: 'joy', icon: '🕹️', name: 'Joystick', desc: 'Lightly used. The last owner held it too tight.', pct: .05, floor: 2000 },
+  { id: 'claw', icon: '🦾', name: 'The Claw', desc: 'Grip strength: legally "some".', pct: .08, floor: 5000 },
+  { id: 'coin', icon: '🪙', name: 'Coin Mech', desc: 'Takes casino tokens. Sometimes gives them back. Sometimes.', pct: .12, floor: 10000 } ];
+const partPrice = (p) => Math.max(p.floor, Math.round(gold() * p.pct));
+const owned = () => get('painWheelClawParts', {}) || {};
+function renderParts(msg) {
+  const st = clawState(), have = owned();
+  $('partsLede').textContent = st === 'grand' ? "Your claw already works? Who fixed it? I want their name. You can still buy spares. I won't stop you. I'll judge you."
+    : st === 'fixed' ? 'You bought all three. The claw in the desert shack works now. Go away happy. Away.'
+    : 'The claw machine in the desert shack is busted. Joystick, claw and coin mech. All three, or it stays broken. Prices are a cut of your gold, because I can.';
+  $('partList').innerHTML = PARTS.map(p => {
+    const got = have[p.id] || st !== 'broken';
+    return `<div class="part${got ? ' got' : ''}"><span class="ic">${p.icon}</span><div><b>${p.name}</b><small>${p.desc}</small></div><button data-buy="${p.id}" ${got || gold() < partPrice(p) ? 'disabled' : ''}>${got ? 'Got it' : fmt(partPrice(p))}</button></div>`;
+  }).join('');
+  $('partsMsg').textContent = msg || '';
+  document.querySelectorAll('[data-buy]').forEach(b => b.onclick = () => buyPart(b.dataset.buy));
+}
+function buyPart(id) {
+  const p = PARTS.find(x => x.id === id), cost = partPrice(p), g = gold();
+  if (g < cost) { renderParts("You can't afford it. I can tell from here."); return; }
+  put('painWheelGold', g - cost); const have = owned(); have[id] = true; put('painWheelClawParts', have); showGold(); sfx('audio_token', .7);
+  if (PARTS.every(x => have[x.id])) { put('painWheelClawState', 'fixed'); renderParts('All three. The claw works now. Go win a skeleton something.'); say("That's all three. Now leave before you ask me to install it. I don't install.", 5000); pose('point'); }
+  else renderParts(pick(['Sold. No receipt. Receipts are for people I like.', 'Fine. Bag it yourself.', 'Paid. Next.']));
+}
+function openParts() { renderParts(); $('parts').classList.add('open'); }
+$('partsClose').onclick = () => $('parts').classList.remove('open');
+$('parts').addEventListener('click', (e) => { if (e.target.id === 'parts') $('parts').classList.remove('open'); });
+addEventListener('keydown', (e) => { if (e.key === 'Escape') $('parts').classList.remove('open'); });
+
+// ---------- everything you can click ----------
+const LINES = {
+  cans: ['Paint. Kevin Beige, Raid Wipe Red, and "Is That Mold" Green.', 'The cans are shaken. Not stirred. Karen will not stir them.'],
+  motto: ["You can't do it. We can help. For a fee.", 'The fee is also why we can\'t help.'],
+  logo: ['GNOME DEPOT. The roof on the logo leaks. We sell the shingles.', 'Established yesterday. Out of business tomorrow.'],
+  register: ["Karen: Don't touch my register. It's older than you and nicer than you.", 'The register says NO SALE. It always says NO SALE.'],
+  returns: ['RETURNS: through that door. The door is painted on the wall.', 'The returns desk is closed. It was never open.'] };
+document.querySelectorAll('[data-go]').forEach(b => b.onclick = () => {
+  const g = b.dataset.go;
+  if (g === 'paint') { say(pick(["Paint is for walls and wheels. Not for you to lick.", "Themes are in the paint. Pick one and get out."]), 2600); pose('point'); goShop('themes'); return; }
+  if (g === 'house') { say("Lumber's for houses. Your house. Go upgrade it at home. I'm not carrying it.", 3000); setTimeout(() => { location.href = 'wheel.html#go=house'; }, 1400); return; }
+  if (g === 'claw') { openParts(); return; }
+  if (g === 'door') { location.href = '811.html'; return; }
+  if (g === 'bell') { sfx('audio_door_chime', .7); say(pick(['Stop ringing the bell.', 'I HEARD YOU. Everybody heard you.', "That bell is for emergencies. You're not an emergency."]), 2600); pose('point'); return; }
+  if (g === 'returns' || g === 'register') { (g === 'register' ? note : say)(pick(LINES[g]), 3400); return; }
+  note(pick(LINES[g]), 3400);
+});
+</script>
+<script>
+// ---- Gnome Depot's music: borrowing the 8/11's lo-fi for now (Pixabay). A random song each time, never the same one twice in a row ----
+(() => {
+(() => { if (window.__wfSet) return; window.__wfSet = true;
+  addEventListener('blur', (e) => { if (e.target !== window) return; window.__wf = false; setTimeout(() => { if (document.activeElement && document.activeElement.tagName === 'IFRAME') window.__wf = true; dispatchEvent(new Event('wfchange')); }, 0); }, true);
+  addEventListener('focus', (e) => { if (e.target !== window) return; window.__wf = true; dispatchEvent(new Event('wfchange')); }, true);
+  addEventListener('pointerdown', () => { if (!window.__wf) { window.__wf = true; dispatchEvent(new Event('wfchange')); } }, true);
+  document.addEventListener('visibilitychange', () => dispatchEvent(new Event('wfchange'))); })();
+  const SONGS = [1, 2, 3, 4, 5].map(n => `media/audio_bgm_811_${n}.mp3`);
+  const g = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v === null ? d : v; } catch (e) { return d; } };
+  const target = () => { if (g('painWheelMusicOff', false) === true || document.hidden || !window.__wf) return 0; const mv = g('painWheelMusicVol', .5), v = parseFloat(localStorage.getItem('painWheelVolume')); return .5 * (typeof mv === 'number' ? mv : .5) * (isNaN(v) ? .6 : Math.max(0, Math.min(1, v))); };
+  const ramp = (a, to, ms, done) => { const f = a.volume, t0 = performance.now(); (function st() { const k = Math.min(1, (performance.now() - t0) / ms); a.volume = Math.max(0, Math.min(1, f + (to - f) * k)); if (k < 1) requestAnimationFrame(st); else if (done) done(); })(); };
+  let cur = null, last = -1;
+  function next() {
+    let i; do { i = Math.floor(Math.random() * SONGS.length); } while (SONGS.length > 1 && i === last); last = i;
+    const a = new Audio(SONGS[i]); a.volume = 0; const old = cur; cur = a; if (old) ramp(old, 0, 3000, () => old.pause());
+    if (target() > 0) a.play().then(() => ramp(a, target(), 2500)).catch(() => {});
+    a.addEventListener('timeupdate', function nx() { if (a.duration && a.currentTime > a.duration - 4 && cur === a) { a.removeEventListener('timeupdate', nx); next(); } });
+    a.addEventListener('ended', () => { if (cur === a) next(); });
+  }
+  const apply = () => { if (!cur) return; const t = target(); if (t > 0) { cur.play().catch(() => {}); ramp(cur, t, 900); } else ramp(cur, 0, 600, () => { if (!target()) cur.pause(); }); };
+  addEventListener('pointerdown', () => { if (!cur) next(); }, { once: true });
+  document.addEventListener('visibilitychange', apply); addEventListener('wfchange', apply);
+})();
+</script>
+</body></html>

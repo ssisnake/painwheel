@@ -13,7 +13,7 @@
   nav a.alt { background: #14532d; color: #fde68a; }
   .wrap { flex: 1; display: grid; place-items: center; padding: 0 12px 16px; }
   .scroller { width: 100%; overflow-x: auto; display: grid; place-items: center; }
-  .scene { position: relative; width: min(2576px, 100%, calc((100vh - 178px) * 2576 / 1438)); aspect-ratio: 2576 / 1438; background: url(media/store811_bg.jpg) 0 0 / 100% 100% no-repeat; border-radius: 10px; box-shadow: 0 0 0 3px #f97316, 0 20px 60px rgba(0,0,0,.7); overflow: hidden; }
+  .scene { position: relative; container-type: inline-size; width: min(2576px, 100%, calc((100vh - 178px) * 2576 / 1438)); aspect-ratio: 2576 / 1438; background: url(media/store811_bg.jpg) 0 0 / 100% 100% no-repeat; border-radius: 10px; box-shadow: 0 0 0 3px #f97316, 0 20px 60px rgba(0,0,0,.7); overflow: hidden; }
   @media (max-width: 700px) { .scene { min-width: 640px; } .scroller { place-items: start; } }
   .prop { position: absolute; display: block; padding: 0; border: 0; background: none; cursor: pointer; transition: transform .15s, filter .15s; }
   .prop img { display: block; width: 100%; height: auto; image-rendering: pixelated; pointer-events: none; }
@@ -38,6 +38,11 @@
   #atm button.go { background: #22c55e; color: #052e16; box-shadow: 0 3px 0 #15803d; } #atm button.x { background: #f87171; color: #450a0a; box-shadow: 0 3px 0 #b91c1c; }
   #atm input { flex: 2 1 140px; min-width: 0; font: 700 20px ui-monospace, monospace; padding: 10px 12px; border-radius: 8px; border: 3px solid #18181b; background: #052e16; color: #4ade80; }
   #atm .lbl { margin: 12px 0 0; font: 800 14px system-ui, sans-serif; letter-spacing: .08em; color: #d6d3d1; }
+  /* the Gnome Depot flyer taped to the door */
+  #flyer { position: absolute; left: 26.2%; top: 33.5%; width: 4.3%; aspect-ratio: 3 / 4; z-index: 3; padding: .25cqw; border: 0; cursor: pointer; rotate: -6deg; background: #fb923c; color: #431407; box-shadow: .15cqw .25cqw .4cqw rgba(0,0,0,.45);
+    font: 900 .62cqw/1.05 Impact, 'Arial Black', system-ui, sans-serif; text-align: center; display: flex; flex-direction: column; justify-content: center; gap: .2cqw; transition: rotate .15s, scale .15s; }
+  #flyer::before { content: ''; position: absolute; left: 30%; top: -.35cqw; width: 40%; height: .7cqw; background: rgba(253,230,138,.8); rotate: 4deg; }
+  #flyer small { font: 800 .42cqw/1.1 system-ui, sans-serif; } #flyer:hover, #flyer:focus-visible { rotate: -2deg; scale: 1.12; outline: none; filter: drop-shadow(0 0 .5cqw #fde68a); }
   /* the dying fluorescent tube (right ceiling light) */
   .bulb { position: absolute; left: 67.5%; top: 4.1%; width: 18.6%; height: 4%; pointer-events: none; background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(30,30,28,.85) 55%, rgba(30,30,28,0) 100%); border-radius: 50%; mix-blend-mode: multiply;   /* soft-edged so the tube goes dark, not a box */ opacity: 0; animation: bulb 6.5s infinite; }
   @keyframes bulb { 0%, 41%, 47%, 49%, 77%, 100% { opacity: 0; } 42%, 46%, 48%, 78%, 79.5% { opacity: 1; } }
@@ -73,6 +78,7 @@
   <img id="cup" alt="">
   <button id="hatch" type="button" aria-label="A secret compartment">🔑</button>
   <div id="props"></div>
+  <button id="flyer" type="button" title="Gnome Depot: grand opening" aria-label="Gnome Depot flyer: go next door">GNOME<br>DEPOT<small>GRAND OPENING<br>next door →<br>rude service guaranteed</small></button>
   <div id="say" role="status"></div>
   <div id="atm" role="dialog" aria-modal="true" aria-label="ATM"><div class="box">
     <div class="scr" id="atmScr"></div>
@@ -159,6 +165,7 @@ addEventListener('message', (e) => {
   else if (e.data.shop === 'close') closeShopFrame();
   else if (e.data.shop === 'go' && /^wheel\.html#go=\w+$/.test(e.data.href || '')) location.href = e.data.href;
 });
+$('flyer').onclick = () => { say(get('painWheelSeenGnome', false) ? 'Next door. Karen is in a mood. Karen is always in a mood.' : 'A flyer for the hardware store next door. Someone wrote "DO NOT" on it in pen.', 1600); setTimeout(() => { location.href = 'gnome.html'; }, 1200); };
 $('catalogBtn').onclick = (e) => { e.preventDefault(); goShop(''); };
 AISLES.forEach(([name, img, l, t, w, tab, line]) => {
   const b = add(`<button type="button" class="prop" title="${name}" aria-label="Shop: ${name}" style="left:${l}%;top:${t}%;width:${w}%"><img src="media/${img}.png" alt=""></button>`);
