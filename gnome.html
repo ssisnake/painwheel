@@ -90,7 +90,7 @@ const sfx = (name, g) => { try { if (!vol()) return; AC = AC || new (window.Audi
 addEventListener('pointerdown', () => { if (AC && AC.state === 'suspended') AC.resume(); }, { once: true });
 
 // ---------- Karen Sprocketknockers: behind the register, arms crossed, already annoyed ----------
-const KAREN_NUDGE = { left: 94.1, bottom: 28.6, width: 10.6 };   // % of the store: tweak to move her (bottom = up from the floor of the picture)
+const KAREN_NUDGE = { left: 93.6, bottom: 29.5, width: 11.6 };   // % of the store: tweak to move her (bottom = up from the floor of the picture)
 const k = $('karen'); Object.assign(k.style, { left: KAREN_NUDGE.left + '%', bottom: KAREN_NUDGE.bottom + '%', width: KAREN_NUDGE.width + '%', translate: '-50% 0' });
 function pose(p, ms) { $('karenImg').src = 'media/gnome_karen_' + p + '.png'; clearTimeout(pose.t); if (p !== 'crossed') pose.t = setTimeout(() => { $('karenImg').src = 'media/gnome_karen_crossed.png'; }, ms || 2600); }
 const HELLO_FIRST = ["Oh. A customer. Wonderful. I was having a nice day.", "Welcome to Gnome Depot, where the gnomes are short and so is my patience."];
@@ -102,6 +102,18 @@ const KAREN = ["My name tag? It's fine. The rest of my name is on the tape. It i
   "My hair is not 'a lot'. It's VOLUME. Gnomes need height.", "You break it, you bought it. You look at it funny, you also bought it.", "The claw parts are in the bin. No, I won't get them for you. Your arms work."];
 $('karen').onclick = () => { pose('point'); say(pick(KAREN)); };
 setTimeout(() => { pose('point', 3000); say(get('painWheelGnomeVisits', 0) ? pick(HELLO) : pick(HELLO_FIRST), 4800); put('painWheelGnomeVisits', get('painWheelGnomeVisits', 0) + 1); sfx('audio_door_chime', .6); }, 900);
+
+// ---------- Ada (a mechanic, and a regular) is sometimes browsing in the back aisle ----------
+if (Math.random() < .35) {
+  const ada = document.createElement('button'); ada.type = 'button'; ada.setAttribute('aria-label', 'Ada, browsing in the back');
+  ada.style.cssText = 'position:absolute;left:56.6%;bottom:33.6%;width:4.1%;padding:0;border:0;background:none;cursor:pointer;z-index:1;translate:-50% 0;filter:brightness(.82) saturate(.9)';
+  ada.innerHTML = '<img src="media/gnome_ada.png" alt="" style="display:block;width:100%;height:auto;image-rendering:pixelated;filter:drop-shadow(0 .2cqw .2cqw rgba(0,0,0,.4))">';
+  $('scene').appendChild(ada);
+  const ADA = ["Don't mind me. Just here for gears. And bolts. And the bin of things nobody can identify.", "I drew this whole store, you know. Karen was my idea. I regret nothing.",
+    "Andesite? Don't get me started. Greg swears it's best down low. Greg is wrong. Greg is a sheep in a top hat.", "Karen charged me 12% of my gold for a wrench. I respect it. I hate it, but I respect it.",
+    "If you see a ram in a top hat, I'm not here. We're mid-argument.", "This place has everything except customer service."];
+  ada.onclick = () => { note('🔧 Ada: ' + pick(ADA), 5200); if (Math.random() < .4) setTimeout(() => say(pick(["Ada, you're blocking the aisle.", "Are you buying that or just hugging it?", "Ada. My favorite non-paying customer."]), 3200), 2600); };
+}
 
 // ---------- the shop opens right here (the wheel's shop in a frame, like the 8/11) ----------
 function goShop(tab) {

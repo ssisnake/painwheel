@@ -636,7 +636,7 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
         chandAt = Date.now();
     });
     let shantyAt = 0;
-    $('hsFish1').addEventListener('click', () => { if (Date.now() - shantyAt > 23000) { shantyAt = Date.now(); if (window.fishSing) fishSing(() => sfx.shanty()); else sfx.shanty(); }
+    $('hsFish1').addEventListener('click', () => { if (Date.now() - shantyAt > 16000) { shantyAt = Date.now(); if (window.fishSing) fishSing(() => sfx.shanty()); else sfx.shanty(); }
         say('🐟🎵 ' + pick(['Gary turns his head and sings you a sea shanty. You did not ask for this. (Do not call him Gary.)', 'WHAT SHALL WE DO WITH A DRUNKEN REB. EAR-LY IN THE MORNING.', 'The swordfish sings. His name is not Gary. He sings anyway.', 'Way hay and up she rises. The yacht does not. It is in the desert.']), 5500); });
     $('hsFish2').addEventListener('click', () => say('🐟 ' + pick(['Reb caught this one. It was already dead. It was in a freezer aisle.', 'The plaque says "THE ONE THAT GOT AWAY." It did not get away.',
         'This swordfish has seen things. It will not sing for you.', 'Kevin named it Gary. Do not call it Gary. It hates that.'])));
