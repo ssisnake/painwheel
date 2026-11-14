@@ -26,6 +26,18 @@
   .tap:hover, .tap:focus-visible { border-color: #fde68a; box-shadow: 0 0 18px #fde68a; outline: none; }
   #cup { position: absolute; display: none; translate: -50% 0; image-rendering: pixelated; pointer-events: none; z-index: 5; transition: opacity 1.2s; }
   @keyframes wob { 25% { transform: rotate(-6deg); } 75% { transform: rotate(6deg); } }
+  /* the ATM: a green-screen teller that moves gold between your wallet and your Guild Bank Vault */
+  #atm { position: fixed; inset: 0; z-index: 70; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.6); padding: 16px; }
+  #atm.open { display: flex; }
+  #atm .box { width: min(460px, 100%); background: #3f3f46; border: 6px solid #27272a; border-radius: 14px; padding: 14px; box-shadow: 0 20px 60px rgba(0,0,0,.6); color: #e7e5e4; font: 18px system-ui, sans-serif; }
+  #atm .scr { background: #052e16; border: 4px solid #18181b; border-radius: 8px; padding: 12px 14px; color: #4ade80; font: 700 18px ui-monospace, monospace; min-height: 96px; text-shadow: 0 0 6px rgba(74,222,128,.5); line-height: 1.45; }
+  #atm .scr b { color: #bbf7d0; } #atm .scr .err { color: #fca5a5; }
+  #atm .row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  #atm button { flex: 1 1 0; min-width: 70px; font: 800 18px system-ui, sans-serif; padding: 10px; border-radius: 8px; border: 0; background: #d6d3d1; color: #1c1917; cursor: pointer; box-shadow: 0 3px 0 #78716c; }
+  #atm button:active { translate: 0 2px; box-shadow: 0 1px 0 #78716c; }
+  #atm button.go { background: #22c55e; color: #052e16; box-shadow: 0 3px 0 #15803d; } #atm button.x { background: #f87171; color: #450a0a; box-shadow: 0 3px 0 #b91c1c; }
+  #atm input { flex: 2 1 140px; min-width: 0; font: 700 20px ui-monospace, monospace; padding: 10px 12px; border-radius: 8px; border: 3px solid #18181b; background: #052e16; color: #4ade80; }
+  #atm .lbl { margin: 12px 0 0; font: 800 14px system-ui, sans-serif; letter-spacing: .08em; color: #d6d3d1; }
   /* the dying fluorescent tube (right ceiling light) */
   .bulb { position: absolute; left: 67.5%; top: 4.1%; width: 18.6%; height: 4%; pointer-events: none; background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(30,30,28,.85) 55%, rgba(30,30,28,0) 100%); border-radius: 50%; mix-blend-mode: multiply;   /* soft-edged so the tube goes dark, not a box */ opacity: 0; animation: bulb 6.5s infinite; }
   @keyframes bulb { 0%, 41%, 47%, 49%, 77%, 100% { opacity: 0; } 42%, 46%, 48%, 78%, 79.5% { opacity: 1; } }
@@ -62,6 +74,17 @@
   <button id="hatch" type="button" aria-label="A secret compartment">🔑</button>
   <div id="props"></div>
   <div id="say" role="status"></div>
+  <div id="atm" role="dialog" aria-modal="true" aria-label="ATM"><div class="box">
+    <div class="scr" id="atmScr"></div>
+    <div id="atmPin"><div class="row"><input id="atmPinIn" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="PIN" aria-label="PIN"><button class="go" id="atmPinGo">Enter</button><button class="x" id="atmX1">Cancel</button></div></div>
+    <div id="atmMain" style="display:none">
+      <div class="lbl">PUT GOLD IN THE VAULT</div><div class="row"><button data-adep=".1">10%</button><button data-adep=".5">50%</button><button data-adep="1">All</button></div>
+      <div class="lbl">TAKE GOLD OUT</div><div class="row"><button data-awd=".1">10%</button><button data-awd=".5">50%</button><button data-awd="1">All</button></div>
+      <div class="lbl">EXACT AMOUNT</div><div class="row"><input id="atmAmt" inputmode="decimal" autocomplete="off" placeholder="250k or 1.5m" aria-label="Amount"><button class="go" id="atmDep">In</button><button id="atmWd">Out</button></div>
+      <div class="row"><button class="x" id="atmX2">Take card &amp; leave</button></div>
+    </div>
+  </div></div>
+
   <div id="closed"><b>CLOSED</b><p>The 8/11 is closed. It is open 11 days a week, just not for you yet.<br>Land on <b style="font-size:inherit;color:#fb923c">8/11</b> on the wheel to open it. The shop lives in here.</p><a href="wheel.html">🎡 Go spin</a></div>
 </div></div></div>
 <div class="bar"><span class="barlbl"><img class="mach" src="media/s811_slurpee_machine.png" alt=""><b>Slurpee machine</b> · 1 gold a cup · or click an aisle sign to shop</span>
@@ -108,13 +131,12 @@ const AISLES = [
   ['TOYS', 'photo_811_sign_toys', 51.8, 26.6, 7, 'garage', 'Toys. And cars. And a rocket. Do not ask where we keep the rocket.'],
   ['SNACKS & POTIONS', 'photo_811_sign_snacks', 60.6, 25.4, 7.4, 'consumables', 'Snacks and potions. Same shelf. Same expiration date.'],
   ['COSMETICS', 'photo_811_sign_cosmetics', 69.3, 26.6, 8.6, 'cosmetics', 'Cosmetics. Make the needle pretty. Switch them in Settings.'],
-  ['THEMES', 'photo_811_sign_themes', 33.4, 21.5, 8, 'themes', 'Themes. New paint for the whole wheel. Switch them in Settings.'],
   ['CURSES', 'photo_811_sign_curses', 43, 26.6, 7.4, 'curses', 'Curses. Aim them at a guildmate. We are not liable.'] ];
-const PROPS = [['photo_811_hotdog', 24.6, 51.6, 9.2, 'hotdog', 'Hot dog roller'], ['photo_811_lottery', 34, 47.8, 7.6, 'scratch', 'Scratch-offs'],
+const PROPS = [['s811_hotdog_roll.webp', 24.9, 47.6, 7.8, 'hotdog', 'Hot dog roller'], ['s811_scratch_stand.png', 43, 58.4, 9.9, 'scratch', 'Scratch-offs'],
   ['photo_811_carrier1', 26.6, 72.2, 5, 'pets', 'Pets'], ['photo_811_carrier2', 32.1, 71.7, 4.6, 'pets', 'Pets']];
 const JOKES = {
   hotdog: ['That hot dog has been rolling since 2019. It is not for sale. It is load-bearing.', 'The hot dogs are free. Nobody has ever taken one. Ever.', "Kevin ate one in 2021. He doesn't talk about it."],
-  atm: ['OUT OF ORDER. Has been since the Cataclysm.', 'The ATM charges a 1% fee to tell you it is out of order.', 'Try the Guild Bank Vault on the yacht. This thing eats cards.'],
+  atm: ['It works now. Nobody is more surprised than the clerk.', 'The ATM used to say OUT OF ORDER. Someone moved the scratch-off rack and found the plug.', 'No fees. The ATM tried to charge one and the clerk unplugged it again for a minute.'],
   open: ['Open 7 hours a day, 11 days a week. Do the math. We did not.', 'Closed on days that end in Y.'],
   cam: ['The camera blinks at you. It has seen things.', 'Smile. You are on Goblin Security TV.', 'The red light is on. Nobody is watching. Probably.'] };
 const props = $('props');
@@ -145,14 +167,16 @@ AISLES.forEach(([name, img, l, t, w, tab, line]) => {
 });
 add('<img class="deco" src="media/photo_811_sale.png" alt="" style="left:47.6%;top:24.2%;width:3.6%;transform:rotate(14deg);z-index:2">');
 PROPS.forEach(([img, l, t, w, act, name]) => {
-  const b = add(`<button type="button" class="prop" title="${name}" aria-label="${name}" style="left:${l}%;top:${t}%;width:${w}%"><img src="media/${img}.png" alt=""></button>`);
+  const b = add(`<button type="button" class="prop" title="${name}" aria-label="${name}" style="left:${l}%;top:${t}%;width:${w}%"><img src="media/${/\./.test(img) ? img : img + '.png'}" alt=""></button>`);
+  if (act === 'scratch') b.style.zIndex = 2;
   b.onclick = () => JOKES[act] ? say(pick(JOKES[act]), 3400) : goShop(act);
 });
-add('<img class="deco" src="media/photo_811_pricetag.png" alt="" style="left:30.2%;top:57.6%;width:3%;transform:rotate(-8deg)">');
+add('<img class="deco" src="media/photo_811_pricetag.png" alt="" style="left:31.9%;top:61.2%;width:2.8%;transform:rotate(-8deg);z-index:1">');
 [['atm', 'The ATM', 34.4, 42.5, 6, 18, ''], ['open', 'The sign', 80.2, 29.5, 5.6, 11, ''], ['door', 'Leave', 24.4, 21, 6.4, 28, ''], ['cam', '', 82.6, 12.4, 6, 8, ' secret']].forEach(([k, name, l, t, w, h, cls]) => {
   const b = add(`<button type="button" class="hs${cls}" ${name ? `title="${name}" aria-label="${name}"` : 'tabindex="-1" aria-hidden="true"'} style="left:${l}%;top:${t}%;width:${w}%;height:${h}%"></button>`);
   b.onclick = () => {
     if (k === 'door') { location.href = 'wheel.html'; return; }
+    if (k === 'atm') { openAtm(); return; }
     if (k === 'cam' && get('painWheelSeenVip', false)) { say('📹 The camera feed flickers... is that the VIP room?', 1800); setTimeout(() => { location.href = 'yacht.html#vip'; }, 1300); return; }
     say(pick(JOKES[k]), 3400);
   };
@@ -220,6 +244,42 @@ function slurpee(f) {
   }, 2300);
 }
 document.querySelectorAll('[data-f]').forEach(b => b.onclick = () => slurpee(b.dataset.f));
+// ---------- the ATM: same PIN as your Guild Bank Vault, moves gold between your wallet and the vault (no fees, the clerk unplugged that part) ----------
+const VAULT_PIN = '1234';
+let atmTries = 0;
+const vaultBal = () => Math.max(0, Number(get('painWheelVault', 0)) || 0);
+const atmScr = (html) => { $('atmScr').innerHTML = html; };
+const atmBal = (msg) => atmScr(`${msg ? msg + '<br>' : ''}WALLET: <b>${fmt(get('painWheelGold', 0))}</b><br>VAULT:&nbsp; <b>${fmt(vaultBal())}</b>`);
+function openAtm() {
+  $('atm').classList.add('open'); $('atmPin').style.display = ''; $('atmMain').style.display = 'none'; $('atmPinIn').value = ''; atmTries = 0;
+  atmScr('GOBLIN SAVINGS &amp; LOAN<br>INSERT CARD. ENTER PIN.<br><span style="opacity:.7">(same as your vault. it is on a sticky note.)</span>');
+  setTimeout(() => $('atmPinIn').focus(), 50);
+}
+const closeAtm = () => { $('atm').classList.remove('open'); showGold(); };
+function atmPin() {
+  if ($('atmPinIn').value === VAULT_PIN) { $('atmPin').style.display = 'none'; $('atmMain').style.display = ''; atmBal('WELCOME BACK, VALUED GOBLIN.'); return; }
+  atmTries++; $('atmPinIn').value = '';
+  atmScr(atmTries >= 3 ? '<span class="err">CARD EATEN.</span><br>JUST KIDDING. TRY AGAIN.<br><span style="opacity:.7">hint: the yacht vault door has a sticky note on it.</span>' : '<span class="err">WRONG PIN.</span><br>ENTER PIN.');
+}
+const parseAmt = (t) => { const m = String(t).toLowerCase().replace(/[,\s_g]/g, '').match(/^(\d*\.?\d+)([kmbt]?)$/); if (!m) return NaN; return Math.floor(+m[1] * ({ '': 1, k: 1e3, m: 1e6, b: 1e9, t: 1e12 })[m[2]]); };
+function atmMove(dir, want) {
+  const g = Math.max(0, Number(get('painWheelGold', 0)) || 0), v = vaultBal();
+  if (!(want > 0)) { atmBal('<span class="err">NUMBERS ONLY. LIKE 5000, 250K OR 1.5M.</span>'); return; }
+  const amt = Math.min(Math.floor(want), dir === 'in' ? g : v);
+  if (amt <= 0) { atmBal(`<span class="err">${dir === 'in' ? 'YOUR WALLET IS EMPTY.' : 'THE VAULT IS EMPTY. JUST ECHOES.'}</span>`); return; }
+  if (dir === 'in') { put('painWheelGold', g - amt); put('painWheelVault', Math.min(1e300, v + amt)); } else { put('painWheelVault', v - amt); put('painWheelGold', Math.min(1e300, g + amt)); }
+  showGold(); atmBal(dir === 'in' ? `DEPOSITED ${fmt(amt)}. OFFSHORE. SHHH.` : `DISPENSED ${fmt(amt)}. SPEND IT ON SLURPEES.`);
+}
+$('atmPinGo').onclick = atmPin; $('atmPinIn').onkeydown = (e) => { if (e.key === 'Enter') atmPin(); };
+$('atmX1').onclick = $('atmX2').onclick = closeAtm;
+$('atm').addEventListener('click', (e) => { if (e.target.id === 'atm') closeAtm(); });
+addEventListener('keydown', (e) => { if (e.key === 'Escape' && $('atm').classList.contains('open')) closeAtm(); });
+document.querySelectorAll('[data-adep]').forEach(b => b.onclick = () => atmMove('in', Math.max(0, Number(get('painWheelGold', 0)) || 0) * +b.dataset.adep));
+document.querySelectorAll('[data-awd]').forEach(b => b.onclick = () => atmMove('out', vaultBal() * +b.dataset.awd));
+$('atmDep').onclick = () => { atmMove('in', parseAmt($('atmAmt').value)); $('atmAmt').value = ''; };
+$('atmWd').onclick = () => { atmMove('out', parseAmt($('atmAmt').value)); $('atmAmt').value = ''; };
+$('atmAmt').onkeydown = (e) => { if (e.key === 'Enter') $('atmDep').click(); };
+
 </script>
 <script>
 // ---- the 8/11's music: lo-fi on the store speakers (Pixabay: zephiramusic, franzian-deo, Alex Morgan). A random song each time, never the same one twice in a row ----
