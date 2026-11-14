@@ -111,7 +111,7 @@ const AISLES = [
   ['THEMES', 'photo_811_sign_themes', 33.4, 21.5, 8, 'themes', 'Themes. New paint for the whole wheel. Switch them in Settings.'],
   ['CURSES', 'photo_811_sign_curses', 43, 26.6, 7.4, 'curses', 'Curses. Aim them at a guildmate. We are not liable.'] ];
 const PROPS = [['photo_811_hotdog', 24.6, 51.6, 9.2, 'hotdog', 'Hot dog roller'], ['photo_811_lottery', 34, 47.8, 7.6, 'scratch', 'Scratch-offs'],
-  ['photo_811_carrier1', 26.6, 72.2, 5, 'pets', 'Pets'], ['photo_811_carrier2', 32.4, 73, 4.6, 'pets', 'Pets']];
+  ['photo_811_carrier1', 26.6, 72.2, 5, 'pets', 'Pets'], ['photo_811_carrier2', 32.1, 71.7, 4.6, 'pets', 'Pets']];
 const JOKES = {
   hotdog: ['That hot dog has been rolling since 2019. It is not for sale. It is load-bearing.', 'The hot dogs are free. Nobody has ever taken one. Ever.', "Kevin ate one in 2021. He doesn't talk about it."],
   atm: ['OUT OF ORDER. Has been since the Cataclysm.', 'The ATM charges a 1% fee to tell you it is out of order.', 'Try the Guild Bank Vault on the yacht. This thing eats cards.'],
@@ -119,7 +119,7 @@ const JOKES = {
   cam: ['The camera blinks at you. It has seen things.', 'Smile. You are on Goblin Security TV.', 'The red light is on. Nobody is watching. Probably.'] };
 const props = $('props');
 const add = (html) => { props.insertAdjacentHTML('beforeend', html); return props.lastElementChild; };
-const CLERK_NUDGE = { right: 4.6, bottom: 35.6 };   // % from the right / bottom: lower = further right / further down
+const CLERK_NUDGE = { right: 3.7, bottom: 34.7 };   // % from the right / bottom: lower = further right / further down
 const clerk = add(`<img class="deco" src="media/photo_811_clerk.png" alt="" style="right:${CLERK_NUDGE.right}%;bottom:${CLERK_NUDGE.bottom}%;width:10.4%;z-index:1">`);
 function point(ms) { clerk.src = 'media/photo_811_clerk_point.png'; clerk.style.width = '11.4%'; clearTimeout(point.t); point.t = setTimeout(() => { clerk.src = 'media/photo_811_clerk.png'; clerk.style.width = '10.4%'; }, ms || 1400); }
 // the shop opens right here in the store: the wheel page loads in a frame showing only the shop, and goes away when you close it
