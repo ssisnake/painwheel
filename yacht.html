@@ -293,6 +293,8 @@
         <div class="row"><button class="btn" data-dep=".1">10%</button><button class="btn" data-dep=".5">50%</button><button class="btn go" data-dep="1">Everything</button></div>
         <div class="muted" style="margin:10px 0 4px;font-weight:900">TAKE GOLD OUT</div>
         <div class="row"><button class="btn" data-wd=".1">10%</button><button class="btn" data-wd=".5">50%</button><button class="btn" data-wd="1">Everything</button></div>
+        <div class="muted" style="margin:10px 0 4px;font-weight:900">EXACT AMOUNT</div>
+        <div class="row" style="flex-wrap:wrap"><input id="vAmt" inputmode="decimal" autocomplete="off" placeholder="250k or 1.5m" style="flex:1 1 160px;min-width:0;font:700 20px ui-monospace,monospace;padding:10px 12px;border-radius:8px;border:2px solid #78716c;background:#1c1917;color:#fde68a"><button class="btn go" id="vAmtDep" style="white-space:nowrap">Stash</button><button class="btn" id="vAmtWd" style="white-space:nowrap">Take out</button></div>
         <div class="fdic">🏛️ <b>FDIC INSURED</b> up to <b>250,000g</b> per goblin.<br><span>FDIC = Federal Deposit Insurance Cartel. Gold above 250,000g is insured by Kevin's word.</span></div>
         <div id="iou"></div>
         <p class="muted" id="vNote" style="text-align:center;margin-top:10px"></p>
@@ -560,6 +562,21 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
         gold -= amt; vault = Math.min(1e300, vault + amt); saveGold(); sfx.coins(); award('vault');
         say('🏦 Stashed ' + fmt(amt) + ' offshore. The Goblin IRS will never find it.');
     }));
+    // type an exact amount: 25000, 25,000, 250k, 1.5m, 2b all work
+    const parseAmt = (t) => { const m = String(t).toLowerCase().replace(/[,\s_g]/g, '').match(/^(\d*\.?\d+)([kmbt]?)$/); if (!m) return NaN; return Math.floor(+m[1] * ({ '': 1, k: 1e3, m: 1e6, b: 1e9, t: 1e12 })[m[2]]); };
+    function vaultExact(dir) {
+        const box = $('vAmt'), want = parseAmt(box.value);
+        if (!(want > 0)) { say('Numbers only. Like 5000, 250k or 1.5m. The vault does not take poems.'); sfx.wrong(); box.focus(); return; }
+        const have = dir === 'in' ? gold : vault, amt = Math.min(want, Math.floor(have));
+        if (amt <= 0) { say(dir === 'in' ? "Your wallet is empty. The vault doesn't take IOUs. (Kevin does.)" : 'The vault is empty. Just echoes. And a single Kevin hair.'); sfx.wrong(); return; }
+        if (dir === 'in') { gold -= amt; vault = Math.min(1e300, vault + amt); award('vault'); } else { vault -= amt; gold = Math.min(1e300, gold + amt); }
+        saveGold(); sfx.coins(); box.value = '';
+        const short = amt < want ? ' (that was all of it)' : '';
+        say(dir === 'in' ? '🏦 Stashed ' + fmt(amt) + short + ' offshore. The Goblin IRS will never find it.' : '💰 Took out ' + fmt(amt) + short + '. Spend it on something stupid.');
+    }
+    $('vAmtDep').addEventListener('click', () => vaultExact('in'));
+    $('vAmtWd').addEventListener('click', () => vaultExact('out'));
+    $('vAmt').addEventListener('keydown', e => { if (e.key === 'Enter') vaultExact('in'); });
     document.querySelectorAll('[data-wd]').forEach(b => b.addEventListener('click', () => {
         const amt = Math.floor(vault * +b.dataset.wd);
         if (amt <= 0) { say('The vault is empty. Just echoes. And a single Kevin hair.'); sfx.wrong(); return; }
