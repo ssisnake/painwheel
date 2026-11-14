@@ -103,6 +103,37 @@ const KAREN = ["My name tag? It's fine. The rest of my name is on the tape. It i
 $('karen').onclick = () => { pose('point'); say(pick(KAREN)); };
 setTimeout(() => { pose('point', 3000); say(get('painWheelGnomeVisits', 0) ? pick(HELLO) : pick(HELLO_FIRST), 4800); put('painWheelGnomeVisits', get('painWheelGnomeVisits', 0) + 1); sfx('audio_door_chime', .6); }, 900);
 
+// ---------- Gnome of the Month: hung on the front of the checkout counter. It is always Karen ----------
+{
+  const tilted = Math.random() < .5, gotm = document.createElement('button'); gotm.type = 'button'; gotm.setAttribute('aria-label', 'Gnome of the Month photo');
+  gotm.style.cssText = `position:absolute;left:${tilted ? 73.2 : 73.6}%;top:73.2%;width:${tilted ? 8.4 : 8}%;padding:0;border:0;background:none;cursor:pointer;z-index:2`;
+  gotm.innerHTML = `<img src="media/gnome_gotm_${tilted ? 'tilted' : 'straight'}.png" alt="" style="display:block;width:100%;height:auto;filter:drop-shadow(.15cqw .3cqw .3cqw rgba(0,0,0,.5))">`;
+  $('scene').appendChild(gotm);
+  const GOTM = ['Gnome of the Month: Karen. Every month since 1987. Nobody else applied.', 'The spider has lived there longer than most employees.',
+    'The plaque used to say EMPLOYEE of the Month. Karen sanded it off. She is not an employee. She is a FORCE.', "Look closer: she's glaring at you from inside the photo too."];
+  gotm.onclick = () => { note(pick(GOTM), 4200); if (Math.random() < .5) setTimeout(() => { pose('point'); say(pick(["Don't touch my plaque.", 'I earned that. Twelve times a year. For thirty-nine years.', "Leave the spider alone. He's on payroll."]), 3200); }, 2400); };
+}
+
+// ---------- the garden gnome by the paint counter. He moves when you aren't looking ----------
+{
+  const gg = document.createElement('button'); gg.type = 'button'; gg.setAttribute('aria-label', 'A garden gnome statue');
+  let x = 35 + Math.random() * 2.5, hovered = false;
+  gg.style.cssText = `position:absolute;left:${x}%;bottom:3.4%;width:3.2%;padding:0;border:0;background:none;cursor:pointer;z-index:2;translate:-50% 0`;
+  gg.innerHTML = '<img src="media/gnome_garden_still.png" alt="" style="display:block;width:100%;height:auto;image-rendering:pixelated;filter:drop-shadow(0 .2cqw .2cqw rgba(0,0,0,.5))">';
+  $('scene').appendChild(gg); const img = gg.querySelector('img'); new Image().src = 'media/gnome_garden_sneak.png';
+  gg.onmouseenter = () => hovered = true; gg.onmouseleave = () => hovered = false;
+  const sneak = () => {
+    if (hovered || document.hidden || Math.random() < .45) return;
+    img.src = 'media/gnome_garden_sneak.png'; gg.style.width = '4.9%';
+    x = Math.max(31, Math.min(41, x + (Math.random() < .5 ? -1 : 1) * (1 + Math.random() * 2))); gg.style.left = x + '%';
+    setTimeout(() => { img.src = 'media/gnome_garden_still.png'; gg.style.width = '3.2%'; }, 420);
+  };
+  setInterval(sneak, 9000 + Math.random() * 7000);
+  const GG = ['That gnome was not there a minute ago.', "It's just a garden gnome. It's just a garden gnome. It's just a", 'The price tag says SOLD. Nobody remembers buying him.',
+    'He has dirt on his shovel. Fresh dirt.', 'You blink. He did not.'];
+  gg.onclick = () => { note('🍄 ' + pick(GG), 3800); if (Math.random() < .35) setTimeout(() => say(pick(["Don't make eye contact with Gerald. Not the wheel Gerald. A different Gerald.", "He's not for sale. He keeps coming back.", 'I have returned that gnome nine times.']), 3200), 2200); };
+}
+
 // ---------- Ada (a mechanic, and a regular) is sometimes browsing in the back aisle ----------
 if (Math.random() < .35) {
   const ada = document.createElement('button'); ada.type = 'button'; ada.setAttribute('aria-label', 'Ada, browsing in the back');
