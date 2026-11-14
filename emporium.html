@@ -33,6 +33,7 @@
   #axa { position: absolute; left: 35.5%; top: 30.6%; height: 33.6%; width: 22cqw; translate: -50% 0; overflow: hidden; z-index: 1; cursor: pointer; padding: 0; border: 0; background: none; display: flex; justify-content: center; }
   #axa img { height: 34cqw; width: auto; flex: none; image-rendering: pixelated; filter: drop-shadow(0 0 .6cqw rgba(0,0,0,.45)); animation: breathe 3.4s ease-in-out infinite; transform-origin: 50% 60%; }
   @keyframes breathe { 50% { transform: translateY(.25cqw) scaleY(.995); } }
+  #axa.right { left: 60.5%; } #axa.right img { scale: -1 1; }
   #axa:hover img, #axa:focus-visible img { filter: drop-shadow(0 0 .8cqw #fde68a); } #axa:focus-visible { outline: none; }
   #say { position: absolute; left: 50%; top: 20%; transform: translateX(-50%); max-width: 70%; padding: 10px 18px; border-radius: 10px; background: rgba(28,20,10,.94); border: 2px solid #f59e0b; color: #fef3c7; font: 800 clamp(16px, 1.5vw, 26px)/1.35 system-ui, sans-serif; text-align: center; display: none; z-index: 8; box-shadow: 0 10px 30px rgba(0,0,0,.6); }
   #say b { color: #fcd34d; }
@@ -53,7 +54,7 @@
   .card .desc { margin: 10px 0 0; font-size: 18px; font-style: italic; color: #d6d3d1; }
   .card .set { margin-top: 12px; padding: 10px 12px; border-radius: 10px; background: #292117; font-size: 16px; color: #e7e5e4; line-height: 1.4; }
   .card .set b { color: #fcd34d; }
-  .card .price { margin: 14px auto 0; width: 260px; height: 104px; display: flex; align-items: center; justify-content: center; padding-left: 52px; background: url(media/sale_tag.png) center / contain no-repeat; font: 900 24px ui-monospace, monospace; color: #3b1d0a; text-shadow: 0 1px 0 rgba(255,255,255,.4); transform: rotate(-3deg); }
+  .card .price { margin: 14px auto 0; width: 260px; height: 104px; display: flex; align-items: center; justify-content: center; padding-left: 52px; background: url(media/sale_tag.png) center / contain no-repeat; font: 900 26px ui-monospace, monospace; color: #3b1d0a; -webkit-text-fill-color: #3b1d0a; color-scheme: only light; forced-color-adjust: none; text-shadow: 0 1px 0 rgba(255,236,200,.7); transform: rotate(-3deg); }
   .card .pct { font-size: 14px; color: #a8a29e; font-weight: 700; }
   .card .row { display: flex; gap: 10px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
   .card button { font: 900 19px system-ui, sans-serif; padding: 11px 22px; border-radius: 10px; border: 0; cursor: pointer; }
@@ -69,7 +70,7 @@
   <button class="hs" data-hs="console" style="left:43.3%;top:35%;width:11.2%;height:7.5%" aria-label="The old console"></button>
   <button class="hs" data-hs="jar" style="left:24.5%;top:32%;width:4.3%;height:9%" aria-label="The jar on the shelf"></button>
   <button id="axa" type="button" aria-label="Axazon"><img id="axaImg" src="media/axa_crossed.png" alt=""></button>
-  <button id="cobra" type="button" aria-label="A wicker basket" style="position:absolute;left:84.5%;top:79%;width:7.6%;padding:0;border:0;background:none;cursor:pointer;z-index:2"><img src="media/cobra_still.png" alt="" style="display:block;width:100%;height:auto;image-rendering:pixelated;filter:drop-shadow(0 .3cqw .3cqw rgba(0,0,0,.5))"></button>
+  <button id="cobra" type="button" aria-label="A wicker basket" style="position:absolute;left:84.5%;top:82.4%;width:7.6%;padding:0;border:0;background:none;cursor:pointer;z-index:2"><img src="media/cobra_still.png" alt="" style="display:block;width:100%;height:auto;image-rendering:pixelated;filter:drop-shadow(0 .3cqw .3cqw rgba(0,0,0,.5))"></button>
   <div id="goods"></div>
   <div id="say" role="status"></div>
   <div id="closed"><b>CLOSED</b><p>A tarp, a folding table and a hand-painted sign. Nobody's home.<br>Land on <b style="font-size:inherit;color:#e879f9">Axazon's Emporium</b> on the wheel and he'll open up for you.</p><a href="wheel.html">🎡 Go spin</a></div>
@@ -303,8 +304,28 @@ const JOKES = {
 };
 document.querySelectorAll('.hs').forEach(h => h.onclick = () => say(pick(JOKES[h.dataset.hs])));
 const AXA_LINES = ['What. I\'m working.', 'Eyes on the merchandise, not the merchant.', 'Yes, the shoulders are looking at you. They do that.', 'This outfit is not for sale. I asked. I said no.',
-  'Fishnet breathes. It\'s the desert. Do the math.', 'The halo is real. Don\'t ask how I got it.', 'Browse or buy. Loitering is 5% of your gold.'];
+  'Fishnet breathes. It\'s the desert. Do the math.', 'The halo is real. Don\'t ask how I got it.', 'Browse or buy. Loitering is 5% of your gold.',
+  'Cash only. I don\'t take Goblin Express. The Black card tried to bite me.', 'Goblin Express? Put that away. I know where those come from. I know where they GO.', 'Does that say Goblin Express? That card has 34% interest and a lawyer. Gold only.'];
 $('axa').onclick = () => say(pick(AXA_LINES));
+if (Math.random() < .5) $('axa').classList.add('right');   // some visits he stands on the other side, so the stuff behind him gets its turn
+
+// ---------- every once in a while a tumbleweed rolls through the stall ----------
+(function tumbleweed() {
+  const host = $('axa').parentElement;
+  const roll = () => {
+    if (document.hidden || host.querySelector('.tumble')) return;
+    const t = document.createElement('img'); t.className = 'tumble'; t.src = 'media/photo_tumbleweed.gif'; t.alt = '';
+    const ltr = Math.random() < .5, y = 84 + Math.random() * 6, w = 5 + Math.random() * 2;
+    t.style.cssText = `position:absolute;top:${y}%;width:${w}%;z-index:3;pointer-events:none;${ltr ? '' : 'scale:-1 1;'}`;
+    host.appendChild(t);
+    const a = t.animate([{ left: ltr ? '-8%' : '104%' }, { left: ltr ? '104%' : '-8%' }], { duration: 7000 + Math.random() * 4000, easing: 'linear' });
+    t.animate([{ translate: '0 0' }, { translate: '0 -1.4cqw', offset: .5 }, { translate: '0 0' }], { duration: 900, iterations: Infinity, easing: 'ease-in-out' });
+    a.onfinish = () => t.remove();
+  };
+  const loop = () => setTimeout(() => { if (Math.random() < .45) roll(); loop(); }, 40000 + Math.random() * 50000);
+  setTimeout(() => { if (Math.random() < .3) roll(); }, 9000);
+  loop(); window.tumble = roll;
+})();
 
 if (!isOpen()) $('closed').style.display = 'flex';
 else { const first = !get('painWheelSeenEmporium', false); put('painWheelSeenEmporium', true); setTimeout(() => say(first ? 'Did you really climb out that window? You special or something?' : pick(HELLO), first ? 6000 : 4800), 700); addEventListener('pointerdown', () => sfx('audio_door_chime', .5), { once: true }); }
