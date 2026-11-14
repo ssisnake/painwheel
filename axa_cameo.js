@@ -9,11 +9,15 @@
   b.innerHTML = `<img src="media/axa_peek.png" alt="" style="display:block;width:100%;height:auto;image-rendering:pixelated;${spot.flip ? 'transform:scaleX(-1);' : ''}filter:${spot.filter || 'brightness(.55) saturate(.6)'}">`;
   new Image().src = 'media/axa_duck.png';   // the ducking frame, ready
   host.appendChild(b); setTimeout(() => b.style.opacity = String(spot.op || .9), 1500);
+  const SPOTS = ['board', 'shack', '811'];   // every place he hides (keep in sync with AXA_CAMEO ids + the spoilers file)
   const LINES = ["...you didn't see me.", 'Nothing to see here. Keep investigating. Not me though.', "I'm not here. I'm at the flea market. Ask anyone.", 'Shh. I am a background character.', 'Was it me this whole time? ...Maybe.', 'Wrong guy. Totally different halo.'];
+  const ALL = ['Okay. You found me everywhere. ...Everywhere you KNOW about.', 'Fine. Every hiding spot. You win nothing. I win nothing. We are all losers here.', 'All of them? Who told you? Was it the skeleton? It was the skeleton.'];
+  const pickAll = () => ALL[Math.floor(Math.random() * ALL.length)];
   b.onclick = (e) => {
     e.stopPropagation(); seen[spot.id] = Date.now(); try { localStorage.setItem('painWheelAxaSightings', JSON.stringify(seen)); } catch (err) {}
-    const n = Object.keys(seen).length, t = document.createElement('div');
-    t.textContent = LINES[Math.floor(Math.random() * LINES.length)] + (n > 1 ? `  (sightings: ${n})` : '');
+    const n = SPOTS.filter(k => seen[k]).length, t = document.createElement('div');
+    const all = n >= SPOTS.length; if (all) { try { if (!localStorage.getItem('painWheelAxaAll')) localStorage.setItem('painWheelAxaAll', JSON.stringify(Date.now())); } catch (err) {} }
+    t.textContent = all ? pickAll() : LINES[Math.floor(Math.random() * LINES.length)] + (n > 1 ? `  (sightings: ${n})` : '');
     t.style.cssText = `position:absolute;left:${spot.x}%;top:${Math.max(0, spot.y - 6)}%;transform:translateX(-30%);z-index:30;max-width:320px;padding:8px 12px;border-radius:10px;background:#1c1712;border:2px solid #a16207;color:#fde68a;font:800 16px/1.3 system-ui,sans-serif;box-shadow:0 8px 20px rgba(0,0,0,.6);pointer-events:none`;
     host.appendChild(t); b.querySelector('img').src = 'media/axa_duck.png'; setTimeout(() => { b.style.opacity = '0'; }, 500); setTimeout(() => { t.remove(); b.remove(); }, 3600);
   };

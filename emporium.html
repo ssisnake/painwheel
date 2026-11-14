@@ -302,7 +302,7 @@ const JOKES = {
   console: ['That\'s a prototype WHEEL-2600. Not for sale. Not even for you.', 'Found it on a yacht. The VIP room. You didn\'t see that.', 'The cartridges are in the back. The back is also a tarp.'],
   jar: ['Don\'t ask what\'s in the jar.', 'That jar has been on that shelf since before the shack. Before the desert.', 'Reb asked about the jar once. Reb doesn\'t ask anymore.']
 };
-document.querySelectorAll('.hs').forEach(h => h.onclick = () => say(pick(JOKES[h.dataset.hs])));
+document.querySelectorAll('.hs').forEach(h => h.onclick = () => { say(pick(JOKES[h.dataset.hs])); if (h.dataset.hs === 'fish' && window.fishSing) fishSing(); });   // Steve sings too
 const AXA_LINES = ['What. I\'m working.', 'Eyes on the merchandise, not the merchant.', 'Yes, the shoulders are looking at you. They do that.', 'This outfit is not for sale. I asked. I said no.',
   'Fishnet breathes. It\'s the desert. Do the math.', 'The halo is real. Don\'t ask how I got it.', 'Browse or buy. Loitering is 5% of your gold.',
   'Cash only. I don\'t take Goblin Express. The Black card tried to bite me.', 'Goblin Express? Put that away. I know where those come from. I know where they GO.', 'Does that say Goblin Express? That card has 34% interest and a lawyer. Gold only.'];
@@ -385,4 +385,5 @@ setInterval(() => { showGold(); }, 5000);
     f.style.transition = 'transform .6s, opacity .6s'; f.style.transform = 'rotate(-70deg) translateX(-60%)'; f.style.opacity = '0'; setTimeout(() => f.remove(), 700); };
 })();
 </script>
+<script src="fish_song.js"></script>
 </body></html>

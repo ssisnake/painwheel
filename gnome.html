@@ -33,7 +33,7 @@
   #parts h2 { margin: 0 0 4px; font-size: 26px; color: #fb923c; }
   #parts .muted { color: #d6d3d1; font-size: 17px; line-height: 1.4; margin: 0 0 12px; }
   .part { display: grid; grid-template-columns: 52px 1fr auto; gap: 12px; align-items: center; padding: 10px 12px; margin-top: 8px; border-radius: 10px; background: #2a1a0c; border: 2px solid #7c2d12; }
-  .part .ic { font-size: 40px; text-align: center; }
+  .part .ic { width: 52px; height: 52px; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 2px 2px rgba(0,0,0,.5)); }
   .part b { display: block; font-size: 19px; } .part small { color: #d6d3d1; font-size: 15px; }
   .part button, #parts .close { font: 800 18px system-ui, sans-serif; padding: 9px 16px; border-radius: 9px; border: 0; cursor: pointer; background: #22c55e; color: #052e16; white-space: nowrap; }
   .part button:disabled { background: #57534e; color: #d6d3d1; cursor: default; }
@@ -127,9 +127,9 @@ function clawState() {
   return s;
 }
 const PARTS = [
-  { id: 'joy', icon: '🕹️', name: 'Joystick', desc: 'Lightly used. The last owner held it too tight.', pct: .05, floor: 2000 },
-  { id: 'claw', icon: '🦾', name: 'The Claw', desc: 'Grip strength: legally "some".', pct: .08, floor: 5000 },
-  { id: 'coin', icon: '🪙', name: 'Coin Mech', desc: 'Takes casino tokens. Sometimes gives them back. Sometimes.', pct: .12, floor: 10000 } ];
+  { id: 'joy', icon: 'media/gnome_part_joy.png', name: 'Joystick', desc: 'Lightly used. The last owner held it too tight.', pct: .05, floor: 2000 },
+  { id: 'claw', icon: 'media/gnome_part_claw.png', name: 'The Claw', desc: 'Grip strength: legally "some".', pct: .08, floor: 5000 },
+  { id: 'coin', icon: 'media/gnome_part_coin.png', name: 'Coin Mech', desc: 'Takes casino tokens. Sometimes gives them back. Sometimes.', pct: .12, floor: 10000 } ];
 const partPrice = (p) => Math.max(p.floor, Math.round(gold() * p.pct));
 const owned = () => get('painWheelClawParts', {}) || {};
 function renderParts(msg) {
@@ -139,7 +139,7 @@ function renderParts(msg) {
     : 'The claw machine in the desert shack is busted. Joystick, claw and coin mech. All three, or it stays broken. Prices are a cut of your gold, because I can.';
   $('partList').innerHTML = PARTS.map(p => {
     const got = have[p.id] || st !== 'broken';
-    return `<div class="part${got ? ' got' : ''}"><span class="ic">${p.icon}</span><div><b>${p.name}</b><small>${p.desc}</small></div><button data-buy="${p.id}" ${got || gold() < partPrice(p) ? 'disabled' : ''}>${got ? 'Got it' : fmt(partPrice(p))}</button></div>`;
+    return `<div class="part${got ? ' got' : ''}"><img class="ic" src="${p.icon}" alt=""><div><b>${p.name}</b><small>${p.desc}</small></div><button data-buy="${p.id}" ${got || gold() < partPrice(p) ? 'disabled' : ''}>${got ? 'Got it' : fmt(partPrice(p))}</button></div>`;
   }).join('');
   $('partsMsg').textContent = msg || '';
   document.querySelectorAll('[data-buy]').forEach(b => b.onclick = () => buyPart(b.dataset.buy));
