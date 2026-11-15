@@ -450,7 +450,8 @@ setInterval(() => { showGold(); }, 5000);
   const sc = document.getElementById('scene'); if (!sc) return;
   const SAY = ["...the little wheel says you should not have come at night.", "I sell nothing. I only spin. ...You wouldn't understand.", "Every wheel has a wheel inside it. Ask the VIP room.",
     "Axazon doesn't know I'm here. Axazon doesn't know a lot of things.", "The candles were lit before you got here. They'll be lit after.", "Chapter 185. They're behind. We are not behind.",
-    "Spin it? ...No. It's not ready for you yet.", "The skull slice. Always the skull slice. Remember that."];
+    "Spin it? ...No. It's not ready for you yet.", "The skull slice. Always the skull slice. Remember that.",
+    "What're ya buyin'?", "Got somethin' that might interest ya.", "Ahh... I'll buy it at a high price.", "Not enough cash, stranger.", "Welcome!", "Hehehe... thank you.", "Is that all, stranger?"];
   let el = null;
   const place = () => {
     const night = sc.classList.contains('night');
@@ -461,7 +462,7 @@ setInterval(() => { showGold(); }, 5000);
       el.innerHTML = '<img src="media/emp_stranger.png?v=1" alt="" style="display:block;width:100%;height:auto;image-rendering:pixelated;filter:brightness(.72) saturate(.9) drop-shadow(0 0 .8cqw rgba(250,204,21,.25))">';
       sc.appendChild(el); setTimeout(() => el && (el.style.opacity = '.9'), 2500);
       let n = 0;
-      el.onclick = (e) => { e.stopPropagation(); const d = document.getElementById('say'); d.innerHTML = '<b>The stranger:</b> '; d.append(SAY[(Math.floor(Math.random() * SAY.length) + n++) % SAY.length]); d.style.setProperty('--tail', '8%'); d.style.display = 'block'; clearTimeout(window.__strT); window.__strT = setTimeout(() => d.style.display = 'none', 5200);
+      el.onclick = (e) => { e.stopPropagation(); const d = document.getElementById('say'); d.innerHTML = '<b>The stranger:</b> '; d.append(n++ === 0 ? "What're ya buyin'?" : SAY[Math.floor(Math.random() * SAY.length)]); d.style.setProperty('--tail', '8%'); d.style.display = 'block'; clearTimeout(window.__strT); window.__strT = setTimeout(() => d.style.display = 'none', 5200);
         if (n >= 3) { el.style.translate = '-120% 0'; el.style.opacity = '0'; setTimeout(() => { el && el.remove(); el = null; }, 1500); setTimeout(() => typeof say === 'function' && say("Who? There's nobody there. There's never anybody there. ...Was there?", 4200), 1700); } };
     } else if (!night && el) { el.remove(); el = null; }
   };
