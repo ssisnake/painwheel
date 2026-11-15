@@ -372,7 +372,7 @@ if (Math.random() < .5) $('axa').classList.add('right');   // some visits he sta
 })();
 
 if (!isOpen()) $('closed').style.display = 'flex';
-else { const first = !get('painWheelSeenEmporium', false); put('painWheelSeenEmporium', true); setTimeout(() => say(first ? 'Did you really climb out that window? You special or something?' : pick(HELLO), first ? 6000 : 4800), 700);   // no door chime: it's a tent }
+else { const first = !get('painWheelSeenEmporium', false); put('painWheelSeenEmporium', true); setTimeout(() => say(first ? 'Did you really climb out that window? You special or something?' : pick(HELLO), first ? 6000 : 4800), 700); /* no door chime: it's a tent */ }
 addEventListener('storage', (e) => { if (e.key === 'painWheelGold') { showGold(); render(); } if (e.key === 'painWheelEmporium' || e.key === 'painWheelFound') render(); });
 render(); tick(); setInterval(tick, 15000);
 setInterval(() => { showGold(); }, 5000);
@@ -469,6 +469,6 @@ setInterval(() => { showGold(); }, 5000);
   setTimeout(place, 1200); setInterval(place, 60000);
 })();
 </script>
-<script>window.AXA_CAMEO = { id: 'emporium', host: '#scene', z: 1, filter: 'brightness(.7) saturate(.6) sepia(.25)' };</script><script src="axa_cameo.js?v=00e20b00"></script>
+<script>window.AXA_CAMEO = { id: 'emporium', host: '#scene', z: 1, filter: 'brightness(.55) saturate(.6) sepia(.2)', when: () => { const s = document.getElementById('scene'); return !!s && s.classList.contains('night'); } };</script><script src="axa_cameo.js?v=cfcbc266"></script>
 <script src="logo_zoom.js?v=8c9b3e40"></script>
 </body></html>
