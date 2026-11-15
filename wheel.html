@@ -257,6 +257,7 @@
         @keyframes scratchPop { from { transform: scale(.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         /* clippy pet */
         .clippy-pet { position: fixed; z-index: 76; pointer-events: none; font-size: 38px; left: 0; top: 0; }
+        #foreverBtn.forever-closed { filter: grayscale(.85) brightness(.7); }
         .clippy-pet .pet-bubble { position: absolute; left: 40px; top: -10px; width: 200px; background: #fffbe6; color: #111; font-size: 11px; font-weight: 700; line-height: 1.3; border: 1.5px solid #111; border-radius: 10px; padding: 6px 8px; box-shadow: 2px 2px 0 #111; }
         /* ambulance light: slow pulse, no strobe */
         /* ChAoTiC's cruiser: 8-frame pixel sprite (lights swap red/blue about once a second, no strobe) */
@@ -925,7 +926,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 15, 4:21 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 15, 4:59 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -8717,6 +8718,10 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
     function toggleForever() { setTimeout(() => { if (typeof bgmApply === 'function') bgmApply(); }, 50);   // Forever is a ghost town: no music
         const on = !document.body.classList.contains('ghost-town');
         if (foreverPrankBusy) return;
+        if (on && !isForeverWeek()) {   // Forever is a once-a-year thing now: launch week only
+            funEvent(pick(["🌵 Forever is closed. It comes back the week of Nov 4, like the real one did. Everybody left. Everybody came back.", "🌵 The server's down for the year. Forever returns Nov 4. Clippy is waiting by the door.", "🌵 Not this week. Forever only happens on its anniversary (Nov 4-10)."]), 5000);
+            return;
+        }
         if (!on && !store.get('painWheelForeverPrank', false)) {   // the first time you try to leave Forever, the button just... leaves. No explanation.
             store.set('painWheelForeverPrank', true); foreverPrankBusy = true;
             const fb = $('foreverBtn'); fb.style.visibility = 'hidden';
@@ -10317,6 +10322,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         id: '2026-11-07-fixed', title: 'The claw, the liver and the ghost town', date: 'November 6-7, 2026',
         showAfter: Date.parse('2026-11-07T06:00:00Z'),   // re-issued Nov 7 with corrected notes, so it pops up again for everyone
         lines: [
+            ['🌵', "Forever is a once-a-year thing now. It opens on its anniversary week (Nov 4-10) and everyone goes. The rest of the year, the door's locked."],
             ['🐏', "Greg is in the claw machine now. Nobody knows how he got in there. He says he used a crane."],
             ['🏆', "14 new achievements, and a pile of new titles you can only earn. Some of them won't tell you how."],
             ['👆', "If you own Bibledaddy's finger, you can nail it to the wheel as your needle now. One nail. It holds. Mostly."],
@@ -11142,6 +11148,21 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
 
     // ---------- party mode: slow sweeping club lights, no strobe ----------
     $('foreverBtn').addEventListener('click', toggleForever);
+    // Forever Week (Nov 4-10): the wheel goes ghost town by itself once a year; outside it the button is closed, and the week ending kicks everyone back
+    (function foreverSeason() {
+        const fb = $('foreverBtn'), tag = fb && fb.querySelector('.plate-tag'), yr = String(new Date().getFullYear());
+        const sync = () => {
+            const week = isForeverWeek(), inside = document.body.classList.contains('ghost-town');
+            if (fb) { fb.classList.toggle('forever-closed', !week && !inside); fb.title = week ? 'Forever (it is Forever Week)' : 'Forever: closed until Nov 4'; }
+            if (tag && !inside) tag.textContent = week ? 'this week!' : 'Nov 4';
+            if (inside && !week) { toggleForever(); funEvent("🌵 Forever Week is over. Everybody came back. Nobody's talking about it.", 5000); }
+        };
+        setTimeout(() => {
+            if (!EMBED_SHOP && isForeverWeek() && store.get('painWheelForeverOut', '') !== yr && !document.body.classList.contains('ghost-town')) toggleForever();
+            sync();
+        }, 3500);
+        setInterval(sync, 60000);
+    })();
     function lockShopBtn() {   // a padlock and gray on the Shop button until the 8/11 opens
         const b = $('shopBtn'); if (!b) return; const lk = !has811();
         b.style.filter = lk ? 'grayscale(1) brightness(.7)' : ''; b.title = lk ? 'Locked: land on 8/11 to open the shop' : 'Walk into the 8/11';
