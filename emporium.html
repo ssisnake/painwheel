@@ -341,7 +341,7 @@ setInterval(() => { showGold(); }, 5000);
   addEventListener('focus', (e) => { if (e.target !== window) return; window.__wf = true; dispatchEvent(new Event('wfchange')); }, true);
   addEventListener('pointerdown', () => { if (!window.__wf && !window.__fishSinging) { window.__wf = true; dispatchEvent(new Event('wfchange')); } }, true);   // clicking the page means you're here
   document.addEventListener('visibilitychange', () => dispatchEvent(new Event('wfchange'))); })();
-  const SONGS = [1, 2, 3].map(n => `media/audio_bgm_emp_${n}.mp3`);
+  const SONGS = [1, 2, 3].map(n => `media/audio_bgm_emp_${n}.mp3?v=bg1`);
   const g = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v === null ? d : v; } catch (e) { return d; } };
   const target = () => { if (g('painWheelMusicOff', false) === true || document.hidden || !window.__wf) return 0; const mv = g('painWheelMusicVol', .5), v = parseFloat(localStorage.getItem('painWheelVolume')); return .5 * (typeof mv === 'number' ? mv : .5) * (isNaN(v) ? .6 : Math.max(0, Math.min(1, v))); };
   const ramp = (a, to, ms, done) => { const f = a.volume, t0 = performance.now(); (function st() { const k = Math.min(1, (performance.now() - t0) / ms); a.volume = Math.max(0, Math.min(1, f + (to - f) * k)); if (k < 1) requestAnimationFrame(st); else if (done) done(); })(); };

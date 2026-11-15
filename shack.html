@@ -147,7 +147,7 @@ const sfx = (name, dur, rate) => {
   addEventListener('focus', (e) => { if (e.target !== window) return; window.__wf = true; dispatchEvent(new Event('wfchange')); }, true);
   addEventListener('pointerdown', () => { if (!window.__wf && !window.__fishSinging) { window.__wf = true; dispatchEvent(new Event('wfchange')); } }, true);   // clicking the page means you're here
   document.addEventListener('visibilitychange', () => dispatchEvent(new Event('wfchange'))); })();
-const CLAW_BGM = [1, 2, 3, 4, 5].map(n => `media/audio_bgm_clawbusted${n}.mp3`);   // same songs through the cabinet's dying speaker (WHEEL-2600 keeps the clean ones)
+const CLAW_BGM = [1, 2, 3, 4, 5].map(n => `media/audio_bgm_clawbusted${n}.mp3?v=bg1`);   // same songs through the cabinet's dying speaker (WHEEL-2600 keeps the clean ones)
 let clawA = null, clawI = Math.floor(Math.random() * 5), clawOn = false;
 const musicOff = () => get('painWheelMusicOff', false) === true;
 const musicVol = () => { const v = get('painWheelMusicVol', .5); return typeof v === 'number' ? Math.max(0, Math.min(1, v)) : .5; };
@@ -160,7 +160,7 @@ function clawSong(i) {
   a.addEventListener('ended', () => { if (clawA === a) setTimeout(() => { if (clawA === a) clawSong((clawI + 1 + Math.floor(Math.random() * Math.max(1, CLAW_BGM.length - 1))) % CLAW_BGM.length); }, 700); });   // let the song finish, a beat of quiet, then the next
 }
 // ---- the shack's own music (Pixabay: tunetank, mickeyscat): western and old-film ragtime, under the wind; steps aside for the arcade ----
-const SHACK_BGM = ['media/audio_bgm_shack1.mp3', 'media/audio_bgm_shack2.mp3'];
+const SHACK_BGM = ['media/audio_bgm_shack1.mp3?v=bg1', 'media/audio_bgm_shack2.mp3?v=bg1'];
 let shA = null, shI = Math.floor(Math.random() * 2);
 const shTarget = () => (clawOn || musicOff() || document.hidden || !window.__wf) ? 0 : .5 * musicVol() * vol();
 function shSong(i) {

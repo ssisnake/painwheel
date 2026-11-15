@@ -240,7 +240,7 @@ function showEvidence() {
 // 🎬 credits on the little sticky note, bottom middle
 // ---------- background music for the Board: two Pixabay tracks, crossfading into each other, quiet ----------
 // "Detective Documentary" by leberch, "Time Lapse" by kulakovka (credited in the roll). Starts on your first click (browsers wait for one)
-const BGM = ['media/audio_bgm_detective.mp3', 'media/audio_bgm_timelapse.mp3', 'media/audio_bgm_dark.mp3'];
+const BGM = ['media/audio_bgm_detective.mp3?v=bg1', 'media/audio_bgm_timelapse.mp3?v=bg1', 'media/audio_bgm_dark.mp3?v=bg1'];
 (() => { if (window.__wfSet) return; window.__wfSet = true; window.__wf = window.__wf;   // our own record of whether this window has focus (more reliable than asking during the blur event)
   addEventListener('blur', (e) => { if (e.target !== window) return; window.__wf = false; setTimeout(() => { if (document.activeElement && document.activeElement.tagName === 'IFRAME') window.__wf = true; dispatchEvent(new Event('wfchange')); }, 0); }, true);
   addEventListener('focus', (e) => { if (e.target !== window) return; window.__wf = true; dispatchEvent(new Event('wfchange')); }, true);
