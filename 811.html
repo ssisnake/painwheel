@@ -358,6 +358,19 @@ $('hatch').onclick = () => {
   say('Inside the secret compartment: a tiny key, and a sticker of an old TV with a little wheel on the screen.' + (first ? ' 📌 Evidence found! It is pinned to The Board.' : ' You already took this one.'), 6500);
   $('hatch').style.display = 'none';
 };
+// BRAIN FREEZE (faces by Ada): somebody in the store pays for your three Slurpees in a row
+const FREEZE = [['cog', 'Cogsworth', 'MY BEARD IS FROZEN TO MY FACE.'], ['ada', 'Ada', 'Who designed this cup. Who DESIGNED this cup.'], ['kevin', 'Kevin', 'MY TONGUE IS STUCK. I DON\'T KNOW HOW. I WAS DRINKING IT.'], ['axa', 'Axazon', 'This Slurpee has betrayed me. I will remember this.']];
+FREEZE.forEach(([k]) => { const i = new Image(); i.src = 'media/freeze_' + k + '.png'; });
+function brainFreeze() {
+  const [k, who, line] = pick(FREEZE), d = document.createElement('div');
+  d.style.cssText = 'position:fixed;left:50%;top:46%;z-index:70;transform:translate(-50%,-50%) scale(.4);opacity:0;transition:transform .35s cubic-bezier(.2,1.6,.4,1),opacity .3s;text-align:center;pointer-events:none;width:min(420px,80vw)';
+  d.innerHTML = `<div style="font:900 clamp(26px,3.4vw,46px)/1 system-ui,sans-serif;color:#bae6fd;text-shadow:0 0 12px #38bdf8,0 3px 0 #0c4a6e,0 0 3px #000;letter-spacing:.06em">🧠❄️ BRAIN FREEZE</div><img src="media/freeze_${k}.png" alt="" style="width:100%;height:auto;image-rendering:pixelated;filter:drop-shadow(0 10px 18px rgba(0,0,0,.7)) drop-shadow(0 0 14px rgba(125,211,252,.6))"><div style="display:inline-block;margin-top:4px;padding:6px 12px;border-radius:10px;background:#0c1a2b;border:2px solid #7dd3fc;color:#e0f2fe;font:800 17px/1.3 system-ui,sans-serif"></div>`;
+  d.lastChild.textContent = who + ': "' + line + '"';
+  document.body.appendChild(d); requestAnimationFrame(() => { d.style.opacity = '1'; d.style.transform = 'translate(-50%,-50%) scale(1)'; });
+  const img = d.querySelector('img'); img.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px) rotate(-2deg)' }, { transform: 'translateX(6px) rotate(2deg)' }, { transform: 'translateX(0)' }], { duration: 160, iterations: 10 });
+  setTimeout(() => { d.style.opacity = '0'; d.style.transform = 'translate(-50%,-50%) scale(.85)'; }, 3600); setTimeout(() => d.remove(), 4100);
+}
+window.brainFreeze = brainFreeze;
 function slurpee(f) {
   if (busy || !has811()) return;
   const g = get('painWheelGold', 0);
@@ -374,7 +387,9 @@ function slurpee(f) {
     else {
       say(pick(LINES[f]) + ' (It went in your bag.)', 3600);
       const q = get('painWheelPendingLoot', []); q.push(['uncommon', '🥤 8/11', 'Slurpee (' + f + ')']); put('painWheelPendingLoot', q);   // the wheel adds it to your bag
-      if (Math.random() < .15) setTimeout(() => say('🧠❄️ BRAIN FREEZE. You forgot your rotation.', 2600), 1800);
+      const st = get('painWheelSlurpeeRun', { n: 0, t: 0 }) || { n: 0, t: 0 }, n = Date.now() - (st.t || 0) < 120000 ? (st.n || 0) + 1 : 1;
+      put('painWheelSlurpeeRun', { n: n >= 3 ? 0 : n, t: Date.now() });
+      if (n >= 3 || Math.random() < .08) setTimeout(brainFreeze, 1500);   // three in a row = guaranteed brain freeze
     }
     setTimeout(() => { cup.style.transition = 'opacity 1.2s'; cup.style.opacity = '0'; setTimeout(() => { cup.style.display = 'none'; busy = false; }, 1250); }, 2600);   // somebody cleans it up
   }, 2300);
