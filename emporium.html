@@ -372,7 +372,7 @@ if (Math.random() < .5) $('axa').classList.add('right');   // some visits he sta
 })();
 
 if (!isOpen()) $('closed').style.display = 'flex';
-else { const first = !get('painWheelSeenEmporium', false); put('painWheelSeenEmporium', true); setTimeout(() => say(first ? 'Did you really climb out that window? You special or something?' : pick(HELLO), first ? 6000 : 4800), 700); addEventListener('pointerdown', () => sfx('audio_door_chime', .5), { once: true }); }
+else { const first = !get('painWheelSeenEmporium', false); put('painWheelSeenEmporium', true); setTimeout(() => say(first ? 'Did you really climb out that window? You special or something?' : pick(HELLO), first ? 6000 : 4800), 700);   // no door chime: it's a tent }
 addEventListener('storage', (e) => { if (e.key === 'painWheelGold') { showGold(); render(); } if (e.key === 'painWheelEmporium' || e.key === 'painWheelFound') render(); });
 render(); tick(); setInterval(tick, 15000);
 setInterval(() => { showGold(); }, 5000);
