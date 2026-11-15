@@ -220,11 +220,12 @@ const FLOOR = { poor: 500, common: 1000, uncommon: 2500, rare: 6000, epic: 15000
 const QCOL = { poor: '#9d9d9d', common: '#f5f5f4', uncommon: '#1eff00', rare: '#3b9cff', epic: '#b45cf0', legendary: '#ff8000' };
 const QDARK = { poor: '#57534e', common: '#44403c', uncommon: '#15803d', rare: '#1d4ed8', epic: '#7e22ce', legendary: '#c2410c' };
 const QEMO = { poor: '🧦', common: '📦', uncommon: '🎁', rare: '💎', epic: '🔮', legendary: '👑' };
-const priceOf = (q) => Math.max(FLOOR[q], Math.round(gold() * PCT[q]));
+const vaultG = () => { const v = Number(get('painWheelVault', 0)); return Number.isFinite(v) && v > 0 ? v : 0; };   // prices count wallet + vault
+const priceOf = (q) => Math.max(FLOOR[q], Math.round((gold() + vaultG()) * PCT[q]));
 // haggling: one try per item per restock. Win and the % drops for you; lose and Axazon adds an asshole tax
 const hag = () => { const h = get('painWheelHaggle', {}) || {}; return h.rot === ROT.id ? h : { rot: ROT.id, items: {} }; };
 const pctFor = (i) => { const q = STOCK[i].q, h = (hag().items || {})[i]; return h ? h.pct : PCT[q]; };
-const priceFor = (i) => { const q = STOCK[i].q, pc = pctFor(i); return Math.max(Math.round(FLOOR[q] * pc / PCT[q]), Math.round(gold() * pc)); };
+const priceFor = (i) => { const q = STOCK[i].q, pc = pctFor(i); return Math.max(Math.round(FLOOR[q] * pc / PCT[q]), Math.round((gold() + vaultG()) * pc)); };
 const HAGGLE = [   // [button, points off, chance he says yes]
   ['Knock 5% off', .05, .6], ['Knock 10% off', .10, .3], ['Half off. Final offer.', .5, .08]];
 const HAG_YES = ["Fine. FINE. Take it before I change my mind.", "You drive a hard bargain. Mostly because you won't stop talking.", "Deal. Don't tell anybody. Especially Kevin.", "Ugh. Okay. You remind me of me. That's not a compliment."];
@@ -289,10 +290,10 @@ function showItem(i) {
     <div class="row"><button class="buy" type="button">🏷️ Buy it</button>${hg ? '' : '<button class="hag" type="button">🤝 Haggle</button>'}<button class="no" type="button">Just looking</button></div><div class="hagrow"></div><div class="msg" role="status"></div>`;
   card.querySelector('h2').textContent = it.n; card.querySelector('.desc').textContent = ITEM_DESC[it.n] ? '"' + ITEM_DESC[it.n] + '"' : 'Axazon swears it is authentic.';
   const buy = card.querySelector('.buy');
-  if (gold() < price) { buy.disabled = true; card.querySelector('.msg').textContent = 'You can\'t afford it. Axazon can tell.'; }
+  if (gold() < price) { buy.disabled = true; card.querySelector('.msg').textContent = (vaultG() > 0 ? 'Not enough on you. Your vault counts toward the price, but Axazon wants cash. The 8/11 ATM is next door. Ish.' : 'You can\'t afford it. Axazon can tell.'); }
   buy.onclick = () => {
     const p = priceFor(i), g = gold();
-    if (g < p) { card.querySelector('.msg').textContent = 'You can\'t afford it. Axazon can tell.'; return; }
+    if (g < p) { card.querySelector('.msg').textContent = (vaultG() > 0 ? 'Not enough on you. Your vault counts toward the price, but Axazon wants cash. The 8/11 ATM is next door. Ish.' : 'You can\'t afford it. Axazon can tell.'); return; }
     if (myBuys(ROT.id).includes(i)) return;
     put('painWheelGold', g - p);   // the wheel picks the new total up (and the item, next time it's open)
     const q = get('painWheelPendingLoot', []) || []; q.push([it.q, "🏷️ Bought at Axazon's Emporium", it.n]); put('painWheelPendingLoot', q);

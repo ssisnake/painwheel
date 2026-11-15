@@ -167,7 +167,8 @@ setTimeout(() => { pose('point', 3000); say(get('painWheelGnomeVisits', 0) ? pic
 }
 
 // ---------- adopt the garden gnome (a pet: 6% of your gold, at least 2,500g) ----------
-const gnomePrice = () => Math.max(2500, Math.round(gold() * .06));
+const vaultG = () => { const v = Number(get('painWheelVault', 0)); return Number.isFinite(v) && v > 0 ? v : 0; };   // prices count wallet + vault
+const gnomePrice = () => Math.max(2500, Math.round((gold() + vaultG()) * .06));
 const ownsGnome = () => !!(get('painWheelPets', {}) || {}).garden;
 function openAdopt(line) {
   const own = ownsGnome();
@@ -278,7 +279,7 @@ const PARTS = [
   { id: 'joy', icon: 'media/gnome_part_joy.png', name: 'Joystick', desc: 'Lightly used. The last owner held it too tight.', pct: .05, floor: 2000 },
   { id: 'claw', icon: 'media/gnome_part_claw.png', name: 'The Claw', desc: 'Grip strength: legally "some".', pct: .08, floor: 5000 },
   { id: 'coin', icon: 'media/gnome_part_coin.png', name: 'Coin Mech', desc: 'Takes casino tokens. Sometimes gives them back. Sometimes.', pct: .12, floor: 10000 } ];
-const partPrice = (p) => Math.max(p.floor, Math.round(gold() * p.pct));
+const partPrice = (p) => Math.max(p.floor, Math.round((gold() + vaultG()) * p.pct));
 const owned = () => get('painWheelClawParts', {}) || {};
 function renderParts(msg) {
   const st = clawState(), have = owned();

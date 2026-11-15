@@ -283,7 +283,7 @@ function openClaw() {
     if (!auto) msg.textContent = `🎁 You grabbed ${P.won.replace(/^.*?YOU WON /, '').split('.')[0]} out of the chute. It's yours. Check your pets.`; };
   chute.onclick = () => collect(false);
   q('buy').onclick = () => {   // the cashier cage: 5% of your gold (min 100g)
-    const gold = get('painWheelGold', 0), c = Math.max(100, Math.round(gold * .05));
+    const gold = get('painWheelGold', 0), vlt = Math.max(0, Number(get('painWheelVault', 0)) || 0), c = Math.max(100, Math.round((gold + vlt) * .05));   // wallet + vault
     if (gold < c) { msg.textContent = `The cashier wants ${fmt(c)}. You do not have ${fmt(c)}.`; return; }
     put('painWheelGold', gold - c); tokens = get('painWheelTokens', 0) + 1; put('painWheelTokens', tokens); sfx('audio_token');
     msg.textContent = `🎰 Bought 1 token for ${fmt(c)} (5% of your gold). You have ${tokens}. The cashier bit it to check.`;
