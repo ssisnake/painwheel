@@ -105,7 +105,7 @@
   <div id="props"></div>
   <button id="flyer" type="button" title="Gnome Depot: (not) grand opening" aria-label="Gnome Depot flyer: go next door"><img src="media/s811_gnome_flyer.png" alt=""></button>
   <div id="say" role="status"></div>
-  <div id="notice" role="dialog" aria-modal="true" aria-label="Gnome Depot is open"><img src="media/s811_gnome_notice.png" alt="A Gnome Depot flyer on the 8/11 door: NOT grand opening, next door"><div class="row"><button id="noticeGo">Go next door</button><button class="alt" id="noticeX">Maybe later</button></div></div>
+  <div id="notice" role="dialog" aria-modal="true" aria-label="Gnome Depot is open"><img id="noticeImg" alt="A Gnome Depot flyer on the 8/11 door: NOT grand opening, next door"><div class="row"><button id="noticeGo">Go next door</button><button class="alt" id="noticeX">Maybe later</button></div></div>
   <div id="atm" role="dialog" aria-modal="true" aria-label="ATM"><div class="box">
     <div class="scr" id="atmScr"></div>
     <div id="atmPin"><div class="row"><input id="atmPinIn" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="PIN" aria-label="PIN"><button class="go" id="atmPinGo">Enter</button><button class="x" id="atmX1">Cancel</button></div></div>
@@ -214,7 +214,7 @@ addEventListener('message', (e) => {
   else if (e.data.shop === 'go' && /^wheel\.html#go=\w+$/.test(e.data.href || '')) location.href = e.data.href;
 });
 $('flyer').onclick = () => { say(get('painWheelSeenGnome', false) ? 'Next door. Karen is in a mood. Karen is always in a mood.' : 'A flyer for the hardware store next door. Someone wrote "DO NOT" on it in pen.', 1600); setTimeout(() => { location.href = 'gnome.html'; }, 1200); };
-if (has811() && !get('painWheelGnomeNotice', false)) setTimeout(() => { $('notice').classList.add('open'); put('painWheelGnomeNotice', true); }, 1400);   // once: Gnome Depot is (not) grand opening next door
+if (has811() && !get('painWheelGnomeNotice', false)) setTimeout(() => { $('noticeImg').src = 'media/s811_gnome_notice.png'; $('notice').classList.add('open'); put('painWheelGnomeNotice', true); }, 1400);   // only downloaded the one time it shows   // once: Gnome Depot is (not) grand opening next door
 $('noticeGo').onclick = () => { location.href = 'gnome.html'; };
 $('noticeX').onclick = () => $('notice').classList.remove('open');
 $('notice').addEventListener('click', (e) => { if (e.target.id === 'notice') $('notice').classList.remove('open'); });
