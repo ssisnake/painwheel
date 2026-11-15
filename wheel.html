@@ -896,7 +896,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 14, 2:28 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 14, 6:31 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -969,6 +969,7 @@
             </div>
             <div id="updDate" class="text-xs mono text-slate-400 mb-3"></div>
             <ul id="updList" class="space-y-2.5 text-base text-slate-200"></ul>
+            <div class="mt-4 flex items-center gap-3 rounded-xl px-3 py-2 bg-slate-900/70 border border-amber-900/50"><img src="media/cog_head.png" alt="" style="width:48px;height:auto;image-rendering:pixelated;flex:none"><div class="text-sm text-slate-300 leading-snug"><span id="cogSign" class="italic"></span><div class="text-amber-300 font-black mt-0.5">⚙️ Cogsworth, patch dwarf</div></div></div>
             <div class="mt-5 pt-3 border-t border-amber-900/60">
                 <div class="text-sm font-black uppercase tracking-wider text-amber-400 mb-2">📜 Past updates</div>
                 <div id="updHistory" class="space-y-2"></div>
@@ -7976,6 +7977,8 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         say: (t) => t === 'KEVIN' ? pick(['kevin. cool. cool cool cool. (not cool)', '*slides away from the Kevin*']) : pick(['sup.', 'i am not sticky. you are sticky.', '*slorp*', 'the sun is not out. the glasses stay on.', 'i was a slurpee once. long story.', 'too cool to spin. spin me anyway.']) };
     PETS.piggy = { e: '🐷', img: PHOTO_PET_PIGGY, w: 38, name: 'Goblin Piggy Bank', cost: 0, claw: true, desc: 'A goblin-shaped piggy bank. Feed it gold. It will never, ever give any back. Very on brand.',
         say: (t) => t === 'KEVIN' ? pick(['Kevin owes me 40 gold. I am still waiting.', 'no refunds. especially for Kevin.']) : pick(['feed me gold.', 'time is money, friend.', 'there is no slot on the bottom. there never was.', '*coins jingle* (yours. now mine.)', 'interest rate: yes', 'i am saving for a yacht. YOUR yacht.']) };
+    PETS.garden = { e: '🍄', img: 'media/gnome_garden_still.png', w: 30, name: 'Garden Gnome', cost: 0, depot: true, desc: "A lawn gnome from Gnome Depot. He doesn't move. He definitely doesn't move. Stop looking at him.",
+        say: (t) => t === 'KEVIN' ? pick(['i buried a kevin once. he came back. like me.', '*has not moved* (has moved)']) : pick(['...', '*was facing the other way a second ago*', 'i am a statue.', 'dig. dig. dig.', 'karen returned me nine times. i always come home.', 'you blinked.', '*shovel noises at 3 AM*']) };
     const CLAW_PRIZES = [
         { k: 'volley', img: PHOTO_VOLLEY, won: '🏐 YOU WON VOLLEY McBALLFACE. He is yours now. He does not explain the handprint.', fun: '🏐 VOLLEY McBALLFACE HAS BEEN RESCUED FROM THE CLAW', hi: 'IT IS SO NICE TO BE OUT OF THE CLAW' },
         { k: 'spinny', img: PHOTO_PET_SPINNY, won: "🎡 YOU WON LIL' SPINNY. It has not stopped spinning since you picked it up.", fun: "🎡 LIL' SPINNY ESCAPED THE CLAW (STILL SPINNING)", hi: 'wheeeeee. i am out. wheeeee.' },
@@ -10055,6 +10058,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             ['🏅', "The original 8 sets are retired. The people who helped build The Wheel get them back forever with a personal code (Settings → Have a code?)."],
             ['🏆', "No One is now You're Winner ! (Big Rigs fans know.)"],
             ['🌙', "Go to Bed Evelyn plays a real lullaby now."],
+            ['🍄', "Gnome Depot has a garden gnome you can adopt as a pet. He does not move. Stop checking. Also: Gnome of the Month."],
             ['🐟', "The swordfish learned a real sea shanty. All of them. Nobody asked."],
             ['🔨', "Gnome Depot is open, next door to the 8/11 (look for the flyer). Paint, lumber, and parts. Karen will help you. Karen will not help you."],
             ['🏧', "The 8/11 ATM works now. Same PIN as your Guild Bank Vault: move gold in and out without sailing to the yacht. The scratch-offs got a real floor stand, and the hot dogs actually roll."],
@@ -10171,7 +10175,10 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             box.appendChild(d);
         });
     }
+    const COG_SIGNOFFS = ['Tested it. Mostly. The parts I tested work great.', 'Fixed some bugs. Made some new ones. Net progress.', 'If anything breaks, it was the skeleton.',
+        'Built at 3 AM. Proofread at 3:05 AM. Shipped at 3:06 AM.', 'Karen charged me for the screws. Worth it.', 'Read the patch notes twice. Found a typo anyway. Left it in for character.'];
     function showUpdateNotes() {
+        try { $('cogSign').textContent = '"' + pick(COG_SIGNOFFS) + '"'; } catch (e) {}
         const live = !UPDATE_NOTES.showAfter || Date.now() >= UPDATE_NOTES.showAfter, cur = live ? UPDATE_NOTES : UPDATE_HISTORY[0];   // tonight's notes stay secret until midnight
         $('updTitle').textContent = cur.title; $('updDate').textContent = cur.date; renderUpdateHistory(live ? null : cur);
         const ul = $('updList'); ul.innerHTML = '';
@@ -10467,13 +10474,14 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             const PET_ICON = { murloc: `<span style="display:inline-block;width:30px;height:27px;vertical-align:middle;background:url(${PHOTO_MURLOC_SHEET}) 0 0 / 600% 100% no-repeat"></span>`,
                 chicken: `<img src="${PHOTO_CHICKEN}" alt="" style="display:inline-block;height:28px;vertical-align:middle">`, whelp: `<img src="${PHOTO_WHELP}" alt="" style="display:inline-block;height:28px;vertical-align:middle">`,
                 accountant: `<img src="${PHOTO_GIZ_GRIN}" alt="" style="display:inline-block;height:34px;vertical-align:middle">`, volley: `<img src="${PHOTO_VOLLEY}" alt="" style="display:inline-block;height:28px;vertical-align:middle">` };
-            ['spinny', 'gerald', 'needle', 'kevjr', 'duck', 'bones', 'slimothy', 'piggy'].forEach(k => { PET_ICON[k] = `<img src="${PETS[k].img}" alt="" style="display:inline-block;height:30px;vertical-align:middle;image-rendering:pixelated">`; });
+            ['spinny', 'gerald', 'needle', 'kevjr', 'duck', 'bones', 'slimothy', 'piggy', 'garden'].forEach(k => { PET_ICON[k] = `<img src="${PETS[k].img}" alt="" style="display:inline-block;height:30px;vertical-align:middle;image-rendering:pixelated">`; });
             add(shopRow(`<img src="${PHOTO_CLAW}" alt="" style="display:inline-block;height:30px;vertical-align:middle">`, 'Claw & Disorder', 'THE WHEEL™ claw machine at Little St. Jeff\'s Prize Island, in the corner of the desert shack. New pets live inside. Nobody gets what they came for. Usually.', `Play: 1 🎰 token (you have ${tokens})`, () => { closeShop(); location.href = 'shack.html#claw'; }));
             { const n = document.createElement('div'); n.className = 'text-sm text-slate-300'; n.textContent = `Up to ${PET_LIMIT} pets can be out at once (${activePets().length}/${PET_LIMIT} now). Switch which ones are out in ⚙️ Settings. Clippy doesn't count. Clippy is not a pet. Clippy is a consequence.`; add(n); }
             Object.entries(PETS).forEach(([k, p0]) => {
                 const p = PET_ICON[k] ? Object.assign({}, p0, { e: PET_ICON[k] }) : p0;
                 if (p.secret && !clippyUnlocked && !pets[k]) return;
                 if (p0.claw && !pets[k]) { add(shopRow(p.e, p.name, 'Only from the claw machine. Good luck. You will need it.', 'Claw only', null, 'owned')); return; }
+                if (p0.depot && !pets[k]) { add(shopRow(p.e, p.name, 'Only at Gnome Depot, next to the 8/11. Karen will overcharge you. He will follow you home.', 'Gnome Depot', null, 'owned')); return; }
                 if (k === 'chicken' && !pets[k]) { add(shopRow(p.e, p.name, 'Can\'t be bought. Find a Westfall chicken wandering around and type chicken while it\'s on screen...', cluckStage ? 'Quest: CLUCK!' : 'Quest only', null, 'owned')); return; }
                 if (k === 'clippy' && pets[k]) { add(shopRow(p.e, p.name, "Clippy can't be turned off. Clippy is forever. (Maybe a favor will do it someday.)", '📎 Always on', null, 'owned')); return; }
                 if (pets[k]) {   // owned: the button shows/hides the pet (max PET_LIMIT on screen)

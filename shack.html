@@ -180,6 +180,21 @@ function clawMusic(on) {
   if (t > 0) { clawA.play().catch(() => {}); ramp(clawA, t, 800); } else ramp(clawA, 0, 600, () => { if (!clawTarget()) clawA.pause(); });
 }
 addEventListener('wfchange', () => clawOn && clawMusic(true));
+// ---------- Cogsworth (a dwarf tinkerer, Claude's guy) is sometimes working on the claw machine ----------
+if (Math.random() < .3) {
+  const cog = document.createElement('button'); cog.type = 'button'; cog.setAttribute('aria-label', 'Cogsworth, fixing the claw machine');
+  cog.style.cssText = 'position:absolute;left:50.4%;bottom:19%;width:7.2%;padding:0;border:0;background:none;cursor:pointer;z-index:2;translate:-50% 0;filter:brightness(.82) sepia(.18)';
+  cog.innerHTML = '<img src="media/cog_tinker.png" alt="" style="display:block;width:100%;height:auto;image-rendering:pixelated;filter:drop-shadow(0 .3cqw .3cqw rgba(0,0,0,.5))">';
+  scene.appendChild(cog);
+  const LINES = { broken: ["Cogsworth: Waiting on parts. Karen has them. Karen has everything. Karen gives nothing.", "Cogsworth: Joystick, claw, coin mech. Gnome Depot. Tell Karen I sent you. Actually, don't.",
+      "Cogsworth: I could fix this in ten minutes with parts. I've been here three days without them."],
+    fixed: ["Cogsworth: Fixed it myself. (You bought the parts. I turned three screws. Took four hours.)", "Cogsworth: She runs like a dream. A cursed dream. But a dream.",
+      "Cogsworth: If it eats your token, that's a feature. I documented it."],
+    grand: ["Cogsworth: Somebody fixed this before I got here. Sloppy work. I redid it. Twice.", "Cogsworth: This machine's older than Clippy and twice as stubborn."] };
+  cog.onclick = (e) => { e.stopPropagation(); const img = cog.querySelector('img'); img.src = 'media/cog_proud.png'; setTimeout(() => { img.src = 'media/cog_tinker.png'; }, 2600);
+    say('⚙️ ' + pick(LINES[clawState()] || LINES.grand), 4800); };
+}
+
 function openClaw() {
   if (clawState() === 'broken') { say('🔧 ' + pick(CLAW_BROKEN), 6000); return; }   // parts first (Gnome Depot)
   clawMusic(true);

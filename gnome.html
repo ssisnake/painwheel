@@ -29,6 +29,11 @@
   /* the claw machine parts counter */
   #parts { position: fixed; inset: 0; z-index: 70; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.62); padding: 16px; }
   #parts.open { display: flex; }
+  #adopt { position: fixed; inset: 0; z-index: 70; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.62); padding: 16px; } #adopt.open { display: flex; }
+  #adopt .box { width: min(520px, 100%); background: #1c1209; border: 4px solid #ea580c; border-radius: 14px; padding: 18px; color: #ffedd5; box-shadow: 0 20px 60px rgba(0,0,0,.6); }
+  #adopt h2 { margin: 0 0 4px; font-size: 26px; color: #fb923c; } #adopt .muted { color: #d6d3d1; font-size: 17px; line-height: 1.4; margin: 0 0 12px; }
+  #adoptBuy:disabled { background: #57534e !important; color: #d6d3d1 !important; cursor: default; }
+  #adopt .close { font: 800 18px system-ui, sans-serif; padding: 9px 16px; border-radius: 9px; border: 0; cursor: pointer; background: #f59e0b; color: #1c1917; }
   #parts .box { width: min(560px, 100%); max-height: 92vh; overflow: auto; background: #1c1209; border: 4px solid #ea580c; border-radius: 14px; padding: 18px; color: #ffedd5; box-shadow: 0 20px 60px rgba(0,0,0,.6); }
   #parts h2 { margin: 0 0 4px; font-size: 26px; color: #fb923c; }
   #parts .muted { color: #d6d3d1; font-size: 17px; line-height: 1.4; margin: 0 0 12px; }
@@ -61,6 +66,13 @@
   <button id="karen" type="button" aria-label="Karen Sprocketknockers"><img id="karenImg" src="media/gnome_karen_crossed.png" alt=""></button>
   <div id="say" role="status"></div>
 </div></div></div>
+<div id="adopt" class="dlg" role="dialog" aria-modal="true" aria-label="Adopt the garden gnome"><div class="box">
+  <h2>🍄 The Garden Gnome</h2>
+  <p class="muted" id="adoptLine"></p>
+  <div style="display:grid;grid-template-columns:90px 1fr;gap:14px;align-items:center"><img src="media/gnome_garden_sneak.png" alt="" style="width:90px;height:auto;image-rendering:pixelated"><p class="muted" id="adoptText" style="margin:0"></p></div>
+  <div style="display:flex;gap:10px;justify-content:center;margin-top:14px;flex-wrap:wrap"><button class="close" id="adoptBuy" style="margin:0;background:#22c55e;color:#052e16"></button><button class="close" id="adoptClose" style="margin:0">Back away slowly</button></div>
+  <div id="adoptMsg" style="min-height:1.4em;margin-top:10px;text-align:center;font-weight:800;color:#fde68a"></div>
+</div></div>
 <div id="parts" role="dialog" aria-modal="true" aria-label="Claw machine parts"><div class="box">
   <h2>🦾 Claw Machine Parts</h2>
   <p class="muted" id="partsLede"></p>
@@ -131,8 +143,30 @@ setTimeout(() => { pose('point', 3000); say(get('painWheelGnomeVisits', 0) ? pic
   setInterval(sneak, 9000 + Math.random() * 7000);
   const GG = ['That gnome was not there a minute ago.', "It's just a garden gnome. It's just a garden gnome. It's just a", 'The price tag says SOLD. Nobody remembers buying him.',
     'He has dirt on his shovel. Fresh dirt.', 'You blink. He did not.'];
-  gg.onclick = () => { note('🍄 ' + pick(GG), 3800); if (Math.random() < .35) setTimeout(() => say(pick(["Don't make eye contact with Gerald. Not the wheel Gerald. A different Gerald.", "He's not for sale. He keeps coming back.", 'I have returned that gnome nine times.']), 3200), 2200); };
+  gg.onclick = () => openAdopt(pick(GG));
 }
+
+// ---------- adopt the garden gnome (a pet: 6% of your gold, at least 2,500g) ----------
+const gnomePrice = () => Math.max(2500, Math.round(gold() * .06));
+const ownsGnome = () => !!(get('painWheelPets', {}) || {}).garden;
+function openAdopt(line) {
+  const own = ownsGnome();
+  $('adoptLine').textContent = '🍄 ' + line;
+  $('adoptText').textContent = own ? "You already own him. He's in your pets. Also he's here. Also he's behind you. They always come back."
+    : "Karen: That one? Fine. He's a pet now, I guess. He doesn't eat. He doesn't sleep. He doesn't stop watching. Six percent of your gold. No returns. Trust me, I've tried.";
+  const b = $('adoptBuy'); b.disabled = own || gold() < gnomePrice(); b.textContent = own ? 'Already yours' : 'Adopt for ' + fmt(gnomePrice());
+  $('adoptMsg').textContent = !own && gold() < gnomePrice() ? "You can't afford him. He can wait. He's very patient." : '';
+  $('adopt').classList.add('open');
+}
+$('adoptBuy').onclick = () => {
+  const cost = gnomePrice(), g = gold(); if (ownsGnome() || g < cost) return;
+  put('painWheelGold', g - cost); const pets = get('painWheelPets', {}) || {}; pets.garden = true; put('painWheelPets', pets); showGold(); sfx('audio_token', .7);
+  $('adoptBuy').disabled = true; $('adoptBuy').textContent = 'Adopted'; $('adoptMsg').textContent = 'He is yours. Check your pets on the wheel. Do not check behind you.';
+  setTimeout(() => { pose('point'); say("Sold. No returns. I mean it. I've tried NINE times.", 3600); }, 900);
+};
+$('adoptClose').onclick = () => $('adopt').classList.remove('open');
+$('adopt').addEventListener('click', (e) => { if (e.target.id === 'adopt') $('adopt').classList.remove('open'); });
+addEventListener('keydown', (e) => { if (e.key === 'Escape') $('adopt').classList.remove('open'); });
 
 // ---------- Ada (a mechanic, and a regular) is sometimes browsing in the back aisle ----------
 if (Math.random() < .35) {
@@ -144,6 +178,26 @@ if (Math.random() < .35) {
     "Andesite? Don't get me started. Greg swears it's best down low. Greg is wrong. Greg is a sheep in a top hat.", "Karen charged me 12% of my gold for a wrench. I respect it. I hate it, but I respect it.",
     "If you see a ram in a top hat, I'm not here. We're mid-argument.", "This place has everything except customer service."];
   ada.onclick = () => { note('🔧 Ada: ' + pick(ADA), 5200); if (Math.random() < .4) setTimeout(() => say(pick(["Ada, you're blocking the aisle.", "Are you buying that or just hugging it?", "Ada. My favorite non-paying customer."]), 3200), 2600); };
+}
+
+// ---------- Cogsworth (a dwarf tinkerer, Claude's guy) sometimes browses the front of the aisle. If Ada's in, they bicker ----------
+if (Math.random() < .3) {
+  const cog = document.createElement('button'); cog.type = 'button'; cog.setAttribute('aria-label', 'Cogsworth, squinting at a part');
+  cog.style.cssText = 'position:absolute;left:44.5%;bottom:21.5%;width:5.2%;padding:0;border:0;background:none;cursor:pointer;z-index:2;translate:-50% 0';
+  cog.innerHTML = '<img src="media/cog_tinker.png" alt="" style="display:block;width:100%;height:auto;image-rendering:pixelated;filter:drop-shadow(0 .2cqw .25cqw rgba(0,0,0,.45))">';
+  $('scene').appendChild(cog);
+  const COG = ["Cogsworth: Don't mind me. Just checking if this sprocket is the right sprocket. It is not. None of them are.", "Cogsworth: I fixed three bugs last night. I made four. Net progress!",
+    "Cogsworth: Karen charged me for LOOKING at a wrench. I respect the hustle.", "Cogsworth: I read every patch note before it ships. Twice. Then I find a typo anyway.",
+    "Cogsworth: If the claw machine breaks again, it was the skeleton. Write that down.", "Cogsworth: These sticky notes are my memory. Don't move them. Especially the pink one."];
+  const BICKER = [["Ada: Andesite goes UP high, Cogsworth.", "Cogsworth: Andesite goes wherever the dwarves put it. Down. Deep. Where it belongs."],
+    ["Ada: You're holding that gear upside down.", "Cogsworth: Gears don't HAVE an upside down. ...This one might."],
+    ["Ada: Who drew you?", "Cogsworth: You did. Kind of. Long story. Don't think about it."]];
+  cog.onclick = () => {
+    const ada = document.querySelector('[aria-label="Ada, browsing in the back"]');
+    if (ada && Math.random() < .5) { const b = pick(BICKER); note('🔧 ' + b[0], 2800); setTimeout(() => note('⚙️ ' + b[1], 3600), 2800); return; }
+    cog.querySelector('img').src = 'media/cog_proud.png'; setTimeout(() => { cog.querySelector('img').src = 'media/cog_tinker.png'; }, 2600);
+    note('⚙️ ' + pick(COG), 4400);
+  };
 }
 
 // ---------- the shop opens right here (the wheel's shop in a frame, like the 8/11) ----------
