@@ -102,7 +102,7 @@ const sfx = (name, g) => { try { if (!vol()) return; AC = AC || new (window.Audi
 addEventListener('pointerdown', () => { if (AC && AC.state === 'suspended') AC.resume(); }, { once: true });
 
 // ---------- Karen Sprocketknockers: behind the register, arms crossed, already annoyed ----------
-const KAREN_NUDGE = { left: 93.6, bottom: 26.4, width: 11.6 };   // % of the store: tweak to move her (bottom = up from the floor of the picture)
+const KAREN_NUDGE = { left: 93.6, bottom: 23.4, width: 11.6 };   // % of the store: tweak to move her (bottom = up from the floor of the picture)
 const k = $('karen'); Object.assign(k.style, { left: KAREN_NUDGE.left + '%', bottom: KAREN_NUDGE.bottom + '%', width: KAREN_NUDGE.width + '%', translate: '-50% 0' });
 function pose(p, ms) { $('karenImg').src = 'media/gnome_karen_' + p + '.png'; clearTimeout(pose.t); if (p !== 'crossed') pose.t = setTimeout(() => { $('karenImg').src = 'media/gnome_karen_crossed.png'; }, ms || 2600); }
 const HELLO_FIRST = ["Oh. A customer. Wonderful. I was having a nice day.", "Welcome to Gnome Depot, where the gnomes are short and so is my patience."];
@@ -118,7 +118,7 @@ setTimeout(() => { pose('point', 3000); say(get('painWheelGnomeVisits', 0) ? pic
 // ---------- Gnome of the Month: hung on the front of the checkout counter. It is always Karen ----------
 {
   const tilted = Math.random() < .5, gotm = document.createElement('button'); gotm.type = 'button'; gotm.setAttribute('aria-label', 'Gnome of the Month photo');
-  gotm.style.cssText = `position:absolute;left:${tilted ? 84.1 : 84.4}%;top:79.5%;width:${tilted ? 8.4 : 8}%;padding:0;border:0;background:none;cursor:pointer;z-index:2`;
+  gotm.style.cssText = `position:absolute;left:${tilted ? 87.3 : 87.6}%;top:84%;width:${tilted ? 8.4 : 8}%;padding:0;border:0;background:none;cursor:pointer;z-index:2`;
   gotm.innerHTML = `<img src="media/gnome_gotm_${tilted ? 'tilted' : 'straight'}.png" alt="" style="display:block;width:100%;height:auto;filter:drop-shadow(.15cqw .3cqw .3cqw rgba(0,0,0,.5))">`;
   $('scene').appendChild(gotm);
   const GOTM = ['Gnome of the Month: Karen. Every month since 1987. Nobody else applied.', 'The spider has lived there longer than most employees.',
