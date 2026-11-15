@@ -923,7 +923,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 14, 10:04 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 14, 10:19 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -5251,7 +5251,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
        Every fair or rigged spin from a named player is sent to the Sheet; rigged
        spins are logged but don't count. The Sheet also feeds the Discord board. */
     const LEADERBOARD_URL = ((window.PAIN_WHEEL_CONFIG || {}).leaderboardUrl || '').trim();
-    const axaFound = () => { const s = store.get('painWheelAxaSightings', {}) || {}; return ['board', 'shack', '811'].filter(k => s[k]).length; };   // secret: how many of Axazon's hiding spots you've clicked
+    const axaFound = () => { const s = store.get('painWheelAxaSightings', {}) || {}; return Object.keys(s).filter(k => s[k]).length; };   // secret: how many of Axazon's hiding spots you've clicked
     function reportSpin(s, fair, ash) {
         if (!LEADERBOARD_URL || !playerName) { achPosts.length = 0; return; }
         const body = JSON.stringify({ name: playerName, type: s.type, label: TYPE[s.type].label || TYPE[s.type].pill || s.type,
@@ -10263,6 +10263,8 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         id: '2026-11-07-fixed', title: 'The claw, the liver and the ghost town', date: 'November 6-7, 2026',
         showAfter: Date.parse('2026-11-07T06:00:00Z'),   // re-issued Nov 7 with corrected notes, so it pops up again for everyone
         lines: [
+            ['🖥️', "Somebody left their computer on in the VIP room. Once the 8/11 is open, the right monitor is worth a look."],
+            ['📞', "The brick phone works like a real landline now: one call at a time. Everyone else gets a busy signal."],
             ['🤝', "You can haggle with Axazon now. One try per item per restock. He's exactly as pleasant about it as you'd expect."],
             ['🐏', "Gnome Depot has had some... disturbances in the aisles lately. Karen would like it to stop."],
             ['🪵', "Gnome Depot's lumber opens your house right there in the store now. No more getting thrown back to the wheel."],
