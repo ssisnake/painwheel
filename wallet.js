@@ -7,13 +7,15 @@
   css.textContent = `
   header { display: grid !important; grid-template-columns: 1fr auto 1fr; align-items: center; }
   header h1 { grid-column: 1; grid-row: 1; justify-self: start; } header nav { grid-column: 2; grid-row: 1; justify-content: center; } header #goldBox { grid-column: 3; grid-row: 1; justify-self: end; }
+  #bar nav { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; } #bar #goldBox { background: rgba(12,6,2,.86); border-color: rgba(250,204,21,.6); color: #fde047; font: 800 20px ui-monospace, monospace; }
   header nav a { font-size: 16px !important; padding: 7px 12px !important; white-space: nowrap; } header nav a.here { display: none; }
   header h1.logo-h1 { margin: 0; line-height: 0; } header h1.logo-h1 img { height: 64px; width: auto; image-rendering: pixelated; display: block; filter: drop-shadow(0 3px 4px rgba(0,0,0,.5)); }
   @media (max-width: 1000px) { header h1.logo-h1 img { height: 46px; } }
-  header nav a.plate { background: none !important; padding: 0 !important; border-radius: 8px; line-height: 0; transition: transform .12s, filter .12s; } header nav a.plate img { height: 50px; width: auto; image-rendering: pixelated; display: block; }
-  header nav a.plate:hover, header nav a.plate:focus-visible { transform: translateY(-1px); filter: brightness(1.15); outline: none; }
+  nav a.plate { background: none !important; padding: 0 !important; border-radius: 8px; line-height: 0; transition: transform .12s, filter .12s; } nav a.plate img { height: 50px; width: auto; image-rendering: pixelated; display: block; }
+  nav a.plate:hover, nav a.plate:focus-visible { transform: translateY(-1px); filter: brightness(1.15); outline: none; }
   @media (max-width: 1000px) { header { grid-template-columns: 1fr auto; } header nav { grid-column: 1 / -1; grid-row: 2; } header #goldBox { grid-column: 2; grid-row: 1; } }
-  #goldBox { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; border-radius: 10px; border: 2px solid transparent; transition: border-color .15s, background .15s; user-select: none; }
+  header h1 { white-space: nowrap; font-size: clamp(22px, 2.4vw, 32px) !important; }
+  #goldBox { font: 800 20px ui-monospace, monospace !important; color: #fde047; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; border-radius: 10px; border: 2px solid transparent; transition: border-color .15s, background .15s; user-select: none; }
   #goldBox:hover, #goldBox:focus-visible { border-color: #facc15; background: rgba(250,204,21,.1); outline: none; }
   #goldBox img { height: 30px; width: auto; image-rendering: pixelated; filter: drop-shadow(0 2px 0 rgba(0,0,0,.5)); }
   #moneyPop { position: fixed; inset: 0; z-index: 80; display: none; align-items: center; justify-content: center; padding: 16px; background: rgba(0,0,0,.6); }
@@ -33,7 +35,7 @@
     ['811.html', '🏪 8/11', () => g('painWheel811Open', false) || st().SEVEN_ELEVEN > 0, /^811\.html$/], ['gnome.html', '🔨 Gnome Depot', () => g('painWheelSeenGnome', false) || g('painWheelGnomeNotice', false), /^gnome\.html$/],
     ['emporium.html', '🧺 Emporium', () => g('painWheelEmporiumOpen', false) || st().EMPORIUM > 0, /^emporium\.html$/],
     ['wheel.html', '🎡 Back to The Wheel', () => true, /^wheel\.html$/]];
-  const nav = document.querySelector('header nav'), here = (location.pathname.split('/').pop() || 'index.html');
+  const nav = document.querySelector('header nav, #bar nav'), here = (location.pathname.split('/').pop() || 'index.html');
   if (nav) {
     [...nav.querySelectorAll('a')].forEach(a => { const h = a.getAttribute('href') || ''; if (PLACES.some(p => p[3].test(h))) a.remove(); });   // drop the old place links, keep page-specific buttons (like the catalog)
     const PLATE = { './': 'board', 'yacht.html': 'yacht', 'shack.html': 'shack', '811.html': '811', 'gnome.html': 'gnome', 'emporium.html': 'emporium', 'wheel.html': 'wheel' };

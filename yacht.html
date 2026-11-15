@@ -240,9 +240,9 @@
     <div id="bar">
         <div class="pill" id="title">🛥️ Gallywix's Yacht <small>Trophy Room &amp; Guild Bank Vault</small></div>
         <div id="rightBar">
-            <div class="pill mono" id="goldPill">💰 0g</div>
-            <a class="pill" id="boardBtn" href="./"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-            <button class="pill" id="backBtn">🌀 Back to the Wheel</button>
+            <div class="pill mono" id="goldPill" hidden>💰 0g</div>
+            <nav></nav><span id="goldBox"></span>
+            <button class="pill" id="backBtn" hidden>🌀 Back to the Wheel</button>
         </div>
     </div>
 
@@ -440,7 +440,7 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
     let gold = Math.min(1e300, Number(S.get('painWheelGold', 0)) || 0), vault = Math.min(1e300, Number(S.get('painWheelVault', 0)) || 0);
     function saveGold() { S.set('painWheelGold', Math.round(gold)); S.set('painWheelVault', Math.round(vault)); renderGold(); }
     function renderGold() {
-        $('goldPill').textContent = '💰 ' + fmt(gold) + (vault ? '  ·  🏦 ' + fmt(vault) : '');
+        $('goldPill').textContent = '💰 ' + fmt(gold) + (vault ? '  ·  🏦 ' + fmt(vault) : ''); if (window.renderGoldBox) renderGoldBox();
         $('vWallet').textContent = fmt(gold); $('vVault').textContent = fmt(vault);
     }
     renderGold();
@@ -881,5 +881,6 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
 })();
 </script>
 <script src="fish_song.js"></script>
+<script src="wallet.js"></script>
 </body>
 </html>
