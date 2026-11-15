@@ -297,7 +297,7 @@ document.querySelectorAll('[data-go]').forEach(b => b.onclick = () => {
 (() => { if (window.__wfSet) return; window.__wfSet = true;
   addEventListener('blur', (e) => { if (e.target !== window) return; window.__wf = false; setTimeout(() => { if (document.activeElement && document.activeElement.tagName === 'IFRAME') window.__wf = true; dispatchEvent(new Event('wfchange')); }, 0); }, true);
   addEventListener('focus', (e) => { if (e.target !== window) return; window.__wf = true; dispatchEvent(new Event('wfchange')); }, true);
-  addEventListener('pointerdown', () => { if (!window.__wf) { window.__wf = true; dispatchEvent(new Event('wfchange')); } }, true);
+  addEventListener('pointerdown', () => { if (!window.__wf && !window.__fishSinging) { window.__wf = true; dispatchEvent(new Event('wfchange')); } }, true);
   document.addEventListener('visibilitychange', () => dispatchEvent(new Event('wfchange'))); })();
   const SONGS = [1, 2].map(n => `media/audio_bgm_gnome_${n}.mp3?v=2`);
   const g = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v === null ? d : v; } catch (e) { return d; } };
