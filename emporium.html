@@ -62,7 +62,7 @@
   .card .no { background: #44403c; color: #fff; }
   .card .msg { margin-top: 10px; min-height: 24px; font-size: 17px; font-weight: 800; color: #fca5a5; }
 </style></head><body>
-<header><h1>🏷️ Axazon's Emporium</h1><span id="goldBox"></span><nav><a class="alt" href="./"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a><a class="alt" href="shack.html">🏜️ The Shack</a><a class="alt" href="811.html">🏪 The 8/11</a><a href="wheel.html">🎡 Back to The Wheel</a></nav></header>
+<header><h1 class="logo-h1"><img src="media/logo_emporium.png" alt="Axazon's Emporium"></h1><span id="goldBox"></span><nav><a class="alt" href="./"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a><a class="alt" href="shack.html">🏜️ The Shack</a><a class="alt" href="811.html">🏪 The 8/11</a><a href="wheel.html">🎡 Back to The Wheel</a></nav></header>
 <div class="wrap"><div class="scroller"><div class="scene" id="scene">
   <button class="hs" data-hs="refund" style="left:62%;top:30.5%;width:12%;height:17.5%" aria-label="The no refunds sign"></button>
   <button class="hs" data-hs="fish" style="left:79.5%;top:15%;width:17%;height:19%" aria-label="The mounted fish"></button>
@@ -182,7 +182,7 @@ const POSE = (k, ms) => { const im = document.getElementById('axaImg'); if (!im)
 const say = (t, ms, pose) => { const d = $('say'); d.innerHTML = '<b>Axazon:</b> ' + t; d.style.display = 'block'; clearTimeout(say.t); say.t = setTimeout(() => d.style.display = 'none', ms || 4200); POSE(pose || 'wave', Math.min(ms || 4200, 3200)); };
 [new Image(), new Image()].forEach((im, i) => im.src = 'media/axa_' + ['wave', 'shield'][i] + '.png');   // preload the other poses
 const gold = () => { const g = get('painWheelGold', 0); return typeof g === 'number' && isFinite(g) ? g : 0; };
-const showGold = () => { $('goldBox').textContent = '🪙 ' + fmt(gold()); };
+const showGold = () => { if (window.renderGoldBox) renderGoldBox(); else $('goldBox').textContent = '🪙 ' + fmt(gold()); };
 showGold();
 const isOpen = () => get('painWheelEmporiumOpen', false) || ((get('painWheelStats', {}) || {}).byType || {}).EMPORIUM > 0;
 
@@ -386,4 +386,5 @@ setInterval(() => { showGold(); }, 5000);
 })();
 </script>
 <script src="fish_song.js"></script>
+<script src="wallet.js"></script>
 </body></html>

@@ -8,7 +8,9 @@
   header { display: grid !important; grid-template-columns: 1fr auto 1fr; align-items: center; }
   header h1 { grid-column: 1; grid-row: 1; justify-self: start; } header nav { grid-column: 2; grid-row: 1; justify-content: center; } header #goldBox { grid-column: 3; grid-row: 1; justify-self: end; }
   header nav a { font-size: 16px !important; padding: 7px 12px !important; white-space: nowrap; } header nav a.here { display: none; }
-  header nav a.plate { background: none !important; padding: 0 !important; border-radius: 8px; line-height: 0; transition: transform .12s, filter .12s; } header nav a.plate img { height: 54px; width: auto; image-rendering: pixelated; display: block; }
+  header h1.logo-h1 { margin: 0; line-height: 0; } header h1.logo-h1 img { height: 64px; width: auto; image-rendering: pixelated; display: block; filter: drop-shadow(0 3px 4px rgba(0,0,0,.5)); }
+  @media (max-width: 1000px) { header h1.logo-h1 img { height: 46px; } }
+  header nav a.plate { background: none !important; padding: 0 !important; border-radius: 8px; line-height: 0; transition: transform .12s, filter .12s; } header nav a.plate img { height: 50px; width: auto; image-rendering: pixelated; display: block; }
   header nav a.plate:hover, header nav a.plate:focus-visible { transform: translateY(-1px); filter: brightness(1.15); outline: none; }
   @media (max-width: 1000px) { header { grid-template-columns: 1fr auto; } header nav { grid-column: 1 / -1; grid-row: 2; } header #goldBox { grid-column: 2; grid-row: 1; } }
   #goldBox { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; border-radius: 10px; border: 2px solid transparent; transition: border-color .15s, background .15s; user-select: none; }
