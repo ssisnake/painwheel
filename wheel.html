@@ -902,7 +902,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 14, 8:41 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 14, 8:53 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -1562,6 +1562,8 @@
        VIDEO_BUZZ = optional video that shows in the Buzz popup (with its own sound). */
     const AUDIO_BUZZ = null;
     const VIDEO_BUZZ = null;
+    /* God_Help_Us: Axa's fish video (10s). Plays on half the landings; the other half get the picture. */
+    const VIDEO_GHU = "media/video_ghu.mp4?v=7267767c";
     const AUDIO_CLUSSY = "media/audio_clussy.mp3?v=687a17c9";  // Clussy soundboard clip
     const AUDIO_CHIRP = "media/audio_chirp.mp3?v=49fe08d4";
     const AUDIO_ISRAEL_SONG = "media/audio_israel_song.mp3?v=84191fe1";
@@ -2046,7 +2048,7 @@
           win: { title: "🍗 KFC? 🍗", size: SIZE.big, sub: () => pick(["Ordered the 12-piece. Spent the raid in the bathroom. Kevin took my spot. It went better.", "The chicken was a little pink. So was the toilet seat, six hours later.", "Finger lickin' good going in. Bibledaddy had to respond to the call coming out.", "Extra crispy on the outside. Extra regret on the inside. AFK for the rest of the night.", "The Colonel's 11 secret herbs and spices are 10 laxatives and a prayer."]), media: { src: PHOTO_KFC_Q, fallback: null, caption: "🚽 ESTIMATED TIME IN THE BATHROOM: THE REST OF RAID 🚽" } } },
         { id: "GOD_HELP_US", n: 1, label: "God_Help_Us", pill: "GOD_HELP_US", bg: "#0c4a6e", text: "#e0f2fe", border: "#7dd3fc", color: "text-sky-300", glow: "bg-sky-700", key: "`", rig: "GHU",
           win: { title: "God_Help_Us", size: SIZE.big, sub: () => pick(["We don't talk about the fish video. The fish doesn't either.", "Some things can't be unseen. This is one of them. The guild has never been the same.", "The fish has been released back into the wild. It doesn't swim anymore. It just stares.", "If you were in Discord that night, you already know. If you weren't, be thankful."]),
-                 media: { src: FISH_ART, fallback: null, caption: "🛋️ Struggling after the Fish Incident? Book Dr. Gill Finnegan, PhD (Pretty Heavily Disturbed), the guild's licensed-in-nothing trauma counselor. First session free. So is every other one, because he's not real. \"Have you tried not thinking about the fish?\"" } } },
+                 videoChance: [VIDEO_GHU, .5], media: { src: FISH_ART, fallback: null, caption: "🛋️ Struggling after the Fish Incident? Book Dr. Gill Finnegan, PhD (Pretty Heavily Disturbed), the guild's licensed-in-nothing trauma counselor. First session free. So is every other one, because he's not real. \"Have you tried not thinking about the fish?\"" } } },
         { id: "GYM_ETIQUETTE", n: 1, label: "🏋️ Gym Etiquette 🏋️", pill: "GYM ETIQUETTE", bg: "#0f766e", text: "#ccfbf1", border: "#5eead4", color: "text-teal-300", glow: "bg-teal-600", rig: "GYM",
           win: { title: "🏋️ GYM ETIQUETTE 🏋️", size: SIZE.mid, sub: () => pick(["Gym etiquette: wipe down the bench, rerack your weights, and please, for the love of God, wear real pants.", "This is a gym, not a fitting room for underwear that was never meant to leave the house.", "Rule 1: if it fits in your sock drawer, it is not gym clothes.", "He's not here to work out. He's here to make everyone else leave.", "Leave the house in that and the only thing getting pumped is the police scanner. ChAoTiC is on his way."]), media: { src: PHOTO_GYM, fallback: null, caption: "📋 DRESS CODE VIOLATION #1 (OF MANY)" } } },
         { id: "QUESTION_ALUMINUM", n: 1, label: "🥫 Question of Aluminum 🥫", pill: "QUESTION OF ALUMINUM", bg: "#94a3b8", text: "#0f172a", border: "#e2e8f0", color: "text-slate-300", glow: "bg-slate-400", key: ":", rig: "ALU",
@@ -5681,12 +5683,15 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
                 try { localStorage.setItem('painWheelCroissants', JSON.stringify(st)); } catch (e) {}
             }
         }
+        let chanceVideo = false;
+        if (!videoSrc && w.videoChance && w.videoChance[0] && Math.random() < w.videoChance[1]) { videoSrc = w.videoChance[0]; chanceVideo = true; }   // sometimes the slice plays its video instead of the picture
         if (videoSrc) {
             modalVideoWrap.classList.remove('hidden'); modalVideoWrap.classList.add('flex');
             if (modalVideo.src !== videoSrc) modalVideo.src = videoSrc;
             modalVideo.currentTime = 0;
             // clip audio follows the volume slider; muted if sound is off or the 2-minute cooldown is active
-            modalVideo.muted = !soundOn() || !lastSpecialSoundAllowed;
+            modalVideo.muted = !soundOn() || (!lastSpecialSoundAllowed && !chanceVideo);
+            if (chanceVideo && soundOn() && musicOn()) sliceDuck(10500);   // the music steps aside for the clip
             modalVideo.onended = () => stopModalVideo();
             modalVideo.volume = Math.min(1, currentVolume * 0.75);
             const pr = modalVideo.play();
@@ -5696,7 +5701,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             modalWinnerText.classList.add('hidden');
             vietnamScene.classList.remove('hidden'); vietnamScene.classList.add('flex');
         }
-        if (w.media) {
+        if (w.media && !chanceVideo) {
             modalMediaContainer.classList.remove('hidden'); modalMediaContainer.classList.add('flex');
             const fb = FALLBACK_IMG[w.media.fallback] || '';
             if (w.media.src) {
