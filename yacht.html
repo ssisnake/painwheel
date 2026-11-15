@@ -18,7 +18,7 @@
     body::before { content: ""; position: fixed; inset: -40px; background: url("media/yacht_interior.webp") center / cover no-repeat; filter: blur(28px) brightness(.32); z-index: -1; }
     #scroller { width: 100vw; height: 100vh; overflow: auto; display: flex; align-items: center; }
     /* the room: always the image's exact shape, as big as the screen allows (no cropping, no upscaling past the window) */
-    #stage { position: relative; flex: none; margin: auto; width: max(640px, min(100vw, calc(100vh * 2576 / 1093))); aspect-ratio: 2576 / 1093;
+    #stage { position: relative; flex: none; margin: auto; width: max(640px, min(100vw, calc((100vh - 78px) * 2576 / 1093))); aspect-ratio: 2576 / 1093;
         background: #1a0f0a url("media/yacht_interior.webp") center / 100% 100% no-repeat; container-type: inline-size; user-select: none; }
     button { font: inherit; color: inherit; }
 
@@ -51,7 +51,8 @@
     @keyframes breathe { from { opacity: .35 } to { opacity: 1 } }
 
     /* top bar */
-    #bar { position: absolute; left: 1cqw; right: 1cqw; top: .8cqw; display: flex; justify-content: space-between; align-items: flex-start; gap: 1cqw; pointer-events: none; z-index: 5; }
+    body { padding-top: 78px; box-sizing: border-box; }
+    #bar { position: fixed; left: 0; right: 0; top: 0; height: 78px; box-sizing: border-box; padding: 7px 16px; background: #0b0705; border-bottom: 2px solid #2a1a10; align-items: center !important; display: flex; justify-content: space-between; align-items: flex-start; gap: 1cqw; pointer-events: none; z-index: 5; }
     #bar > * { pointer-events: auto; }
     .pill { background: rgba(12,6,2,.86); border: 1px solid rgba(250,204,21,.6); border-radius: .6cqw; padding: .45cqw .9cqw; font-weight: 900; font-size: max(12px, .9cqw); }
     #title { color: var(--gold2); letter-spacing: .06em; text-transform: uppercase; }
@@ -879,7 +880,8 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
 </script>
 <script src="fish_song.js?v=db2c1926"></script>
 <script src="wallet.js?v=503ba3e6"></script>
-<script>window.AXA_CAMEO = [{ id: 'yacht', host: '#stage', z: 1, filter: 'brightness(.55) saturate(.5) hue-rotate(160deg)' }, { id: 'vip', host: '#vipStage', z: 1, filter: 'brightness(.5) saturate(.7)' }];</script><script src="axa_cameo.js?v=00e20b00"></script><script src="vip_pc.js?v=136d69e3"></script>
+<script>window.AXA_CAMEO = [{ id: 'yacht', host: '#stage', z: 1, filter: 'brightness(.55) saturate(.5) hue-rotate(160deg)' }, { id: 'vip', host: '#vipStage', z: 1, filter: 'brightness(.5) saturate(.7)' }];</script><script src="axa_cameo.js?v=cfcbc266"></script><script src="vip_pc.js?v=07585d79"></script>
 <script src="logo_zoom.js?v=8c9b3e40"></script>
+<script>(() => { const b = document.getElementById('bar'); if (b && b.parentElement !== document.body) document.body.prepend(b); })();</script>
 </body>
 </html>
