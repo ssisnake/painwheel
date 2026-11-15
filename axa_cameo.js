@@ -6,7 +6,7 @@ window.AXA_PLACES = {   // x/y/w: % of that place's picture (top-left of the spr
   shack:    { name: 'The Shack',      bg: 'media/shack_interior.jpg',   x: 46.1,  y: 40,   w: 2.5, ar: 1.791, op: .5, flip: true },
   '811':    { name: 'The 8/11',       bg: 'media/store811_bg.jpg',      x: 96.4,  y: 82,   w: 2.6, ar: 1.778, op: .55, flip: true },
   gnome:    { name: 'Gnome Depot',    bg: 'media/gnome_bg.jpg',         x: 12.4,  y: 36.5, w: 2.1, ar: 1.778, op: .42 },
-  emporium: { name: "Axazon's Emporium", bg: 'media/emporium_bg.jpg',   x: 97.3,  y: 35,   w: 1.8, ar: 1.792, op: .45, flip: true },
+  emporium: { name: "Axazon's Emporium", bg: 'media/emporium_bg.jpg?v=2', x: 97.3, y: 35,   w: 1.8, ar: 1.778, op: .45, flip: true },
   yacht:    { name: "Gallywix's Yacht", bg: 'media/yacht_interior.webp', x: 2.6,  y: 34,   w: 3.2, ar: 2.357, op: .45 },
   vip:      { name: 'The VIP Room',   bg: 'media/vip_room.webp',        x: 64.3,  y: 69.5, w: 1.5, ar: 2.357, op: .55 }
 };

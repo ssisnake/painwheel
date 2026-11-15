@@ -13,7 +13,8 @@
   nav a.alt { background: #3f3a2e; color: #fde68a; }
   .wrap { flex: 1; display: grid; place-items: center; padding: 0 12px 6px; }
   .scroller { width: 100%; overflow-x: auto; display: grid; place-items: center; }
-  .scene { position: relative; width: min(2576px, 100%, calc((100vh - 150px) * 2576 / 1438)); aspect-ratio: 2576 / 1438; background: url(media/emporium_bg.jpg) 0 0 / 100% 100% no-repeat; border-radius: 10px; box-shadow: 0 0 0 3px #a16207, 0 20px 50px rgba(0,0,0,.7); container-type: inline-size; }
+  .scene { position: relative; width: min(2560px, 100%, calc((100vh - 150px) * 2560 / 1440)); aspect-ratio: 2560 / 1440; background: url(media/emporium_bg.jpg?v=2) 0 0 / 100% 100% no-repeat; border-radius: 10px; box-shadow: 0 0 0 3px #a16207, 0 20px 50px rgba(0,0,0,.7); container-type: inline-size; }
+  .scene.night { background-image: url(media/emporium_bg_night.jpg?v=1); }
   @media (max-width: 700px) { .scene { min-width: 640px; } .scroller { place-items: start; } }
   /* the goods on the table: each sits above its paper tag */
   .item { position: absolute; bottom: 30%; width: 8.4%; height: 13%; translate: -50% 0; padding: 0; border: 0; background: none; cursor: pointer; display: flex; align-items: flex-end; justify-content: center; transition: transform .15s, filter .15s; z-index: 2; }
@@ -186,6 +187,10 @@ const say = (t, ms, pose) => { const d = $('say'); d.innerHTML = '<b>Axazon:</b>
 const gold = () => { const g = get('painWheelGold', 0); return typeof g === 'number' && isFinite(g) ? g : 0; };
 const showGold = () => { if (window.renderGoldBox) renderGoldBox(); else $('goldBox').textContent = '🪙 ' + fmt(gold()); };
 showGold();
+// night market: 8 PM to 6 AM Central the lights come on
+const nightNow = () => { const h = +new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', hour: 'numeric', hour12: false }).format(new Date()) % 24; return h >= 20 || h < 6; };
+const setNight = () => { const sc = document.getElementById('scene'); if (sc) sc.classList.toggle('night', nightNow()); };
+setNight(); setInterval(setNight, 60000);
 const isOpen = () => get('painWheelEmporiumOpen', false) || ((get('painWheelStats', {}) || {}).byType || {}).EMPORIUM > 0;
 
 // sound: the wheel's own clips at the wheel's volume
