@@ -311,6 +311,7 @@ function showItem(i) {
       const [, off, ch] = HAGGLE[+btn.dataset.k], base = PCT[it.q], won = Math.random() < ch;
       const pc = won ? (off >= .5 ? base / 2 : Math.max(.01, base - off)) : base + .05;
       const h = hag(); h.items = h.items || {}; h.items[i] = { pct: pc, won }; put('painWheelHaggle', h);
+      if (!won) { const n = (get('painWheelHaggleLosses', 0) || 0) + 1; put('painWheelHaggleLosses', n); if (n >= 3 && window.pwAch) pwAch('norefunds'); }
       const line = won ? pick(HAG_YES) : off >= .5 ? pick(HAG_LOWBALL) : pick(HAG_NO);
       $('dlg').close(); render(); POSE(won ? 'wave' : 'crossed', 3200);
       if (!won && Math.random() < .3 && window.cobra) setTimeout(() => window.cobra(false), 900);
@@ -442,8 +443,8 @@ setInterval(() => { showGold(); }, 5000);
     f.style.transition = 'transform .6s, opacity .6s'; f.style.transform = 'rotate(-70deg) translateX(-60%)'; f.style.opacity = '0'; setTimeout(() => f.remove(), 700); };
 })();
 </script>
-<script src="fish_song.js?v=db2c1926"></script>
-<script src="wallet.js?v=503ba3e6"></script>
+<script src="fish_song.js?v=7e44e6a7"></script>
+<script src="wallet.js?v=07cb4a3e"></script>
 <script>
 // ---- after dark, sometimes a hooded stranger with a tiny wheel lurks at the edge of the stall (Ada's "secret person"). Nobody knows who he is. ----
 (() => {
@@ -462,13 +463,13 @@ setInterval(() => { showGold(); }, 5000);
       el.innerHTML = '<img src="media/emp_stranger.png?v=1" alt="" style="display:block;width:100%;height:auto;image-rendering:pixelated;filter:brightness(.72) saturate(.9) drop-shadow(0 0 .8cqw rgba(250,204,21,.25))">';
       sc.appendChild(el); setTimeout(() => el && (el.style.opacity = '.9'), 2500);
       let n = 0;
-      el.onclick = (e) => { e.stopPropagation(); const d = document.getElementById('say'); d.innerHTML = '<b>The stranger:</b> '; d.append(n++ === 0 ? "What're ya buyin'?" : SAY[Math.floor(Math.random() * SAY.length)]); d.style.setProperty('--tail', '8%'); d.style.display = 'block'; clearTimeout(window.__strT); window.__strT = setTimeout(() => d.style.display = 'none', 5200);
+      el.onclick = (e) => { e.stopPropagation(); if (window.pwAch) pwAch('stranger'); const d = document.getElementById('say'); d.innerHTML = '<b>The stranger:</b> '; d.append(n++ === 0 ? "What're ya buyin'?" : SAY[Math.floor(Math.random() * SAY.length)]); d.style.setProperty('--tail', '8%'); d.style.display = 'block'; clearTimeout(window.__strT); window.__strT = setTimeout(() => d.style.display = 'none', 5200);
         if (n >= 3) { el.style.translate = '-120% 0'; el.style.opacity = '0'; setTimeout(() => { el && el.remove(); el = null; }, 1500); setTimeout(() => typeof say === 'function' && say("Who? There's nobody there. There's never anybody there. ...Was there?", 4200), 1700); } };
     } else if (!night && el) { el.remove(); el = null; }
   };
   setTimeout(place, 1200); setInterval(place, 60000);
 })();
 </script>
-<script>window.AXA_CAMEO = { id: 'emporium', host: '#scene', z: 1, filter: 'brightness(.55) saturate(.6) sepia(.2)', when: () => { const s = document.getElementById('scene'); return !!s && s.classList.contains('night'); } };</script><script src="axa_cameo.js?v=cfcbc266"></script>
+<script>window.AXA_CAMEO = { id: 'emporium', host: '#scene', z: 1, filter: 'brightness(.55) saturate(.6) sepia(.2)', when: () => { const s = document.getElementById('scene'); return !!s && s.classList.contains('night'); } };</script><script src="axa_cameo.js?v=370eea98"></script>
 <script src="logo_zoom.js?v=8c9b3e40"></script>
 </body></html>

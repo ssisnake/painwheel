@@ -722,7 +722,7 @@
             <div class="w-3 h-8 rounded-full bg-gradient-to-b from-red-500 via-[#F48CBA] to-cyan-400"></div>
             <div>
                 <h1 class="text-lg sm:text-xl md:text-2xl font-black tracking-tight uppercase leading-tight">
-                    <span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">The Wheel</span><span id="themeBadgeL" class="align-middle"></span><img id="logoImg" alt="" class="inline-block align-middle"><span id="themeBadgeR" class="align-middle"></span><span id="painWord" class="hidden"></span> <span class="text-slate-500 text-xs sm:text-sm align-middle normal-case font-bold tracking-normal">· <span class="slice-total">117</span> slices of pain</span>
+                    <span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">The Wheel</span><span id="themeBadgeL" class="align-middle"></span><span id="logoWrap" style="position:relative;display:inline-block;vertical-align:middle"><img id="logoImg" alt="" class="inline-block align-middle" style="position:relative;z-index:2"></span><span id="themeBadgeR" class="align-middle"></span><span id="painWord" class="hidden"></span> <span class="text-slate-500 text-xs sm:text-sm align-middle normal-case font-bold tracking-normal">· <span class="slice-total">117</span> slices of pain</span>
                 </h1>
                 <p id="tagline" class="text-xs text-slate-400 mono">High-Precision Decision Engine • 4x Live Optic Zoom</p>
             </div>
@@ -925,7 +925,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 15, 4:07 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 15, 4:21 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -4882,7 +4882,20 @@
         { id: 'wheelception5', name: 'Wheelception', desc: "Go 5 wheels deep on the WHEEL-2600 in the yacht's VIP room. We have to go deeper.", secret: true, secretName: true },
         { id: 'purpleheart', name: 'Purple Heart',            desc: 'Wounded in the line of duty: you survived the Fish Incident. (Land on God_Help_Us.)' },
         { id: 'cluck',      name: 'CLUCK!',                   desc: 'Complete the Westfall chicken\'s quest.' },
-        { id: 'clippy',     name: "It Looks Like You're Adopting a Paperclip", desc: 'Find and adopt the secret pet.', secret: true, secretName: true }
+        { id: 'clippy',     name: "It Looks Like You're Adopting a Paperclip", desc: 'Find and adopt the secret pet.', secret: true, secretName: true },
+        { id: 'unsupervised', name: 'Unsupervised',            desc: 'Witness the Greg Incident at Gnome Depot.', secret: true, secretName: true },
+        { id: 'karen50',    name: "Karen's Problem",          desc: 'Annoy Karen Sprocketknockers 50 times.', secret: true },
+        { id: 'gnomealone', name: 'Gnome Alone',              desc: 'Catch the garden gnome right after he moved.', secret: true, secretName: true },
+        { id: 'never811',   name: 'Employee of the Never',    desc: 'Walk into the 8/11 811 times.', secret: true },
+        { id: 'norefunds',  name: 'No Refunds Ever',          desc: 'Lose three haggles with Axazon.', secret: true },
+        { id: 'winrar',     name: 'I Paid for WinRAR',        desc: 'Actually buy the WinRAR license on degen1350\'s computer.', secret: true, secretName: true },
+        { id: 'fishy',      name: 'Something Smells Fishy',   desc: 'Hear every singing swordfish in the game.', secret: true, secretName: true },
+        { id: 'scratch13',  name: 'Shit Out of Luck',         desc: 'Lose 13 scratch-offs in a row.', secret: true },
+        { id: 'brainfreeze', name: 'Brain Freeze',            desc: 'Drink three Slurpees in a row at the 8/11.' },
+        { id: 'stranger',   name: "What're Ya Buyin'?",       desc: 'Meet the stranger at the Emporium after dark.', secret: true, secretName: true },
+        { id: 'knock',      name: "Who's There?",             desc: 'Hear the knock on the VIP room door.', secret: true, secretName: true },
+        { id: 'axacam5',    name: 'Caught on Camera',         desc: 'Catch Axazon hiding in 5 different places.' },
+        { id: 'gregpet',    name: 'Heavy Machinery Not Included', desc: 'Win Greg from the claw machine.', secret: true, secretName: true }
     ];
     const PURPLE_HEART_SVG = '<svg viewBox="0 0 64 80" width="44" height="55" aria-hidden="true"><path d="M20 0h24v22H20z" fill="#7e22ce"/><path d="M20 0h4v22h-4zM40 0h4v22h-4z" fill="#f5f5f4"/><path d="M28 0h8v22h-8z" fill="#a855f7"/><path d="M32 74 C10 58 4 46 4 36 C4 26 12 20 20 20 C26 20 30 24 32 28 C34 24 38 20 44 20 C52 20 60 26 60 36 C60 46 54 58 32 74Z" fill="#facc15" stroke="#a16207" stroke-width="2"/><path d="M32 68 C14 55 10 45 10 37 C10 30 15 26 21 26 C26 26 29 29 32 33 C35 29 38 26 43 26 C49 26 54 30 54 37 C54 45 50 55 32 68Z" fill="#7e22ce"/><ellipse cx="32" cy="45" rx="7" ry="9" fill="#fde68a" opacity=".9"/></svg>';
     let achQueue = [], achShowing = false;
@@ -5253,7 +5266,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
        Every fair or rigged spin from a named player is sent to the Sheet; rigged
        spins are logged but don't count. The Sheet also feeds the Discord board. */
     const LEADERBOARD_URL = ((window.PAIN_WHEEL_CONFIG || {}).leaderboardUrl || '').trim();
-    const axaFound = () => { const s = store.get('painWheelAxaSightings', {}) || {}; return Object.keys(s).filter(k => s[k]).length; };   // secret: how many of Axazon's hiding spots you've clicked
+    const axaFound = () => { const s = store.get('painWheelAxaSightings', {}) || {}; const n = Object.keys(s).filter(k => s[k]).length; if (n >= 5) setTimeout(() => unlock('axacam5'), 0); return n; };   // secret: how many of Axazon's hiding spots you've clicked
     function reportSpin(s, fair, ash) {
         if (!LEADERBOARD_URL || !playerName) { achPosts.length = 0; return; }
         const body = JSON.stringify({ name: playerName, type: s.type, label: TYPE[s.type].label || TYPE[s.type].pill || s.type,
@@ -7749,7 +7762,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
                     if (win) {   // straight to the chute
                         const P = prize0; msg.textContent = P.won;
                         prize.style.transition = 'left .9s ease-in-out, bottom .9s ease-in'; prize.style.left = '4%'; clawMotor(0.9, 1.2); setTimeout(() => { prize.style.bottom = '-40%'; setTimeout(() => playCrash(), 600); }, 900);
-                        pets[P.k] = true; store.set('painWheelPets', pets); renderPets(); unlock('clawwin');
+                        pets[P.k] = true; store.set('painWheelPets', pets); renderPets(); unlock('clawwin'); if (P.k === 'greg') unlock('gregpet');
                         if (CLAW_PRIZES.every(c => pets[c.k])) unlock('clawall');
                         funEvent(P.fun, 4200);
                         chatBurst(['HE WON THE CLAW', 'the claw actually worked??', 'rigged (in a good way)', P.k === 'volley' ? 'WILSONNNN' : P.k === 'kevjr' ? 'oh no more kevin' : P.k === 'gerald' ? 'GERALD' : P.k === 'needle' ? 'the needle is LOOSE' : 'it is still spinning'], 4, 2500);
@@ -8095,6 +8108,10 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         say: (t) => t === 'KEVIN' ? pick(['kevin. cool. cool cool cool. (not cool)', '*slides away from the Kevin*']) : pick(['sup.', 'i am not sticky. you are sticky.', '*slorp*', 'the sun is not out. the glasses stay on.', 'i was a slurpee once. long story.', 'too cool to spin. spin me anyway.']) };
     PETS.piggy = { e: '🐷', img: PHOTO_PET_PIGGY, w: 38, name: 'Goblin Piggy Bank', cost: 0, claw: true, desc: 'A goblin-shaped piggy bank. Feed it gold. It will never, ever give any back. Very on brand.',
         say: (t) => t === 'KEVIN' ? pick(['Kevin owes me 40 gold. I am still waiting.', 'no refunds. especially for Kevin.']) : pick(['feed me gold.', 'time is money, friend.', 'there is no slot on the bottom. there never was.', '*coins jingle* (yours. now mine.)', 'interest rate: yes', 'i am saving for a yacht. YOUR yacht.']) };
+    PETS.greg = { e: '🐏', img: 'media/pet_greg.png', w: 34, name: 'Greg', cost: 0, claw: true, desc: "Ada's ram in a top hat. Self-appointed foreman of Andesite Heights. Banned from heavy machinery. Laminated paperwork and everything.",
+        say: (t) => t === 'KEVIN' ? pick(['Kevin. Now THERE is a man who could use a forklift.', 'I would have landed on Kevin with a bulldozer. More efficient.'])
+            : t === 'OSHA' ? pick(["OSHA? I don't see any OSHA. I see a man with a clipboard and no vision.", 'This is a CONSTRUCTION SITE now. Hard hats optional.', "I didn't touch anything. The crane did that on its own."])
+            : pick(['Where do you keep your bulldozer?', 'The andesite goes at the TOP.', 'I have a promotion hat. It is the same hat.', 'Ada says I can\'t drive. Ada says a lot of things.', 'This wheel needs a second crane.', "I'm not banned. I'm on sabbatical from machinery.", '*taps cane on the screen* load-bearing?']) };
     PETS.garden = { e: '🍄', img: 'media/gnome_garden_still.png', w: 30, name: 'Garden Gnome', cost: 0, depot: true, desc: "A lawn gnome from Gnome Depot. He doesn't move. He definitely doesn't move. Stop looking at him.",
         say: (t) => t === 'KEVIN' ? pick(['i buried a kevin once. he came back. like me.', '*has not moved* (has moved)']) : pick(['...', '*was facing the other way a second ago*', 'i am a statue.', 'dig. dig. dig.', 'karen returned me nine times. i always come home.', 'you blinked.', '*shovel noises at 3 AM*']) };
     const CLAW_PRIZES = [
@@ -8106,7 +8123,8 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         { k: 'duck', img: PHOTO_PET_DUCK, won: '🦆 YOU WON RAID DUCK. It squeaked once and wiped the claw machine.', fun: '🦆 RAID DUCK ESCAPED THE CLAW (IT PULLED EARLY)', hi: 'quack. (that means "pull")' },
         { k: 'bones', img: PHOTO_PET_SKELETON, won: '💀 YOU WON BONES. He brought his own token. He is not sharing it.', fun: '💀 BONES GOT OUT. HIS BROTHER IS STILL IN THE SHACK.', hi: 'finally. do NOT touch my token.' },
         { k: 'slimothy', img: PHOTO_PET_SLIME, won: '🟢 YOU WON SLIMOTHY. The sunglasses stayed on the whole time.', fun: '🟢 SLIMOTHY SLID OUT OF THE CLAW. TOO COOL.', hi: 'sup.' },
-        { k: 'piggy', img: PHOTO_PET_PIGGY, won: '🐷 YOU WON THE GOBLIN PIGGY BANK. It already wants your gold.', fun: '🐷 THE GOBLIN PIGGY BANK IS LOOSE. HIDE YOUR GOLD.', hi: 'feed me. gold. now.' }];
+        { k: 'piggy', img: PHOTO_PET_PIGGY, won: '🐷 YOU WON THE GOBLIN PIGGY BANK. It already wants your gold.', fun: '🐷 THE GOBLIN PIGGY BANK IS LOOSE. HIDE YOUR GOLD.', hi: 'feed me. gold. now.' },
+        { k: 'greg', img: 'media/pet_greg.png', won: '🐏 YOU WON GREG. He is not authorized to operate heavy machinery. He has already asked where the forklift is.', fun: '🐏 GREG HAS ESCAPED THE CLAW. LOCK UP THE FORKLIFTS.', hi: 'Finally. Where do you keep your bulldozer?' }];
     const PET_LIMIT = 4;   // pets on screen at once (the rest wait in the shop)
     const petShown = (k) => k === 'clippy' || store.get('painWheelPetsShown', {})[k] !== false;   // Clippy can't be hidden (someday: a favor)
     const activePets = () => Object.keys(PETS).filter(k => k !== 'clippy' && pets[k] && petShown(k)).slice(0, PET_LIMIT);   // Clippy doesn't count: he's less a pet, more a punishment
@@ -8532,7 +8550,13 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         return true;
     }
     let oshaLast = '';
+    function gregOsha() {   // Greg is out during OSHA: he 'helps'
+        let out = false; try { out = activePets().includes('greg'); } catch (e) {} if (!out) return;
+        setTimeout(() => petSay('greg', pick(["That wasn't me. ...The crane was me.", "I've been told I'm 'the reason for the sign'.", 'OSHA and I have an understanding. They understand I am banned.', 'Hard hat? I have a TOP hat.'])), 2600);
+        setTimeout(() => oshaSay(pick(['Sir. Sir. Is that a ram.', 'We have a file on the ram.', 'Nobody let the ram near the rocket.']), innerWidth * .5, innerHeight * .4, 3200), 5200);
+    }
     function oshaEvent() {   // after an OSHA landing: something breaks. Pick one that can happen right now (never the same one twice in a row)
+        gregOsha();
         const all = [['rocket', oshaRocket], ['trip', oshaTrip], ['slice', oshaSliceFall], ['boom', oshaVehicleBoom], ['pet', oshaPetTrip], ['button', oshaButtonFall], ['clippy', oshaClippyEye], ['shack', oshaShackFire]];
         const opts = all.filter(([k]) => k !== oshaLast).sort(() => Math.random() - 0.5);
         for (const [k, fn] of opts) { if (fn() !== false) { oshaLast = k; return; } }
@@ -8953,7 +8977,15 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         const ice = document.createElement('div');
         ice.style.cssText = `position:fixed;z-index:62;left:0;top:${Math.round(r.bottom - 60)}px;pointer-events:none;transform:translateX(${innerWidth + 30}px);transition:transform 3.2s cubic-bezier(.3,.6,.4,1)`;
         ice.innerHTML = SVG_ICEBERG; document.body.appendChild(ice);
-        floatBubble("🛥️ Lookout: ICEBERG, RIGHT AHEAD!", r.left + r.width / 2, r.top - 10, 2600);
+        let volleyRide = false; try { volleyRide = activePets().includes('volley'); } catch (e) {}
+        if (volleyRide) {   // Volley is out: he's RIDING the iceberg in, like a tiny volleyball captain
+            ice.style.position = 'fixed'; const v = document.createElement('img'); v.src = PHOTO_VOLLEY; v.alt = '';
+            v.style.cssText = 'position:absolute;left:16px;top:-26px;width:34px;image-rendering:pixelated;filter:drop-shadow(0 2px 3px rgba(0,0,0,.5))'; ice.appendChild(v);
+            v.animate([{ transform: 'rotate(-8deg) translateY(0)' }, { transform: 'rotate(8deg) translateY(-4px)' }, { transform: 'rotate(-8deg) translateY(0)' }], { duration: 700, iterations: Infinity });
+            document.querySelectorAll('#pet-volley').forEach(el => { el.dataset.wasVis = el.style.visibility; el.style.visibility = 'hidden'; });
+            setTimeout(() => { document.querySelectorAll('#pet-volley').forEach(el => { el.style.visibility = el.dataset.wasVis || ''; }); }, 9000);
+        }
+        floatBubble(volleyRide ? "🏐 VOLLEY?! GET OFF THE ICEBERG!" : "🛥️ Lookout: ICEBERG, RIGHT AHEAD!", r.left + r.width / 2, r.top - 10, 2600);
         requestAnimationFrame(() => requestAnimationFrame(() => { ice.style.transform = `translateX(${Math.round(r.right - 26)}px)`; }));
         setTimeout(() => {   // CRUNCH
             playVehicleCrash(); setTimeout(yachtHorn, 900); setTimeout(yachtSink, 2600);
@@ -9120,7 +9152,9 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
     // ---------- titles ----------
     const TITLES = [['Degenerate Reject', 1e308],
         ['the Kevin-Touched', 1000], ['Ret Enjoyer', 2500], ['Liver Donor', 5000], ['of the Murder Row', 10000], ['Certified Degenerate', 25000],
-        ['the Unbuffed', 50000], ['Goblin Tycoon', 100000], ['Patron of Reb', 250000], ['the Lobbyist', 1000000], ['Wheel Emperor', 10000000]
+        ['the Unbuffed', 50000], ['Goblin Tycoon', 100000], ['Patron of Reb', 250000], ['the Lobbyist', 1000000], ['Wheel Emperor', 10000000],
+        ['the Island Emptier', 0], ['Five Wheels Deep', 0], ['Forever Alone', 0], ['Debt Free', 0], ['Ascended Degenerate', 0],
+        ['Unsupervised', 0], ["Karen's Problem", 0], ['Gnome Alone', 0], ['Employee of the Never', 0], ['No Refunds Ever', 0], ['I Paid for WinRAR', 0], ['Something Smells Fishy', 0], ['Shit Out of Luck', 0]
     ];
     let ownedTitles = store.get('painWheelTitles', {}), titleChoice = store.get('painWheelTitle', '');
     const TITLE_H = {"degen": 132, "emperor": 121, "kevin": 137, "liver": 136, "lobbyist": 123, "murder": 135, "patron": 126, "ret": 136, "tycoon": 128, "unbuffed": 128};
@@ -9147,6 +9181,12 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         'the Lobbyist':         { f: 'lobbyist', b: [31, 33, 84, 68], how: 'Reach the Gold lobbying tier.', ok: () => !!achieved.aipac4 },
         'Wheel Emperor':        { f: 'emperor',  b: [25, 33, 73, 71], how: 'Spin the wheel 5,000 times.', ok: () => allTimeSpins >= 5000 }
     };
+    // titles earned straight from an achievement. secret: the Shop doesn't say how. (Banner art for these comes later from Ada; until then they use the nameplate.)
+    const TITLE_ACH = {
+        'the Island Emptier': ['clawall', 'Win every prize in the claw machine.'], 'Five Wheels Deep': ['wheelception5', 'Go five wheels deep.'],
+        'Forever Alone': ['foreveralone', 'Be alone in Forever.'], 'Debt Free': ['debtfree', 'Pay off every debt you owe.'], 'Ascended Degenerate': ['spins10000', 'Spin the wheel 10,000 times.'],
+        'Unsupervised': ['unsupervised', 0], "Karen's Problem": ['karen50', 0], 'Gnome Alone': ['gnomealone', 0], 'Employee of the Never': ['never811', 0],
+        'No Refunds Ever': ['norefunds', 0], 'I Paid for WinRAR': ['winrar', 0], 'Something Smells Fishy': ['fishy', 0], 'Shit Out of Luck': ['scratch13', 0] };
     function titleBanner(t, w, locked) {   // the banner with the title written on the parchment
         const a = TITLE_ART[t]; if (!a) return `<span style="font-weight:800">${t}</span>`;
         const h = Math.round(w * 0.27), bw = w * (a.b[2] - a.b[0]) / 100, bh = h * (a.b[3] - a.b[1]) / 100;
@@ -9161,6 +9201,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
     function checkTitles(quiet) {
         let got = [];
         Object.entries(TITLE_ART).forEach(([t, a]) => { if (!ownedTitles[t]) { let ok = false; try { ok = a.ok(); } catch (e) {} if (ok) { ownedTitles[t] = true; got.push(t); } } });
+        Object.entries(TITLE_ACH).forEach(([t, [id]]) => { if (!ownedTitles[t] && achieved[id]) { ownedTitles[t] = true; got.push(t); } });
         if (!got.length) return;
         store.set('painWheelTitles', ownedTitles); try { renderLooks(); } catch (e) {}
         if (quiet) return got;
@@ -9185,12 +9226,22 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         blood:   { name: 'Blood Red', cost: 2500, fill: '#dc2626', stroke: '#fecaca' },
         ash:     { name: 'Ashbringer White', cost: 10000, fill: '#ffffff', stroke: '#fde68a', glow: true },
         rainbow: { name: 'Rainbow', cost: 15000, fill: 'url(#ndlRainbow)', stroke: '#ffffff' },
-        finger:  { name: "Kevin's Finger 👇", cost: 25000, emoji: '👇' }
+        finger:  { name: "Kevin's Finger 👇", cost: 25000, emoji: '👇' },
+        nailed:  { name: "Nick's Finger (nailed on)", cost: 0, nailed: true, needs: () => !!garage.finger }   // free once you own Bibledaddy's finger; takes it off the SPIN button
     };
     let ownedNeedles = store.get('painWheelNeedles', { classic: true }), needleChoice = store.get('painWheelNeedle', 'classic');
+    setTimeout(() => { try { if (needleChoice === 'nailed' && !garage.finger) equipNeedle('classic'); } catch (e) {} }, 1200);
     function applyNeedle() {
         const n = NEEDLES[needleChoice] || NEEDLES.classic, svg = $('pointerAssembly').querySelector('svg');
         if (!svg) return;
+        window.__fingerNailed = !!n.nailed; try { renderFinger(); } catch (e) {}
+        if (n.nailed) {   // Bibledaddy's finger, pointing down, held on by one crooked nail and a prayer
+            svg.setAttribute('overflow', 'visible');
+            svg.innerHTML = `<g transform="rotate(5 23 10)" style="filter:drop-shadow(0 0 1.5px #000) drop-shadow(0 0 1.5px #000) drop-shadow(0 4px 4px rgba(0,0,0,.8))"><image href="${garage.voodoo ? PHOTO_FINGER_CURSED : PHOTO_FINGER}" x="-9" y="13" width="64" height="23" transform="rotate(90 23 24)" preserveAspectRatio="xMidYMid meet"/></g>
+               <line x1="16" y1="-2" x2="27" y2="14" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/><circle cx="15.5" cy="-2" r="4.6" fill="#e2e8f0" stroke="#1e293b" stroke-width="1.8"/>`;
+            return;
+        }
+        svg.removeAttribute('overflow');
         svg.innerHTML = n.emoji
             ? `<text x="23" y="46" font-size="42" text-anchor="middle" fill="#ffffff" style="filter:drop-shadow(0 3px 4px rgba(0,0,0,.8))">${n.emoji}</text>`
             : `<defs><linearGradient id="ndlRainbow" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ef4444"/><stop offset=".25" stop-color="#facc15"/><stop offset=".5" stop-color="#22c55e"/><stop offset=".75" stop-color="#3b82f6"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs>
@@ -10076,8 +10127,9 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
 
     // ---------- 🖐️ Bibledaddy's Finger: rests on the SPIN button ----------
     function renderFinger() {   // the plain finger, until the voodoo doll gets hold of it
-        window.__fingerOn = !!garage.finger; $('nickFinger').style.display = garage.finger ? 'block' : 'none';
-        if (!garage.finger) return;
+        const sits = garage.finger && !window.__fingerNailed;   // nailed to the needle = not sitting on the wheel
+        window.__fingerOn = !!sits; $('nickFinger').style.display = sits ? 'block' : 'none';
+        if (!sits) return;
         const img = $('nickFingerImg'), want = garage.voodoo ? PHOTO_FINGER_CURSED : PHOTO_FINGER;
         if (img.getAttribute('src') !== want) img.src = want;
         img.classList.toggle('finger-cursed', !!garage.voodoo);
@@ -10265,6 +10317,13 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         id: '2026-11-07-fixed', title: 'The claw, the liver and the ghost town', date: 'November 6-7, 2026',
         showAfter: Date.parse('2026-11-07T06:00:00Z'),   // re-issued Nov 7 with corrected notes, so it pops up again for everyone
         lines: [
+            ['🐏', "Greg is in the claw machine now. Nobody knows how he got in there. He says he used a crane."],
+            ['🏆', "14 new achievements, and a pile of new titles you can only earn. Some of them won't tell you how."],
+            ['👆', "If you own Bibledaddy's finger, you can nail it to the wheel as your needle now. One nail. It holds. Mostly."],
+            ['🏐', "Volley has been spotted at sea. On an iceberg. Captaining it."],
+            ['🏪', "The 8/11's wiring has been described as 'a fire hazard with opinions'."],
+            ['🚪', "The VIP room is very quiet. Very, very quiet. Until it isn't."],
+            ['🛥️', "The yacht's buttons moved up off the art, the shop chooser got a proper frame, and the title tags got cleaner text."],
             ['🥤', "The 8/11 Slurpee machine is stronger than it looks. Pace yourself."],
             ['🕯️', "The VIP room got a new poster. The Church of the Eternal Spin is very proud of it."],
             ['🌙', "The Emporium after dark has... a regular. Nobody's sure who he is."],
@@ -10650,7 +10709,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
               tip.innerHTML = '<span>🎨 Buy it here, switch it in ⚙️ Settings.</span>'; const go = document.createElement('button'); go.className = 'px-3 py-1 rounded bg-amber-600 hover:bg-amber-500 text-black text-xs font-black cursor-pointer'; go.textContent = 'Open Settings';
               go.addEventListener('click', openLooks); tip.appendChild(go); add(tip); }
             add(shopHead('📍 Needle transmogs'));
-            Object.entries(NEEDLES).forEach(([k, n]) => add(ownRow(needleIcon(n, 28), n.name, n.emoji ? 'Points at Kevin. Accusingly.' : 'A new paint job for the needle.', n.cost, ownedNeedles[k], needleChoice === k,
+            Object.entries(NEEDLES).filter(([, n]) => !n.needs || n.needs()).forEach(([k, n]) => add(ownRow(needleIcon(n, 28), n.name, n.nailed ? "Bibledaddy's finger, nailed on with one crooked nail. Free, since you already own the finger. It leaves the SPIN button while it's up here." : n.emoji ? 'Points at Kevin. Accusingly.' : 'A new paint job for the needle.', n.cost, ownedNeedles[k] || !!n.nailed, needleChoice === k,
                 () => { if (!spend(n.cost, n.name)) return; ownedNeedles[k] = true; store.set('painWheelNeedles', ownedNeedles); unlock('drip'); equipNeedle(k); },
                 () => equipNeedle(k))));
             add(shopHead('🔊 Spin sound packs'));
@@ -10661,7 +10720,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             add(ownRow('<img src="media/nameplate.png" alt="" style="display:inline-block;height:22px;width:auto;vertical-align:middle">', 'No title', 'Humble. Suspicious.', 0, true, !titleChoice, null, () => equipTitle('')));
             TITLES.filter(([t]) => t !== 'Degenerate Reject' || ownedTitles[t]).forEach(([t]) => {
                 const a = TITLE_ART[t], own = !!ownedTitles[t];
-                const r = shopRow('', t, own ? `${playerName || 'You'}, ${t}` : '🔒 ' + (a ? a.how : 'A guild secret.'), titleChoice === t ? 'Equipped' : own ? 'Equip' : 'Locked', own && titleChoice !== t ? () => equipTitle(t) : null, titleChoice === t ? 'equipped' : own ? 'equip' : 'owned');
+                const ta = TITLE_ACH[t], r = shopRow('', t, own ? `${playerName || 'You'}, ${t}` : '🔒 ' + (a ? a.how : ta && ta[1] ? ta[1] : 'A secret. Ada says no hints.'), titleChoice === t ? 'Equipped' : own ? 'Equip' : 'Locked', own && titleChoice !== t ? () => equipTitle(t) : null, titleChoice === t ? 'equipped' : own ? 'equip' : 'owned');
                 const ic = r.querySelector('img, span'); if (ic && a) { const holder = document.createElement('span'); holder.innerHTML = titleBanner(t, 300, !own); holder.firstChild.style.display = 'block'; ic.replaceWith(holder.firstChild); const nm = r.querySelector('.min-w-0 > b'); if (nm) nm.remove(); }
                 add(r);
             });
@@ -10990,6 +11049,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         t.addEventListener('click', onPick); grid.appendChild(t);
     }
     function needleIcon(n, h) {
+        if (n.nailed) return `<img src="${PHOTO_FINGER}" alt="" style="transform:rotate(90deg)${h ? `;height:${Math.round(h * .45)}px;width:auto;vertical-align:middle;margin:0 ${Math.round(h * .3)}px` : ''}">`;
         if (n.emoji) return `<img src="${PHOTO_FINGER}" alt="" style="transform:rotate(180deg)${h ? `;height:${h}px;width:auto;vertical-align:middle` : ''}">`;
         return `<svg viewBox="0 0 46 54" width="${Math.round((h || 40) * 46 / 54)}" height="${h || 40}" style="display:inline-block;vertical-align:middle"><defs><linearGradient id="ndlRbS" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ef4444"/><stop offset=".33" stop-color="#facc15"/><stop offset=".66" stop-color="#22c55e"/><stop offset="1" stop-color="#3b82f6"/></linearGradient></defs>
             <circle cx="23" cy="14" r="10" fill="#1E293B" stroke="#F8FAFC" stroke-width="3"/><path d="M13 18L23 50L33 18H13Z" fill="${String(n.fill).startsWith('url') ? 'url(#ndlRbS)' : n.fill}" stroke="${n.stroke}" stroke-width="2" stroke-linejoin="round"/><circle cx="23" cy="14" r="4" fill="${String(n.fill).startsWith('url') ? '#facc15' : n.fill}"/></svg>`;
@@ -11005,7 +11065,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             lookTile(tg, themeChoice === t.id, t.name.replace(/\s*[\u{1F000}-\u{1FFFF}\u2600-\u27BF\uFE0F]+/gu, '').trim(), icon, () => equipTheme(t.id));
         });
         const ng = $('needleGrid'); ng.innerHTML = '';
-        Object.entries(NEEDLES).filter(([k]) => ownedNeedles[k]).forEach(([k, n]) => lookTile(ng, needleChoice === k, n.name.replace(/\s*👇/, ''), needleIcon(n), () => equipNeedle(k)));
+        Object.entries(NEEDLES).filter(([k, n]) => ownedNeedles[k] || (n.nailed && n.needs())).forEach(([k, n]) => lookTile(ng, needleChoice === k, n.name.replace(/\s*👇/, ''), needleIcon(n), () => equipNeedle(k)));
         const pg = $('packGrid'); pg.innerHTML = '';
         Object.entries(TICK_PACKS).filter(([k]) => ownedPacks[k]).forEach(([k, p]) => lookTile(pg, tickPack === k, p.name, PACK_ICON()[k], () => equipPack(k), p.name + ' (click to hear it)'));
         renderPetPicker();
@@ -11029,6 +11089,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         const win = t.tk.cost * t.mult;
         if (win) setGold(gold + win);
         if (!t.mult) scratchStats.failed++; else if (t.mult === 1) scratchStats.back++; else scratchStats.won++;
+        scratchStats.streak = t.mult ? 0 : (scratchStats.streak || 0) + 1; if (scratchStats.streak >= 13) unlock('scratch13');
         scratchStats.winnings += win; store.set('painWheelScratchStats', scratchStats);
         settleScratch.last = !win ? pick(['No luck. The goblins thank you.', 'So close. (Not really.)', 'Loser! Try again!', 'The house wins. As always.'])
             : t.mult === 1 ? `Money back! +${fmt(win)} (break even)` : `WINNER! ${t.sym.find((s, i) => t.sym.filter(x => x === s).length >= 3)} ×${t.mult} → +${fmt(win)}`;
@@ -12418,6 +12479,7 @@ const AUDIO_DOOR_CHIME = "media/audio_door_chime.mp3?v=34de5993";
     applyTheme();
     window.addEventListener('load', () => { resizeCanvases(); tuneTickerSpeed(); requestAnimationFrame(loop); });
     </script>
+<script>window.AXA_CAMEO = { id: 'wheel', host: '#logoWrap', x: 54, y: -13, w: 5.6, z: 1, filter: 'brightness(.55) saturate(.7)', op: .95, clip: 'inset(0 0 52% 0)' };</script><script src="axa_cameo.js?v=370eea98"></script>
 <script src="logo_zoom.js?v=8c9b3e40"></script>
 </body>
 </html>

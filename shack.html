@@ -32,7 +32,7 @@
   .scroller { width: 100%; overflow-x: auto; display: grid; place-items: center; }
   @media (max-width: 700px) { .scene { min-width: 640px; } .scroller { place-items: start; } }
 </style></head><body>
-<header><h1 class="logo-h1"><img src="media/logo_shack.png?v=1" alt="The Shack in the Desert"></h1><span id="goldBox"></span><nav><a class="alt" href="./"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a><a class="alt" href="emporium.html" id="fleaNav" style="display:none">🏷️ Flea Market</a><a href="wheel.html">🎡 Back to The Wheel</a></nav></header>
+<header><h1 class="logo-h1" id="shackLogo" style="position:relative"><img src="media/logo_shack.png?v=1" alt="The Shack in the Desert"></h1><span id="goldBox"></span><nav><a class="alt" href="./"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a><a class="alt" href="emporium.html" id="fleaNav" style="display:none">🏷️ Flea Market</a><a href="wheel.html">🎡 Back to The Wheel</a></nav></header>
 <div class="wrap"><div class="scroller"><div class="scene" id="scene">
       <button class="hs" data-hs="claw" style="left:30.8%;top:21.1%;width:15.8%;height:60.9%" aria-label="🕹️ Little St. Jeff's Prize Island"><b>🕹️ Little St. Jeff's Prize Island</b></button>
       <button class="hs" data-hs="door" style="left:51.1%;top:16.1%;width:13.5%;height:48.4%" aria-label="🚪 Back to The Wheel"><b>🚪 Back to The Wheel</b></button>
@@ -113,7 +113,8 @@ const CLAW_PRIZES = [
   { k: 'duck', img: 'media/photo_pet_duck.png', won: '🦆 YOU WON RAID DUCK. It squeaked once and wiped the claw machine.' },
   { k: 'bones', img: 'media/photo_pet_skeleton.png', won: '💀 YOU WON BONES. He brought his own token. He is not sharing it. (The skeleton in the corner says that is his little brother.)' },
   { k: 'slimothy', img: 'media/photo_pet_slime.png', won: '🟢 YOU WON SLIMOTHY. The sunglasses stayed on the whole time.' },
-  { k: 'piggy', img: 'media/photo_pet_piggy.png', won: '🐷 YOU WON THE GOBLIN PIGGY BANK. It already wants your gold.' }];
+  { k: 'piggy', img: 'media/photo_pet_piggy.png', won: '🐷 YOU WON THE GOBLIN PIGGY BANK. It already wants your gold.' },
+  { k: 'greg', img: 'media/pet_greg.png', won: '🐏 YOU WON GREG. He is not authorized to operate heavy machinery. He has already asked where the forklift is.' }];
 const fmt = (n) => { n = Math.round(n); if (n < 1e15) return n.toLocaleString() + 'g'; const e = Math.floor(Math.log10(n)); return (n / Math.pow(10, e)).toFixed(2) + 'e' + e + 'g'; };
 const queueAch = (id) => { const q = get('painWheelPendingAch', []); if (!q.includes(id)) q.push(id); put('painWheelPendingAch', q); };
 // sound: the real claw motor / token / crash files, at the wheel's volume
@@ -311,7 +312,7 @@ function openClaw() {
           prize.style.transition = 'left .9s ease-in-out, bottom .9s ease-in'; prize.style.left = '8%';
           goHome(() => { claw.style.transform = 'translateX(-50%)'; prize.style.bottom = '-40%'; setTimeout(() => sfx('audio_crash_1'), 600); });
           const pets2 = get('painWheelPets', {}); pets2[P.k] = true; put('painWheelPets', pets2); pets[P.k] = true;
-          queueAch('clawwin'); if (CLAW_PRIZES.every(c => pets2[c.k])) queueAch('clawall');
+          queueAch('clawwin'); if (P.k === 'greg') queueAch('gregpet'); if (CLAW_PRIZES.every(c => pets2[c.k])) queueAch('clawall');
           setTimeout(() => {
             prize.remove(); claw.style.transform = 'translateX(-50%)'; busy = false;
             collect(true); waiting = P; chute.innerHTML = `<img src="${P.img}" alt="">`; chute.style.display = 'flex'; msg.textContent = P.won + '  👇 Grab it from the PRIZES door!';
@@ -395,7 +396,7 @@ addEventListener('pointerdown', startWind, { once: true });
   setInterval(() => { if (Math.random() < .05) lizard(); }, 90000);
   window.lizard = lizard;
 })();
-</script><script>window.AXA_CAMEO = { id: 'shack', host: '#scene', x: 46.1, y: 40, w: 2.5, z: 1, flip: true, filter: 'brightness(.62) sepia(.35)', op: .5 };</script><script src="axa_cameo.js?v=00e20b00"></script>
-<script src="wallet.js?v=503ba3e6"></script>
+</script><script>window.AXA_CAMEO = [{ id: 'shack', host: '#scene', x: 46.1, y: 40, w: 2.5, z: 1, flip: true, filter: 'brightness(.62) sepia(.35)', op: .5 }, { id: 'shacklogo', host: '#shackLogo', x: 27.7, y: 45.5, w: 3.4, z: 2, filter: 'brightness(.5) sepia(.6) saturate(1.4) contrast(1.2)', op: .95, clip: 'inset(0 0 50% 0)' }];</script><script src="axa_cameo.js?v=370eea98"></script>
+<script src="wallet.js?v=07cb4a3e"></script>
 <script src="logo_zoom.js?v=8c9b3e40"></script>
 </body></html>

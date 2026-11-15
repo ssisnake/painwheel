@@ -235,7 +235,9 @@ const EVIDENCE = [
 function showEvidence() {
   const got = EVIDENCE.filter(e => clues[e.k]).length;
   show('MISSING EVIDENCE', `<p style="font-style:italic;color:#57534e">Every string points here. Find everything. ${got} of ${EVIDENCE.length} found.</p>` +
-    EVIDENCE.map(e => clues[e.k] && e.name ? `<div class="ev got"><span class="bx">✔</span><div><b>${e.name}</b><small>${e.where}</small></div></div>` : `<div class="ev"><span class="bx"></span><div><b>???</b><small>${e.hint || 'Not found yet.'}</small></div></div>`).join(''));
+    EVIDENCE.map(e => clues[e.k] && e.name ? `<div class="ev got"><span class="bx">✔</span><div><b>${e.name}</b><small>${e.where}</small></div></div>` : `<div class="ev"><span class="bx"></span><div><b>???</b><small>${e.hint || 'Not found yet.'}</small></div></div>`).join('') + '<div id="evAxa" style="position:relative;height:0"></div>');
+  const host = document.getElementById('dBody'); if (host) host.style.position = 'relative';
+  if (window.axaPlace) axaPlace({ id: 'evidence', host: '#dBody', x: 96.2, y: 95.5, w: 3.6, z: 2, filter: 'sepia(.8) brightness(.75) contrast(1.1)', op: .8, clip: 'inset(0 0 48% 0)' });   // peeking up from the bottom right corner of the file
 }
 // 🎬 credits on the little sticky note, bottom middle
 // ---------- background music for the Board: two Pixabay tracks, crossfading into each other, quiet ----------
@@ -410,5 +412,5 @@ clippy = function (t) { _clippy(t); if (/authorities|stapler|hostage/i.test(t) &
 document.getElementById('clippy').onclick = () => clippy(pick(CLIPPY_LINES));
 setTimeout(() => clippy(pick(CLIPPY_LINES)), 6000 + Math.random() * 6000);
 setInterval(() => { if (!document.hidden && !dlg.open && Math.random() < .5) clippy(pick(CLIPPY_LINES)); }, 70000);
-</script><script>window.AXA_CAMEO = { id: 'board', host: '#board', x: 90.55, y: 36, w: 1.8, z: 1, filter: 'brightness(.7) saturate(.8)', op: .5 };</script><script src="axa_cameo.js?v=cfcbc266"></script><script src="fish_song.js?v=db2c1926"></script>
+</script><script>window.AXA_CAMEO = { id: 'board', host: '#board', x: 90.55, y: 36, w: 1.8, z: 1, filter: 'brightness(.7) saturate(.8)', op: .5 };</script><script src="axa_cameo.js?v=370eea98"></script><script src="fish_song.js?v=7e44e6a7"></script>
 </body></html>

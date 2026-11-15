@@ -1,3 +1,4 @@
+window.pwAch = window.pwAch || ((id) => { try { const q = JSON.parse(localStorage.getItem('painWheelPendingAch') || '[]'); const a = JSON.parse(localStorage.getItem('painWheelAchievements') || '{}'); if (!q.includes(id) && !(a && a[id])) { q.push(id); localStorage.setItem('painWheelPendingAch', JSON.stringify(q)); } } catch (e) {} });   // the wheel hands out the trophy next time it's open
 // ---- the singing swordfish: "The Ghost of Gallows Reef" by kaazoom (Pixabay), cut down and squeezed through a cheap toy speaker ----
 // fishSing(fallback): plays the shanty once (no stacking). Returns true if it's singing. fallback runs if the clip can't play.
 // While he sings, a popup shows Gary on his plaque flopping along like the real singing-fish plaque (frames by Ada: media/fishpop_1-5.webp):
@@ -37,7 +38,12 @@
     pop.querySelector('img').src = F(5); setTimeout(() => { if (pop) pop.querySelector('img').src = F(1); }, 250);
     setTimeout(() => { if (pop) pop.classList.remove('on'); }, 700);
   }
-  window.fishSing = function (fallback) {
+  window.fishSing = function (fallback, who) {
+    try {   // Something Smells Fishy: hear every singing swordfish (the Board, both on the yacht, Steve at the Emporium)
+      const id = who || (/emporium/.test(location.pathname) ? 'emporium' : /yacht/.test(location.pathname) ? 'yacht' : 'board');
+      const s = JSON.parse(localStorage.getItem('painWheelFishSung') || '{}') || {}; s[id] = 1; localStorage.setItem('painWheelFishSung', JSON.stringify(s));
+      if (['board', 'yacht', 'yacht2', 'emporium'].every(k => s[k]) && window.pwAch) pwAch('fishy');
+    } catch (e) {}
     let vol = 0.6;
     try { const v = parseFloat(localStorage.getItem('painWheelVolume')); if (!isNaN(v)) vol = Math.max(0, Math.min(1, v)); if (localStorage.getItem('painWheelMuted') === 'true') vol = 0; } catch (e) {}
     if (!vol) return false;

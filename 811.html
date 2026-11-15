@@ -362,6 +362,7 @@ $('hatch').onclick = () => {
 const FREEZE = [['cog', 'Cogsworth', 'MY BEARD IS FROZEN TO MY FACE.'], ['ada', 'Ada', 'Who designed this cup. Who DESIGNED this cup.'], ['kevin', 'Kevin', 'MY TONGUE IS STUCK. I DON\'T KNOW HOW. I WAS DRINKING IT.'], ['axa', 'Axazon', 'This Slurpee has betrayed me. I will remember this.']];
 FREEZE.forEach(([k]) => { const i = new Image(); i.src = 'media/freeze_' + k + '.png'; });
 function brainFreeze() {
+  if (window.pwAch) pwAch('brainfreeze');
   const [k, who, line] = pick(FREEZE), d = document.createElement('div');
   d.style.cssText = 'position:fixed;left:50%;top:46%;z-index:70;transform:translate(-50%,-50%) scale(.4);opacity:0;transition:transform .35s cubic-bezier(.2,1.6,.4,1),opacity .3s;text-align:center;pointer-events:none;width:min(420px,80vw)';
   d.innerHTML = `<div style="font:900 clamp(26px,3.4vw,46px)/1 system-ui,sans-serif;color:#bae6fd;text-shadow:0 0 12px #38bdf8,0 3px 0 #0c4a6e,0 0 3px #000;letter-spacing:.06em">🧠❄️ BRAIN FREEZE</div><img src="media/freeze_${k}.png" alt="" style="width:100%;height:auto;image-rendering:pixelated;filter:drop-shadow(0 10px 18px rgba(0,0,0,.7)) drop-shadow(0 0 14px rgba(125,211,252,.6))"><div style="display:inline-block;margin-top:4px;padding:6px 12px;border-radius:10px;background:#0c1a2b;border:2px solid #7dd3fc;color:#e0f2fe;font:800 17px/1.3 system-ui,sans-serif"></div>`;
@@ -456,7 +457,36 @@ $('atmAmt').onkeydown = (e) => { if (e.key === 'Enter') $('atmDep').click(); };
   addEventListener('pointerdown', () => { if (!cur) next(); }, { once: true });
   document.addEventListener('visibilitychange', apply); addEventListener('wfchange', apply);
 })();
-</script><script>window.AXA_CAMEO = { id: '811', host: '#scene', x: 96.4, y: 82, w: 2.6, z: 2, flip: true, filter: 'brightness(.85) saturate(.8)', op: .55 };   // bottom right, leaning out from behind the end of the counter</script><script src="axa_cameo.js?v=cfcbc266"></script>
-<script src="wallet.js?v=503ba3e6"></script>
+</script><script>window.AXA_CAMEO = { id: '811', host: '#scene', x: 96.4, y: 82, w: 2.6, z: 2, flip: true, filter: 'brightness(.85) saturate(.8)', op: .55 };   // bottom right, leaning out from behind the end of the counter</script><script src="axa_cameo.js?v=370eea98"></script>
+<script src="wallet.js?v=07cb4a3e"></script>
 <script src="logo_zoom.js?v=8c9b3e40"></script>
+<script>
+// ---- THE BLACKOUT (Ada's idea): rare. The power dies, the clerk is just... gone, and the TV keeps broadcasting on its own. ----
+(() => {
+  const sc = document.getElementById('scene'); if (!sc) return;
+  const css = document.createElement('style');
+  css.textContent = `#blackout { position: absolute; inset: 0; z-index: 6; pointer-events: none; background: radial-gradient(ellipse 20% 22% at 17.5% 14%, rgba(80,140,255,.10), rgba(0,0,0,0) 70%), rgba(2,3,8,.93); opacity: 0; transition: opacity .25s; }
+    #blackout.on { opacity: 1; } #scene.dark #tv { z-index: 7; filter: brightness(1.25) drop-shadow(0 0 1.2cqw rgba(110,160,255,.55)); } #scene.dark #tube, #scene.dark #lamp, #scene.dark #lampGlow { opacity: 0 !important; }
+    #scene.dark .deco[src*="clerk"] { visibility: hidden; }`;
+  document.head.appendChild(css);
+  const ov = document.createElement('div'); ov.id = 'blackout'; sc.appendChild(ov);
+  const DARK = ['...hello? Is anyone at the register?', 'The TV is still on. The TV is not plugged in.', 'Something in the cooler just opened by itself.', 'You hear the Slurpee machine still running. In the dark.', 'The clerk was right there. RIGHT there.'];
+  const BACK = ['*the lights flicker back on* The clerk is behind the counter like nothing happened. "Find everything okay?"', '*power\'s back* The clerk hasn\'t moved. He\'s holding a candle. It isn\'t lit.', '*lights on* The clerk: "What blackout?"'];
+  let on = false;
+  window.blackout = () => {
+    if (on) return; on = true;
+    try { const v = parseFloat(localStorage.getItem('painWheelVolume')), vol = isNaN(v) ? .6 : v; if (vol && localStorage.getItem('painWheelMuted') !== 'true') {   // the power dying: a falling hum and a thunk
+      const ac = window.__boAC = window.__boAC || new (window.AudioContext || window.webkitAudioContext)(), t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain();
+      o.type = 'sawtooth'; o.frequency.setValueAtTime(120, t); o.frequency.exponentialRampToValueAtTime(30, t + .7); g.gain.setValueAtTime(.12 * vol, t); g.gain.exponentialRampToValueAtTime(.001, t + .8);
+      const f = ac.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 500; o.connect(f); f.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + .85); } } catch (e) {}
+    sc.classList.add('dark'); ov.classList.add('on');
+    if (typeof say === 'function') setTimeout(() => say(DARK[Math.floor(Math.random() * DARK.length)], 4200), 900);
+    if (typeof breaking === 'function') {}   // the anchor keeps reading the news on his own
+    setTimeout(() => { if (typeof say === 'function') say(DARK[Math.floor(Math.random() * DARK.length)], 4200); }, 6000);
+    setTimeout(() => { ov.classList.remove('on'); sc.classList.remove('dark'); on = false; if (typeof say === 'function') say(BACK[Math.floor(Math.random() * BACK.length)], 5200); }, 12500);
+  };
+  if (Math.random() < .07) setTimeout(() => !document.hidden && window.blackout(), 15000 + Math.random() * 40000);   // about 1 visit in 14
+})();
+</script>
+<script>try { const n = (JSON.parse(localStorage.getItem('painWheel811Visits') || '0') || 0) + 1; localStorage.setItem('painWheel811Visits', JSON.stringify(n)); if (n >= 811 && window.pwAch) pwAch('never811'); } catch (e) {}</script>
 </body></html>

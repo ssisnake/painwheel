@@ -634,7 +634,7 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
     let shantyAt = 0;
     $('hsFish1').addEventListener('click', () => { if (Date.now() - shantyAt > 16000) { shantyAt = Date.now(); if (window.fishSing) fishSing(() => sfx.shanty()); else sfx.shanty(); }
         say('🐟🎵 ' + pick(['Gary turns his head and sings you a sea shanty. You did not ask for this. (Do not call him Gary.)', 'WHAT SHALL WE DO WITH A DRUNKEN REB. EAR-LY IN THE MORNING.', 'The swordfish sings. His name is not Gary. He sings anyway.', 'Way hay and up she rises. The yacht does not. It is in the desert.']), 5500); });
-    $('hsFish2').addEventListener('click', () => { if (window.fishSing) fishSing(); });   // he finally gets to sing too
+    $('hsFish2').addEventListener('click', () => { if (window.fishSing) fishSing(null, 'yacht2'); });   // he finally gets to sing too
     $('hsFish2').addEventListener('click', () => say('🐟 ' + pick(['Reb caught this one. It was already dead. It was in a freezer aisle.', 'The plaque says "THE ONE THAT GOT AWAY." It did not get away.',
         'This swordfish has seen things. It will not sing for you.', 'Kevin named it Gary. Do not call it Gary. It hates that.'])));
     const VIEWS = ['A murloc presses its face to the glass. MRGLGLGL.', 'Kevin is swimming next to the yacht. He fell off the dock. Again.', 'Is that... Mankrik\'s wife?',
@@ -667,7 +667,8 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
         try { localStorage.setItem('painWheelSeen2600', 'true'); } catch (e) {}
     }
     $('vipSit').addEventListener('click', sitDown);
-    window.vipSitDown = sitDown;   // degen1350's desktop "The Wheel" icon launches the WHEEL-2600
+    window.vipSitDown = sitDown;
+    $('vipSit').addEventListener('click', () => setTimeout(() => { if (window.axaPlace && window.AXA_2600 && !document.querySelector('#miniCore [aria-label="Something in the background"]')) axaPlace(window.AXA_2600); }, 900));   // degen1350's desktop "The Wheel" icon launches the WHEEL-2600
     const VIP_SAY = {
         pc: ['The PC has 4,000 hours on one game. The game is The Wheel.', 'The fans are RGB. The RGB is set to "Kevin".', 'Hard drive: 2TB. All of it is wheel replays.', "It's running on Ultra. The wheel has never looked better."],
         head: ['The headset is still warm. Somebody was just here.', 'You put it on. Faintly, you hear the wheel ticking.', 'The mic is unmuted. It has been unmuted for three years.'],
@@ -878,10 +879,45 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
   addEventListener('wfchange', sync); document.addEventListener('visibilitychange', sync);
 })();
 </script>
-<script src="fish_song.js?v=db2c1926"></script>
-<script src="wallet.js?v=503ba3e6"></script>
-<script>window.AXA_CAMEO = [{ id: 'yacht', host: '#stage', z: 1, filter: 'brightness(.55) saturate(.5) hue-rotate(160deg)' }, { id: 'vip', host: '#vipStage', z: 1, filter: 'brightness(.5) saturate(.7)' }];</script><script src="axa_cameo.js?v=cfcbc266"></script><script src="vip_pc.js?v=07585d79"></script>
+<script src="fish_song.js?v=7e44e6a7"></script>
+<script src="wallet.js?v=07cb4a3e"></script>
+<script>window.AXA_CAMEO = [{ id: 'yacht', host: '#stage', z: 1, filter: 'brightness(.55) saturate(.5) hue-rotate(160deg)' }, { id: 'vip', host: '#vipStage', z: 1, filter: 'brightness(.5) saturate(.7)' }];
+window.AXA_2600 = { id: '2600', host: '#miniCore', x: 3.5, y: 87.3, w: 3.6, z: 3, filter: 'brightness(.85) saturate(.6) contrast(1.2)', op: .95, clip: 'inset(0 0 46% 0)' };   // bobbing in the WHEEL-2600's little ocean</script><script src="axa_cameo.js?v=370eea98"></script><script src="vip_pc.js?v=eb7e2433"></script>
 <script src="logo_zoom.js?v=8c9b3e40"></script>
 <script>(() => { const b = document.getElementById('bar'); if (b && b.parentElement !== document.body) document.body.prepend(b); })();</script>
+<script>
+// ---- VERY rare: someone knocks on the VIP room door. Nobody is ever there. ----
+(() => {
+  const AFTER = ["You open the door. Nobody. Just a wet footprint on the carpet. It has three toes.", "You check. The hallway's empty. The knocking was coming from INSIDE the room.",
+    "Nobody there. Just a note: \"Chapter 186 is coming.\"", "Nobody. The candles in the poster flicker. Probably a draft. Probably.", "You open it. A tiny wheel rolls in, spins once, and rolls back out.",
+    "Nobody's there. Clippy, on the monitor, slowly turns to look at the door."];
+  let done = false;
+  const knock = () => {
+    try {
+      const v = parseFloat(localStorage.getItem('painWheelVolume')), vol = isNaN(v) ? .6 : Math.max(0, Math.min(1, v));
+      if (vol && localStorage.getItem('painWheelMuted') !== 'true') {
+        const ac = window.__knockAC = window.__knockAC || new (window.AudioContext || window.webkitAudioContext)();
+        const hit = (t) => {   // a dull wooden thud: low sine drop + a burst of filtered noise
+          const o = ac.createOscillator(), g = ac.createGain(); o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(60, t + .12);
+          g.gain.setValueAtTime(.55 * vol, t); g.gain.exponentialRampToValueAtTime(.001, t + .18); o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + .2);
+          const n = ac.createBuffer(1, ac.sampleRate * .06, ac.sampleRate), d = n.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
+          const b = ac.createBufferSource(), f = ac.createBiquadFilter(), ng = ac.createGain(); f.type = 'lowpass'; f.frequency.value = 700; ng.gain.value = .5 * vol;
+          b.buffer = n; b.connect(f); f.connect(ng); ng.connect(ac.destination); b.start(t);
+        };
+        const t = ac.currentTime + .05; [0, .28, .56, 1.6, 1.86].forEach(d => hit(t + d));   // knock knock knock ... knock knock
+      }
+    } catch (e) {}
+    const sc = document.getElementById('vipScene'), m = document.getElementById('vipMsg');
+    if (sc) sc.animate([{ translate: '0 0' }, { translate: '.25cqw 0' }, { translate: '-.25cqw 0' }, { translate: '0 0' }], { duration: 120, iterations: 3 });
+    if (m) { const old = m.textContent; m.textContent = '*knock knock knock* ...Someone is at the VIP room door.';
+      setTimeout(() => { m.textContent = AFTER[Math.floor(Math.random() * AFTER.length)]; }, 4200); setTimeout(() => { m.textContent = old; }, 11000); }
+  };
+  window.vipKnock = knock;
+  setInterval(() => {   // about once every half hour of sitting in the VIP room, and only once per visit to the yacht
+    const open = document.getElementById('vip') && document.getElementById('vip').classList.contains('open');
+    if (!done && open && !document.hidden && Math.random() < 1 / 90) { done = true; knock(); if (window.pwAch) pwAch('knock'); }
+  }, 20000);
+})();
+</script>
 </body>
 </html>

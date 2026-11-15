@@ -1,3 +1,4 @@
+window.pwAch = window.pwAch || ((id) => { try { const q = JSON.parse(localStorage.getItem('painWheelPendingAch') || '[]'); const a = JSON.parse(localStorage.getItem('painWheelAchievements') || '{}'); if (!q.includes(id) && !(a && a[id])) { q.push(id); localStorage.setItem('painWheelPendingAch', JSON.stringify(q)); } } catch (e) {} });   // the wheel hands out the trophy next time it's open
 // ---- shared header bits for the side pages: centered nav, gold on the right with a coin, and a money popup (wallet / vault / Goblin Express) ----
 (function () {
   const g = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } };
