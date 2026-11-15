@@ -182,7 +182,7 @@
   if (mon && has811()) {
     mon.removeAttribute('data-vsay'); mon.dataset.label = "🖥️ Monitor #3 (degen1350's computer)"; mon.title = "degen1350's computer";
     const scrEl = mon.parentElement.querySelectorAll('.vipScr')[1];
-    if (scrEl) { scrEl.innerHTML = ''; scrEl.style.background = '#000 url(media/pc_desktop.webp) center / cover no-repeat'; scrEl.style.filter = 'brightness(1.1) saturate(1.1)'; }
+    if (scrEl) { Object.assign(scrEl.style, { left: '55.05%', top: '47.4%', width: '8.3%', height: '13.5%' }); scrEl.innerHTML = ''; scrEl.style.background = '#000 url(media/pc_monitor.webp) center / 100% 100% no-repeat'; scrEl.style.filter = 'brightness(1.08)'; }
     mon.addEventListener('click', (e) => { e.stopPropagation(); e.preventDefault(); open(); }, true);
   }
 })();
