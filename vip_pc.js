@@ -94,7 +94,11 @@
   hot('dsk', L1, 34.2, W, 14.4, "Greg's Adventure (DEMO)", () => ok("Greg's Adventure (DEMO)", '🐏', "Greg's Adventure requires a 3dfx Voodoo2 graphics card.\n\nAlso: Greg is not authorized to operate heavy machinery, including this computer.", () => clippy("Ada had it uninstalled. Greg reinstalled it. Ada laminated a sign.")));
   hot('dsk', L2, 34.2, W, 11.6, 'Curses.exe', () => ok('Curses.exe', '💀', 'Curses.exe has performed an illegal operation and will be shut down.\n\nIf the problem persists, it is probably Kevin.', () => clippy("Somebody keeps buying curses at the 8/11 from this machine. I'm not saying who. It's degen1350.")));
   hot('dsk', L1, 50.2, W, 12.6, 'Security Cam Viewer', openCams);
-  hot('dsk', L2, 50.2, W, 11.4, 'The Wheel', () => ok('The Wheel', '🎡', 'The Wheel is already running.\n(It is always running. It has never not been running.)', () => clippy("You're IN it. That's the problem. That's always been the problem.")));
+  hot('dsk', L2, 50.2, W, 11.4, 'The Wheel', () => {   // launches the WHEEL-2600 (the wheel inside the wheel)
+    clippy("Launching THE WHEEL. Again. From inside The Wheel. I'm not getting paid enough for this.");
+    const w = ok('The Wheel', '🎡', 'Loading WHEEL-2600...\nInsert cartridge. Blow on it. Insert it again.');
+    setTimeout(() => { w.remove(); close(); if (window.vipSitDown) window.vipSitDown(); }, 1600);
+  });
   hot('dsk', L1, 65.3, 8, 13, 'To Do... (Probably Not)', () => ok('To Do.txt - Notepad', '📝', '1. fix the claw  ✓ (Cogsworth)\n2. stop ADDing so hard  ✗\n3. find the hidden guy on the cams  ...\n4. return Ada\'s wrench\n5. tell Greg no\n6. tell Greg no again', () => clippy('Number 2 has been on there since 1998.')));
   hot('dsk', L2, 65.3, W, 13, 'Internet (Good Luck)', () => { const w = ok('Dial-Up Networking', '☎️', 'Dialing... *SKREEEEE-KSSSHHH-BWAAANG*\nConnecting at 14.4 kbps...'); setTimeout(() => { if (w.isConnected) { w.remove(); ok('Dial-Up Networking', '📵', 'Connection lost.\nSomebody picked up the phone.', () => clippy("It's a landline. Somebody always picks up the phone. Usually Vince.")); } }, 2600); });
   hot('dsk', 83.2, 89.6, 2.6, 5, 'Volume', () => clippy("The volume knob is taped at 11. Don't ask. Nobody asks."));

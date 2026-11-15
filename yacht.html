@@ -638,6 +638,7 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
     let shantyAt = 0;
     $('hsFish1').addEventListener('click', () => { if (Date.now() - shantyAt > 16000) { shantyAt = Date.now(); if (window.fishSing) fishSing(() => sfx.shanty()); else sfx.shanty(); }
         say('🐟🎵 ' + pick(['Gary turns his head and sings you a sea shanty. You did not ask for this. (Do not call him Gary.)', 'WHAT SHALL WE DO WITH A DRUNKEN REB. EAR-LY IN THE MORNING.', 'The swordfish sings. His name is not Gary. He sings anyway.', 'Way hay and up she rises. The yacht does not. It is in the desert.']), 5500); });
+    $('hsFish2').addEventListener('click', () => { if (window.fishSing) fishSing(); });   // he finally gets to sing too
     $('hsFish2').addEventListener('click', () => say('🐟 ' + pick(['Reb caught this one. It was already dead. It was in a freezer aisle.', 'The plaque says "THE ONE THAT GOT AWAY." It did not get away.',
         'This swordfish has seen things. It will not sing for you.', 'Kevin named it Gary. Do not call it Gary. It hates that.'])));
     const VIEWS = ['A murloc presses its face to the glass. MRGLGLGL.', 'Kevin is swimming next to the yacht. He fell off the dock. Again.', 'Is that... Mankrik\'s wife?',
@@ -670,6 +671,7 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
         try { localStorage.setItem('painWheelSeen2600', 'true'); } catch (e) {}
     }
     $('vipSit').addEventListener('click', sitDown);
+    window.vipSitDown = sitDown;   // degen1350's desktop "The Wheel" icon launches the WHEEL-2600
     const VIP_SAY = {
         pc: ['The PC has 4,000 hours on one game. The game is The Wheel.', 'The fans are RGB. The RGB is set to "Kevin".', 'Hard drive: 2TB. All of it is wheel replays.', "It's running on Ultra. The wheel has never looked better."],
         head: ['The headset is still warm. Somebody was just here.', 'You put it on. Faintly, you hear the wheel ticking.', 'The mic is unmuted. It has been unmuted for three years.'],
@@ -880,8 +882,8 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
   addEventListener('wfchange', sync); document.addEventListener('visibilitychange', sync);
 })();
 </script>
-<script src="fish_song.js"></script>
-<script src="wallet.js"></script>
-<script>window.AXA_CAMEO = [{ id: 'yacht', host: '#stage', z: 1, filter: 'brightness(.55) saturate(.5) hue-rotate(160deg)' }, { id: 'vip', host: '#vipStage', z: 1, filter: 'brightness(.5) saturate(.7)' }];</script><script src="axa_cameo.js"></script><script src="vip_pc.js"></script>
+<script src="fish_song.js?v=db2c1926"></script>
+<script src="wallet.js?v=503ba3e6"></script>
+<script>window.AXA_CAMEO = [{ id: 'yacht', host: '#stage', z: 1, filter: 'brightness(.55) saturate(.5) hue-rotate(160deg)' }, { id: 'vip', host: '#vipStage', z: 1, filter: 'brightness(.5) saturate(.7)' }];</script><script src="axa_cameo.js?v=00e20b00"></script><script src="vip_pc.js?v=136d69e3"></script>
 </body>
 </html>
