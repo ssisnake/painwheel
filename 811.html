@@ -64,10 +64,13 @@
   #tv canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .25s; pointer-events: none; image-rendering: pixelated; }
   @keyframes tvwob { 0%, 93%, 100% { translate: 0 0; } 94% { translate: .15cqw 0; } 95% { translate: -.1cqw 0; } 96% { translate: .05cqw 0; } }
   #tv .bars { position: absolute; inset: 0; display: none; background: linear-gradient(90deg, #9ca3af 0 14%, #ca8a04 14% 28%, #0891b2 28% 42%, #15803d 42% 57%, #a21caf 57% 71%, #b91c1c 71% 85%, #1d4ed8 85%); filter: brightness(.65) saturate(.8); }
-  #tv.ch1 .bars, #tv.ch2 .bars { display: block; } #tv.ch2 .bars { background: #0b0f17; }
+  #tv.bars-on .bars { display: block; } #tv.bars-off .bars { display: block; background: #0b0f17; }
   #tv .card { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; transform: rotate(15deg); font: 900 .55cqw/1.15 system-ui, sans-serif; color: #f8fafc; text-align: center; text-shadow: 0 1px 0 #000; }
-  #tv.ch1 .card, #tv.ch2 .card { display: flex; } #tv.ch1 .in, #tv.ch2 .in { display: none; }
+  #tv.away .card { display: flex; } #tv.away .in { display: none; } #tv .card { flex-direction: column; } #tv .card .ct { max-width: 3.9cqw; text-align: center; line-height: 1.1; } #tv .card b { display: block; font-size: .7cqw; } #tv .card small { display: block; font-size: .42cqw; opacity: .85; margin-top: .15cqw; }
   @media (prefers-reduced-motion: reduce) { #tv .tick span { animation-duration: 60s; } #tv .in { animation: none; } }
+  .lamp { position: absolute; left: 55.3%; top: 31%; width: 1.7%; height: 2.1%; pointer-events: none; border-radius: 50%; background: radial-gradient(ellipse, rgba(30,24,16,.88) 45%, rgba(30,24,16,0) 75%); opacity: 0; }
+  .lampglow { position: absolute; left: 53.9%; top: 32%; width: 4.4%; height: 6.5%; pointer-events: none; background: radial-gradient(ellipse at 50% 15%, rgba(255,230,150,.35), transparent 70%); }
+  .regtext { position: absolute; left: 79.15%; top: 54.05%; width: 1.7%; height: 1.15%; pointer-events: none; display: flex; align-items: center; justify-content: center; font: 800 .5cqw/1 ui-monospace, monospace; letter-spacing: -.02em; color: #86efac; text-shadow: 0 0 .2cqw rgba(74,222,128,.9); transform: rotate(7deg); }
   #tube { position: absolute; left: 65%; top: 0; width: 25%; height: 15.556%; pointer-events: none; opacity: 0; }
   #hatch { position: absolute; left: 3.4%; top: 61.5%; width: 4.6%; height: 11%; display: none; padding: 0; border: 2px solid #78716c; border-radius: 4px; cursor: pointer; z-index: 6;
     background: radial-gradient(circle at 50% 55%, rgba(250,204,21,.55), #0c0a09 70%); box-shadow: inset 0 0 12px #000, 0 0 16px rgba(250,204,21,.5); font-size: clamp(14px, 2vw, 28px); animation: hatchIn .6s ease-out; }
@@ -92,7 +95,7 @@
 </style></head><body>
 <header><h1>🏪 The 8/11</h1><span id="goldBox"></span><nav><a class="alt" href="./"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a><a class="alt" href="#" id="catalogBtn">🛒 The whole catalog</a><a href="wheel.html">🎡 Back to The Wheel</a></nav></header>
 <div class="wrap"><div class="scroller"><div class="scene" id="scene">
-  <img id="tube" alt="">
+  <img id="tube" alt=""><div class="lampglow" id="lampGlow"></div><div class="lamp" id="lamp"></div>
   <div id="tv" role="button" tabindex="0" title="Channel 8/11 News (click to change the channel)" aria-label="The TV: click to change the channel"><div class="in"><div class="logo">8/11 <b>NEWS</b></div><div class="hl" id="tvHl"></div><div class="tick"><span id="tvTick"></span></div></div><div class="bars"></div><div class="card" id="tvCard"></div><div class="glow"></div><div class="scan"></div><div class="track"></div><canvas width="48" height="40"></canvas></div>
   <button class="tap" data-f="Blue Raspberry" style="left:4%;top:33%;width:9.5%;height:26%" title="Blue Raspberry Slurpee (1 gold)" aria-label="Blue Raspberry Slurpee, 1 gold"></button>
   <button class="tap" data-f="Cherry" style="left:13.6%;top:33%;width:4.8%;height:26%" title="Cherry Slurpee (1 gold)" aria-label="Cherry Slurpee, 1 gold"></button>
@@ -166,10 +169,13 @@ const sfxQuiet = (name, g, rate) => { try { if (!vol() || !AC || AC.state !== 'r
   const show = (n) => { if (!t()) return; if (n === 'on') t().style.opacity = '0'; else { t().src = 'media/s811_light_' + n + '.jpg'; t().style.opacity = '1'; } };
   const SEQS = [[['dim', 90], ['on', 140], ['off', 110], ['on', 0]], [['half', 120], ['off', 180], ['half', 90], ['on', 0]], [['dim', 70], ['off', 260], ['dim', 120], ['on', 0]], [['off', 90], ['on', 0]]];
   const run = () => {
-    if (!document.hidden) { let at = 0; pick(SEQS).forEach(([n, ms]) => { setTimeout(() => show(n), at); at += ms; }); if (Math.random() < .22) sfxQuiet('audio_flicker', .35, .72); }
-    setTimeout(run, 4500 + Math.random() * 4000);
+    if (!document.hidden) { let at = 0; pick(SEQS).forEach(([n, ms]) => { setTimeout(() => show(n), at); at += ms; }); sfxQuiet('audio_flicker', .35, .72); }
+    setTimeout(run, 1000 + Math.random() * 59000);   // anywhere from 1 to 60 seconds: back-to-back sometimes, quiet for a minute other times
   };
-  setTimeout(run, 2600);
+  setTimeout(run, 1500 + Math.random() * 20000);
+  // the little lamp over the LOTTO rack has a loose bulb too (no sound, just a stutter now and then)
+  const lamp = (o) => { $('lamp').style.opacity = o; $('lampGlow').style.opacity = 1 - o; };
+  (function lampLoop() { setTimeout(() => { if (!document.hidden) { let at = 0; pick([[[1, 80], [0, 120], [1, 60], [0, 0]], [[.7, 150], [1, 300], [0, 0]], [[1, 70], [0, 0]]]).forEach(([o, ms]) => { setTimeout(() => lamp(o), at); at += ms; }); } lampLoop(); }, 2500 + Math.random() * 14000); })();
 })();
 addEventListener('pointerdown', () => { if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} } }, { once: true });
 // ---- the store: aisle signs open that shop tab on the wheel, the clerk points, the rest is jokes ----
@@ -179,8 +185,8 @@ const AISLES = [   // [name, sprite or '' (painted in the background), left, top
   ['TOYS', '', 50.6, 21.6, 8.1, 8.8, 'garage', 'Toys. And cars. And a rocket. Do not ask where we keep the rocket.'],
   ['SNACKS & POTIONS', '', 60.2, 21.6, 8.2, 8.8, 'consumables', 'Snacks and potions. Same shelf. Same expiration date.'],
   ['COSMETICS', '', 70.1, 21.6, 8.1, 8.8, 'cosmetics', 'Cosmetics. Make the needle pretty. Switch them in Settings.'] ];
-const PROPS = [['s811_hotdog_roll.webp', 27.6, 56.2, 7.8, 'hotdog', 'Hot dog roller'],
-  ['photo_811_carrier1', 27.2, 75.4, 5.6, 'pets', 'Pets'], ['photo_811_carrier2', 33.6, 75.8, 5.2, 'pets', 'Pets']];
+const PROPS = [['s811_hotdog_roll.webp', 29.6, 56.2, 7.8, 'hotdog', 'Hot dog roller'],
+  ['photo_811_carrier1', 28.6, 76.6, 4.7, 'pets', 'Pets'], ['photo_811_carrier2', 34.2, 77, 4.4, 'pets', 'Pets']];
 const JOKES = {
   hotdog: ['That hot dog has been rolling since 2019. It is not for sale. It is load-bearing.', 'The hot dogs are free. Nobody has ever taken one. Ever.', "Kevin ate one in 2021. He doesn't talk about it."],
   atm: ['It works now. Nobody is more surprised than the clerk.', 'The ATM used to say OUT OF ORDER. Someone moved the scratch-off rack and found the plug.', 'No fees. The ATM tried to charge one and the clerk unplugged it again for a minute.'],
@@ -189,9 +195,9 @@ const JOKES = {
   cam: ['The camera blinks at you. It has seen things.', 'Smile. You are on Goblin Security TV.', 'The red light is on. Nobody is watching. Probably.'] };
 const props = $('props');
 const add = (html) => { props.insertAdjacentHTML('beforeend', html); return props.lastElementChild; };
-const CLERK_NUDGE = { right: 3.3, bottom: 30.6 };   // % from the right / bottom: lower = further right / further down
-const clerk = add(`<img class="deco" src="media/photo_811_clerk.png" alt="" style="right:${CLERK_NUDGE.right}%;bottom:${CLERK_NUDGE.bottom}%;width:10.4%;z-index:1">`);
-function point(ms) { clerk.src = 'media/photo_811_clerk_point.png'; clerk.style.width = '11.4%'; clearTimeout(point.t); point.t = setTimeout(() => { clerk.src = 'media/photo_811_clerk.png'; clerk.style.width = '10.4%'; }, ms || 1400); }
+const CLERK_NUDGE = { right: 2.3, bottom: 29.8, w: 9.9, wPoint: 10.8 };   // % from the right / bottom: lower = further right / further down
+const clerk = add(`<img class="deco" src="media/photo_811_clerk.png" alt="" style="right:${CLERK_NUDGE.right}%;bottom:${CLERK_NUDGE.bottom}%;width:${CLERK_NUDGE.w}%;z-index:1">`);
+function point(ms) { clerk.src = 'media/photo_811_clerk_point.png'; clerk.style.width = CLERK_NUDGE.wPoint + '%'; clearTimeout(point.t); point.t = setTimeout(() => { clerk.src = 'media/photo_811_clerk.png'; clerk.style.width = CLERK_NUDGE.w + '%'; }, ms || 1400); }
 // the shop opens right here in the store: the wheel page loads in a frame showing only the shop, and goes away when you close it
 function goShop(tab) {
   point(1000); if ($('shopFrame')) return;
@@ -253,8 +259,21 @@ add('<img class="deco" src="media/photo_811_pricetag.png" alt="" style="left:35.
     if (performance.now() - t0 < ms) setTimeout(() => requestAnimationFrame(fr), 70); else cv.style.opacity = '0'; })(); };
   const tr = el.querySelector('.track'); const track = () => { tr.classList.remove('go'); void tr.offsetWidth; tr.classList.add('go'); };
   (function loop() { setTimeout(() => { if (!document.hidden) { const r = Math.random(); if (r < .55) track(); else if (r < .85) snow(700 + Math.random() * 900, .45); else { track(); snow(400, .35); } } loop(); }, 5000 + Math.random() * 7000); })();
-  let ch = 0; const CARDS = ['', 'PLEASE<br>STAND BY', 'NO<br>SIGNAL'];
-  const change = () => { ch = (ch + 1) % 3; snow(350, .55); setTimeout(() => { el.className = ch ? 'ch' + ch : ''; $('tvCard').innerHTML = CARDS[ch]; if (ch === 2) cv.style.opacity = '.35'; }, 180);
+  // channels: [label, background, text color, html, extra class]. 0 is the news; the ads also cut in on their own now and then
+  const CH = [['news'],
+    ['ad', '#ea580c', '#1c1917', '<b>GNOME DEPOT</b>YOU CAN\'T DO IT.<br>WE CAN HELP.<small>*for a fee</small>'],
+    ['ad', 'linear-gradient(135deg,#a16207,#facc15)', '#1c1917', '<b>GOBLIN EXPRESS</b>400% APR!<small>no pulse check</small>'],
+    ['ad', '#1d4ed8', '#f8fafc', '<b>SLURPEES</b>1 GOLD<small>brain freeze: free</small>'],
+    ['ch', '#0c4a6e', '#e0f2fe', '<b>WEATHER</b>DUSTY<br>99% MURLOC<small>tomorrow: also dust</small>'],
+    ['ch', '#020617', '#4ade80', '<b>$KNOB</b>▲▼▲▼▲<small>nobody knows</small>'],
+    ['ch', '#7f1d1d', '#fde68a', '<b>KEVIN TV</b>24/7 KEVIN<small>he pulled again</small>'],
+    ['ad', '#14532d', '#fde68a', '<b>THE WHEEL™</b>SPIN IT.<small>you know you want to</small>'],
+    ['bars', '', '#f8fafc', 'PLEASE<br>STAND BY'], ['off', '', '#f8fafc', 'NO<br>SIGNAL']];
+  let ch = 0, adBack = 0;
+  const tune = (n) => { const c = CH[n]; snow(350, .55); setTimeout(() => { el.className = n ? 'away' + (c[0] === 'bars' ? ' bars-on' : c[0] === 'off' ? ' bars-off' : '') : '';
+      const card = $('tvCard'); card.innerHTML = c[3] ? '<div class="ct">' + c[3] + '</div>' : ''; card.style.background = c[1] || ''; card.style.color = c[2] || ''; if (c[0] === 'off') cv.style.opacity = '.35'; }, 180); };
+  (function ads() { setTimeout(() => { if (!document.hidden && ch === 0) { const n = 1 + Math.floor(Math.random() * 3) + (Math.random() < .3 ? 6 : 0); tune(n > 7 ? 7 : n); clearTimeout(adBack); adBack = setTimeout(() => { if (ch === 0) tune(0); }, 7000); } ads(); }, 25000 + Math.random() * 30000); })();
+  const change = () => { clearTimeout(adBack); ch = (ch + 1) % CH.length; tune(ch);
     if (Math.random() < .35) say(pick(['*click* The TV changes channels. They are all bad.', 'The clerk: "Leave it on the news. The news is the only one that works."', 'Somebody taped over the remote buttons. You used your finger.']), 2600); };
   el.addEventListener('click', change); el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); change(); } });
 })();
