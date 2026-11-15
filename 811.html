@@ -125,7 +125,16 @@ const pick = (a) => a[Math.floor(Math.random() * a.length)];
 const get = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } };
 const put = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
 const fmt = (n) => { n = Math.round(n); if (n < 1e15) return n.toLocaleString() + 'g'; const e = Math.floor(Math.log10(n)); return (n / Math.pow(10, e)).toFixed(2) + 'e' + e + 'g'; };
-const say = (t, ms) => { const d = $('say'); d.textContent = t; d.style.display = 'block'; clearTimeout(say.t); say.t = setTimeout(() => d.style.display = 'none', ms || 3400); };
+// text pops up next to whatever you just clicked (above it, or below it near the top of the store)
+const lastPt = { t: 0 };
+addEventListener('pointerdown', (e) => { const sc = $('scene'); if (!sc) return; const r = sc.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) return;
+  lastPt.x = (e.clientX - r.left) / r.width * 100; lastPt.y = (e.clientY - r.top) / r.height * 100; lastPt.t = Date.now(); }, true);
+function placeSay(d) {
+  if (Date.now() - lastPt.t > 6000) { d.style.left = '50%'; d.style.top = '4%'; d.style.transform = 'translateX(-50%)'; d.style.maxWidth = '80%'; return; }
+  const below = lastPt.y < 28; d.style.maxWidth = '42%';
+  d.style.left = Math.max(22, Math.min(78, lastPt.x)) + '%'; d.style.top = (below ? lastPt.y + 5 : lastPt.y - 4) + '%'; d.style.transform = below ? 'translateX(-50%)' : 'translate(-50%, -100%)';
+}
+const say = (t, ms) => { const d = $('say'); d.textContent = t; placeSay(d); d.style.display = 'block'; clearTimeout(say.t); say.t = setTimeout(() => d.style.display = 'none', ms || 3400); };
 const has811 = () => get('painWheel811Open', false) || ((get('painWheelStats', {}) || {}).byType || {}).SEVEN_ELEVEN > 0;
 const showGold = () => { if (window.renderGoldBox) renderGoldBox(); else $('goldBox').textContent = '🪙 ' + fmt(get('painWheelGold', 0)); };
 showGold(); addEventListener('storage', (e) => { if (e.key === 'painWheelGold') showGold(); });
