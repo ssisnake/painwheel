@@ -79,7 +79,19 @@
         @keyframes flick { 0% { transform: scaleY(1); } 100% { transform: scaleY(1.25) translateY(-4px); } }
         /* War Glaives */
         .glaive-fly { position: absolute; width: 110px; height: 110px; z-index: 20; pointer-events: none; }
-        .glaive-fly img { width: 100%; height: 100%; animation: glaiveSpin 0.35s linear infinite; filter: drop-shadow(0 0 10px rgba(163,230,53,0.9)); }
+.tbanner { position: relative; display: inline-block; flex: none; vertical-align: middle; }
+        .tbanner img, .cls-tile .tbanner img { width: 100% !important; height: 100% !important; max-width: none; display: block; image-rendering: auto; }
+        .tbanner b { position: absolute; display: flex; align-items: center; justify-content: center; text-align: center; white-space: nowrap; color: #2b1607; font-family: Georgia, 'Times New Roman', serif; font-weight: 900; line-height: 1; text-shadow: 0 1px 0 rgba(255,236,190,.55); }
+        .tbanner.locked { filter: grayscale(1) brightness(.55); }
+        #titleGrid { display: flex; flex-wrap: wrap; gap: 8px; } #titleGrid .cls-tile { width: auto; min-width: 106px; }
+        .title-tile { padding: 6px 8px !important; } .title-tile > span:last-child { display: none; } .title-tile .tbanner { margin: 0 auto; }
+        .title-toast { position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%); z-index: 9500; text-align: center; pointer-events: none; animation: ttIn .5s ease-out; transition: opacity .7s, transform .7s; }
+        .title-toast.out { opacity: 0; transform: translate(-50%, 30px); }
+        .title-toast .tt-cap { font-weight: 900; font-size: 22px; color: #fde68a; text-shadow: 0 2px 6px #000, 0 0 10px #000; margin-bottom: 4px; letter-spacing: .05em; }
+        .title-toast .tt-sub { font-weight: 700; font-size: 16px; color: #e2e8f0; text-shadow: 0 2px 4px #000; margin-top: 2px; }
+        .title-toast .tbanner { filter: drop-shadow(0 6px 14px rgba(0,0,0,.8)); }
+        @keyframes ttIn { from { opacity: 0; transform: translate(-50%, 40px) scale(.9); } to { opacity: 1; transform: translate(-50%, 0) scale(1); } }
+                .glaive-fly img { width: 100%; height: 100%; animation: glaiveSpin 0.35s linear infinite; filter: drop-shadow(0 0 10px rgba(163,230,53,0.9)); }
         @keyframes glaiveSpin { to { transform: rotate(360deg); } }
         .slash-mark { position: absolute; height: 3px; z-index: 19; pointer-events: none; background: linear-gradient(90deg, rgba(190,242,100,0), #d9f99d 20%, #84cc16 80%, rgba(190,242,100,0));
             box-shadow: 0 0 10px #84cc16; transform-origin: left center; }
@@ -902,7 +914,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 14, 9:14 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 14, 9:33 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -8937,7 +8949,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             row.querySelector('[data-w]').onclick = () => {
                 if (liverDown) { $('knobNews').textContent = '🏥 Reb is in the hospital. Visiting hours are over.'; return; }
                 if (Date.now() - store.get('painWheelWaterAt', 0) < 55 * 60000) { $('knobNews').textContent = '💧 You already gave Reb water this hour. He poured it in a plant.'; return; }
-                store.set('painWheelWaterAt', Date.now()); sendEvent({ k: 'liver', what: 'water' }); liver = Math.min(100, liver + 1); renderLiver();
+                store.set('painWheelWaterAt', Date.now()); store.set('painWheelWaterCount', store.get('painWheelWaterCount', 0) + 1); sendEvent({ k: 'liver', what: 'water' }); liver = Math.min(100, liver + 1); renderLiver();
                 $('knobNews').textContent = pick(['💧 Reb drank the water. He looked betrayed.', '💧 +1% liver. Reb asked if it was vodka. It was not.', "💧 Hydration delivered. Reb's liver sends its thanks."]);
             };
             row.querySelector('[data-d]').onclick = () => {
@@ -8967,6 +8979,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
     }
     function hurtLiver(n, why) {
         if (liverDown) return;
+        store.set('painWheelDrinkCount', store.get('painWheelDrinkCount', 0) + 1);
         if (guildLiver) {   // the shared liver: the Sheet does the math (and the hospital trip)
             sendEvent({ k: 'liver', what: 'drink', d: Math.round(n / 3) }); liver = Math.max(0, liver - Math.round(n / 3)); renderLiver();
             $('knobNews').textContent = `🫀 ${why}: the guild's liver -${Math.round(n / 3)}%`; return;
@@ -9060,6 +9073,47 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
     ];
     let ownedTitles = store.get('painWheelTitles', {}), titleChoice = store.get('painWheelTitle', '');
     function renderTitle() { const el = $('titleShow'); if (el) el.textContent = titleChoice ? `«${titleChoice}»` : ''; }
+    // ---------- title banners (Ada's art): titles are EARNED now, not bought. Anyone who bought one keeps it ----------
+    const TITLE_ART = {
+        'the Kevin-Touched':    { f: 'kevin',    b: [23, 30, 81, 72], how: 'Land on Kevin 3 times in a row.', ok: () => !!achieved.kevin3 },
+        'Ret Enjoyer':          { f: 'ret',      b: [28, 31, 81, 71], how: 'Max out a Buff Ret Paladin slice.', ok: () => !!achieved.retmax },
+        'Liver Donor':          { f: 'liver',    b: [28, 32, 72, 72], how: "Hurt Reb's liver 25 times.", ok: () => store.get('painWheelDrinkCount', 0) >= 25 },
+        'of the Murder Row':    { f: 'murder',   b: [25, 33, 77, 71], how: 'Take the Murder Row port.', ok: () => !!achieved.murderrow },
+        'Certified Degenerate': { f: 'degen',    b: [25, 31, 78, 70], how: 'Spin the wheel 500 times.', ok: () => allTimeSpins >= 500 },
+        'the Unbuffed':         { f: 'unbuffed', b: [27, 31, 81, 72], how: 'Land on Buff Ret Paladin 25 times. Still unbuffed.', ok: () => ((stats.byType || {}).RET_PALADIN || 0) >= 25 },
+        'Goblin Tycoon':        { f: 'tycoon',   b: [31, 30, 76, 70], how: 'Upgrade your house to an Undermine Castle.', ok: () => !!achieved.castle },
+        'Patron of Reb':        { f: 'patron',   b: [27, 33, 75, 71], how: 'Give Reb water 10 times.', ok: () => store.get('painWheelWaterCount', 0) >= 10 },
+        'the Lobbyist':         { f: 'lobbyist', b: [31, 33, 84, 68], how: 'Reach the Gold lobbying tier.', ok: () => !!achieved.aipac4 },
+        'Wheel Emperor':        { f: 'emperor',  b: [25, 33, 73, 71], how: 'Spin the wheel 5,000 times.', ok: () => allTimeSpins >= 5000 }
+    };
+    function titleBanner(t, w, locked) {   // the banner with the title written on the parchment
+        const a = TITLE_ART[t]; if (!a) return `<span style="font-weight:800">${t}</span>`;
+        const h = Math.round(w * 0.27), bw = w * (a.b[2] - a.b[0]) / 100, bh = h * (a.b[3] - a.b[1]) / 100;
+        const fs = Math.max(10, Math.min(bh * 0.62, bw / (t.length * 0.52)));
+        return `<span class="tbanner${locked ? ' locked' : ''}" style="width:${w}px;height:${h}px"><img src="media/title_${a.f}.webp" alt=""><b style="left:${a.b[0]}%;top:${a.b[1]}%;width:${a.b[2] - a.b[0]}%;height:${a.b[3] - a.b[1]}%;font-size:${fs.toFixed(1)}px">${t}</b></span>`;
+    }
+    function titleToast(t) {
+        const d = document.createElement('div'); d.className = 'title-toast';
+        d.innerHTML = `<div class="tt-cap">🏷️ NEW TITLE UNLOCKED</div>${titleBanner(t, Math.min(460, innerWidth - 40))}<div class="tt-sub">Equip it in Settings → Looks</div>`;
+        document.body.appendChild(d); setTimeout(() => d.classList.add('out'), 5200); setTimeout(() => d.remove(), 6000);
+    }
+    function checkTitles(quiet) {
+        let got = [];
+        Object.entries(TITLE_ART).forEach(([t, a]) => { if (!ownedTitles[t]) { let ok = false; try { ok = a.ok(); } catch (e) {} if (ok) { ownedTitles[t] = true; got.push(t); } } });
+        if (!got.length) return;
+        store.set('painWheelTitles', ownedTitles); try { renderLooks(); } catch (e) {}
+        if (quiet) return got;
+        got.forEach((t, i) => setTimeout(() => titleToast(t), i * 6200));
+        return got;
+    }
+    setTimeout(() => {   // first visit after the change: hand out what you already earned in one go, no toast parade
+        if (!store.get('painWheelTitlesEarned', false)) {
+            store.set('painWheelTitlesEarned', true); const got = checkTitles(true) || [];
+            setTimeout(() => funEvent(got.length ? `🏷️ Titles are earned now, not bought. You already earned ${got.length}: ${got.join(', ')}.` : '🏷️ Titles are earned now, not bought. Check the Shop to see how.', 7000), 4000);
+        }
+        setInterval(() => { if (!document.hidden) checkTitles(); }, 4000);
+    }, 1500);
+
 
     // ---------- needle transmogs ----------
     const NEEDLES = {
@@ -10145,6 +10199,9 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         id: '2026-11-07-fixed', title: 'The claw, the liver and the ghost town', date: 'November 6-7, 2026',
         showAfter: Date.parse('2026-11-07T06:00:00Z'),   // re-issued Nov 7 with corrected notes, so it pops up again for everyone
         lines: [
+            ['🏷️', "Titles are earned now, not bought, and every one has its own banner. Anything you already bought is still yours. The Shop shows what each locked one wants from you."],
+            ['💬', "The 8/11, Gnome Depot and the Emporium have proper speech bubbles now, built to stretch to whatever anyone says."],
+            ['📺', "The 8/11 TV hisses when you change the channel. Like a real TV. From 1994."],
             ['👓', "Ret Vision has its own soundtrack now. You'll know it when you hear it."],
             ['🐏', "New studio in the credits on The Board. Ask Greg. Actually, don't."],
             ['📰', "Channel 8/11 News has an anchor now. He blinks, he talks, and when something big happens out there in the guild, he finds out live on air."],
@@ -10522,9 +10579,12 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
                 () => equipPack(k))));
             add(shopHead('🏷️ Titles (shown on the guild leaderboard)'));
             add(ownRow('<img src="media/nameplate.png" alt="" style="display:inline-block;height:22px;width:auto;vertical-align:middle">', 'No title', 'Humble. Suspicious.', 0, true, !titleChoice, null, () => equipTitle('')));
-            TITLES.filter(([t]) => t !== 'Degenerate Reject' || ownedTitles[t]).forEach(([t, c]) => add(ownRow('<img src="media/nameplate.png" alt="" style="display:inline-block;height:22px;width:auto;vertical-align:middle">', t, `${playerName || 'You'}, ${t}`, c, ownedTitles[t], titleChoice === t,
-                () => { if (!spend(c, t)) return; ownedTitles[t] = true; store.set('painWheelTitles', ownedTitles); unlock('drip'); equipTitle(t); },
-                () => equipTitle(t))));
+            TITLES.filter(([t]) => t !== 'Degenerate Reject' || ownedTitles[t]).forEach(([t]) => {
+                const a = TITLE_ART[t], own = !!ownedTitles[t];
+                const r = shopRow('', t, own ? `${playerName || 'You'}, ${t}` : '🔒 ' + (a ? a.how : 'A guild secret.'), titleChoice === t ? 'Equipped' : own ? 'Equip' : 'Locked', own && titleChoice !== t ? () => equipTitle(t) : null, titleChoice === t ? 'equipped' : own ? 'equip' : 'owned');
+                const ic = r.querySelector('img, span'); if (ic && a) { const holder = document.createElement('span'); holder.innerHTML = titleBanner(t, 300, !own); holder.firstChild.style.display = 'block'; ic.replaceWith(holder.firstChild); const nm = r.querySelector('.min-w-0 > b'); if (nm) nm.remove(); }
+                add(r);
+            });
             add(shopRow('📞', "Vince's 1980s Brick Phone", "A genuine 1983 car phone from Vince the stock broker. Four pounds. Twenty minutes of battery. It sits in the bottom-left corner. Click it and Vince calls with a stock tip (he's right about 60% of the time). Note: comes lightly dusted with a white powder Vince insists is \"just baby powder\" and an alarming amount of stripper glitter. Do not ask Vince about either.", garage.phone ? 'Owned ✓' : `Buy: ${fmt(priceOf(PCT.toy))}`, () => {
                 if (!spend(priceOf(PCT.toy), "Vince's brick phone")) return; garage.phone = true; store.set('painWheelGarage', garage); renderGarage(); unlock('brickphone'); renderShop(); closeShop(); vinceBusyUntil = 0; vinceCall();
             }, garage.phone ? 'owned' : 'buy'));
@@ -10871,7 +10931,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         renderPetPicker();
         const tl = $('titleGrid'); tl.innerHTML = '';
         lookTile(tl, !titleChoice, 'No title', '🚫', () => equipTitle(''));   // (titles use the nameplate as their icon)
-        TITLES.filter(([t]) => ownedTitles[t]).forEach(([t]) => lookTile(tl, titleChoice === t, t, '<img src="media/nameplate.png" alt="" style="height:26px;width:auto">', () => equipTitle(t)));
+        TITLES.filter(([t]) => ownedTitles[t]).forEach(([t]) => { lookTile(tl, titleChoice === t, t, TITLE_ART[t] ? titleBanner(t, 230) : '<img src="media/nameplate.png" alt="" style="height:26px;width:auto">', () => equipTitle(t)); if (TITLE_ART[t]) tl.lastChild.classList.add('title-tile'); });
     }
     function openLooks() { if (EMBED_SHOP) { try { parent.postMessage({ shop: 'go', href: 'wheel.html#go=looks' }, location.origin); } catch (e) {} return; } closeShop(); $('settingsBtn').click(); setTimeout(() => { const el = $('looksSection'); if (el) el.scrollIntoView({ block: 'start', behavior: 'smooth' }); }, 60); }
     $('looksShop').addEventListener('click', () => { const p = $('settingsPanel'); p.classList.add('hidden'); p.classList.remove('flex'); openShop('cosmetics'); });

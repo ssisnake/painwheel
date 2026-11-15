@@ -24,10 +24,10 @@
   #karen img { display: block; width: 100%; height: auto; image-rendering: pixelated; filter: drop-shadow(0 .3cqw .4cqw rgba(0,0,0,.45)); transform-origin: 50% 100%; animation: huff 3.2s ease-in-out infinite; }
   @keyframes huff { 50% { transform: scaleY(1.015); } }
   #karen:hover img, #karen:focus-visible img { filter: drop-shadow(0 0 .7cqw #fde68a); } #karen:focus-visible { outline: none; }
-  #say { position: absolute; left: 50%; top: 3%; transform: translateX(-50%); max-width: 82%; padding: 10px 18px; border-radius: 10px; background: rgba(20,12,6,.94); border: 2px solid #ea580c; color: #ffedd5; font: 800 19px/1.35 system-ui, sans-serif; text-align: center; display: none; z-index: 9; }
+  #say { position: absolute; left: 50%; top: 3%; transform: translateX(-50%); max-width: 82%; border-style: solid; border-width: 30px 28px 30px 28px; border-image: url(media/bub_gnome_frame.png) 59 56 59 56 fill / 30px 28px 30px 28px round; background: none; border-radius: 0; padding: 0 8px; color: #2b1607; filter: drop-shadow(2px 3px 0 rgba(0,0,0,.4)); font: 800 19px/1.35 system-ui, sans-serif; text-align: center; display: none; z-index: 9; }
   #say b { color: #fb923c; }
-  .bub { position: absolute; z-index: 8; translate: -50% -100%; max-width: 26%; min-width: 11%; padding: .55cqw .8cqw; border-radius: .8cqw; background: #fffbeb; color: #1c1917; border: .2cqw solid #1c1917; font: 800 1.15cqw/1.3 system-ui, sans-serif; text-align: center; box-shadow: .2cqw .3cqw 0 rgba(0,0,0,.4); pointer-events: none; }
-  .bub::after { content: ''; position: absolute; left: 50%; bottom: -.9cqw; margin-left: -.6cqw; border: .6cqw solid transparent; border-top: .7cqw solid #1c1917; }
+  .bub { position: absolute; z-index: 8; translate: -50% -100%; width: max-content; max-width: 26%; min-width: 12%; padding: 0 .3cqw; border-style: solid; border-width: 1.53cqw 1.46cqw 1.53cqw 1.46cqw; border-image: url(media/bub_gnome_frame.png) 59 56 59 56 fill / 1.53cqw 1.46cqw 1.53cqw 1.46cqw round; background: none; border-radius: 0; color: #2b1607; font: 800 1.15cqw/1.3 system-ui, sans-serif; text-align: center; filter: drop-shadow(.15cqw .25cqw 0 rgba(0,0,0,.35)); pointer-events: none; }
+  .bub::after { content: ''; position: absolute; left: 50%; bottom: calc(-1.53cqw - 1.82cqw + 0.84cqw); width: 1.98cqw; height: 1.82cqw; margin-left: -0.99cqw; border: 0; background: url(media/bub_gnome_tail.png) center / 100% 100% no-repeat; }
 
   /* the claw machine parts counter */
   #parts { position: fixed; inset: 0; z-index: 70; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.62); padding: 16px; }

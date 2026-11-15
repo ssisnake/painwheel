@@ -35,8 +35,9 @@
   @keyframes breathe { 50% { transform: translateY(.25cqw) scaleY(.995); } }
   #axa.right { left: 60.5%; } #axa.right img { scale: -1 1; }
   #axa:hover img, #axa:focus-visible img { filter: drop-shadow(0 0 .8cqw #fde68a); } #axa:focus-visible { outline: none; }
-  #say { position: absolute; left: 50%; top: 20%; transform: translateX(-50%); max-width: 70%; padding: 10px 18px; border-radius: 10px; background: rgba(28,20,10,.94); border: 2px solid #f59e0b; color: #fef3c7; font: 800 clamp(16px, 1.5vw, 26px)/1.35 system-ui, sans-serif; text-align: center; display: none; z-index: 8; box-shadow: 0 10px 30px rgba(0,0,0,.6); }
-  #say b { color: #fcd34d; }
+  #say { position: absolute; left: 50%; top: 20%; transform: translateX(-50%); max-width: 70%; border-style: solid; border-width: 26px 33px 28px 33px; border-image: url(media/bub_flea_frame.png) 52 66 56 66 fill / 26px 33px 28px 33px round; background: none; border-radius: 0; padding: 0 8px; color: #2b1607; filter: drop-shadow(2px 3px 0 rgba(0,0,0,.4)); font: 800 clamp(16px, 1.5vw, 26px)/1.35 system-ui, sans-serif; text-align: center; display: none; z-index: 8; box-shadow: 0 10px 30px rgba(0,0,0,.6); }
+  #say b { color: #7c2d12; }
+  #say::after { content: ''; position: absolute; left: var(--tail, 50%); bottom: -46px; width: 40px; height: 41px; margin-left: -20px; background: url(media/bub_flea_tail.png) center / 100% 100% no-repeat; }
   .bar { display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: center; align-items: center; padding: 8px 12px 16px; font-size: 18px; color: #d6d3d1; text-align: center; }
   .bar b { color: #fcd34d; }
   #closed { position: absolute; inset: 0; z-index: 20; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 20px; text-align: center; background: rgba(12,9,5,.9); border-radius: 10px; }
@@ -179,7 +180,7 @@ const fmt = (n) => { n = Math.round(n); if (n < 1e15) return n.toLocaleString() 
 const short = (n) => { n = Math.round(n); if (n < 1e4) return n.toLocaleString() + 'g'; const u = [[1e12, 'T'], [1e9, 'B'], [1e6, 'M'], [1e3, 'K']]; if (n >= 1e15) { const e = Math.floor(Math.log10(n)); return (n / Math.pow(10, e)).toFixed(1) + 'e' + e + 'g'; } for (const [v, s] of u) if (n >= v) return (n / v).toFixed(n / v < 10 ? 1 : 0) + s; return n + 'g'; };
 // Axazon's poses: arms crossed (waiting), waving (talking), holding up the goods (a sale)
 const POSE = (k, ms) => { const im = document.getElementById('axaImg'); if (!im) return; im.src = 'media/axa_' + k + '.png'; clearTimeout(POSE.t); if (k !== 'crossed') POSE.t = setTimeout(() => im.src = 'media/axa_crossed.png', ms || 3000); };
-const say = (t, ms, pose) => { const d = $('say'); d.innerHTML = '<b>Axazon:</b> ' + t; d.style.display = 'block'; clearTimeout(say.t); say.t = setTimeout(() => d.style.display = 'none', ms || 4200); POSE(pose || 'wave', Math.min(ms || 4200, 3200)); };
+const say = (t, ms, pose) => { const d = $('say'); d.innerHTML = '<b>Axazon:</b> ' + t; d.style.display = 'block'; try { const ar = $('axa').getBoundingClientRect(), dr = d.getBoundingClientRect(); d.style.setProperty('--tail', Math.max(12, Math.min(88, (ar.left + ar.width / 2 - dr.left) / dr.width * 100)) + '%'); } catch (e) {} clearTimeout(say.t); say.t = setTimeout(() => d.style.display = 'none', ms || 4200); POSE(pose || 'wave', Math.min(ms || 4200, 3200)); };
 [new Image(), new Image()].forEach((im, i) => im.src = 'media/axa_' + ['wave', 'shield'][i] + '.png');   // preload the other poses
 const gold = () => { const g = get('painWheelGold', 0); return typeof g === 'number' && isFinite(g) ? g : 0; };
 const showGold = () => { if (window.renderGoldBox) renderGoldBox(); else $('goldBox').textContent = '🪙 ' + fmt(gold()); };

@@ -16,8 +16,8 @@
   .scene { position: relative; container-type: inline-size; width: min(2560px, 100%, calc((100vh - 178px) * 16 / 9)); aspect-ratio: 16 / 9; background: url(media/store811_bg.jpg?v=3) 0 0 / 100% 100% no-repeat; border-radius: 10px; box-shadow: 0 0 0 3px #f97316, 0 20px 60px rgba(0,0,0,.7); overflow: hidden; }
   @media (max-width: 700px) { .scene { min-width: 640px; } .scroller { place-items: start; } }
   .prop { position: absolute; display: block; padding: 0; border: 0; background: none; cursor: pointer; transition: transform .15s, filter .15s; }
-  .bub { position: absolute; z-index: 8; translate: -50% -100%; max-width: 24%; min-width: 11%; padding: .55cqw .8cqw; border-radius: .8cqw; background: #fffbeb; color: #1c1917; border: .2cqw solid #1c1917; font: 800 1.15cqw/1.3 system-ui, sans-serif; text-align: center; box-shadow: .2cqw .3cqw 0 rgba(0,0,0,.4); pointer-events: none; }
-  .bub::after { content: ''; position: absolute; left: 50%; bottom: -.9cqw; margin-left: -.6cqw; border: .6cqw solid transparent; border-top: .7cqw solid #1c1917; }
+  .bub { position: absolute; z-index: 8; translate: -50% -100%; width: max-content; max-width: 24%; min-width: 12%; padding: 0 .3cqw; border-style: solid; border-width: 1.53cqw 1.35cqw 1.53cqw 1.35cqw; border-image: url(media/bub_811_frame.png) 59 52 59 52 fill / 1.53cqw 1.35cqw 1.53cqw 1.35cqw round; background: none; border-radius: 0; color: #2b1607; font: 800 1.15cqw/1.3 system-ui, sans-serif; text-align: center; filter: drop-shadow(.15cqw .25cqw 0 rgba(0,0,0,.35)); pointer-events: none; }
+  .bub::after { content: ''; position: absolute; left: 50%; bottom: calc(-1.53cqw - 2.0cqw + 0.84cqw); width: 2.11cqw; height: 2.0cqw; margin-left: -1.05cqw; border: 0; background: url(media/bub_811_tail.png) center / 100% 100% no-repeat; }
   .prop img { display: block; width: 100%; height: auto; image-rendering: pixelated; pointer-events: none; }
   .prop:hover, .prop:focus-visible { transform: scale(1.07); filter: drop-shadow(0 0 10px #fde68a); outline: none; z-index: 4; }
   .deco { position: absolute; pointer-events: none; image-rendering: pixelated; }
@@ -81,7 +81,7 @@
   @keyframes hatchIn { from { transform: scaleY(0); transform-origin: top; } to { transform: none; } }
   #customer { position: absolute; bottom: 4%; z-index: 3; animation: idle 2.6s ease-in-out infinite; }
   @keyframes idle { 50% { translate: 0 -3%; } }
-  #say { position: absolute; left: 50%; top: 4%; transform: translateX(-50%); max-width: 80%; padding: 10px 18px; border-radius: 10px; background: rgba(12,10,9,.92); border: 2px solid #f97316; color: #fef3c7; font: 800 19px/1.35 system-ui, sans-serif; text-align: center; display: none; z-index: 9; }
+  #say { position: absolute; left: 50%; top: 4%; transform: translateX(-50%); max-width: 80%; border-style: solid; border-width: 30px 26px 30px 26px; border-image: url(media/bub_811_frame.png) 59 52 59 52 fill / 30px 26px 30px 26px round; background: none; border-radius: 0; padding: 0 8px; color: #2b1607; filter: drop-shadow(2px 3px 0 rgba(0,0,0,.4)); font: 800 19px/1.35 system-ui, sans-serif; text-align: center; display: none; z-index: 9; }
   .bar { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center; padding: 10px 12px 18px; font-size: 18px; color: #d6d3d1; }
   .bar { gap: 12px 18px; }
   .barlbl { font-size: 18px; color: #d6d3d1; display: inline-flex; align-items: center; gap: 10px; } .mach { height: 56px; image-rendering: pixelated; filter: drop-shadow(0 3px 0 rgba(0,0,0,.5)); } .barlbl b { color: #fb923c; }
@@ -149,11 +149,12 @@ showGold(); addEventListener('storage', (e) => { if (e.key === 'painWheelGold') 
 // sound: the wheel's own clips, at the wheel's volume (browsers wait for your first click)
 let AC = null; const BUF = {};
 const vol = () => { const v = parseFloat(localStorage.getItem('painWheelVolume')); return isNaN(v) ? 0.6 : Math.max(0, Math.min(1, v)); };
-const sfx = (name) => {
+const sfx = (name, o) => {   // o: { gain, dur (seconds), rand (start somewhere random in the clip) }
   try {
     if (!vol()) return;
     AC = AC || new (window.AudioContext || window.webkitAudioContext)();
-    const go = (b) => { const s = AC.createBufferSource(), g = AC.createGain(); s.buffer = b; g.gain.value = 0.8 * vol(); s.connect(g); g.connect(AC.destination); s.start(); };
+    const go = (b) => { const s = AC.createBufferSource(), g = AC.createGain(); s.buffer = b; g.gain.value = (o && o.gain != null ? o.gain : 0.8) * vol(); s.connect(g); g.connect(AC.destination);
+      if (o && o.dur) { const off = o.rand ? Math.random() * Math.max(0, b.duration - o.dur) : 0; s.start(0, off, o.dur); g.gain.setValueAtTime(g.gain.value, AC.currentTime + o.dur - .05); g.gain.linearRampToValueAtTime(0, AC.currentTime + o.dur); } else s.start(); };
     if (BUF[name]) return go(BUF[name]);
     fetch('media/' + name + '.mp3').then(r => r.arrayBuffer()).then(ab => AC.decodeAudioData(ab)).then(b => { BUF[name] = b; go(b); }).catch(() => {});
   } catch (e) {}
@@ -271,6 +272,7 @@ add('<img class="deco" src="media/photo_811_pricetag.png" alt="" style="left:35.
     const seen = get('painWheelBreakingSeen', 0), fresh = brk.filter(x => x.t > seen);
     const item = fresh.length ? fresh[fresh.length - 1].text : pick(brk.length ? brk.map(x => x.text) : BREAK_FALLBACK);
     if (fresh.length) put('painWheelBreakingSeen', fresh[fresh.length - 1].t);
+    snow(450, .6); hiss(.5, .55);
     shocked = true; F('shock'); el.classList.add('breaking'); $('tvTick').textContent = ('BREAKING: ' + item + '  •  ').repeat(3);
     setTimeout(() => { shocked = false; F('calm'); el.classList.remove('breaking'); $('tvTick').textContent = baseTick(); }, 9000);
   }
@@ -280,8 +282,9 @@ add('<img class="deco" src="media/photo_811_pricetag.png" alt="" style="left:35.
   const cv = el.querySelector('canvas'), cx = cv.getContext('2d');
   const snow = (ms, op) => { cv.style.opacity = op; const t0 = performance.now(); (function fr() { const im = cx.createImageData(cv.width, cv.height); for (let i = 0; i < im.data.length; i += 4) { const v = Math.random() * 200 | 0; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; } cx.putImageData(im, 0, 0);
     if (performance.now() - t0 < ms) setTimeout(() => requestAnimationFrame(fr), 70); else cv.style.opacity = '0'; })(); };
+  const hiss = (dur, gain) => { if (AC && !document.hidden) sfx('s811_static' + (Math.random() < .5 ? 2 : 3), { dur, gain, rand: true }); };   // only once the page has made a sound (your first click)
   const tr = el.querySelector('.track'); const track = () => { tr.classList.remove('go'); void tr.offsetWidth; tr.classList.add('go'); };
-  (function loop() { setTimeout(() => { if (!document.hidden) { const r = Math.random(); if (r < .55) track(); else if (r < .85) snow(700 + Math.random() * 900, .45); else { track(); snow(400, .35); } } loop(); }, 5000 + Math.random() * 7000); })();
+  (function loop() { setTimeout(() => { if (!document.hidden) { const r = Math.random(); if (r < .55) track(); else if (r < .85) { const d = 700 + Math.random() * 900; snow(d, .45); hiss(d / 1000, .22); } else { track(); snow(400, .35); hiss(.4, .2); } } loop(); }, 5000 + Math.random() * 7000); })();
   // channels: [label, background, text color, html, extra class]. 0 is the news; the ads also cut in on their own now and then
   const CH = [['news'],
     ['ad', '#ea580c', '#1c1917', '<b>GNOME DEPOT</b>YOU CAN\'T DO IT.<br>WE CAN HELP.<small>*for a fee</small>'],
@@ -293,7 +296,7 @@ add('<img class="deco" src="media/photo_811_pricetag.png" alt="" style="left:35.
     ['ad', '#14532d', '#fde68a', '<b>THE WHEEL™</b>SPIN IT.<small>you know you want to</small>'],
     ['bars', '', '#f8fafc', 'PLEASE<br>STAND BY'], ['off', '', '#f8fafc', 'NO<br>SIGNAL']];
   let ch = 0, adBack = 0;
-  const tune = (n) => { const c = CH[n]; snow(350, .55); setTimeout(() => { el.className = n ? 'away' + (c[0] === 'bars' ? ' bars-on' : c[0] === 'off' ? ' bars-off' : '') : '';
+  const tune = (n) => { const c = CH[n]; snow(350, .55); hiss(.4, .5); setTimeout(() => { el.className = n ? 'away' + (c[0] === 'bars' ? ' bars-on' : c[0] === 'off' ? ' bars-off' : '') : '';
       const card = $('tvCard'); card.innerHTML = c[3] ? '<div class="ct">' + c[3] + '</div>' : ''; card.style.background = c[1] || ''; card.style.color = c[2] || ''; if (c[0] === 'off') cv.style.opacity = '.35'; }, 180); };
   (function ads() { setTimeout(() => { if (!document.hidden && ch === 0) { const n = 1 + Math.floor(Math.random() * 3) + (Math.random() < .3 ? 6 : 0); tune(n > 7 ? 7 : n); clearTimeout(adBack); adBack = setTimeout(() => { if (ch === 0) tune(0); }, 7000); } ads(); }, 25000 + Math.random() * 30000); })();
   const change = () => { clearTimeout(adBack); ch = (ch + 1) % CH.length; tune(ch);
