@@ -50,6 +50,24 @@
   #notice .row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
   #notice button { font: 800 19px system-ui, sans-serif; padding: 10px 20px; border-radius: 10px; border: 0; cursor: pointer; background: #f97316; color: #1c1917; } #notice button.alt { background: #44403c; color: #fde68a; }
   /* the dying fluorescent tube (right ceiling light): Ada's 4 frames laid exactly over that part of the background */
+  #tv { position: absolute; left: 14.84%; top: 8.13%; width: 5.63%; height: 11.32%; z-index: 2; overflow: hidden; cursor: pointer; clip-path: polygon(15.6% 0, 100% 22.4%, 90.3% 100%, 0 87.7%); background: #050a14; }
+  #tv .in { position: absolute; inset: -30%; transform: rotate(15deg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .3cqw; padding-bottom: 1.4cqw; color: #e2e8f0; font: 900 .62cqw/1.1 system-ui, sans-serif; text-align: center; animation: tvwob 9s infinite; }
+  #tv .logo { padding: .1cqw .35cqw; background: #b91c1c; color: #fff; letter-spacing: .03em; } #tv .logo b { color: #fde047; }
+  #tv .hl { font-size: .5cqw; color: #93c5fd; max-width: 4.6cqw; }
+  #tv .tick { position: absolute; left: 26%; right: 26%; bottom: 34%; height: .95cqw; background: #fde047; color: #111827; overflow: hidden; white-space: nowrap; font: 900 .55cqw/.95cqw system-ui, sans-serif; }
+  #tv .tick span { display: inline-block; padding-left: 100%; animation: tick 28s linear infinite; }
+  @keyframes tick { to { transform: translateX(-100%); } }
+  #tv .scan { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0,0,0,.28) 0 1px, transparent 1px 3px); pointer-events: none; }
+  #tv .glow { position: absolute; inset: 0; background: radial-gradient(ellipse at 45% 45%, rgba(147,197,253,.10), rgba(0,0,0,.45) 85%); pointer-events: none; }
+  #tv .track { position: absolute; left: -10%; right: -10%; height: 22%; top: 110%; background: linear-gradient(transparent, rgba(255,255,255,.18) 40%, rgba(255,255,255,.28) 50%, rgba(255,255,255,.12) 60%, transparent); filter: blur(.5px); pointer-events: none; }
+  #tv .track.go { animation: track 2.6s linear; } @keyframes track { from { top: 110%; } to { top: -30%; } }
+  #tv canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .25s; pointer-events: none; image-rendering: pixelated; }
+  @keyframes tvwob { 0%, 93%, 100% { translate: 0 0; } 94% { translate: .15cqw 0; } 95% { translate: -.1cqw 0; } 96% { translate: .05cqw 0; } }
+  #tv .bars { position: absolute; inset: 0; display: none; background: linear-gradient(90deg, #9ca3af 0 14%, #ca8a04 14% 28%, #0891b2 28% 42%, #15803d 42% 57%, #a21caf 57% 71%, #b91c1c 71% 85%, #1d4ed8 85%); filter: brightness(.65) saturate(.8); }
+  #tv.ch1 .bars, #tv.ch2 .bars { display: block; } #tv.ch2 .bars { background: #0b0f17; }
+  #tv .card { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; transform: rotate(15deg); font: 900 .55cqw/1.15 system-ui, sans-serif; color: #f8fafc; text-align: center; text-shadow: 0 1px 0 #000; }
+  #tv.ch1 .card, #tv.ch2 .card { display: flex; } #tv.ch1 .in, #tv.ch2 .in { display: none; }
+  @media (prefers-reduced-motion: reduce) { #tv .tick span { animation-duration: 60s; } #tv .in { animation: none; } }
   #tube { position: absolute; left: 65%; top: 0; width: 25%; height: 15.556%; pointer-events: none; opacity: 0; }
   #hatch { position: absolute; left: 3.4%; top: 61.5%; width: 4.6%; height: 11%; display: none; padding: 0; border: 2px solid #78716c; border-radius: 4px; cursor: pointer; z-index: 6;
     background: radial-gradient(circle at 50% 55%, rgba(250,204,21,.55), #0c0a09 70%); box-shadow: inset 0 0 12px #000, 0 0 16px rgba(250,204,21,.5); font-size: clamp(14px, 2vw, 28px); animation: hatchIn .6s ease-out; }
@@ -75,6 +93,7 @@
 <header><h1>🏪 The 8/11</h1><span id="goldBox"></span><nav><a class="alt" href="./"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a><a class="alt" href="#" id="catalogBtn">🛒 The whole catalog</a><a href="wheel.html">🎡 Back to The Wheel</a></nav></header>
 <div class="wrap"><div class="scroller"><div class="scene" id="scene">
   <img id="tube" alt="">
+  <div id="tv" role="button" tabindex="0" title="Channel 8/11 News (click to change the channel)" aria-label="The TV: click to change the channel"><div class="in"><div class="logo">8/11 <b>NEWS</b></div><div class="hl" id="tvHl"></div><div class="tick"><span id="tvTick"></span></div></div><div class="bars"></div><div class="card" id="tvCard"></div><div class="glow"></div><div class="scan"></div><div class="track"></div><canvas width="48" height="40"></canvas></div>
   <button class="tap" data-f="Blue Raspberry" style="left:4%;top:33%;width:9.5%;height:26%" title="Blue Raspberry Slurpee (1 gold)" aria-label="Blue Raspberry Slurpee, 1 gold"></button>
   <button class="tap" data-f="Cherry" style="left:13.6%;top:33%;width:4.8%;height:26%" title="Cherry Slurpee (1 gold)" aria-label="Cherry Slurpee, 1 gold"></button>
   <button class="tap" data-f="Lime" style="left:18.5%;top:33%;width:4%;height:26%" title="Lime Slurpee (1 gold)" aria-label="Lime Slurpee, 1 gold"></button>
@@ -151,18 +170,17 @@ const AISLES = [   // [name, sprite or '' (painted in the background), left, top
   ['TOYS', '', 50.6, 21.6, 8.1, 8.8, 'garage', 'Toys. And cars. And a rocket. Do not ask where we keep the rocket.'],
   ['SNACKS & POTIONS', '', 60.2, 21.6, 8.2, 8.8, 'consumables', 'Snacks and potions. Same shelf. Same expiration date.'],
   ['COSMETICS', '', 70.1, 21.6, 8.1, 8.8, 'cosmetics', 'Cosmetics. Make the needle pretty. Switch them in Settings.'] ];
-const PROPS = [['s811_hotdog_roll.webp', 28, 52.3, 7, 'hotdog', 'Hot dog roller'],
-  ['photo_811_carrier1', 27.2, 78.6, 5.6, 'pets', 'Pets'], ['photo_811_carrier2', 33.6, 79, 5.2, 'pets', 'Pets']];
+const PROPS = [['s811_hotdog_roll.webp', 27.6, 56.2, 7.8, 'hotdog', 'Hot dog roller'],
+  ['photo_811_carrier1', 27.2, 75.4, 5.6, 'pets', 'Pets'], ['photo_811_carrier2', 33.6, 75.8, 5.2, 'pets', 'Pets']];
 const JOKES = {
   hotdog: ['That hot dog has been rolling since 2019. It is not for sale. It is load-bearing.', 'The hot dogs are free. Nobody has ever taken one. Ever.', "Kevin ate one in 2021. He doesn't talk about it."],
   atm: ['It works now. Nobody is more surprised than the clerk.', 'The ATM used to say OUT OF ORDER. Someone moved the scratch-off rack and found the plug.', 'No fees. The ATM tried to charge one and the clerk unplugged it again for a minute.'],
   open: ['Open 7 hours a day, 11 days a week. Do the math. We did not.', 'Closed on days that end in Y.'],
   scratch: ['Scratch-offs. Odds of winning: yes. Odds of winning anything good: also yes, technically.', 'The LOTTO sign lights up. Then it remembers who you are and turns off.', 'Every ticket says WINNER. In very small print: "of nothing".', "Kevin bought 400 of these. He won a ticket. He bought 400 more."],
-  tv: ['The TV is off. The clerk unplugged it to plug in the ATM.', 'You can see your reflection in the screen. You look tired.', 'Channel 8/11 News is coming soon. The anchor is still in makeup.'],
   cam: ['The camera blinks at you. It has seen things.', 'Smile. You are on Goblin Security TV.', 'The red light is on. Nobody is watching. Probably.'] };
 const props = $('props');
 const add = (html) => { props.insertAdjacentHTML('beforeend', html); return props.lastElementChild; };
-const CLERK_NUDGE = { right: 3.8, bottom: 33.2 };   // % from the right / bottom: lower = further right / further down
+const CLERK_NUDGE = { right: 3.3, bottom: 30.6 };   // % from the right / bottom: lower = further right / further down
 const clerk = add(`<img class="deco" src="media/photo_811_clerk.png" alt="" style="right:${CLERK_NUDGE.right}%;bottom:${CLERK_NUDGE.bottom}%;width:10.4%;z-index:1">`);
 function point(ms) { clerk.src = 'media/photo_811_clerk_point.png'; clerk.style.width = '11.4%'; clearTimeout(point.t); point.t = setTimeout(() => { clerk.src = 'media/photo_811_clerk.png'; clerk.style.width = '10.4%'; }, ms || 1400); }
 // the shop opens right here in the store: the wheel page loads in a frame showing only the shop, and goes away when you close it
@@ -195,12 +213,12 @@ AISLES.forEach(([name, img, l, t, w, h, tab, line]) => {
 add('<img class="deco" src="media/photo_811_sale.png" alt="" style="left:46.4%;top:19.4%;width:3.4%;transform:rotate(14deg);z-index:2;pointer-events:none">');
 PROPS.forEach(([img, l, t, w, act, name]) => {
   const b = add(`<button type="button" class="prop" title="${name}" aria-label="${name}" style="left:${l}%;top:${t}%;width:${w}%"><img src="media/${/\./.test(img) ? img : img + '.png'}" alt=""></button>`);
-  if (act === 'scratch') b.style.zIndex = 2;
+  if (act === 'hotdog') { b.style.height = '13%'; const im = b.querySelector('img'); im.style.height = '100%'; im.style.objectFit = 'fill'; }   // a little shorter and wider (Axa)
   b.onclick = () => JOKES[act] ? say(pick(JOKES[act]), 3400) : goShop(act);
 });
-add('<img class="deco" src="media/photo_811_pricetag.png" alt="" style="left:37.3%;top:65.8%;width:2.8%;transform:rotate(-8deg);z-index:1">');
+add('<img class="deco" src="media/photo_811_pricetag.png" alt="" style="left:35.6%;top:67.4%;width:2.8%;transform:rotate(-8deg);z-index:2">');
 [['atm', 'The ATM', 33.5, 45.5, 6.9, 19.5, ''], ['open', 'The sign', 80, 32.5, 5.8, 14, ''], ['door', 'Leave', 21.3, 22.5, 4.8, 40, ''], ['cam', '', 82.8, 12.8, 6, 8, ' secret'],
- ['scratch', 'Scratch-offs', 54.6, 38.5, 10.6, 33, ''], ['tv', 'The TV', 12.4, 6.6, 9, 14.5, '']].forEach(([k, name, l, t, w, h, cls]) => {
+ ['scratch', 'Scratch-offs', 54.6, 38.5, 10.6, 33, '']].forEach(([k, name, l, t, w, h, cls]) => {
   const b = add(`<button type="button" class="hs${cls}" ${name ? `title="${name}" aria-label="${name}"` : 'tabindex="-1" aria-hidden="true"'} style="left:${l}%;top:${t}%;width:${w}%;height:${h}%"></button>`);
   b.onclick = () => {
     if (k === 'door') { location.href = 'wheel.html'; return; }
@@ -209,6 +227,28 @@ add('<img class="deco" src="media/photo_811_pricetag.png" alt="" style="left:37.
     say(pick(JOKES[k]), 3400);
   };
 });
+
+// ---- Channel 8/11 News: headlines, a ticker with your own numbers, rolling tracking lines and a little static now and then (soft, never flashing) ----
+(function tv() {
+  const el = $('tv'); if (!el) return;
+  const st = get('painWheelStats', {}) || {}, by = st.byType || {}, gold = Number(get('painWheelGold', 0)) || 0, vault = Number(get('painWheelVault', 0)) || 0;
+  const HL = ['KEVIN PULLS BOSS EARLY, AGAIN', 'LOCAL CLERK STILL HAS NOT FIXED LIGHT', 'GNOME OPENS STORE, IMMEDIATELY REGRETS IT', 'SKELETON STILL WAITING ON CLAW', 'HOT DOG ENTERS 7TH YEAR ON ROLLER',
+    'SCIENTISTS CONFIRM: THE WHEEL IS RIGGED (IN A FUN WAY)', 'AREA SWORDFISH WILL NOT STOP SINGING', 'YACHT SPOTTED IN DESERT, NOBODY ASKS QUESTIONS'];
+  const TICK = [`LOCAL GOBLIN HAS ${fmt(gold).toUpperCase()} ON HAND, REFUSES TO TIP`, vault ? `${fmt(vault).toUpperCase()} SPOTTED IN AN OFFSHORE VAULT. THE IRS IS "LOOKING INTO IT"` : 'VAULT REPORTED EMPTY. JUST ECHOES.',
+    `${(st.spins || 0).toLocaleString()} SPINS AND COUNTING`, by.KEVIN ? `KEVIN LANDED ${by.KEVIN.toLocaleString()} TIMES. EXPERTS: "THAT'S A LOT OF KEVIN"` : 'KEVIN COUNT: SUSPICIOUSLY LOW',
+    'KAREN SAYS NO. VISIT GNOME DEPOT, NEXT DOOR', 'SLURPEES: 1 GOLD. BRAIN FREEZE: FREE', 'WEATHER: DUSTY, WITH A CHANCE OF MURLOC', '$KNOB: UP. OR DOWN. NOBODY KNOWS', 'REB\'S LIVER: HANGING IN THERE', 'OPEN 11 DAYS A WEEK'];
+  $('tvTick').textContent = TICK.join('  •  ') + '  •  ';
+  let h = 0; const head = () => { $('tvHl').textContent = HL[h++ % HL.length]; }; h = Math.floor(Math.random() * HL.length); head(); setInterval(head, 6000);
+  const cv = el.querySelector('canvas'), cx = cv.getContext('2d');
+  const snow = (ms, op) => { cv.style.opacity = op; const t0 = performance.now(); (function fr() { const im = cx.createImageData(cv.width, cv.height); for (let i = 0; i < im.data.length; i += 4) { const v = Math.random() * 200 | 0; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; } cx.putImageData(im, 0, 0);
+    if (performance.now() - t0 < ms) setTimeout(() => requestAnimationFrame(fr), 70); else cv.style.opacity = '0'; })(); };
+  const tr = el.querySelector('.track'); const track = () => { tr.classList.remove('go'); void tr.offsetWidth; tr.classList.add('go'); };
+  (function loop() { setTimeout(() => { if (!document.hidden) { const r = Math.random(); if (r < .55) track(); else if (r < .85) snow(700 + Math.random() * 900, .45); else { track(); snow(400, .35); } } loop(); }, 5000 + Math.random() * 7000); })();
+  let ch = 0; const CARDS = ['', 'PLEASE<br>STAND BY', 'NO<br>SIGNAL'];
+  const change = () => { ch = (ch + 1) % 3; snow(350, .55); setTimeout(() => { el.className = ch ? 'ch' + ch : ''; $('tvCard').innerHTML = CARDS[ch]; if (ch === 2) cv.style.opacity = '.35'; }, 180);
+    if (Math.random() < .35) say(pick(['*click* The TV changes channels. They are all bad.', 'The clerk: "Leave it on the news. The news is the only one that works."', 'Somebody taped over the remote buttons. You used your finger.']), 2600); };
+  el.addEventListener('click', change); el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); change(); } });
+})();
 
 // ---- a random regular wanders in every visit ----
 const REGULARS = [
@@ -347,6 +387,6 @@ $('atmAmt').onkeydown = (e) => { if (e.key === 'Enter') $('atmDep').click(); };
   addEventListener('pointerdown', () => { if (!cur) next(); }, { once: true });
   document.addEventListener('visibilitychange', apply); addEventListener('wfchange', apply);
 })();
-</script><script>window.AXA_CAMEO = { id: '811', host: '#scene', x: 96.4, y: 74, w: 2.6, z: 2, flip: true, filter: 'brightness(.85) saturate(.8)', op: .55 };   // bottom right, leaning out from behind the end of the counter</script><script src="axa_cameo.js"></script>
+</script><script>window.AXA_CAMEO = { id: '811', host: '#scene', x: 96.4, y: 82, w: 2.6, z: 2, flip: true, filter: 'brightness(.85) saturate(.8)', op: .55 };   // bottom right, leaning out from behind the end of the counter</script><script src="axa_cameo.js"></script>
 <script src="wallet.js"></script>
 </body></html>

@@ -8,6 +8,8 @@
   header { display: grid !important; grid-template-columns: 1fr auto 1fr; align-items: center; }
   header h1 { grid-column: 1; grid-row: 1; justify-self: start; } header nav { grid-column: 2; grid-row: 1; justify-content: center; } header #goldBox { grid-column: 3; grid-row: 1; justify-self: end; }
   header nav a { font-size: 16px !important; padding: 7px 12px !important; white-space: nowrap; } header nav a.here { display: none; }
+  header nav a.plate { background: none !important; padding: 0 !important; border-radius: 8px; line-height: 0; transition: transform .12s, filter .12s; } header nav a.plate img { height: 54px; width: auto; image-rendering: pixelated; display: block; }
+  header nav a.plate:hover, header nav a.plate:focus-visible { transform: translateY(-1px); filter: brightness(1.15); outline: none; }
   @media (max-width: 1000px) { header { grid-template-columns: 1fr auto; } header nav { grid-column: 1 / -1; grid-row: 2; } header #goldBox { grid-column: 2; grid-row: 1; } }
   #goldBox { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 12px; border-radius: 10px; border: 2px solid transparent; transition: border-color .15s, background .15s; user-select: none; }
   #goldBox:hover, #goldBox:focus-visible { border-color: #facc15; background: rgba(250,204,21,.1); outline: none; }
@@ -32,7 +34,9 @@
   const nav = document.querySelector('header nav'), here = (location.pathname.split('/').pop() || 'index.html');
   if (nav) {
     [...nav.querySelectorAll('a')].forEach(a => { const h = a.getAttribute('href') || ''; if (PLACES.some(p => p[3].test(h))) a.remove(); });   // drop the old place links, keep page-specific buttons (like the catalog)
-    PLACES.forEach(([href, label, ok, re]) => { if (!ok() || re.test(here)) return; const a = document.createElement('a'); a.href = href; a.innerHTML = label; a.className = href === 'wheel.html' ? '' : 'alt'; nav.appendChild(a); });
+    const PLATE = { './': 'board', 'yacht.html': 'yacht', 'shack.html': 'shack', '811.html': '811', 'gnome.html': 'gnome', 'emporium.html': 'emporium', 'wheel.html': 'wheel' };
+    PLACES.forEach(([href, label, ok, re]) => { if (!ok() || re.test(here)) return; const a = document.createElement('a'); a.href = href; a.className = 'plate'; a.title = label.replace(/<[^>]*>/g, '').trim(); a.innerHTML = `<img src="media/plate_${PLATE[href]}.png" alt="${a.title}">`; nav.appendChild(a); });
+    const cat = document.getElementById('catalogBtn'); if (cat) { cat.className = 'plate'; cat.title = 'The whole catalog'; cat.innerHTML = '<img src="media/plate_catalog.png" alt="The whole catalog">'; nav.insertBefore(cat, nav.firstChild); }
   }
   const box = document.getElementById('goldBox'); if (!box) return;
   box.setAttribute('role', 'button'); box.tabIndex = 0; box.title = 'Your money';

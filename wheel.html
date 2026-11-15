@@ -466,6 +466,12 @@
         .nameplate.name-glow #playerShow { color: #7c2d12; text-shadow: 0 0 8px #fde047, 0 0 16px #f59e0b; animation: nameGlow 2.4s ease-in-out infinite; }
         @keyframes nameGlow { 50% { text-shadow: 0 0 14px #fde047, 0 0 26px #f59e0b; } }
         .nameplate:hover { filter: brightness(1.08) drop-shadow(0 0 6px rgba(251,191,36,.6)); }
+        .shop-pol { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 250px; text-decoration: none; color: #e2e8f0; transform: rotate(var(--r)); transition: transform .15s, filter .15s; }
+        .shop-pol:hover, .shop-pol:focus-visible { transform: rotate(0deg) scale(1.06); filter: drop-shadow(0 0 14px rgba(250,204,21,.6)); outline: none; }
+        .shop-pol > img { width: 100%; height: auto; filter: drop-shadow(0 8px 14px rgba(0,0,0,.6)); }
+        .shop-pol div { text-align: center; } .shop-pol div b { display: block; font: 900 calc(19px * var(--ts, 1)) system-ui, sans-serif; color: #fde68a; } .shop-pol div small { font-size: calc(15px * var(--ts, 1)); color: #cbd5e1; }
+        .fakepol { display: block; width: 100%; padding: 12px 12px 6px; background: #efe6d2; box-shadow: 0 8px 14px rgba(0,0,0,.6); }
+        .fakepol span { display: block; aspect-ratio: 4 / 3; background: center / cover no-repeat; } .fakepol b { display: block; padding: 6px 0 2px; font: italic 800 20px 'Comic Sans MS', 'Segoe Print', cursive; color: #292524; text-align: center; }
         .plate-btn { background: none; border: 0; padding: 0; line-height: 0; border-radius: 8px; transition: transform .12s, filter .12s; }
         .plate-btn:hover { transform: translateY(-1px); filter: brightness(1.15); } .plate-btn:active { transform: translateY(1px); }
         .plate-btn:focus-visible { outline: 2px solid #facc15; outline-offset: 2px; }
@@ -896,7 +902,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 14, 7:10 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 14, 7:38 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -10058,6 +10064,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             ['🏅', "The original 8 sets are retired. The people who helped build The Wheel get them back forever with a personal code (Settings → Have a code?)."],
             ['🏆', "No One is now You're Winner ! (Big Rigs fans know.)"],
             ['🌙', "Go to Bed Evelyn plays a real lullaby now."],
+            ['🛒', "The Shop button asks which shop now: the 8/11, Gnome Depot or Axazon's Emporium (whichever you've found). Channel 8/11 News is on the TV in the corner. Click it to change the channel. It won't help."],
             ['🏪', "The 8/11 got remodeled (by which we mean repainted over the stains): painted aisle signs, a LOTTO rack, a TV in the corner, and a flyer for the hardware store next door. The music is now played through the store's finest blown-out speaker."],
             ['🍄', "Gnome Depot has a garden gnome you can adopt as a pet. He does not move. Stop checking. Also: Gnome of the Month."],
             ['🐟', "The swordfish learned a real sea shanty. All of them. Nobody asked."],
@@ -10826,7 +10833,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             }
             b.addEventListener('click', () => { shopTab = id; renderShop(); }); tabs.appendChild(b);
         });
-        $('shopBtn').addEventListener('click', () => { open811(); $('shopBtn').blur(); });   // the 8/11 IS the shop now
+        $('shopBtn').addEventListener('click', () => { $('shopBtn').blur(); pickShop(); });   // which shop? (just the 8/11 until the others open)
         lockShopBtn();
         $('shopClose').addEventListener('click', closeShop);
         $('shopClose').innerHTML = `<img src="${PHOTO_UI_CLOSE}" alt="Close" style="width:34px;height:auto;display:block">`;
@@ -11574,6 +11581,24 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
     function s811Say(t, ms) { const d = $('s811Say'); d.textContent = t; d.classList.remove('hidden'); clearTimeout(s811Say.t); s811Say.t = setTimeout(() => d.classList.add('hidden'), ms || 3200); }
     const AUDIO_LULLABY = "media/audio_lullaby.mp3?v=f58fe7fe";   // "Lofi Lullaby" by marlowemusic (Pixabay), first 26s, faded out
 const AUDIO_DOOR_CHIME = "media/audio_door_chime.mp3?v=34de5993";
+    // ---------- the Shop button asks which shop, with each one's Board polaroid ----------
+    function pickShop() {
+        if (!has811()) { open811(); return; }
+        const sb = stats.byType || {}, SHOPS = [
+            ['811.html', 'media/bpol_811.webp', 'The 8/11', 'Pets, toys, cosmetics, curses, Slurpees.', true],
+            ['gnome.html', 'media/gnome_bg.jpg', 'Gnome Depot', 'Paint (themes), houses, claw parts. Karen.', store.get('painWheelSeenGnome', false) || store.get('painWheelGnomeNotice', false)],
+            ['emporium.html', 'media/bpol_emporium.webp', "Axazon's Emporium", 'Rare loot. Steep prices. No refunds. Ever.', store.get('painWheelEmporiumOpen', false) || (sb.EMPORIUM || 0) > 0] ].filter(x => x[4]);
+        if (SHOPS.length < 2) { open811(); return; }
+        const old = $('shopPick'); if (old) old.remove();
+        const d = document.createElement('div'); d.id = 'shopPick';
+        d.style.cssText = 'position:fixed;inset:0;z-index:72;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:16px;background:rgba(2,6,23,.82)';
+        d.innerHTML = `<div style="font:900 calc(28px * var(--ts, 1))/1.2 system-ui,sans-serif;color:#fde68a;text-shadow:0 2px 0 #000">🛒 Which shop?</div>
+            <div style="display:flex;flex-wrap:wrap;gap:22px;justify-content:center;max-width:1100px">${SHOPS.map(([href, img, name, sub], i) => `<a href="${href}" class="shop-pol" style="--r:${i % 2 ? 2 : -2}deg">${/bpol_/.test(img) ? `<img src="${img}" alt="">` : `<span class="fakepol"><span style="background-image:url(${img})"></span><b>${name}</b></span>`}<div><b>${name}</b><small>${sub}</small></div></a>`).join('')}</div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center"><button type="button" id="shopPickHere" style="font:800 calc(17px * var(--ts, 1)) system-ui,sans-serif;padding:9px 18px;border-radius:10px;border:0;background:#334155;color:#e2e8f0;cursor:pointer">📋 Just open the catalog here</button><button type="button" id="shopPickX" style="font:800 calc(17px * var(--ts, 1)) system-ui,sans-serif;padding:9px 18px;border-radius:10px;border:0;background:#f59e0b;color:#1c1917;cursor:pointer">Never mind</button></div>`;
+        document.body.appendChild(d);
+        d.addEventListener('click', (e) => { if (e.target === d) d.remove(); });
+        $('shopPickX').onclick = () => d.remove(); $('shopPickHere').onclick = () => { d.remove(); openShop(); };
+    }
     function open811() {   // the 8/11 is its own page now (811.html); this old in-page store is kept only as a fallback
         if (!has811()) { moveToast('🔒 The shop is inside the 8/11, and the 8/11 is closed. Land on 8/11 on the wheel to open it.'); return; }
         location.href = '811.html'; return;
