@@ -221,11 +221,11 @@ if (Math.random() < .3) {
 }
 
 // ---------- the shop opens right here (the wheel's shop in a frame, like the 8/11) ----------
-function goShop(tab) {
+function goShop(tab, mode) {
   if ($('shopFrame')) return;
   const w = document.createElement('div'); w.id = 'shopWait'; w.textContent = 'Karen is looking for the price gun. Slowly.'; document.body.appendChild(w);
   const f = document.createElement('iframe'); f.id = 'shopFrame'; f.title = 'Gnome Depot';
-  f.src = 'wheel.html?embed=shop' + (tab ? '#go=shop_' + tab : ''); document.body.appendChild(f);
+  f.src = mode === 'house' ? 'wheel.html?embed=house' : 'wheel.html?embed=shop' + (tab ? '#go=shop_' + tab : ''); document.body.appendChild(f);
   setTimeout(() => { if ($('shopWait')) closeShopFrame(); }, 20000);
 }
 function closeShopFrame() { const f = $('shopFrame'), w = $('shopWait'); if (f) f.remove(); if (w) w.remove(); showGold(); }
@@ -283,7 +283,7 @@ const LINES = {
 document.querySelectorAll('[data-go]').forEach(b => b.onclick = () => {
   const g = b.dataset.go;
   if (g === 'paint') { say(pick(["Paint is for walls and wheels. Not for you to lick.", "Themes are in the paint. Pick one and get out."]), 2600); pose('point'); goShop('themes'); return; }
-  if (g === 'house') { say("Lumber's for houses. Your house. Go upgrade it at home. I'm not carrying it.", 3000); setTimeout(() => { location.href = 'wheel.html#go=house'; }, 1400); return; }
+  if (g === 'house') { say("Lumber's for houses. Your house. I'm not carrying it.", 3000); goShop('', 'house'); return; }
   if (g === 'claw') { openParts(); return; }
   if (g === 'door') { location.href = '811.html'; return; }
   if (g === 'bell') { sfx('audio_door_chime', .7); say(pick(['Stop ringing the bell.', 'I HEARD YOU. Everybody heard you.', "That bell is for emergencies. You're not an emergency."]), 2600); pose('point'); return; }

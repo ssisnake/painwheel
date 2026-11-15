@@ -244,6 +244,13 @@
         html.embed-shop body > *:not(#shopPanel):not(#moveToast):not(#achToast):not(.embed-ok) { display: none !important; }
         html.embed-shop #shopPanel { background: rgba(2, 6, 23, .55) !important; }
         html.embed-shop #shopBack811 { display: none !important; }
+        html.embed-house body > *:not(#housePanel):not(#moveToast):not(#achToast):not(.embed-ok) { display: none !important; }
+        html.embed-house #shopPanel { display: none !important; }
+        html.embed-house body > #housePanel#housePanel#housePanel#housePanel { display: flex !important; background: rgba(28, 12, 4, .55) !important; }
+        html.embed-house #housePanel > div { background: linear-gradient(170deg, #431407, #1c1917 50%, #292524) !important; border-color: #ea580c !important; box-shadow: 0 0 0 4px #1c1917, 0 0 0 7px #f59e0b, 0 20px 50px rgba(0,0,0,.6) !important; }
+        html.embed-house #housePanel .text-emerald-300 { color: #fdba74 !important; } html.embed-house #housePanel .text-emerald-100\/80 { color: #fed7aa !important; }
+        html.embed-house #hpUpgrade { background: #ea580c !important; } html.embed-house #hpUpgrade:hover { background: #f97316 !important; }
+        html.embed-house #hearthRow { display: none !important; }
         .scratch-cell { width: 48px; height: 48px; border-radius: 8px; border: 2px solid #b45309; display: flex; align-items: center; justify-content: center; font-size: 26px;
             background: repeating-linear-gradient(45deg,#a16207 0 6px,#ca8a04 6px 12px); }
         .scratch-cell.open { background: #0f172a; border-color: #f59e0b; animation: scratchPop .35s ease-out both; }
@@ -916,7 +923,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 14, 9:40 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 14, 9:41 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -1469,8 +1476,10 @@
 
     <script>
     // the 8/11 page loads this page inside itself with ?embed=shop: only the shop shows, nothing else runs at you
-    const EMBED_SHOP = new URLSearchParams(location.search).get('embed') === 'shop';
+    const EMBED_HOUSE = new URLSearchParams(location.search).get('embed') === 'house';   // Gnome Depot's lumber aisle: just the house panel, in Gnome Depot orange
+    const EMBED_SHOP = new URLSearchParams(location.search).get('embed') === 'shop' || EMBED_HOUSE;
     if (EMBED_SHOP) document.documentElement.classList.add('embed-shop');
+    if (EMBED_HOUSE) document.documentElement.classList.add('embed-house');
     /* ===================== MOVING TO THE NEW WHEEL (stats transfer) =====================
        Each browser keeps its stats per site, so the old link and the GitHub link don't share
        them. The old page builds a link (or a code) holding this browser's painWheel* data;
@@ -7941,7 +7950,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
     $('hpEmoji').addEventListener('click', () => { if (houseLevel >= 6) location.href = YACHT_URL; });   // click the yacht itself to board right away
     setInterval(() => { if (goblinDebt && !document.hidden) { goblinDebt = Math.ceil(goblinDebt * 1.01); store.set('painWheelDebt', goblinDebt); renderGold(); } }, 10 * 60 * 1000);
     function openHousePanel() { renderHousePanel(); $('hpMsg').textContent = ''; const p = $('housePanel'); p.classList.remove('hidden'); p.classList.add('flex'); }
-    $('houseClose').addEventListener('click', () => { const p = $('housePanel'); p.classList.add('hidden'); p.classList.remove('flex'); });
+    $('houseClose').addEventListener('click', () => { if (EMBED_HOUSE) { try { parent.postMessage({ shop: 'close' }, location.origin); } catch (e) {} return; } const p = $('housePanel'); p.classList.add('hidden'); p.classList.remove('flex'); });
     function showHouse() { const h = $('timeshareHouse'); h.classList.remove('hidden'); h.classList.add('flex'); renderHouseIcon(); }
     function houseSay(t) { const b = $('timeshareBubble'); b.textContent = t; b.classList.remove('hidden'); clearTimeout(houseSay.t); houseSay.t = setTimeout(() => b.classList.add('hidden'), 3500); }
     function buyTimeshare() {
@@ -11069,7 +11078,8 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         store.set('painWheelPendingLoot', []); q.forEach((l, i) => setTimeout(() => giveLoot(l[0], l[1], l[2]), 300 + i * 900));
     }
     if (!EMBED_SHOP) { setTimeout(lootPending, 2000); setTimeout(awardPending, 2500); }
-    if (EMBED_SHOP) setTimeout(() => openShop(BOARD_GO && BOARD_GO.startsWith('shop_') ? BOARD_GO.slice(5) : null), 30);
+    if (EMBED_HOUSE) setTimeout(() => { const g = store.get('painWheelGold', gold); if (typeof g === 'number' && isFinite(g)) gold = g; openHousePanel(); try { parent.postMessage({ shop: 'ready' }, location.origin); } catch (e) {} }, 30);
+    else if (EMBED_SHOP) setTimeout(() => openShop(BOARD_GO && BOARD_GO.startsWith('shop_') ? BOARD_GO.slice(5) : null), 30);
     else if (BOARD_GO) setTimeout(() => {
         const w = $('welcome'); if (w && !w.classList.contains('hidden') && store.get('painWheelPlayer', '')) { w.classList.add('hidden'); w.classList.remove('flex'); }
         if (BOARD_GO === '811') open811(); else if (BOARD_GO === 'claw') location.href = 'shack.html#claw'; else if (BOARD_GO === 'shop') openShop();
