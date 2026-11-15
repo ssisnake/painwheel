@@ -102,7 +102,7 @@ const sfx = (name, g) => { try { if (!vol()) return; AC = AC || new (window.Audi
 addEventListener('pointerdown', () => { if (AC && AC.state === 'suspended') AC.resume(); }, { once: true });
 
 // ---------- Karen Sprocketknockers: behind the register, arms crossed, already annoyed ----------
-const KAREN_NUDGE = { left: 93.6, bottom: 23.4, width: 11.6 };   // % of the store: tweak to move her (bottom = up from the floor of the picture)
+const KAREN_NUDGE = { left: 93.6, bottom: 24.9, width: 11.6 };   // % of the store: tweak to move her (bottom = up from the floor of the picture)
 const k = $('karen'); Object.assign(k.style, { left: KAREN_NUDGE.left + '%', bottom: KAREN_NUDGE.bottom + '%', width: KAREN_NUDGE.width + '%', translate: '-50% 0' });
 function pose(p, ms) { $('karenImg').src = 'media/gnome_karen_' + p + '.png'; clearTimeout(pose.t); if (p !== 'crossed') pose.t = setTimeout(() => { $('karenImg').src = 'media/gnome_karen_crossed.png'; }, ms || 2600); }
 const HELLO_FIRST = ["Oh. A customer. Wonderful. I was having a nice day.", "Welcome to Gnome Depot, where the gnomes are short and so is my patience."];
