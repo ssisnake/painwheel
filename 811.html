@@ -108,7 +108,7 @@ const put = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catc
 const fmt = (n) => { n = Math.round(n); if (n < 1e15) return n.toLocaleString() + 'g'; const e = Math.floor(Math.log10(n)); return (n / Math.pow(10, e)).toFixed(2) + 'e' + e + 'g'; };
 const say = (t, ms) => { const d = $('say'); d.textContent = t; d.style.display = 'block'; clearTimeout(say.t); say.t = setTimeout(() => d.style.display = 'none', ms || 3400); };
 const has811 = () => get('painWheel811Open', false) || ((get('painWheelStats', {}) || {}).byType || {}).SEVEN_ELEVEN > 0;
-const showGold = () => { $('goldBox').textContent = '🪙 ' + fmt(get('painWheelGold', 0)); };
+const showGold = () => { if (window.renderGoldBox) renderGoldBox(); else $('goldBox').textContent = '🪙 ' + fmt(get('painWheelGold', 0)); };
 showGold(); addEventListener('storage', (e) => { if (e.key === 'painWheelGold') showGold(); });
 
 // sound: the wheel's own clips, at the wheel's volume (browsers wait for your first click)
@@ -348,4 +348,5 @@ $('atmAmt').onkeydown = (e) => { if (e.key === 'Enter') $('atmDep').click(); };
   document.addEventListener('visibilitychange', apply); addEventListener('wfchange', apply);
 })();
 </script><script>window.AXA_CAMEO = { id: '811', host: '#scene', x: 96.4, y: 74, w: 2.6, z: 2, flip: true, filter: 'brightness(.85) saturate(.8)', op: .55 };   // bottom right, leaning out from behind the end of the counter</script><script src="axa_cameo.js"></script>
+<script src="wallet.js"></script>
 </body></html>
