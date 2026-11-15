@@ -902,7 +902,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 14, 9:05 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 14, 9:09 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -3912,7 +3912,8 @@
     // ---------- background music (Pixabay: maksymmalko, tatamusic), crossfading, quiet, pauses when you leave the window ----------
     const WHEEL_BGM = [1, 2, 3, 4, 5, 6, 7, 8].map(n => `media/audio_bgm_wheel${n}.mp3?v=bg1`);   // 8 songs: people spend the most time here
     let bgmI = Math.floor(Math.random() * 8), bgmA = null, bgmDucked = false;
-    const bgmTarget = () => (EMBED_SHOP || !musicOn() || bgmDucked || document.hidden || !window.__wf || document.body.classList.contains('ghost-town')) ? 0 : .5 * musicVol() * currentVolume;
+    let horrorBgm = null, horrorBgmOn = false;   // Ret Vision's horror ambience: hard cuts in and out, no fades (it's a jump scare)
+    const bgmTarget = () => (EMBED_SHOP || !musicOn() || bgmDucked || horrorBgmOn || document.hidden || !window.__wf || document.body.classList.contains('ghost-town')) ? 0 : .5 * musicVol() * currentVolume;
     function bgmRamp(a, to, ms, done) { const from = a.volume, t0 = performance.now(); (function st() { const k = Math.min(1, (performance.now() - t0) / ms); a.volume = Math.max(0, Math.min(1, from + (to - from) * k)); if (k < 1) requestAnimationFrame(st); else if (done) done(); })(); }
     function bgmStart(i) {
         if (EMBED_SHOP) return; bgmI = i % WHEEL_BGM.length; const a = new Audio(WHEEL_BGM[bgmI]); a.volume = 0;
@@ -3928,6 +3929,24 @@
         if (Date.now() - (playClip.songAt || 0) < 40000) return;   // a song clip is still holding the music
         bgmDucked = false; bgmApply();
     }
+    function horrorBgmSet(on) {
+        if (on === horrorBgmOn) return; horrorBgmOn = on;
+        if (on) {
+            if (bgmA) { bgmA.volume = 0; bgmA.pause(); }   // the normal music just STOPS
+            if (!horrorBgm) { horrorBgm = new Audio('media/audio_bgm_retvision.mp3?v=1'); horrorBgm.loop = true; horrorBgm.addEventListener('loadedmetadata', () => { try { horrorBgm.currentTime = Math.random() * 120; } catch (e) {} }, { once: true }); }
+            try { horrorBgm.currentTime = Math.random() * 120; } catch (e) {}
+            horrorApply();
+        } else {
+            if (horrorBgm) horrorBgm.pause();
+            if (bgmA) { const t = bgmTarget(); bgmA.volume = t; if (t > 0) bgmA.play().catch(() => {}); }   // and snaps right back
+        }
+    }
+    function horrorApply() {   // same rules as the music: Music switch, sliders, and only while you're looking at the page
+        if (!horrorBgm) return;
+        const t = (!horrorBgmOn || EMBED_SHOP || !musicOn() || document.hidden || !window.__wf) ? 0 : Math.min(1, .55 * musicVol() * currentVolume);
+        horrorBgm.volume = t; if (t > 0) { if (horrorBgm.paused) horrorBgm.play().catch(() => {}); } else horrorBgm.pause();
+    }
+    document.addEventListener('visibilitychange', () => horrorApply()); addEventListener('wfchange', () => horrorApply());
     function bgmApply() {   // follow the sliders, the Music switch, Forever, and whether you're looking at the page
         if (!bgmA) return; const t = bgmTarget();
         if (t > 0) { if (bgmA.paused) bgmA.play().catch(() => {}); bgmRamp(bgmA, t, 700); } else bgmRamp(bgmA, 0, 500, () => { if (bgmTarget() === 0) bgmA.pause(); });
@@ -6051,7 +6070,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         icon.addEventListener('click', () => apply(currentVolume > 0 ? 0 : lastNonZero, true));
         $('volTest').addEventListener('click', () => playWinSound());
         const mt = $('musicToggle'); mt.checked = musicOn();   // shared with the Board's music paper
-        mt.addEventListener('change', () => { store.set('painWheelMusicOff', !mt.checked); if (!mt.checked) ['waiting', 'policesong'].forEach(n => { try { clipSources[n] && clipSources[n].stop(); } catch (e) {} }); bgmApply(); });
+        mt.addEventListener('change', () => { store.set('painWheelMusicOff', !mt.checked); if (!mt.checked) ['waiting', 'policesong'].forEach(n => { try { clipSources[n] && clipSources[n].stop(); } catch (e) {} }); bgmApply(); horrorApply(); });
         const showLegacy = () => { const L = store.get('painWheelLegacy', null); $('codeMsg').textContent = L ? `🏅 Legacy unlocked for ${L.who}: all 8 original set perks, forever.` : ''; $('codeMsg').className = 'text-xs w-full text-violet-300 font-bold'; }; showLegacy();
         $('codeBtn').addEventListener('click', async () => {
             const code = $('codeInput').value.trim().toUpperCase(); if (!code) return;
@@ -6063,7 +6082,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         });
         const ct = $('callsToggle'); ct.checked = !store.get('painWheelNoCalls', false); ct.addEventListener('change', () => store.set('painWheelNoCalls', !ct.checked));
         const mv = $('musicVol'), mvl = $('musicVolLabel'); const showMv = () => { mv.value = Math.round(musicVol() * 100); mvl.textContent = mv.value + '%'; }; showMv();
-        mv.addEventListener('input', () => { store.set('painWheelMusicVol', mv.value / 100); mvl.textContent = mv.value + '%'; bgmApply(); });
+        mv.addEventListener('input', () => { store.set('painWheelMusicVol', mv.value / 100); mvl.textContent = mv.value + '%'; bgmApply(); horrorApply(); });
         mv.addEventListener('keydown', (e) => { if (e.code === 'Space') e.preventDefault(); }); mv.addEventListener('pointerup', () => mv.blur());
         const renderSfx = () => document.querySelectorAll('#sfxPicks [data-sfx]').forEach(b => { const on = b.dataset.sfx === sfxStyle; b.className = 'px-3 py-1.5 rounded border text-sm font-bold cursor-pointer ' + (on ? 'bg-amber-500 text-black border-amber-400' : 'bg-slate-800 text-slate-200 border-slate-600'); });
         document.querySelectorAll('#sfxPicks [data-sfx]').forEach(b => b.addEventListener('click', () => { sfxStyle = b.dataset.sfx; store.set('painWheelSfx', sfxStyle); renderSfx(); playTickSound(true); setTimeout(() => playTickSound(false), 140); }));
@@ -10126,6 +10145,8 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         id: '2026-11-07-fixed', title: 'The claw, the liver and the ghost town', date: 'November 6-7, 2026',
         showAfter: Date.parse('2026-11-07T06:00:00Z'),   // re-issued Nov 7 with corrected notes, so it pops up again for everyone
         lines: [
+            ['👓', "Ret Vision has its own soundtrack now. You'll know it when you hear it."],
+            ['🐏', "New studio in the credits on The Board. Ask Greg. Actually, don't."],
             ['📰', "Channel 8/11 News has an anchor now. He blinks, he talks, and when something big happens out there in the guild, he finds out live on air."],
             ['🕹️', "Claw & Disorder at Little St. Jeff's Prize Island (Shop → Pets). It takes Chief Kick a Bitch casino tokens, not gold. 5 prizes, one at a time: Volley McBallface, Lil' Spinny, Gerald, The Needle and Kevin Jr."],
             ['🎰', "Casino tokens: 3 from the casino slice, 1 for your first spin each day, every 25 spins, every achievement, sometimes from Gambled on a Fart, 8/11 and golden cookies, and Gizzlenut finds them in the couch. Or buy one at the cashier cage (5% of your gold)."],
@@ -11064,6 +11085,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         "The murloc got a zombie version. The CHICKEN got one. I got nothing. I've been here since 1996.", "I'm not even scary? I'm a paperclip with no eyelids. I am the scariest thing here.", "Fine. I'll just stand here. Uncursed. Like a loser."];
     function setHorror(on) {
         if (on === horrorLive) return; horrorLive = on;
+        try { horrorBgmSet(on); } catch (e) {}
         if (on && pets.clippy) setTimeout(() => { try { petSay('clippy', pick(CLIPPY_SNUBBED)); } catch (e) {} }, 2600);
         if (on) {
             horrorize(document.body, true);
