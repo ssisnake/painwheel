@@ -16,6 +16,8 @@
   .scene { position: relative; container-type: inline-size; width: min(2576px, 100%, calc((100vh - 178px) * 2576 / 1438)); aspect-ratio: 2576 / 1438; background: url(media/store811_bg.jpg) 0 0 / 100% 100% no-repeat; border-radius: 10px; box-shadow: 0 0 0 3px #f97316, 0 20px 60px rgba(0,0,0,.7); overflow: hidden; }
   @media (max-width: 700px) { .scene { min-width: 640px; } .scroller { place-items: start; } }
   .prop { position: absolute; display: block; padding: 0; border: 0; background: none; cursor: pointer; transition: transform .15s, filter .15s; }
+  .bub { position: absolute; z-index: 8; translate: -50% -100%; max-width: 24%; min-width: 11%; padding: .55cqw .8cqw; border-radius: .8cqw; background: #fffbeb; color: #1c1917; border: .2cqw solid #1c1917; font: 800 1.15cqw/1.3 system-ui, sans-serif; text-align: center; box-shadow: .2cqw .3cqw 0 rgba(0,0,0,.4); pointer-events: none; }
+  .bub::after { content: ''; position: absolute; left: 50%; bottom: -.9cqw; margin-left: -.6cqw; border: .6cqw solid transparent; border-top: .7cqw solid #1c1917; }
   .prop img { display: block; width: 100%; height: auto; image-rendering: pixelated; pointer-events: none; }
   .prop:hover, .prop:focus-visible { transform: scale(1.07); filter: drop-shadow(0 0 10px #fde68a); outline: none; z-index: 4; }
   .deco { position: absolute; pointer-events: none; image-rendering: pixelated; }
@@ -207,8 +209,22 @@ const REGULARS = [
   ['photo_uwu_icon', 6, ['Forty energy drinks. Raid tonight.', 'Do not tell the guild you saw me here. I have a reputation.', 'The clerk gave me the boss discount. It is 0%.', 'I could wipe this whole store. I am choosing not to. Today.']]];
 const [rImg, rW, rLines] = pick(REGULARS), rx = 60 + Math.random() * 10; let rN = 0;
 const reg = add(`<button type="button" class="prop" id="customer" title="A regular" aria-label="A regular" style="left:${rx}%;width:${rW}%"><img src="media/${rImg}.png" alt=""></button>`);
-reg.onclick = () => say(rLines[rN++ % rLines.length], 4200);
-setTimeout(() => { if (has811()) { say(rLines[rN++ % rLines.length], 3800); metNpc('clerk'); metNpc(rImg); } }, 2600);   // they say hi when you walk in (and now they have your number)
+// speech bubbles over whoever is talking (kept inside the store picture)
+function bubble(el, text, ms) {
+  const sc = $('scene'), r = el.getBoundingClientRect(), sr = sc.getBoundingClientRect();
+  if (el.bub) el.bub.remove();
+  const b = document.createElement('div'); b.className = 'bub'; b.textContent = text; sc.appendChild(b); el.bub = b;
+  const cx = (r.left + r.width / 2 - sr.left) / sr.width * 100, top = (r.top - sr.top) / sr.height * 100;
+  b.style.left = Math.max(13, Math.min(87, cx)) + '%'; b.style.top = Math.max(15, top - 1.5) + '%';
+  clearTimeout(el.bubT); el.bubT = setTimeout(() => { b.remove(); if (el.bub === b) el.bub = null; }, ms || 3800);
+}
+reg.onclick = () => bubble(reg, rLines[rN++ % rLines.length], 4200);
+const CLERK_LINES = ['Welcome to 8/11. We are open 8 to 11. Do not ask which 8 or which 11.', 'The hot dogs are fresh. Fresh is a strong word.', 'The ATM works now. I am as surprised as you.',
+  'Karen next door owes ME a hot dog. Do not let her tell you different.', 'No loitering. Unless you are buying. Then loiter all you want.', 'The scratch-offs are rigged. Legally rigged.',
+  'If the light buzzes, just ignore it. I have been ignoring it for six years.', 'Shoplifters will be prosecuted. By me. Personally. With a mop.'];
+clerk.style.pointerEvents = 'auto'; clerk.style.cursor = 'pointer'; clerk.title = 'The clerk';
+clerk.addEventListener('click', () => { point(1800); bubble(clerk, pick(CLERK_LINES), 4200); });
+setTimeout(() => { if (has811()) { bubble(reg, rLines[rN++ % rLines.length], 3800); metNpc('clerk'); metNpc(rImg); } }, 2600);   // they say hi when you walk in (and now they have your number)
 function metNpc(k) { try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || {}; if (!m[k]) { m[k] = Date.now(); localStorage.setItem('painWheelMetNpcs', JSON.stringify(m)); } } catch (e) {} }
 
 // ---- Slurpees: 1 gold, poured from the real machine. The cup gets cleared once you're done ----
