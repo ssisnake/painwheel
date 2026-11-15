@@ -129,7 +129,7 @@ else {
 // the dying fluorescent tube buzzes when it flickers (the CSS flicker runs on a 6.5s loop; it cuts out at 42% and 78%)
 const sfxQuiet = (name, g, rate) => { try { if (!vol() || !AC || AC.state !== 'running') return; const go = (b) => { const s = AC.createBufferSource(), gn = AC.createGain(); s.buffer = b; if (rate) s.playbackRate.value = rate; gn.gain.value = g * vol(); s.connect(gn); gn.connect(AC.destination); s.start(); };
   if (BUF[name]) return go(BUF[name]); fetch('media/' + name + '.mp3').then(r => r.arrayBuffer()).then(ab => AC.decodeAudioData(ab)).then(b => { BUF[name] = b; go(b); }).catch(() => {}); } catch (e) {} };
-setTimeout(function buzz() { if (!document.hidden) sfxQuiet('audio_flicker', .35, .72); setTimeout(buzz, 6500); }, .41 * 6500);
+setTimeout(function buzz() { if (!document.hidden && Math.random() < .22) sfxQuiet('audio_flicker', .35, .72); setTimeout(buzz, 6500); }, .41 * 6500);   // the light flickers every cycle; it only buzzes now and then (~every 30s)
 addEventListener('pointerdown', () => { if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} } }, { once: true });
 // ---- the store: aisle signs open that shop tab on the wheel, the clerk points, the rest is jokes ----
 const AISLES = [
@@ -138,7 +138,7 @@ const AISLES = [
   ['SNACKS & POTIONS', 'photo_811_sign_snacks', 60.6, 25.4, 7.4, 'consumables', 'Snacks and potions. Same shelf. Same expiration date.'],
   ['COSMETICS', 'photo_811_sign_cosmetics', 69.3, 26.6, 8.6, 'cosmetics', 'Cosmetics. Make the needle pretty. Switch them in Settings.'],
   ['CURSES', 'photo_811_sign_curses', 43, 26.6, 7.4, 'curses', 'Curses. Aim them at a guildmate. We are not liable.'] ];
-const PROPS = [['s811_hotdog_roll.webp', 24.9, 47.6, 7.8, 'hotdog', 'Hot dog roller'], ['s811_scratch_stand.png', 43, 58.4, 9.9, 'scratch', 'Scratch-offs'],
+const PROPS = [['s811_hotdog_roll.webp', 28.4, 47.6, 7.8, 'hotdog', 'Hot dog roller'], ['s811_scratch_stand.png', 41.2, 49.3, 13.5, 'scratch', 'Scratch-offs'],
   ['photo_811_carrier1', 26.6, 72.2, 5, 'pets', 'Pets'], ['photo_811_carrier2', 32.1, 71.7, 4.6, 'pets', 'Pets']];
 const JOKES = {
   hotdog: ['That hot dog has been rolling since 2019. It is not for sale. It is load-bearing.', 'The hot dogs are free. Nobody has ever taken one. Ever.', "Kevin ate one in 2021. He doesn't talk about it."],
@@ -178,7 +178,7 @@ PROPS.forEach(([img, l, t, w, act, name]) => {
   if (act === 'scratch') b.style.zIndex = 2;
   b.onclick = () => JOKES[act] ? say(pick(JOKES[act]), 3400) : goShop(act);
 });
-add('<img class="deco" src="media/photo_811_pricetag.png" alt="" style="left:31.9%;top:61.2%;width:2.8%;transform:rotate(-8deg);z-index:1">');
+add('<img class="deco" src="media/photo_811_pricetag.png" alt="" style="left:35.4%;top:61.2%;width:2.8%;transform:rotate(-8deg);z-index:1">');
 [['atm', 'The ATM', 34.4, 42.5, 6, 18, ''], ['open', 'The sign', 80.2, 29.5, 5.6, 11, ''], ['door', 'Leave', 24.4, 21, 6.4, 28, ''], ['cam', '', 82.6, 12.4, 6, 8, ' secret']].forEach(([k, name, l, t, w, h, cls]) => {
   const b = add(`<button type="button" class="hs${cls}" ${name ? `title="${name}" aria-label="${name}"` : 'tabindex="-1" aria-hidden="true"'} style="left:${l}%;top:${t}%;width:${w}%;height:${h}%"></button>`);
   b.onclick = () => {
