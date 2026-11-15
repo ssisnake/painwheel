@@ -472,6 +472,8 @@
         .is-min { height: auto !important; }
         /* your name on a carved wooden nameplate (the art stretches to fit long names and titles) */
         .nameplate { border-style: solid; border-color: transparent; border-width: 15px 16px 11px; border-image: url(media/nameplate.png) 56 56 40 56 fill stretch; background: none; padding: 1px 10px 0; color: #3b1d0a; text-shadow: 0 1px 0 rgba(255,255,255,.35); min-height: 46px; }
+        .nameplate.tb-plate { min-height: 66px; padding: 0 6px; color: #2b1607; font-family: Georgia, 'Times New Roman', serif; font-weight: 900; font-size: calc(17px * var(--ts, 1)); }
+        .nameplate.tb-plate #titleShow { font-style: normal; color: #5c1d06 !important; }
         .nameplate #titleShow { color: #9a3412 !important; text-shadow: 0 1px 0 rgba(255,255,255,.3); }
         .nameplate-input { display: block; max-width: 440px; margin: 0 auto; font: 800 calc(20px * var(--ts, 1)) system-ui, sans-serif; min-height: 64px; border-width: 20px 22px 15px; outline: none; }
         .nameplate-input::placeholder { color: rgba(59,29,10,.45); } .nameplate-input:focus { filter: drop-shadow(0 0 8px rgba(251,191,36,.7)); }
@@ -914,7 +916,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 14, 9:38 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 14, 9:40 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -9072,7 +9074,17 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         ['the Unbuffed', 50000], ['Goblin Tycoon', 100000], ['Patron of Reb', 250000], ['the Lobbyist', 1000000], ['Wheel Emperor', 10000000]
     ];
     let ownedTitles = store.get('painWheelTitles', {}), titleChoice = store.get('painWheelTitle', '');
-    function renderTitle() { const el = $('titleShow'); if (el) el.textContent = titleChoice ? `«${titleChoice}»` : ''; }
+    const TITLE_H = {"degen": 132, "emperor": 121, "kevin": 137, "liver": 136, "lobbyist": 123, "murder": 135, "patron": 126, "ret": 136, "tycoon": 128, "unbuffed": 128};
+    function renderTitle() {   // a themed title turns your whole name tag into that title's banner (stretched in the middle like a 9-slice)
+        const el = $('titleShow'); if (el) el.textContent = titleChoice ? `«${titleChoice}»` : '';
+        const tag = $('playerTag'); if (!tag) return;
+        const a = (typeof TITLE_ART !== 'undefined') && TITLE_ART[titleChoice];
+        tag.classList.toggle('tb-plate', !!a);
+        if (!a) { tag.style.borderImage = tag.style.borderWidth = ''; return; }
+        const h = TITLE_H[a.f] || 130, sc = 66 / h, L = 4.8 * a.b[0], R = 4.8 * (100 - a.b[2]), T = h * a.b[1] / 100, B = h * (100 - a.b[3]) / 100;
+        tag.style.borderImage = `url(media/title_${a.f}.webp) ${T.toFixed(0)} ${R.toFixed(0)} ${B.toFixed(0)} ${L.toFixed(0)} fill stretch`;
+        tag.style.borderWidth = `${(T * sc).toFixed(1)}px ${(R * sc).toFixed(1)}px ${(B * sc).toFixed(1)}px ${(L * sc).toFixed(1)}px`;
+    }
     // ---------- title banners (Ada's art): titles are EARNED now, not bought. Anyone who bought one keeps it ----------
     const TITLE_ART = {
         'the Kevin-Touched':    { f: 'kevin',    b: [23, 30, 81, 72], how: 'Land on Kevin 3 times in a row.', ok: () => !!achieved.kevin3 },
@@ -10201,7 +10213,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         lines: [
             ['🐍', "Something at the Emporium really doesn't like tumbleweeds."],
             ['🐟', "The singing swordfish now sounds like he's coming through a speaker he found in a ditch. This is an improvement."],
-            ['🏷️', "Titles are earned now, not bought, and every one has its own banner. Anything you already bought is still yours. The Shop shows what each locked one wants from you."],
+            ['🏷️', "Titles are earned now, not bought, and every one has its own banner. Equip one and your name tag up top turns into it. Anything you already bought is still yours. The Shop shows what each locked one wants from you."],
             ['💬', "The 8/11, Gnome Depot and the Emporium have proper speech bubbles now, built to stretch to whatever anyone says."],
             ['📺', "The 8/11 TV hisses when you change the channel. Like a real TV. From 1994."],
             ['👓', "Ret Vision has its own soundtrack now. You'll know it when you hear it."],
