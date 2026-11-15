@@ -183,7 +183,7 @@ addEventListener('wfchange', () => clawOn && clawMusic(true));
 // ---------- Cogsworth (a dwarf tinkerer, Claude's guy) is sometimes working on the claw machine ----------
 if (Math.random() < .3) {
   const cog = document.createElement('button'); cog.type = 'button'; cog.setAttribute('aria-label', 'Cogsworth, fixing the claw machine');
-  cog.style.cssText = 'position:absolute;left:50.4%;bottom:19%;width:7.2%;padding:0;border:0;background:none;cursor:pointer;z-index:2;translate:-50% 0;filter:brightness(.82) sepia(.18)';
+  cog.style.cssText = 'position:absolute;left:49.4%;bottom:15%;width:10.8%;padding:0;border:0;background:none;cursor:pointer;z-index:2;translate:-50% 0;filter:brightness(.82) sepia(.18)';
   cog.innerHTML = '<img src="media/cog_tinker.png" alt="" style="display:block;width:100%;height:auto;image-rendering:pixelated;filter:drop-shadow(0 .3cqw .3cqw rgba(0,0,0,.5))">';
   scene.appendChild(cog);
   const LINES = { broken: ["Cogsworth: Waiting on parts. Karen has them. Karen has everything. Karen gives nothing.", "Cogsworth: Joystick, claw, coin mech. Gnome Depot. Tell Karen I sent you. Actually, don't.",
