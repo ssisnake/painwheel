@@ -53,7 +53,11 @@
   #tv { position: absolute; left: 14.84%; top: 8.13%; width: 5.63%; height: 11.32%; z-index: 2; overflow: hidden; cursor: pointer; clip-path: polygon(15.6% 0, 100% 22.4%, 90.3% 100%, 0 87.7%); background: #050a14; }
   #tv .in { position: absolute; inset: -30%; transform: rotate(15deg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .3cqw; padding-bottom: 1.4cqw; color: #e2e8f0; font: 900 .62cqw/1.1 system-ui, sans-serif; text-align: center; animation: tvwob 9s infinite; }
   #tv .logo { padding: .1cqw .35cqw; background: #b91c1c; color: #fff; letter-spacing: .03em; } #tv .logo b { color: #fde047; }
-  #tv .hl { font-size: .5cqw; color: #93c5fd; max-width: 4.6cqw; }
+  #tv .hl { display: none; }
+  #tv .anchor { position: absolute; left: 12%; width: 80%; bottom: 23%; image-rendering: pixelated; pointer-events: none; }
+  #tv.away .anchor { display: none; }
+  #tv .brk { position: absolute; left: -10%; right: -10%; top: 22%; display: none; transform: rotate(15deg); background: #dc2626; color: #fff; text-align: center; font: 900 .5cqw/1.5 system-ui, sans-serif; letter-spacing: .04em; box-shadow: 0 .1cqw 0 #7f1d1d; }
+  #tv.breaking .brk { display: block; } #tv.breaking .tick { background: #dc2626; color: #fff; }
   #tv .tick { position: absolute; left: 26%; right: 26%; bottom: 34%; height: .95cqw; background: #fde047; color: #111827; overflow: hidden; white-space: nowrap; font: 900 .55cqw/.95cqw system-ui, sans-serif; }
   #tv .tick span { display: inline-block; padding-left: 100%; animation: tick 28s linear infinite; }
   @keyframes tick { to { transform: translateX(-100%); } }
@@ -96,7 +100,7 @@
 <header><h1 class="logo-h1"><img src="media/logo_811.png" alt="The 8/11"></h1><span id="goldBox"></span><nav><a class="alt" href="./"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a><a class="alt" href="#" id="catalogBtn">🛒 The whole catalog</a><a href="wheel.html">🎡 Back to The Wheel</a></nav></header>
 <div class="wrap"><div class="scroller"><div class="scene" id="scene">
   <img id="tube" alt=""><div class="lampglow" id="lampGlow"></div><div class="lamp" id="lamp"></div>
-  <div id="tv" role="button" tabindex="0" title="Channel 8/11 News (click to change the channel)" aria-label="The TV: click to change the channel"><div class="in"><div class="logo">8/11 <b>NEWS</b></div><div class="hl" id="tvHl"></div><div class="tick"><span id="tvTick"></span></div></div><div class="bars"></div><div class="card" id="tvCard"></div><div class="glow"></div><div class="scan"></div><div class="track"></div><canvas width="48" height="40"></canvas></div>
+  <div id="tv" role="button" tabindex="0" title="Channel 8/11 News (click to change the channel)" aria-label="The TV: click to change the channel"><div class="in"><div class="logo">8/11 <b>NEWS</b></div><div class="hl" id="tvHl"></div><div class="tick"><span id="tvTick"></span></div></div><img class="anchor" id="anchor" src="media/s811_anchor_calm.png" alt=""><div class="brk">⚠ BREAKING NEWS ⚠</div><div class="bars"></div><div class="card" id="tvCard"></div><div class="glow"></div><div class="scan"></div><div class="track"></div><canvas width="48" height="40"></canvas></div>
   <button class="tap" data-f="Blue Raspberry" style="left:4%;top:33%;width:9.5%;height:26%" title="Blue Raspberry Slurpee (1 gold)" aria-label="Blue Raspberry Slurpee, 1 gold"></button>
   <button class="tap" data-f="Cherry" style="left:13.6%;top:33%;width:4.8%;height:26%" title="Cherry Slurpee (1 gold)" aria-label="Cherry Slurpee, 1 gold"></button>
   <button class="tap" data-f="Lime" style="left:18.5%;top:33%;width:4%;height:26%" title="Lime Slurpee (1 gold)" aria-label="Lime Slurpee, 1 gold"></button>
@@ -252,7 +256,26 @@ add('<img class="deco" src="media/photo_811_pricetag.png" alt="" style="left:35.
   const TICK = [`LOCAL GOBLIN HAS ${fmt(gold).toUpperCase()} ON HAND, REFUSES TO TIP`, vault ? `${fmt(vault).toUpperCase()} SPOTTED IN AN OFFSHORE VAULT. THE IRS IS "LOOKING INTO IT"` : 'VAULT REPORTED EMPTY. JUST ECHOES.',
     `${(st.spins || 0).toLocaleString()} SPINS AND COUNTING`, by.KEVIN ? `KEVIN LANDED ${by.KEVIN.toLocaleString()} TIMES. EXPERTS: "THAT'S A LOT OF KEVIN"` : 'KEVIN COUNT: SUSPICIOUSLY LOW',
     'KAREN SAYS NO. VISIT GNOME DEPOT, NEXT DOOR', 'SLURPEES: 1 GOLD. BRAIN FREEZE: FREE', 'WEATHER: DUSTY, WITH A CHANCE OF MURLOC', '$KNOB: UP. OR DOWN. NOBODY KNOWS', 'REB\'S LIVER: HANGING IN THERE', 'OPEN 11 DAYS A WEEK'];
-  $('tvTick').textContent = TICK.join('  •  ') + '  •  ';
+  const brk = (get('painWheelBreaking', []) || []).filter(x => x && x.text && x.t > Date.now() - 3 * 86400000);
+  const baseTick = () => HL.concat(TICK).concat(brk.map(x => 'BREAKING: ' + x.text)).sort(() => Math.random() - .5).join('  •  ') + '  •  ';
+  $('tvTick').textContent = baseTick();
+  // the anchor: talks in bursts, blinks, and loses it for breaking news
+  const an = $('anchor'), F = (n) => { an.src = 'media/s811_anchor_' + n + '.png'; };
+  ['talk', 'blink', 'shock'].forEach(n => { new Image().src = 'media/s811_anchor_' + n + '.png'; });
+  let shocked = false;
+  (function talk() { setTimeout(() => { if (!shocked && !document.hidden) { let n = 6 + Math.floor(Math.random() * 10), o = false; const iv = setInterval(() => { if (shocked) return clearInterval(iv); o = !o; F(o ? 'talk' : 'calm'); if (--n <= 0) { clearInterval(iv); F('calm'); } }, 170); } talk(); }, 1500 + Math.random() * 3500); })();
+  (function blink() { setTimeout(() => { if (!shocked) { F('blink'); setTimeout(() => { if (!shocked) F('calm'); }, 140); } blink(); }, 2500 + Math.random() * 4000); })();
+  const BREAK_FALLBACK = ['LOCAL HOT DOG ACHIEVES SENTIENCE', 'KEVIN SPOTTED STANDING IN FIRE', 'KAREN SPEAKS TO MANAGER. MANAGER RESIGNS', 'SKELETON WINS CLAW. JUST KIDDING'];
+  function breakingNews() {
+    if (ch !== 0 || shocked) return;
+    const seen = get('painWheelBreakingSeen', 0), fresh = brk.filter(x => x.t > seen);
+    const item = fresh.length ? fresh[fresh.length - 1].text : pick(brk.length ? brk.map(x => x.text) : BREAK_FALLBACK);
+    if (fresh.length) put('painWheelBreakingSeen', fresh[fresh.length - 1].t);
+    shocked = true; F('shock'); el.classList.add('breaking'); $('tvTick').textContent = ('BREAKING: ' + item + '  •  ').repeat(3);
+    setTimeout(() => { shocked = false; F('calm'); el.classList.remove('breaking'); $('tvTick').textContent = baseTick(); }, 9000);
+  }
+  setTimeout(() => { if (brk.some(x => x.t > get('painWheelBreakingSeen', 0))) breakingNews(); }, 4000);   // something big happened since you were last here
+  (function bLoop() { setTimeout(() => { if (!document.hidden && Math.random() < .5) breakingNews(); bLoop(); }, 45000 + Math.random() * 45000); })();
   let h = 0; const head = () => { $('tvHl').textContent = HL[h++ % HL.length]; }; h = Math.floor(Math.random() * HL.length); head(); setInterval(head, 6000);
   const cv = el.querySelector('canvas'), cx = cv.getContext('2d');
   const snow = (ms, op) => { cv.style.opacity = op; const t0 = performance.now(); (function fr() { const im = cx.createImageData(cv.width, cv.height); for (let i = 0; i < im.data.length; i += 4) { const v = Math.random() * 200 | 0; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; } cx.putImageData(im, 0, 0);
