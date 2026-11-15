@@ -923,7 +923,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 14, 9:49 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 14, 9:53 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -1480,6 +1480,9 @@
     const EMBED_SHOP = new URLSearchParams(location.search).get('embed') === 'shop' || EMBED_HOUSE;
     if (EMBED_SHOP) document.documentElement.classList.add('embed-shop');
     if (EMBED_HOUSE) document.documentElement.classList.add('embed-house');
+    // Inside a shop frame, everything ambient (chat, pets, cops, glaives, income/fee ticks, sounds) treats the page as "not being looked at",
+    // so the frame never doubles up on the real wheel or plays sirens while you shop. Shop buttons don't check this, so buying works the same.
+    if (EMBED_SHOP) { try { Object.defineProperty(document, 'hidden', { configurable: true, get: () => true }); Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => 'hidden' }); } catch (e) {} }
     /* ===================== MOVING TO THE NEW WHEEL (stats transfer) =====================
        Each browser keeps its stats per site, so the old link and the GitHub link don't share
        them. The old page builds a link (or a code) holding this browser's painWheel* data;
@@ -1510,32 +1513,44 @@
             if (get('painWheelSheetImportDone') !== '1') put('painWheelSheetImport', sheetImport);
             return { ok: false, msg: 'Those stats were already moved here. Re-sending them to the guild leaderboard.' };
         }
+        // safety net: remember exactly what this browser had, and put it all back if anything below fails partway
+        const TOUCH = MOVE_KEYS.concat(['painWheelSheetImport', 'painWheelImported']), backup = {};
+        TOUCH.forEach(k => backup[k] = get(k));
+        try { localStorage.setItem('painWheelImportBackup', JSON.stringify({ t: Date.now(), keys: backup })); } catch (e) {}
+        const putStrict = (k, v) => localStorage.setItem(k, typeof v === 'string' ? v : JSON.stringify(v));   // throws if storage is full, so we can roll back
+        const num = (n) => { n = Number(n); return Number.isFinite(n) && n > 0 ? Math.floor(n) : 0; };
+        try {
         // stats: add counts together, keep the best streak
         const a = J(get('painWheelStats'), null), b = J(o.painWheelStats, null);
+        if (b && (typeof b !== 'object' || Array.isArray(b))) throw new Error('bad stats');
         if (b) {
-            if (!a) put('painWheelStats', b);
+            if (!a) putStrict('painWheelStats', b);
             else {
-                a.spins = (a.spins || 0) + (b.spins || 0);
-                a.byType = a.byType || {}; Object.entries(b.byType || {}).forEach(([t, n]) => a.byType[t] = (a.byType[t] || 0) + n);
+                a.spins = num(a.spins) + num(b.spins);
+                a.byType = a.byType || {}; Object.entries(b.byType || {}).forEach(([t, n]) => a.byType[t] = num(a.byType[t]) + num(n));
                 a.bestKevinStreak = Math.max(a.bestKevinStreak || 0, b.bestKevinStreak || 0);
                 if (b.firstSpin && (!a.firstSpin || b.firstSpin < a.firstSpin)) a.firstSpin = b.firstSpin;
                 a.kromSeen = Array.from(new Set([...(a.kromSeen || []), ...(b.kromSeen || [])]));
-                put('painWheelStats', a);
+                putStrict('painWheelStats', a);
             }
         }
         const ach = Object.assign({}, J(o.painWheelAchievements, {}), J(get('painWheelAchievements'), {}));
-        put('painWheelAchievements', ach);
+        putStrict('painWheelAchievements', ach);
         const rb = J(get('painWheelRetBuffs'), { v: 2, hits: {} }), rbo = J(o.painWheelRetBuffs, null);
-        if (rbo && rbo.v === 2) { rb.v = 2; rb.hits = rb.hits || {}; Object.entries(rbo.hits || {}).forEach(([i, n]) => rb.hits[i] = Math.max(rb.hits[i] || 0, n)); put('painWheelRetBuffs', rb); }
-        put('painWheelAllTimeSpins', String((parseInt(get('painWheelAllTimeSpins'), 10) || 0) + (parseInt(o.painWheelAllTimeSpins, 10) || 0)));
+        if (rbo && rbo.v === 2) { rb.v = 2; rb.hits = rb.hits || {}; Object.entries(rbo.hits || {}).forEach(([i, n]) => rb.hits[i] = Math.max(rb.hits[i] || 0, n)); putStrict('painWheelRetBuffs', rb); }
+        putStrict('painWheelAllTimeSpins', String(num(parseInt(get('painWheelAllTimeSpins'), 10)) + num(parseInt(o.painWheelAllTimeSpins, 10))));
         ['painWheelPlayer', 'painWheelVolume', 'painWheelTheme', 'painWheelCalloutIdx', 'painWheelSkippedName'].forEach(k => {
-            if (o[k] !== undefined && (get(k) === null || get(k) === '""' || get(k) === '')) put(k, o[k]);
+            if (o[k] !== undefined && (get(k) === null || get(k) === '""' || get(k) === '')) putStrict(k, o[k]);
         });
         // what the guild leaderboard should add for this person (sent once, when a name and the Sheet are ready)
         const spins = sheetImport.spins;
-        put('painWheelSheetImport', sheetImport);
-        put('painWheelImported', code.slice(0, 64));
-        return { ok: true, msg: `Welcome to the new wheel! Moved ${spins.toLocaleString()} spins and ${Object.keys(J(o.painWheelAchievements, {})).length} achievements.` };
+        putStrict('painWheelSheetImport', sheetImport);
+        putStrict('painWheelImported', code.slice(0, 64));
+        } catch (err) {   // put this browser back exactly how it was
+            TOUCH.forEach(k => { try { if (backup[k] === null) localStorage.removeItem(k); else localStorage.setItem(k, backup[k]); } catch (e) {} });
+            return { ok: false, msg: "That move didn't finish, so nothing was changed. Your stats here are safe. Try again." };
+        }
+        return { ok: true, msg: `Welcome to the new wheel! Moved ${sheetImport.spins.toLocaleString()} spins and ${Object.keys(J(o.painWheelAchievements, {})).length} achievements.` };
     }
     const BOARD_GO = (location.hash.match(/go=(\w+)/) || [])[1];   // arriving from the conspiracy board: open that thing
     if (BOARD_GO) history.replaceState(null, '', location.pathname + location.search);
@@ -5243,8 +5258,30 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             fair: !!fair, ashbringer: !!ash, achievements: Object.keys(achieved).length, unlocked: achPosts.splice(0, 4),
             gold: Math.max(0, Math.round(Math.min(1e300, gold + vaultGold())) - store.get('painWheelDevGold', 0)), loot: lootPost.splice(0, 1)[0] || null, favorite: favoriteLabel(), title: titleChoice, donated: aipacTotal, axaFound: axaFound() });
         setTimeout(refreshGuild, 3500);
-        try { fetch(LEADERBOARD_URL, { method: 'POST', mode: 'no-cors', body, keepalive: true }).catch(() => {}); } catch (e) {}
+        postBoard(body);
     }
+    // Leaderboard posts that fail on a bad connection wait in an outbox (this browser) and go out later, oldest first, one at a time.
+    // Each post carries a random id (sid) so the Sheet can ignore a repeat if one ever slips through twice.
+    const OUTBOX = 'painWheelOutbox';
+    function postBoard(body) {
+        try { const o = JSON.parse(body); if (!o.sid) { o.sid = Date.now().toString(36) + Math.random().toString(36).slice(2, 8); body = JSON.stringify(o); } } catch (e) {}
+        const queue = () => { const q = store.get(OUTBOX, []); const list = Array.isArray(q) ? q : []; list.push({ b: body, t: Date.now() }); store.set(OUTBOX, list.slice(-60)); };
+        try { fetch(LEADERBOARD_URL, { method: 'POST', mode: 'no-cors', body, keepalive: true }).catch(queue); } catch (e) { queue(); }
+    }
+    let outboxBusy = false;
+    function flushOutbox() {
+        if (outboxBusy || !LEADERBOARD_URL || EMBED_SHOP || (navigator.onLine === false)) return;
+        let q = store.get(OUTBOX, []); if (!Array.isArray(q) || !q.length) return;
+        const lock = store.get('painWheelOutboxLock', 0); if (typeof lock === 'number' && Date.now() - lock < 30000) return;   // another tab is sending
+        q = q.filter(x => x && typeof x.b === 'string' && Date.now() - (x.t || 0) < 7 * 864e5); store.set(OUTBOX, q); if (!q.length) return;
+        outboxBusy = true; store.set('painWheelOutboxLock', Date.now());
+        const item = q[0];
+        fetch(LEADERBOARD_URL, { method: 'POST', mode: 'no-cors', body: item.b }).then(() => {
+            const now = store.get(OUTBOX, []); store.set(OUTBOX, (Array.isArray(now) ? now : []).filter(x => !(x && x.b === item.b && x.t === item.t)));
+            outboxBusy = false; store.set('painWheelOutboxLock', 0); setTimeout(flushOutbox, 1500);
+        }).catch(() => { outboxBusy = false; store.set('painWheelOutboxLock', 0); });
+    }
+    setTimeout(flushOutbox, 8000); setInterval(flushOutbox, 180000); addEventListener('online', () => setTimeout(flushOutbox, 2000));
     function loadGuildBoard() {
         if (!LEADERBOARD_URL) return;
         $('guildSection').classList.remove('hidden');
@@ -7472,6 +7509,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         else if (e.key === 'painWheelPendingAch' && !EMBED_SHOP) setTimeout(awardPending, 50);
         else if (e.key === 'painWheelPendingLoot' && !EMBED_SHOP) setTimeout(lootPending, 50);
         else if (e.key === 'painWheelStats' && v && typeof v === 'object') { Object.assign(stats, v); }
+        else if (e.key === 'painWheelTitles' && v && typeof v === 'object' && !Array.isArray(v)) { Object.assign(ownedTitles, v); }
         else if (e.key === 'painWheelAllTimeSpins') { const n = parseInt(e.newValue, 10); if (n > allTimeSpins) { allTimeSpins = n; updateSpinBadge(); } }
     });
     const ITEM_ICON = { 'Golden Chocolate Donut': PHOTO_TOY_DONUT, 'Ret Paladin 6% Buff Coupon': PHOTO_ITEM_COUPON, 'Ashbringer (Plastic Replica)': PHOTO_ITEM_SWORD,
@@ -7923,6 +7961,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         });
     }
     $('hpUpgrade').addEventListener('click', () => {
+        if (Date.now() - (window.__hpLast || 0) < 700) return; window.__hpLast = Date.now();   // a double-click buys one level, not two
         const msg = $('hpMsg');
         if (!store.get('painWheelTimeshare', false)) {
             const tc = priceOf(.10); if (gold < tc) { msg.textContent = `You need ${fmt(tc)}. Try a goblin bailout (lol).`; return; }
@@ -9017,8 +9056,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
     // =====================================================================
     function sendEvent(ev) {   // non-spin things the Sheet / Discord should know about
         if (!LEADERBOARD_URL || !playerName) return false;
-        try { fetch(LEADERBOARD_URL, { method: 'POST', mode: 'no-cors', keepalive: true,
-            body: JSON.stringify({ name: playerName, event: ev, gold: Math.max(0, Math.round(Math.min(1e300, gold + vaultGold())) - store.get('painWheelDevGold', 0)), donated: aipacTotal, title: titleChoice, favorite: favoriteLabel() }) }).catch(() => {}); } catch (e) {}
+        postBoard(JSON.stringify({ name: playerName, event: ev, gold: Math.max(0, Math.round(Math.min(1e300, gold + vaultGold())) - store.get('painWheelDevGold', 0)), donated: aipacTotal, title: titleChoice, favorite: favoriteLabel() }));
         return true;
     }
     function shopMsg(t) { const m = $('shopMsg'); if (m) { m.textContent = t; clearTimeout(shopMsg.t); shopMsg.t = setTimeout(() => m.textContent = '', 6000); } }

@@ -294,6 +294,7 @@ function renderParts(msg) {
 }
 function buyPart(id) {
   const p = PARTS.find(x => x.id === id), cost = partPrice(p), g = gold();
+  if (!p || owned()[id]) return;   // already have it (double-click, or another tab bought it)
   if (g < cost) { renderParts("You can't afford it. I can tell from here."); return; }
   put('painWheelGold', g - cost); const have = owned(); have[id] = true; put('painWheelClawParts', have); showGold(); sfx('audio_token', .7);
   if (PARTS.every(x => have[x.id])) { put('painWheelClawState', 'fixed'); renderParts('All three. The claw works now. Go win a skeleton something.'); say("That's all three. Now leave before you ask me to install it. I don't install.", 5000); pose('point'); }
