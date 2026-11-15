@@ -37,6 +37,7 @@
   #axa:hover img, #axa:focus-visible img { filter: drop-shadow(0 0 .8cqw #fde68a); } #axa:focus-visible { outline: none; }
   #say { position: absolute; left: 50%; top: 20%; transform: translateX(-50%); max-width: 70%; border-style: solid; border-width: 26px 33px 28px 33px; border-image: url(media/bub_flea_frame.png) 52 66 56 66 fill / 26px 33px 28px 33px round; background: none; border-radius: 0; padding: 0 8px; color: #2b1607; filter: drop-shadow(2px 3px 0 rgba(0,0,0,.4)); font: 800 clamp(16px, 1.5vw, 26px)/1.35 system-ui, sans-serif; text-align: center; display: none; z-index: 8; box-shadow: 0 10px 30px rgba(0,0,0,.6); }
   #say b { color: #7c2d12; }
+  .hagrow { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 8px; } .hagrow button, #card .hag { font: 800 16px system-ui, sans-serif; padding: 8px 14px; border-radius: 8px; border: 2px solid #b45309; background: #451a03; color: #fde68a; cursor: pointer; } .hagrow button:hover, #card .hag:hover { background: #78350f; } #card .msg.hagmsg { font-size: 18px; color: #fde68a; margin-top: 10px; }
   #say::after { content: ''; position: absolute; left: var(--tail, 50%); bottom: -46px; width: 40px; height: 41px; margin-left: -20px; background: url(media/bub_flea_tail.png) center / 100% 100% no-repeat; }
   .bar { display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: center; align-items: center; padding: 8px 12px 16px; font-size: 18px; color: #d6d3d1; text-align: center; }
   .bar b { color: #fcd34d; }
@@ -215,6 +216,15 @@ const QCOL = { poor: '#9d9d9d', common: '#f5f5f4', uncommon: '#1eff00', rare: '#
 const QDARK = { poor: '#57534e', common: '#44403c', uncommon: '#15803d', rare: '#1d4ed8', epic: '#7e22ce', legendary: '#c2410c' };
 const QEMO = { poor: '🧦', common: '📦', uncommon: '🎁', rare: '💎', epic: '🔮', legendary: '👑' };
 const priceOf = (q) => Math.max(FLOOR[q], Math.round(gold() * PCT[q]));
+// haggling: one try per item per restock. Win and the % drops for you; lose and Axazon adds an asshole tax
+const hag = () => { const h = get('painWheelHaggle', {}) || {}; return h.rot === ROT.id ? h : { rot: ROT.id, items: {} }; };
+const pctFor = (i) => { const q = STOCK[i].q, h = (hag().items || {})[i]; return h ? h.pct : PCT[q]; };
+const priceFor = (i) => { const q = STOCK[i].q, pc = pctFor(i); return Math.max(Math.round(FLOOR[q] * pc / PCT[q]), Math.round(gold() * pc)); };
+const HAGGLE = [   // [button, points off, chance he says yes]
+  ['Knock 5% off', .05, .6], ['Knock 10% off', .10, .3], ['Half off. Final offer.', .5, .08]];
+const HAG_YES = ["Fine. FINE. Take it before I change my mind.", "You drive a hard bargain. Mostly because you won't stop talking.", "Deal. Don't tell anybody. Especially Kevin.", "Ugh. Okay. You remind me of me. That's not a compliment."];
+const HAG_NO = ["No. And now it costs more. That's the asshole tax.", "Did you just try to haggle with ME? Price went up. Enjoy.", "Hard pass. Plus 5% for wasting my time.", "I've been doing this since before you were a twinkle in the wheel's eye. No. Tax added."];
+const HAG_LOWBALL = ["HALF? Get out of my tent. ...Not literally. Buy something. But it costs more now.", "Half. HALF. I'm telling the cobra about you.", "I'm going to pretend you didn't say that. The price isn't."];
 const qualityOf = (n) => ['legendary', 'epic', 'rare', 'uncommon', 'common', 'poor'].find(q => LOOT[q].includes(n)) || 'poor';
 const slotMatch = (slot, n) => slot === n || (slot === 'Slurpee (any flavor)' && String(n).startsWith('Slurpee'));
 const setOf = (n) => LOOT_SETS.find(s => !s.soon && !s.legacy && s.items.some(slot => slotMatch(slot, n)));
@@ -253,7 +263,7 @@ function render() {
     b.onclick = () => sold ? say(pick(['That one\'s yours already. I don\'t do doubles. I barely do singles.', 'Sold. To you. Remember? No refunds.'])) : showItem(i);
     goods.appendChild(b);
     const t = document.createElement('div'); t.className = 'tag' + (sold ? ' sold' : ''); t.style.left = (TAG_X[i] + .1) + '%'; t.style.setProperty('--qd', QDARK[it.q]);
-    t.innerHTML = sold ? 'SOLD' : `${short(priceOf(it.q))}<small>${it.q}</small>`;
+    t.innerHTML = sold ? 'SOLD' : `${short(priceFor(i))}<small>${it.q}</small>`;
     goods.appendChild(t);
   });
 }
@@ -265,18 +275,18 @@ function tick() {
 }
 
 function showItem(i) {
-  const it = STOCK[i], ic = iconOf(it.n), st = setOf(it.n), price = priceOf(it.q), card = $('card');
+  const it = STOCK[i], ic = iconOf(it.n), st = setOf(it.n), price = priceFor(i), card = $('card'), hg = (hag().items || {})[i];
   card.style.setProperty('--q', QCOL[it.q]);
   let setHtml = '';
   if (st) { const have = st.items.filter(slot => slot === 'Slurpee (any flavor)' ? Object.keys(get('painWheelFound', {}) || {}).some(k => k.startsWith('Slurpee')) || pendingNames().some(k => String(k).startsWith('Slurpee')) : owned(slot)).length; setHtml = `<div class="set">Part of <b>${st.name}</b>: you have ${have} of ${st.items.length}.${owned(it.n) ? '' : have + 1 === st.items.length ? ' <b>This finishes the set!</b>' : ''}<br><span style="color:#a8a29e">${st.perk}</span></div>`; }
   card.innerHTML = `<div class="pic">${ic ? `<img src="${ic}" alt="">` : `<span>${QEMO[it.q]}</span>`}</div><h2></h2><div class="ql">${it.q}${owned(it.n) ? ' · you have one' : ' · new for you'}</div>
-    <p class="desc"></p>${setHtml}<div class="price">${fmt(price)}</div><div class="pct">${Math.round(PCT[it.q] * 1000) / 10}% of your gold (at least ${fmt(FLOOR[it.q])})</div>
-    <div class="row"><button class="buy" type="button">🏷️ Buy it</button><button class="no" type="button">Just looking</button></div><div class="msg" role="status"></div>`;
+    <p class="desc"></p>${setHtml}<div class="price">${fmt(price)}</div><div class="pct">${Math.round(pctFor(i) * 1000) / 10}% of your gold (at least ${fmt(Math.round(FLOOR[it.q] * pctFor(i) / PCT[it.q]))})${hg ? (hg.won ? ' · haggled ✓' : ' · asshole tax 😤') : ''}</div>
+    <div class="row"><button class="buy" type="button">🏷️ Buy it</button>${hg ? '' : '<button class="hag" type="button">🤝 Haggle</button>'}<button class="no" type="button">Just looking</button></div><div class="hagrow"></div><div class="msg" role="status"></div>`;
   card.querySelector('h2').textContent = it.n; card.querySelector('.desc').textContent = ITEM_DESC[it.n] ? '"' + ITEM_DESC[it.n] + '"' : 'Axazon swears it is authentic.';
   const buy = card.querySelector('.buy');
   if (gold() < price) { buy.disabled = true; card.querySelector('.msg').textContent = 'You can\'t afford it. Axazon can tell.'; }
   buy.onclick = () => {
-    const p = priceOf(it.q), g = gold();
+    const p = priceFor(i), g = gold();
     if (g < p) { card.querySelector('.msg').textContent = 'You can\'t afford it. Axazon can tell.'; return; }
     if (myBuys(ROT.id).includes(i)) return;
     put('painWheelGold', g - p);   // the wheel picks the new total up (and the item, next time it's open)
@@ -287,6 +297,20 @@ function showItem(i) {
     say(pick(BUY_LINES).replace('{item}', it.n), 5200, 'shield');
   };
   card.querySelector('.no').onclick = () => { $('dlg').close(); if (Math.random() < .5) say(pick(LOOK_LINES)); };
+  const hb = card.querySelector('.hag');
+  if (hb) hb.onclick = () => {
+    const row = card.querySelector('.hagrow'); hb.remove();
+    row.innerHTML = HAGGLE.map(([t], k) => `<button type="button" data-k="${k}">${t}</button>`).join('');
+    row.querySelectorAll('button').forEach(btn => btn.onclick = () => {
+      const [, off, ch] = HAGGLE[+btn.dataset.k], base = PCT[it.q], won = Math.random() < ch;
+      const pc = won ? (off >= .5 ? base / 2 : Math.max(.01, base - off)) : base + .05;
+      const h = hag(); h.items = h.items || {}; h.items[i] = { pct: pc, won }; put('painWheelHaggle', h);
+      const line = won ? pick(HAG_YES) : off >= .5 ? pick(HAG_LOWBALL) : pick(HAG_NO);
+      $('dlg').close(); render(); POSE(won ? 'wave' : 'crossed', 3200);
+      if (!won && Math.random() < .3 && window.cobra) setTimeout(() => window.cobra(false), 900);
+      showItem(i); const m = $('card').querySelector('.msg'); m.innerHTML = '<b>Axazon:</b> '; m.append(line); m.classList.add('hagmsg');
+    });
+  };
   $('dlg').showModal();
 }
 $('dlg').addEventListener('click', (e) => { if (e.target === $('dlg')) $('dlg').close(); });

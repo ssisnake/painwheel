@@ -200,6 +200,37 @@ if (Math.random() < .35) {
   ada.onclick = () => { note('🔧 Ada: ' + pick(ADA), 5200); if (Math.random() < .4) setTimeout(() => say(pick(["Ada, you're blocking the aisle.", "Are you buying that or just hugging it?", "Ada. My favorite non-paying customer."]), 3200), 2600); };
 }
 
+// ---------- RANDOM EVENT: Greg (Ada's ram in a top hat) shows up and they fight about Andesite Heights in the middle of the aisle ----------
+(() => {
+  const SCRIPTS = [
+    [['g', "Ada. I've been looking for you. Andesite Heights needs a second crane."], ['a', "Greg, you're banned from heavy machinery. There's paperwork. I laminated it."], ['g', "The lamination was excessive."], ['a', "You drove a forklift into the ocean."], ['g', "It was a shortcut."]],
+    [['g', "The andesite goes at the TOP of the heights. It's in the name."], ['a', "The name is a NAME, Greg. Nobody builds a mountain upside down."], ['g', "Visionaries do."], ['a', "Visionaries don't eat the blueprints."], ['g', "They were delicious and you know it."]],
+    [['a', "Greg. Why is there a bulldozer in aisle 7?"], ['g', "I don't see a bulldozer."], ['a', "You're LEANING on it."], ['g', "This is a cane. A very large, diesel cane."]],
+    [['g', "I'll have you know I'm the foreman of Andesite Heights now."], ['a', "Who appointed you?"], ['g', "I did. I had a hat made."], ['a', "That's the same hat."], ['g', "It's a promotion hat. It's emotionally different."]]
+  ];
+  const KAREN = ["You two. Either buy something or take it to the parking lot.", "This is a HARDWARE store, not a construction dispute.", "Sir. Sir. The ram. Hooves off the merchandise.", "I'm charging both of you a loitering fee. It's 6% of your gold. Each."];
+  let on = false;
+  function mk(src, label, css) { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', label); b.style.cssText = 'position:absolute;padding:0;border:0;background:none;cursor:pointer;translate:-50% 0;transition:left 1.6s ease-in-out, opacity .8s;' + css;
+    b.innerHTML = `<img src="${src}" alt="" style="display:block;width:100%;height:auto;image-rendering:pixelated;filter:drop-shadow(0 .2cqw .2cqw rgba(0,0,0,.4))">`; $('scene').appendChild(b); return b; }
+  function gregFight() {
+    if (on || document.hidden) return; on = true;
+    let ada = document.querySelector('[aria-label="Ada, browsing in the back"]'), adaTemp = false;
+    if (!ada) { adaTemp = true; ada = mk('media/gnome_ada.png', 'Ada, browsing in the back', 'left:62%;bottom:33.6%;width:4.1%;z-index:1;opacity:0;filter:brightness(.82) saturate(.9)'); requestAnimationFrame(() => { ada.style.opacity = '1'; ada.style.left = '56.6%'; }); }
+    const greg = mk('media/gnome_greg.png', 'Greg, a ram in a top hat', 'left:44%;bottom:33.2%;width:4.3%;z-index:1;opacity:0;filter:brightness(.85) saturate(.9)');
+    greg.onclick = () => bubble(greg, pick(["I'm not banned. I'm on sabbatical from machinery.", "Andesite. Heights. Two words. One vision. Mine.", "Don't tell Ada I'm here. ...She can see me, can't she."]), 3800);
+    requestAnimationFrame(() => { greg.style.opacity = '1'; greg.style.left = '51.6%'; });
+    const sc = pick(SCRIPTS); let t = 2000;
+    sc.forEach(([who, line]) => { setTimeout(() => { const el = who === 'g' ? greg : ada; el.animate([{ translate: '-50% 0' }, { translate: '-50% -.5cqw' }, { translate: '-50% 0' }], { duration: 300 }); bubble(el, line, 3300); }, t); t += 3400; });
+    setTimeout(() => say(pick(KAREN), 3800), t); t += 4000;
+    setTimeout(() => {   // Greg storms off; if Ada only came in for the fight, she goes too
+      greg.style.left = '40%'; greg.style.opacity = '0'; if (adaTemp) { ada.style.left = '62%'; ada.style.opacity = '0'; }
+      setTimeout(() => { greg.remove(); if (adaTemp) ada.remove(); on = false; }, 1700);
+    }, t);
+  }
+  window.gregFight = gregFight;
+  if (Math.random() < .2) setTimeout(gregFight, 12000 + Math.random() * 30000);   // about 1 visit in 5
+})();
+
 // ---------- Cogsworth (a dwarf tinkerer, Claude's guy) sometimes browses the front of the aisle. If Ada's in, they bicker ----------
 if (Math.random() < .3) {
   const cog = document.createElement('button'); cog.type = 'button'; cog.setAttribute('aria-label', 'Cogsworth, squinting at a part');
