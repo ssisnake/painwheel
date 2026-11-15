@@ -71,7 +71,7 @@
   <button class="hs" data-hs="console" style="left:43.3%;top:35%;width:11.2%;height:7.5%" aria-label="The old console"></button>
   <button class="hs" data-hs="jar" style="left:24.5%;top:32%;width:4.3%;height:9%" aria-label="The jar on the shelf"></button>
   <button id="axa" type="button" aria-label="Axazon"><img id="axaImg" src="media/axa_crossed.png" alt=""></button>
-  <button id="cobra" type="button" aria-label="A wicker basket" style="position:absolute;left:84.5%;top:82.4%;width:7.6%;padding:0;border:0;background:none;cursor:pointer;z-index:2"><img src="media/cobra_still.png" alt="" style="display:block;width:100%;height:auto;image-rendering:pixelated;filter:drop-shadow(0 .3cqw .3cqw rgba(0,0,0,.5))"></button>
+  <button id="cobra" type="button" aria-label="A wicker basket" style="position:absolute;left:84.5%;top:86.2%;width:7.6%;padding:0;border:0;background:none;cursor:pointer;z-index:2"><img src="media/cobra_still.png" alt="" style="display:block;width:100%;height:auto;image-rendering:pixelated;filter:drop-shadow(0 .3cqw .3cqw rgba(0,0,0,.5))"></button>
   <div id="goods"></div>
   <div id="say" role="status"></div>
   <div id="closed"><b>CLOSED</b><p>A tarp, a folding table and a hand-painted sign. Nobody's home.<br>Land on <b style="font-size:inherit;color:#e879f9">Axazon's Emporium</b> on the wheel and he'll open up for you.</p><a href="wheel.html">🎡 Go spin</a></div>
@@ -259,7 +259,7 @@ function render() {
 }
 function tick() {
   const r = rotation();
-  if (r.id !== ROT.id) { ROT = r; STOCK = stockFor(r.id); render(); say('Fresh stock just came off the truck. Don\'t ask which truck.'); sfx('audio_door_chime'); }
+  if (r.id !== ROT.id) { ROT = r; STOCK = stockFor(r.id); render(); say('Fresh stock just came off the truck. Don\'t ask which truck.'); }
   const h = Math.floor(r.left / 36e5), m = Math.floor(r.left % 36e5 / 6e4);
   $('rot').innerHTML = `🕘 New stock in <b>${h ? h + 'h ' : ''}${m}m</b> (${r.next} Central)`;
 }
@@ -313,15 +313,28 @@ if (Math.random() < .5) $('axa').classList.add('right');   // some visits he sta
 // ---------- every once in a while a tumbleweed rolls through the stall ----------
 (function tumbleweed() {
   const host = $('axa').parentElement;
-  const roll = () => {
+  const roll = (forceStuck) => {
     if (document.hidden || host.querySelector('.tumble')) return;
     const t = document.createElement('img'); t.className = 'tumble'; t.src = 'media/photo_tumbleweed.gif'; t.alt = '';
-    const ltr = Math.random() < .5, y = 84 + Math.random() * 6, w = 5 + Math.random() * 2;
+    const ltr = Math.random() < .5, y = 87 + Math.random() * 2, w = 5 + Math.random() * 2;
     t.style.cssText = `position:absolute;top:${y}%;width:${w}%;z-index:3;pointer-events:none;${ltr ? '' : 'scale:-1 1;'}`;
     host.appendChild(t);
-    const a = t.animate([{ left: ltr ? '-8%' : '104%' }, { left: ltr ? '104%' : '-8%' }], { duration: 7000 + Math.random() * 4000, easing: 'linear' });
-    t.animate([{ translate: '0 0' }, { translate: '0 -1.4cqw', offset: .5 }, { translate: '0 0' }], { duration: 900, iterations: Infinity, easing: 'ease-in-out' });
-    a.onfinish = () => t.remove();
+    const stuck = (forceStuck === true) || (forceStuck !== false && Math.random() < .35);   // sometimes it rolls right into the cobra basket
+    const from = ltr ? -8 : 104, to = stuck ? (ltr ? 84.5 - w + 3.4 : 92.1 - 3.6) : (ltr ? 104 : -8), sp = 112 / (7000 + Math.random() * 4000);
+    const a = t.animate([{ left: from + '%' }, { left: to + '%' }], { duration: Math.abs(to - from) / sp, easing: stuck ? 'cubic-bezier(.3,0,.75,1)' : 'linear', fill: 'forwards' });
+    const hop = t.animate([{ translate: '0 0' }, { translate: '0 -1.4cqw', offset: .5 }, { translate: '0 0' }], { duration: 900, iterations: Infinity, easing: 'ease-in-out' });
+    a.onfinish = () => {
+      if (!stuck) return t.remove();
+      hop.cancel(); t.style.left = to + '%';
+      t.animate([{ rotate: '0deg' }, { rotate: (ltr ? 8 : -8) + 'deg' }, { rotate: (ltr ? -4 : 4) + 'deg' }, { rotate: '0deg' }], { duration: 500, iterations: 3 });   // wedged against the basket
+      setTimeout(() => {
+        if (window.cobraAngry) window.cobraAngry();
+        setTimeout(() => {   // the cobra smacks it back where it came from
+          const fly = t.animate([{ translate: '0 0', rotate: '0deg' }, { translate: `${ltr ? -18 : 18}cqw -14cqw`, rotate: (ltr ? -540 : 540) + 'deg', offset: .55 }, { translate: `${ltr ? -40 : 40}cqw 4cqw`, rotate: (ltr ? -900 : 900) + 'deg' }], { duration: 1600, easing: 'ease-out', fill: 'forwards' });
+          fly.onfinish = () => t.remove();
+        }, 650);
+      }, 1700);
+    };
   };
   const loop = () => setTimeout(() => { if (Math.random() < .45) roll(); loop(); }, 40000 + Math.random() * 50000);
   setTimeout(() => { if (Math.random() < .3) roll(); }, 9000);
@@ -372,6 +385,19 @@ setInterval(() => { showGold(); }, 5000);
   b.onclick = () => rise(true);
   setInterval(() => { if (!document.hidden && Math.random() < .12) rise(false); }, 60000);   // about once every 8 minutes, on its own
   window.cobra = rise;
+  const ANGRY = ["He hates tumbleweeds. Long story. Involves a hat.", "Nobody touches the basket. Not even the desert.", "That's the third one this week. He's keeping score.", "Steve's brother does NOT do mornings. Or tumbleweeds. Or you."];
+  const hiss = () => { try { const v = parseFloat(localStorage.getItem('painWheelVolume')); const vol = isNaN(v) ? .6 : v; if (!vol || localStorage.getItem('painWheelMuted') === 'true') return;
+      const ac = window.__hissAC = window.__hissAC || new (window.AudioContext || window.webkitAudioContext)(), n = ac.sampleRate * 1.1, buf = ac.createBuffer(1, n, ac.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.min(1, i / (ac.sampleRate * .04)) * Math.pow(1 - i / n, 1.6);
+      const src = ac.createBufferSource(), hp = ac.createBiquadFilter(), g = ac.createGain(); hp.type = 'bandpass'; hp.frequency.value = 5200; hp.Q.value = .8; g.gain.value = .35 * vol;
+      src.buffer = buf; src.connect(hp); hp.connect(g); g.connect(ac.destination); src.start(); } catch (e) {} };
+  window.cobraAngry = () => {
+    busy = true; img.src = 'media/cobra_anim.webp?n=' + (++n); hiss();
+    img.style.filter = 'drop-shadow(0 0 .6cqw rgba(239,68,68,.95)) saturate(1.4)';
+    b.animate([{ translate: '0 0' }, { translate: '-.4cqw 0' }, { translate: '.4cqw 0' }, { translate: '-.3cqw 0' }, { translate: '.3cqw 0' }, { translate: '0 0' }], { duration: 380, iterations: 3 });
+    if (typeof say === 'function') setTimeout(() => say(ANGRY[Math.floor(Math.random() * ANGRY.length)], 4200, 'shield'), 700);
+    setTimeout(() => { img.src = 'media/cobra_still.png'; img.style.filter = ''; busy = false; }, 2600);
+  };
 })();
 </script>
 <script>
@@ -379,7 +405,7 @@ setInterval(() => { showGold(); }, 5000);
 (() => {
   if (Math.random() > .03) return; const scene = document.getElementById('scene'); if (!scene) return;
   const f = document.createElement('button'); f.type = 'button'; f.setAttribute('aria-label', 'Something behind the basket');
-  f.style.cssText = 'position:absolute;left:82.6%;top:89.5%;width:4.6%;padding:0;border:0;background:none;cursor:pointer;z-index:1;transform:rotate(-70deg)';
+  f.style.cssText = 'position:absolute;left:82.6%;top:93%;width:4.6%;padding:0;border:0;background:none;cursor:pointer;z-index:1;transform:rotate(-70deg)';
   f.innerHTML = '<img src="media/photo_finger.png" alt="" style="display:block;width:100%;height:auto;filter:brightness(.8) drop-shadow(0 2px 2px rgba(0,0,0,.6))">';
   scene.appendChild(f);
   f.onclick = () => { if (typeof say === 'function') say(["Is that... Bibledaddy's finger? Don't look at me. I found it like that. It's not for sale. ...It's for sale.", "That finger has been trying to leave the wheel for weeks. It got this far. Respect.", "Finders keepers. That's not a store policy, that's a life policy."][Math.floor(Math.random() * 3)], 6000);
