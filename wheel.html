@@ -902,7 +902,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 14, 8:39 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 14, 8:41 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -5862,7 +5862,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
     $('cheatFind').addEventListener('input', (e) => { const q = e.target.value.trim().toLowerCase(); cheatList.querySelectorAll('[data-mode]').forEach(b => { b.style.display = !q || b.textContent.toLowerCase().includes(q) ? '' : 'none'; }); });
     $('cheatFind').addEventListener('keydown', (e) => e.stopPropagation());   // typing here shouldn't fire the hotkeys
     (function buildCheatEvents() {   // the newer gags, on demand (nothing here pays out gold)
-        const EV = [['🐸 Murloc raid', () => murlocRaid()], ['🧊 Iceberg', () => yachtIceberg(true)], ['🗡️ Stray glaive', () => strayGlaive(true)],
+        const EV = [['🐸 Murloc raid', () => murlocRaid()], ['🏐 Murloc spears Volley', () => murlocSkewer()], ['🧊 Iceberg', () => yachtIceberg(true)], ['🗡️ Stray glaive', () => strayGlaive(true)],
             ['🛸 Chicken abduction', () => chickenAbduct(true)], ['🐔 Roadkill', () => chickenRoadkill(true)],
             ['🦺 OSHA incident', () => oshaEvent()], ['🌵 Cartel abduction', () => cartelAbduction()], ['⏳ WoW Forever', () => toggleForever()],
             ['🏪 8/11 opening', () => { store.set('painWheel811Welcomed', false); welcome811(); }],
@@ -8098,6 +8098,49 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         }, 5600);
         return true;
     }
+    // ---------- 🐸🏐 the murloc spears Volley and parades him around for a couple of minutes ----------
+    let skewerOn = false;
+    function murlocSkewer() {
+        const m = $('pet-murloc'), v = $('pet-volley');
+        if (skewerOn || !m || !v || m._talking || v._talking) return false;
+        const mr = m.getBoundingClientRect(), vr = v.getBoundingClientRect(); if (!onView(mr) || !onView(vr)) return false;
+        skewerOn = true; m._talking = true; v._talking = true;
+        const fixedV = getComputedStyle(v).position === 'fixed', fixedM = getComputedStyle(m).position === 'fixed';
+        const toM = (x, y) => fixedM ? [x, y] : [x + scrollX, y + scrollY];
+        // charge at Volley
+        const [cx, cy] = toM(vr.left - 30, vr.top - 30);
+        const f = m.querySelector('.pet-flip'); if (f) f.style.transform = cx > (m._x || 0) ? 'scaleX(-1)' : '';
+        m.style.transition = 'transform 1.2s ease-in'; m.style.transform = `translate(${Math.round(cx)}px, ${Math.round(cy)}px)`; m._x = cx; m._y = cy;
+        petSay('murloc', pick(['MRGLGLGL!! (charging)', 'Mrrrgl... (eyeing the ball)', 'MRGL! (it has a face. it must be stopped)']));
+        setTimeout(() => petSay('volley', pick(['...', '... (Volley has seen this before)', '...!']), 700), 400);
+        let raf = 0, stuck = false;
+        const ride = () => {   // Volley stays on the spear tip wherever the murloc goes
+            if (!stuck) return;
+            const r = m.getBoundingClientRect(), x = r.left + r.width * .62, y = r.top - r.height * .28;
+            const [px, py] = fixedV ? [x, y] : [x + scrollX, y + scrollY];
+            v.style.transition = 'none'; v.style.transform = `translate(${Math.round(px)}px, ${Math.round(py)}px) rotate(${Math.sin(performance.now() / 300) * 8}deg)`; v._x = px; v._y = py;
+            raf = requestAnimationFrame(ride);
+        };
+        setTimeout(() => {   // STAB
+            const spr = m.querySelector('.murloc-spr'); if (spr) spr.style.animation = 'murSpear .25s steps(6) infinite, murWaddle .12s ease-in-out infinite alternate';
+            stuck = true; ride(); if (soundOn()) { if (AUDIO_CLUSSY) playClip('clussy', AUDIO_CLUSSY, playHonkSound); else playHonkSound(); }   // the sad squeak of a punctured ball
+            petSay('volley', pick(['...!!! (Volley is on the spear now)', '... (this is worse than the island)', '... (Volley is a kebab)']));
+            chatBurst(['THE MURLOC GOT VOLLEY', 'VOLLEYYYYY', 'WILSON NOOOO', 'mrgl kebab', 'someone call the coast guard', 'not the ball'], 4, 2200);
+            if (Math.random() < .5) setTimeout(() => sqPost('yacht', pick(['the murloc is walking around with Volley on a stick. please advise', 'lost: one volleyball. last seen on a spear. reward: none', "Gary would like it known he is NOT next"])), 2500);
+            setTimeout(() => { if (spr) spr.style.animation = ''; }, 1600);
+        }, 1300);
+        // the victory lap: the murloc wanders with his trophy for about two minutes
+        const lap = setInterval(() => { if (!stuck) return; const t = petTarget(m); petMove(m, t.x, t.y);
+            if (Math.random() < .5) petSay(Math.random() < .5 ? 'murloc' : 'volley', Math.random() < .5 ? pick(['MRGL! (trophy)', 'Mrglglgl (look what I got)', 'MRRRGL (the ball is mine now)']) : pick(['...', '... (Volley would like to get down)', '... (Volley is reconsidering the island)'])); }, 9000);
+        setTimeout(() => {   // Volley pops off
+            stuck = false; cancelAnimationFrame(raf); clearInterval(lap);
+            petSay('volley', pick(['... (Volley is free. Volley is never talking about this.)', "...(there's a hole in Volley now. Volley is fine.)"]));
+            setTimeout(() => petSay('murloc', 'mrgl... (sad gurgle)'), 900);
+            m._talking = false; v._talking = false; skewerOn = false;
+            const tv = petTarget(v); petMove(v, tv.x, tv.y); const tm = petTarget(m); petMove(m, tm.x, tm.y);
+        }, 120000);
+        return true;
+    }
     const BOAT_LINES = [
         ['ChAoTiC', 'Undermine Lake Patrol. Which is me. In a boat.'], ['Bibledaddy', 'Nobody told me there would be boats. I get seasick, bud.'],
         ['ChAoTiC', 'Sir, is this your murloc?'], ['Bibledaddy', 'I can patch the yacht. I cannot patch the murloc. Sorry eh.'],
@@ -8142,6 +8185,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
     setInterval(() => {
         if (document.hidden || isSpinning) return;
         if (pets.murloc && Math.random() < 1 / 8) murlocRaid();          // roughly every 15 minutes with the yacht
+        else if (pets.murloc && pets.volley && Math.random() < 1 / 10) murlocSkewer();   // now and then the murloc goes after Volley
         if (pets.whelp && themeDrift && Math.random() < 1 / 3) whelpChase();   // during holidays, every few minutes
     }, 120000);
     function petsReact(type, ctx) {
@@ -10075,6 +10119,8 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             ['🏅', "The original 8 sets are retired. The people who helped build The Wheel get them back forever with a personal code (Settings → Have a code?)."],
             ['🏆', "No One is now You're Winner ! (Big Rigs fans know.)"],
             ['🌙', "Go to Bed Evelyn plays a real lullaby now."],
+            ['🎵', "The music sits further back now, and it steps aside when the wheel lands on something with its own sound. The singing fish got cheaper speakers. They were already cheap."],
+            ['🏐', "If your murloc and Volley are both out... keep an eye on Volley."],
             ['🔨', "Gnome Depot has its own polaroid on The Board now. The shops all wear matching signs."],
             ['📺', "Channel 8/11 now has weather, Kevin TV, $KNOB and a lot of ads. The lights in the 8/11 are getting worse. That is on purpose. Probably."],
             ['🛒', "The Shop button asks which shop now: the 8/11, Gnome Depot or Axazon's Emporium (whichever you've found). Channel 8/11 News is on the TV in the corner. Click it to change the channel. It won't help."],
