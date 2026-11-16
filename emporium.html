@@ -379,10 +379,10 @@ if (Math.random() < .5) $('axa').classList.add('right');   // some visits he sta
 if (!isOpen()) $('closed').style.display = 'flex';
 else { const first = !get('painWheelSeenEmporium', false); put('painWheelSeenEmporium', true); setTimeout(() => say(first ? 'Did you really climb out that window? You special or something?' : pick(HELLO), first ? 6000 : 4800), 700); /* no door chime: it's a tent */ }
 
-/* ---------- the Dusty Unlabeled Bottle: some days it rolls out under the table at ONE restock (9 AM or 9 PM, never both).
+/* ---------- the Dusty Unlabeled Bottle: every day it rolls out under the table at ONE restock (9 AM or 9 PM, random which, never both).
    It looks like junk. It's a Knob Creek 21 with the label worn off, and it's the only thing Reb takes at the VIP door. ---------- */
 const DUSTY = 'Dusty Unlabeled Bottle';
-const dustyHere = (id) => { const day = Math.floor(id / 2), r = rng(day * 31 + 5); return r() < .15 && (r() < .5 ? 0 : 1) === id % 2; };
+const dustyHere = (id) => { const day = Math.floor(id / 2), r = rng(day * 31 + 5); r(); return (r() < .5 ? 0 : 1) === id % 2; };   // every day, at the morning OR the night restock (random which)
 const dustyPrice = () => Math.max(500, Math.round((gold() + vaultG()) * .02));
 function renderDusty() {
   let el = $('dusty'); const show = dustyHere(ROT.id) && get('painWheelDustyBought', null) !== ROT.id;

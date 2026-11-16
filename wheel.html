@@ -926,7 +926,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 15, 9:00 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 15, 9:19 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -7943,6 +7943,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         $('hpIncome').textContent = h.rent < 0 ? (hasPerk('goblin') ? 'HOA fee: waived (Goblin Portfolio)' : `HOA fee: ${h.rent}g every 10 minutes`) : `Rent income: ${RENT_PCT[HOUSE_LEVELS.indexOf(h)] * 100}% of your gold every 10 minutes (+${fmt(rentNow(h))} right now)`;
         const up = $('hpUpgrade');
         if (!store.get('painWheelTimeshare', false)) { up.textContent = `Buy the timeshare (${fmt(priceOf(.10))})`; up.disabled = false; }
+        else if (next && houseLevel === 5) { up.textContent = '📞 Call the yacht broker'; up.disabled = false; }
         else if (next) { up.textContent = `Upgrade to ${next.e} ${next.name}: ${fmt(next.cost)}`; up.disabled = false; }
         else { up.textContent = 'Fully upgraded. You are the goblin now.'; up.disabled = true; }
         up.style.display = !next && houseLevel >= 6 ? 'none' : '';   // maxed out: the Hearth plate takes this spot
@@ -7984,7 +7985,12 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             setGold(gold - tc); buyTimeshare(); renderHousePanel(); msg.textContent = 'Welcome, homeowner.'; return;
         }
         const next = HOUSE_LEVELS[houseLevel + 1]; if (!next) return;
+        if (houseLevel === 5) { brokerCall(false); return; }   // the yacht isn't for sale in a shop: you call the broker
         if (gold < next.cost) { msg.textContent = `You need ${(next.cost - gold).toLocaleString()}g more.`; return; }
+        upgradeHouse(next);
+    });
+    function upgradeHouse(next) {
+        const msg = $('hpMsg');
         setGold(gold - next.cost); houseLevel++; store.set('painWheelHouseLevel', houseLevel);
         renderHouseIcon(); renderHousePanel();
         msg.textContent = `Upgraded to ${next.name}!`;
@@ -7993,7 +7999,51 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         launchConfetti([...COINS, '🏠', '✨'], ['#4ade80', '#facc15', '#ffffff'], 0.5, 0.5);
         if (houseLevel >= 5) unlock('castle');
         if (houseLevel >= 6) { unlock('yacht'); renderHearth(); setTimeout(() => moveToast('⚓ Your yacht has a trophy room now. Go aboard from here, or cast your new Hearthstone.'), 1500); }
-    });
+    }
+    // ---- the yacht broker: once you own the castle, a slimy goblin calls with "an opportunity". You trade the castle in and pay his fee
+    //      (the fee is the yacht's old price, so nothing about the gold changed). He calls on his own about once every 6 hours; you can also call him from Home.
+    const BROKER_PITCH = ["Hey, big shot. Name's Slick Rizzlebolt, Undermine Luxury Vessels. Word is you've got a castle. Castles are out. Boats are in.",
+        "Slick here. Gallywix is... liquidating some assets. Don't ask why. Don't ask where he is. You want a yacht or not?",
+        "It's Slick again. The yacht's still available. Reb's already on it. He won't get off. Comes with the boat."];
+    let brokerBox = null;
+    function brokerCall(incoming) {
+        if (brokerBox || houseLevel !== 5) return; const next = HOUSE_LEVELS[6]; if (!next) return;
+        const box = brokerBox = document.createElement('div'); box.className = 'call-box';
+        box.style.cssText = 'position:fixed;z-index:79;left:16px;bottom:84px;width:min(380px,calc(100vw - 32px));padding:12px 14px;border-radius:14px;border:2px solid #facc15;background:linear-gradient(170deg,#1c1407,#2a1d0a);color:#fef3c7;box-shadow:0 12px 30px rgba(0,0,0,.6);font-size:16px';
+        box.innerHTML = `<div style="display:flex;gap:10px;align-items:center"><div style="width:52px;height:52px;border-radius:50%;background:#0b1220;border:2px solid #facc15;display:flex;align-items:center;justify-content:center;flex:none;font-size:30px">🛥️</div>
+            <div style="min-width:0"><div style="font-family:'JetBrains Mono',monospace;font-weight:800;color:#facc15;font-size:12px;letter-spacing:.12em">📞 ${incoming ? 'INCOMING CALL' : 'CALLING...'}</div><div style="font-weight:800;font-size:18px">Slick Rizzlebolt, Yacht Broker</div></div></div>
+            <div data-l style="margin-top:8px;font-weight:700;display:none"></div><div data-o style="margin-top:8px;display:none"></div><div data-m style="margin-top:6px;color:#fca5a5;font-size:14px"></div>
+            <div data-b style="display:flex;gap:8px;margin-top:10px"></div>`;
+        document.body.appendChild(box);
+        const btns = box.querySelector('[data-b]'), mk = (label, bg, fn) => { const b = document.createElement('button'); b.textContent = label; b.style.cssText = `flex:1;padding:8px;border-radius:10px;background:${bg};color:#fff;font-weight:800;cursor:pointer`; b.onclick = fn; btns.appendChild(b); return b; };
+        let ring = 0, miss = 0;
+        const end = (ms) => { clearInterval(ring); clearTimeout(miss); setTimeout(() => { box.style.transition = 'opacity .6s'; box.style.opacity = '0'; setTimeout(() => { box.remove(); if (brokerBox === box) brokerBox = null; }, 700); }, ms || 0); };
+        const talk = () => {
+            btns.innerHTML = ''; clearInterval(ring); clearTimeout(miss);
+            const l = box.querySelector('[data-l]'); l.style.display = ''; const nT = store.get('painWheelBrokerTalks', 0) || 0; store.set('painWheelBrokerTalks', nT + 1); l.textContent = '"' + (nT ? BROKER_PITCH[1 + nT % 2] : BROKER_PITCH[0]) + '"';
+            const o = box.querySelector('[data-o]'); o.style.display = ''; o.innerHTML = `<b>The deal:</b> trade in your 🏰 Undermine Castle + a broker fee of <b style="color:#facc15">${fmt(next.cost)}</b> for 🛥️ Gallywix's Yacht.`;
+            mk('🤝 Deal', '#16a34a', () => {
+                if (gold < next.cost) { box.querySelector('[data-m]').textContent = `"You're ${fmt(next.cost - gold)} short, pal. Call me when you're serious." *click*`; btns.innerHTML = ''; end(5000); return; }
+                l.textContent = '"Pleasure doing business. The castle? Oh, Kevin\'s gonna live there. He got a great rate." *click*'; o.style.display = 'none'; btns.innerHTML = '';
+                upgradeHouse(next); end(6000);
+            });
+            mk('Hang up', '#b91c1c', () => { box.querySelector('[data-m]').textContent = '"Your loss. I\'ll call back. I always call back." *click*'; btns.innerHTML = ''; end(3500); });
+            chatBurst(['who is calling', 'YACHT??', 'take the deal', "don't trust a goblin named Slick", 'boat arc'], 2, 1500);
+        };
+        store.set('painWheelBrokerCalled', Date.now());
+        if (!incoming) { talk(); return; }
+        playBrickRing(); ring = setInterval(playBrickRing, 3000);
+        mk('Answer', '#16a34a', talk);
+        mk('Ignore', '#b91c1c', () => { moveToast('📞 You sent Slick to voicemail. He left one. It is 4 minutes of boat noises.'); end(0); });
+        miss = setTimeout(() => { moveToast('📞 Missed call: Slick Rizzlebolt, Yacht Broker. He will call back.'); end(0); }, 20000);
+    }
+    setInterval(() => {   // he calls on his own: castle owners only, about every 6 hours, never mid-spin or over another call
+        if (EMBED_SHOP || houseLevel !== 5 || document.hidden || isSpinning || brokerBox || phoneBusy() || !callsOn() || document.body.classList.contains('ghost-town')) return;
+        try { if (strangerRinging || npcCallBox) return; } catch (e) { return; }
+        const last = store.get('painWheelBrokerCalled', 0);
+        if (!last) { store.set('painWheelBrokerCalled', Date.now() - 6 * 3600e3 + 3 * 60e3); return; }   // first call: a few minutes after you get the castle
+        if (Date.now() - last > 6 * 3600e3) brokerCall(true);
+    }, 60 * 1000);
     function payDebt(amt) {
         amt = Math.min(amt, goblinDebt, gold);
         if (amt <= 0) { $('hpMsg').textContent = gold <= 0 ? 'You are broke. The goblins laugh.' : ''; return; }
@@ -10323,6 +10373,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         showAfter: Date.parse('2026-11-07T06:00:00Z'),   // re-issued Nov 7 with corrected notes, so it pops up again for everyone
         lines: [
             ['🥃', "Reb is working the VIP door on the yacht now. He can't be bought with gold. He CAN be bought."],
+            ['🛥️', "You don't just buy the yacht anymore. Get the castle and a guy named Slick gives you a call."],
             ['🌵', "Forever is a once-a-year thing now. It opens on its anniversary week (Nov 4-10) and everyone goes. The rest of the year, the door's locked."],
             ['🐏', "Greg is in the claw machine now. Nobody knows how he got in there. He says he used a crane."],
             ['🏆', "14 new achievements, and a pile of new titles you can only earn. Some of them won't tell you how."],
