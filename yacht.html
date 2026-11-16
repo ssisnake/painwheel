@@ -698,7 +698,6 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
         el.style.backgroundSize = `auto ${Math.round(100 + 120 * k)}%`;   // 1x far out in the fog ... 2.2x right there
         el.style.setProperty('--fog', (0.9 * Math.pow(1 - k, .85)).toFixed(2));
         el.style.filter = `blur(${((1 - k) * 1.6).toFixed(2)}px) saturate(${(.55 + .45 * k).toFixed(2)})`;
-        el.classList.add('drift');
     }
     renderIsle();
     const VIEWS = [
