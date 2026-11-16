@@ -531,6 +531,11 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
         $('vWallet').textContent = fmt(gold); $('vVault').textContent = fmt(vault);
     }
     renderGold();
+    addEventListener('storage', (e) => {   // the wheel (or the 8/11 ATM) changed your gold in another tab: take theirs, don't write over it
+        if (e.key === 'painWheelGold') { gold = Math.min(1e300, Number(S.get('painWheelGold', 0)) || 0); renderGold(); }
+        if (e.key === 'painWheelVault') { vault = Math.min(1e300, Number(S.get('painWheelVault', 0)) || 0); renderGold(); }
+    });
+    const fresh = () => { gold = Math.min(1e300, Number(S.get('painWheelGold', 0)) || 0); vault = Math.min(1e300, Number(S.get('painWheelVault', 0)) || 0); };   // re-read right before any change
 
     // ---------- trophy cabinet ----------
     // Shelf spots, measured off Ada's case (px of the 2560x1085 room): 6 glass columns x 5 shelves = 30 per page. The case is drawn in
@@ -628,11 +633,11 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
     }
     function drawDial(err) { if (vBusy) return; $('vScr').innerHTML = (err ? `<div class="err">INVALID CODE<br>TRY AGAIN</div>` : '<div>ENTER CODE</div>') + `<div class="code">${'*'.repeat(entered.length)}${'_'.repeat(4 - entered.length)}</div>`; }
     function tryCombo() {
-        if (entered.length < 4) return;
+        if (entered.length < 4 || vaultOpen || vBusy || !$('vModal').classList.contains('open')) return;
         if (entered === COMBO) {   // ACCESS GRANTED, the big wheel spins, then the door opens
             entered = ''; vBusy = true; $('vScr').innerHTML = '<div>ACCESS<br>GRANTED</div><div class="ic">✓</div>'; sfx.open();
             setTimeout(() => { $('vWheel').classList.add('spin'); sfx.clunk(); $('vScr').innerHTML = '<div>OPENING<br>VAULT...</div><div class="bar"><i></i></div>'; requestAnimationFrame(() => requestAnimationFrame(() => { const i = $('vScr').querySelector('.bar i'); if (i) i.style.width = '100%'; })); }, 650);
-            setTimeout(() => { vBusy = false; vaultOpen = true; $('vWheel').classList.remove('spin'); showVault(); }, 2000);
+            setTimeout(() => { vBusy = false; vaultOpen = true; $('vWheel').classList.remove('spin'); showVault(); if (!$('vModal').classList.contains('open')) say('🏦 The vault swings open behind you. You walked away mid-unlock. It stays open anyway.'); }, 2000);
             return;
         }
         sfx.wrong(); $('vaultMsg').textContent = pick(WRONG);
@@ -656,7 +661,7 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
     $('fdicPlate').addEventListener('click', () => { sfx.click(); say('🏛️ "Deposits insured by the FDIC (Federal Deposit Insurance Cartel) up to 250,000g per goblin. Anything above that is a personal problem."', 6000); });
     $('hsVault').addEventListener('click', () => { sfx.clunk(); entered = ''; drawDial(); $('vaultMsg').textContent = ''; showVault(); if (!vaultOpen) say('📝 ' + NOTES[0], 5000); open('vModal'); });
     document.querySelectorAll('[data-dep]').forEach(b => b.addEventListener('click', () => {
-        const amt = Math.floor(gold * +b.dataset.dep);
+        fresh(); const amt = Math.min(Math.floor(gold * +b.dataset.dep), Math.floor(1e300 - vault));
         if (amt <= 0) { say("Your wallet is empty. The vault doesn't take IOUs. (Kevin does.)"); sfx.wrong(); return; }
         gold -= amt; vault = Math.min(1e300, vault + amt); saveGold(); sfx.coins(); award('vault');
         say('🏦 Stashed ' + fmt(amt) + ' offshore. The Goblin IRS will never find it.');
@@ -666,7 +671,7 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
     function vaultExact(dir) {
         const box = $('vAmt'), want = parseAmt(box.value);
         if (!(want > 0)) { say('Numbers only. Like 5000, 250k or 1.5m. The vault does not take poems.'); sfx.wrong(); box.focus(); return; }
-        const have = dir === 'in' ? gold : vault, amt = Math.min(want, Math.floor(have));
+        fresh(); const have = dir === 'in' ? gold : vault, amt = Math.min(want, Math.floor(have), Math.floor(1e300 - (dir === 'in' ? vault : gold)));
         if (amt <= 0) { say(dir === 'in' ? "Your wallet is empty. The vault doesn't take IOUs. (Kevin does.)" : 'The vault is empty. Just echoes. And a single Kevin hair.'); sfx.wrong(); return; }
         if (dir === 'in') { gold -= amt; vault = Math.min(1e300, vault + amt); award('vault'); } else { vault -= amt; gold = Math.min(1e300, gold + amt); }
         saveGold(); sfx.coins(); box.value = '';
@@ -675,9 +680,9 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
     }
     $('vAmtDep').addEventListener('click', () => vaultExact('in'));
     $('vAmtWd').addEventListener('click', () => vaultExact('out'));
-    $('vAmt').addEventListener('keydown', e => { if (e.key === 'Enter') vaultExact('in'); });
+    $('vAmt').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); say('Pick one: Stash (put it in) or Take out. The vault does not guess.'); } });
     document.querySelectorAll('[data-wd]').forEach(b => b.addEventListener('click', () => {
-        const amt = Math.floor(vault * +b.dataset.wd);
+        fresh(); const amt = Math.min(Math.floor(vault * +b.dataset.wd), Math.floor(1e300 - gold));
         if (amt <= 0) { say('The vault is empty. Just echoes. And a single Kevin hair.'); sfx.wrong(); return; }
         vault -= amt; gold = Math.min(1e300, gold + amt); saveGold(); sfx.coins();
         say('💰 Took out ' + fmt(amt) + '. Spend it on something stupid.');
@@ -718,7 +723,7 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
         sfx.coins();
         const day = new Date().toDateString();
         if (S.get('painWheelChandDay', '') !== day) {
-            S.set('painWheelChandDay', day); gold = Math.min(1e300, gold + 1); saveGold();
+            S.set('painWheelChandDay', day); fresh(); gold = Math.min(1e300, gold + 1); saveGold();
             say('🪙 A single coin falls off the chandelier. You pocket it. +1g. Gallywix will notice.');
         } else if (Date.now() - chandAt > 400) say('🪙 ' + pick(['The chandelier jingles. It is made of 4,000 gold coins and one Kevin tooth.', 'You already took a coin today. Greedy.',
             'Gallywix had it made from the guild repair fund.', 'It sways. The yacht is not moving. Why is it swaying?']));
@@ -833,7 +838,7 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
         if (takeDusty()) {
             lsPut('painWheelRebLetIn', true); showRebBottle();
             say('🥃 You hand Reb the dusty bottle. He wipes it on his shirt. Reads the label. Reads it again. "...is this a TWENTY-ONE? Where did you GET this?" He unhooks the rope without looking up from it.', 7000);
-            setTimeout(openVip, 4200); return;
+            setTimeout(() => { if (!$('vip').classList.contains('open')) openVip(); }, 4200); return;
         }
         say('🚧 ' + NOPE[vipRopeClicks++ % NOPE.length], 4200);
     });
@@ -854,12 +859,13 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
         tone(140, 0, .35, 'sawtooth', .05); tone(95, .2, .3, 'sawtooth', .05);   // chair creak
         $('vipMsg').textContent = 'You sit down. The chair molds to you. The monitors lean in closer.'; $('vipBar').style.display = 'none';
         $('vipScene').classList.add('zoom');
-        setTimeout(() => { depth = 1; renderMini(); $('mini').classList.add('open'); $('vipMsg').textContent = ''; }, 1250);
+        setTimeout(() => { if (!$('vip').classList.contains('open') || !$('vipScene').classList.contains('zoom')) return; depth = 1; renderMini(); $('mini').classList.add('open'); $('vipMsg').textContent = '';
+            if (window.axaPlace && window.AXA_2600 && !document.querySelector('#miniCore [aria-label="Something in the background"]')) axaPlace(window.AXA_2600); }, 1250);   // (the hidden Axazon goes in AFTER the tiny wheel exists)
         try { localStorage.setItem('painWheelSeen2600', 'true'); } catch (e) {}
     }
     $('vipSit').addEventListener('click', sitDown);
     window.vipSitDown = sitDown;
-    $('vipSit').addEventListener('click', () => setTimeout(() => { if (window.axaPlace && window.AXA_2600 && !document.querySelector('#miniCore [aria-label="Something in the background"]')) axaPlace(window.AXA_2600); }, 900));   // degen1350's desktop "The Wheel" icon launches the WHEEL-2600
+   // degen1350's desktop "The Wheel" icon launches the WHEEL-2600
     const VIP_SAY = {
         pc: ['The PC has 4,000 hours on one game. The game is The Wheel.', 'The fans are RGB. The RGB is set to "Kevin".', 'Hard drive: 2TB. All of it is wheel replays.', "It's running on Ultra. The wheel has never looked better."],
         head: ['The headset is still warm. Somebody was just here.', 'You put it on. Faintly, you hear the wheel ticking.', 'The mic is unmuted. It has been unmuted for three years.'],
@@ -1034,7 +1040,7 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
             return;
         }
         const vipPerk = (S.get('painWheelPerks', {}) || {}).vip || 0;   // the VIP Room set: the console pays real gold
-        if (label === '+1 GOLD') { if (vipPerk) { const g = Math.max(100, Math.round(gold * .02 * vipPerk)); gold = Math.min(1e300, gold + g); saveGold(); sfx.coins(); $('miniRes').textContent = `+${g.toLocaleString()} gold! The console hums. It's been counting toward a 200th slice.`; return; }
+        if (label === '+1 GOLD') { fresh(); if (vipPerk) { const g = Math.max(100, Math.round(gold * .02 * vipPerk)); gold = Math.min(1e300, gold + g); saveGold(); sfx.coins(); $('miniRes').textContent = `+${g.toLocaleString()} gold! The console hums. It's been counting toward a 200th slice.`; return; }
             gold = Math.min(1e300, gold + 1); saveGold(); sfx.coins(); $('miniRes').textContent = '+1 gold! It\'s a tiny wheel. What did you expect.'; return; }
         tone(660, 0, .15, 'triangle', .07); tone(880, .12, .2, 'triangle', .07);
         $('miniRes').textContent = line();
@@ -1052,7 +1058,7 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
     // ---------- welcome aboard ----------
     award('aboard');
     if (!S.get('painWheelYachtVisited', false)) { S.set('painWheelYachtVisited', true); setTimeout(() => say('🛥️ Welcome aboard! Click around. Your trophies are in the cabinet, your gold goes in the vault, and Reb is guarding the VIP door. Do not ask Reb anything.', 6500), 600); }
-    if (location.hash === '#vip') setTimeout(openVip, 600);   // arriving from the conspiracy board's VIP Room photo
+    if (location.hash === '#vip') setTimeout(() => { if (onList()) openVip(); else say('🚧 Reb blocks the door. "Nice try. The Board doesn\'t get you in. Bourbon gets you in."', 5200); }, 600);   // the Board's VIP photo can't skip Reb   // arriving from the conspiracy board's VIP Room photo
 })();
 </script>
 <script>
@@ -1110,7 +1116,7 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
 <script src="fish_song.js?v=31f920f8"></script>
 <script src="wallet.js?v=07cb4a3e"></script>
 <script>window.AXA_CAMEO = [{ id: 'yacht', host: '#stage', z: 1, filter: 'brightness(.5) saturate(.6)' }, { id: 'vip', host: '#vipStage', z: 1, filter: 'brightness(.5) saturate(.7)', clip: 'inset(0 0 42% 0)' }];
-window.AXA_2600 = { id: '2600', host: '#miniCore', x: 3.5, y: 87.3, w: 3.6, z: 3, filter: 'brightness(.85) saturate(.6) contrast(1.2)', op: .95, clip: 'inset(0 0 46% 0)' };   // bobbing in the WHEEL-2600's little ocean</script><script src="axa_cameo.js?v=5952bfe0"></script><script src="vip_pc.js?v=a8483c8d"></script><script src="wheeltari.js?v=0a1991e4"></script>
+window.AXA_2600 = { id: '2600', host: '#miniCore', x: 3.5, y: 87.3, w: 3.6, z: 3, filter: 'brightness(.85) saturate(.6) contrast(1.2)', op: .95, clip: 'inset(0 0 46% 0)' };   // bobbing in the WHEEL-2600's little ocean</script><script src="axa_cameo.js?v=5952bfe0"></script><script src="vip_pc.js?v=f6e647d9"></script><script src="wheeltari.js?v=ab9233e4"></script>
 <script src="logo_zoom.js?v=8c9b3e40"></script>
 <script>(() => { const b = document.getElementById('bar'); if (b && b.parentElement !== document.body) document.body.prepend(b); })();</script>
 <script>

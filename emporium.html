@@ -285,7 +285,7 @@ function tick() {
 }
 
 function showItem(i) {
-  const it = STOCK[i], ic = iconOf(it.n), st = setOf(it.n), price = priceFor(i), card = $('card'), hg = (hag().items || {})[i];
+  const rotAt = ROT.id, it = STOCK[i], ic = iconOf(it.n), st = setOf(it.n), price = priceFor(i), card = $('card'), hg = (hag().items || {})[i];
   card.style.setProperty('--q', QCOL[it.q]);
   let setHtml = '';
   if (st) { const have = st.items.filter(slot => slot === 'Slurpee (any flavor)' ? Object.keys(get('painWheelFound', {}) || {}).some(k => k.startsWith('Slurpee')) || pendingNames().some(k => String(k).startsWith('Slurpee')) : owned(slot)).length; setHtml = `<div class="set">Part of <b>${st.name}</b>: you have ${have} of ${st.items.length}.${owned(it.n) ? '' : have + 1 === st.items.length ? ' <b>This finishes the set!</b>' : ''}<br><span style="color:#a8a29e">${st.perk}</span></div>`; }
@@ -296,6 +296,7 @@ function showItem(i) {
   const buy = card.querySelector('.buy');
   if (gold() < price) { buy.disabled = true; card.querySelector('.msg').textContent = (vaultG() > 0 ? 'Not enough on you. Your vault counts toward the price, but Axazon wants cash. The 8/11 ATM is next door. Ish.' : 'You can\'t afford it. Axazon can tell.'); }
   buy.onclick = () => {
+    if (ROT.id !== rotAt) { card.querySelector('.msg').textContent = 'Too slow. That went back on the truck. Fresh stock is out.'; buy.disabled = true; return; }   // the stock turned over while this was open
     const p = priceFor(i), g = gold();
     if (g < p) { card.querySelector('.msg').textContent = (vaultG() > 0 ? 'Not enough on you. Your vault counts toward the price, but Axazon wants cash. The 8/11 ATM is next door. Ish.' : 'You can\'t afford it. Axazon can tell.'); return; }
     if (myBuys(ROT.id).includes(i)) return;
@@ -395,13 +396,14 @@ function renderDusty() {
   el.innerHTML = '<img src="media/bottle_dusty.webp" alt="">'; el.onclick = showDusty; $('goods').appendChild(el);
 }
 function showDusty() {
-  const card = $('card'), price = dustyPrice(); card.style.setProperty('--q', QCOL.poor);
+  const rotAt = ROT.id, card = $('card'), price = dustyPrice(); card.style.setProperty('--q', QCOL.poor);
   card.innerHTML = `<div class="pic"><img src="media/bottle_dusty.webp" alt="" style="image-rendering:auto"></div><h2></h2><div class="ql">poor · not part of any set</div>
     <p class="desc"></p><div class="price">${fmt(price)}</div><div class="pct">It was under the table. Axazon didn't even know he had it.</div>
     <div class="row"><button class="buy" type="button">🏷️ Buy it</button><button class="no" type="button">Just looking</button></div><div class="msg" role="status"></div>`;
   card.querySelector('h2').textContent = DUSTY; card.querySelector('.desc').textContent = '"' + pick(['That? Found it in the desert with the fish. Take it, it\'s taking up floor.', 'Old bottle. No label. Could be anything. Probably nothing.', 'You want the dusty bottle? Sure. Weirdo.']) + '"';
   const buy = card.querySelector('.buy');
   buy.onclick = () => {
+    if (ROT.id !== rotAt || !dustyHere(ROT.id)) { card.querySelector('.msg').textContent = 'Somebody else grabbed it. Restock just happened. Check again later.'; buy.disabled = true; renderDusty(); return; }
     const p = dustyPrice(), g = gold();
     if (g < p) { card.querySelector('.msg').textContent = 'You can\'t afford it. Axazon can tell. It\'s a dusty bottle, man.'; return; }
     if (get('painWheelDustyBought', null) === ROT.id) return;
@@ -559,7 +561,7 @@ setInterval(() => { showGold(); }, 5000);
         if (n <= 3 || !(hasCart() && hasGlobe())) { coat(); return; }   // he always has something for you
         const d = document.getElementById('say'); d.innerHTML = '<b>The stranger:</b> '; d.append(pick(SAY)); d.style.setProperty('--tail', '8%'); d.style.display = 'block'; clearTimeout(window.__strT); window.__strT = setTimeout(() => d.style.display = 'none', 5200);
         if (n >= 5) { el.style.translate = '-120% 0'; el.style.opacity = '0'; setTimeout(() => { el && el.remove(); el = null; }, 1500); setTimeout(() => typeof say === 'function' && say("Who? There's nobody there. There's never anybody there. ...Was there?", 4200), 1700); } };
-    } else if (!night && el) { el.remove(); el = null; }
+    } else if (!night && el) { el.remove(); el = null; try { sessionStorage.removeItem('pwStranger'); sessionStorage.removeItem('pwStrangerMissed'); } catch (e) {} }   // daybreak: he can turn up again tonight
   };
   setTimeout(place, 1200); setInterval(place, 60000);
 })();

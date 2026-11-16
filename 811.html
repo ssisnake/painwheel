@@ -422,7 +422,7 @@ const atmScr = (html) => { $('atmScr').innerHTML = html; };
 const atmCardTier = () => { if (!get('painWheelGoblinCard', false)) return 'plain'; const n = get('painWheelCardCharges', 0) || 0; return n >= 50 ? 'black' : n >= 10 ? 'plat' : 'red'; };
 const atmCardName = { plain: 'your sad debit card', red: 'your Goblin Express', black: 'your Goblin Express Black', plat: 'your Goblin Express Platinum' };
 let atmAC = null;
-const atmBeep = (f = 1150, d = .07) => { try { const v = parseFloat(localStorage.getItem('painWheelVolume')); const vv = isNaN(v) ? .6 : Math.max(0, Math.min(1, v)); if (!vv) return;
+const atmBeep = (f = 1150, d = .07) => { try { if (localStorage.getItem('painWheelMuted') === 'true') return; const v = parseFloat(localStorage.getItem('painWheelVolume')); const vv = isNaN(v) ? .6 : Math.max(0, Math.min(1, v)); if (!vv) return;
   atmAC = atmAC || new (window.AudioContext || window.webkitAudioContext)(); if (atmAC.state === 'suspended') atmAC.resume();
   const o = atmAC.createOscillator(), g = atmAC.createGain(); o.type = 'square'; o.frequency.value = f; g.gain.setValueAtTime(.035 * vv, atmAC.currentTime); g.gain.exponentialRampToValueAtTime(.0001, atmAC.currentTime + d);
   o.connect(g); g.connect(atmAC.destination); o.start(); o.stop(atmAC.currentTime + d + .02); } catch (e) {} };
@@ -472,7 +472,7 @@ const closeAtm = () => { $('atm').classList.remove('open'); atmState = 'idle'; s
 function atmMove(dir, want) {
   const g = Math.max(0, Number(get('painWheelGold', 0)) || 0), v = vaultBal();
   if (!(want > 0)) { atmBal('<span class="err">TYPE AN AMOUNT ON THE KEYPAD.</span>'); return; }
-  const amt = Math.min(Math.floor(want), dir === 'in' ? g : v);
+  const amt = Math.min(Math.floor(want), dir === 'in' ? g : v, Math.floor(1e300 - (dir === 'in' ? v : g)));   // never push past the cap (that gold would just vanish)
   if (amt <= 0) { atmBal(`<span class="err">${dir === 'in' ? 'INSUFFICIENT FUNDS.' : 'THE VAULT IS EMPTY. JUST ECHOES.'}</span>`); atmBeep(180, .25); return; }
   if (dir === 'in') { put('painWheelGold', g - amt); put('painWheelVault', Math.min(1e300, v + amt)); } else { put('painWheelVault', v - amt); put('painWheelGold', Math.min(1e300, g + amt)); }
   atmBuf = ''; showGold(); atmBeep(1300, .08); setTimeout(() => atmBeep(1700, .1), 90);

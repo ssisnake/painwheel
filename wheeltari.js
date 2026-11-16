@@ -34,7 +34,7 @@
   let ac = null;
   const vol = () => { const v = parseFloat(localStorage.getItem('painWheelVolume')); return isNaN(v) ? .6 : Math.max(0, Math.min(1, v)); };
   function beep(f, t0, dur, g = .05, type = 'square') {
-    const v = vol(); if (!v) return;
+    const v = vol(); if (!v || localStorage.getItem('painWheelMuted') === 'true') return;
     try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === 'suspended') ac.resume();
       const o = ac.createOscillator(), a = ac.createGain(); o.type = type; o.frequency.value = f; a.gain.setValueAtTime(g * v, ac.currentTime + t0); a.gain.exponentialRampToValueAtTime(.0001, ac.currentTime + t0 + dur);
       o.connect(a); a.connect(ac.destination); o.start(ac.currentTime + t0); o.stop(ac.currentTime + t0 + dur + .02); } catch (e) {}
@@ -70,7 +70,7 @@
   const under = (rot) => { let a = -Math.PI / 2 - rot; a = ((a % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2); return Math.floor(a / A); };
 
   // ---------- state ----------
-  let st = 'off', rot = 0, spinning = false, score = 0, lives = 3, last = '', hi = G('painWheelWheeltariHi', 0) || 0, anim = 0, iv = 0, frame = 0;
+  let spinId = 0, st = 'off', rot = 0, spinning = false, score = 0, lives = 3, last = '', hi = G('painWheelWheeltariHi', 0) || 0, anim = 0, iv = 0, frame = 0;
   const hasCart = () => !!G('painWheelCart', false);
   const pad = (n) => String(n).padStart(6, '0');
   function draw() {
@@ -103,7 +103,7 @@
     msg('📺 ' + (hasCart() ? 'The TV hums to life. WHEELTARI. Press fire. (Click the TV, or hit Space.)' : pick(['The TV warms up. WHEELTARI 2601. INSERT CART. Every cart in this room is a dud.', 'Click. Hum. WHEELTARI. It wants a cartridge. A real one.'])));
   }
   function powerOff() {
-    if (st === 'off') return; cancelAnimationFrame(anim); spinning = false; st = 'off';
+    if (st === 'off') return; cancelAnimationFrame(anim); spinId++; spinning = false; st = 'off';   // spinId: any spin still in flight sees it changed and stops
     scr.classList.remove('on'); glow.classList.remove('on'); tvBtn.dataset.label = '📺 The TV (it\'s off)'; beep(90, 0, .12, .04, 'sawtooth');
   }
   let noCart = 0;
@@ -121,11 +121,11 @@
     }
     if (st === 'over') { st = 'play'; score = 0; lives = 3; last = ''; draw(); return; }
     if (spinning) return;
-    spinning = true; last = '';
+    spinning = true; last = ''; const my = ++spinId;
     const t0 = performance.now(), dur = 2300 + Math.random() * 900, start = rot, total = Math.PI * 2 * (3 + Math.random() * 2) + Math.random() * Math.PI * 2;
     let lastS = under(rot);
     (function step(now) {
-      if (st !== 'play') return;
+      if (st !== 'play' || my !== spinId) return;
       const t = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - t, 3); rot = start + total * e;
       const u = under(rot); if (u !== lastS) { lastS = u; beep(1200, 0, .02, .025); }
       draw(); if (t < 1) requestAnimationFrame(step); else land(u);
@@ -151,6 +151,8 @@
     if (st === 'off' || !vip.classList.contains('open')) return;
     const mini = document.getElementById('mini'), pc = document.getElementById('pc98');
     if ((mini && mini.classList.contains('open')) || (pc && pc.classList.contains('open'))) return;
+    const f = document.activeElement;   // don't steal Enter/Space from a button or box that has focus (unless it's the TV itself)
+    if (f && f !== document.body && f !== tvBtn && /^(BUTTON|INPUT|TEXTAREA|SELECT|A)$/.test(f.tagName)) return;
     if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); fire(); }
   });
   new MutationObserver(() => { if (!vip.classList.contains('open')) powerOff(); }).observe(vip, { attributes: true, attributeFilter: ['class'] });
