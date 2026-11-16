@@ -237,10 +237,12 @@
     #vipPoster .pFine { font: 700 .42cqw Arial, sans-serif; color: #c4b5fd; }
     @keyframes vipSpin { to { transform: rotate(360deg); } }
     /* the lava lamp on the cable box (8 frames, slow) and the featured snow globe on the desk */
-    #lava { position: absolute; left: 93.25%; top: 20.9%; width: 2.9%; aspect-ratio: 124 / 344; pointer-events: none; background: url("media/lava_strip.webp") 0 0 / 800% 100% no-repeat;
-        animation: lava 7.2s steps(8) infinite; filter: drop-shadow(0 0 .8cqw rgba(251,113,33,.35)); }
+    #lava { position: absolute; left: 93.2%; top: 20.6%; width: 3%; aspect-ratio: 128 / 348; pointer-events: none; background: url("media/lava_classic.webp") 0 0 / 800% 100% no-repeat;
+        animation: lava 7.2s steps(8) infinite; filter: drop-shadow(0 0 .8cqw var(--lavaGlow, rgba(251,113,33,.35))); transition: filter .4s; }
+    #lava.zap { animation: lava 7.2s steps(8) infinite, lavaZap .5s ease-out; }
+    @keyframes lavaZap { 0% { filter: brightness(1.8) drop-shadow(0 0 1.4cqw #fff7c2); } 100% { } }
     @keyframes lava { to { background-position: 114.2857% 0; } }
-    #lavaGlow { position: absolute; left: 91.6%; top: 18%; width: 6.4%; height: 22%; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, rgba(251,113,33,.22), transparent); }
+    #lavaGlow { position: absolute; left: 91.6%; top: 18%; width: 6.4%; height: 22%; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, var(--lavaGlow2, rgba(251,113,33,.22)), transparent); }
     #deskGlobe { position: absolute; left: 50.25%; top: 51.3%; width: 2.1%; pointer-events: none; display: none; }
     #deskGlobe .globe .gl i { font-size: 1.05cqw; }
     #cartStack { position: absolute; left: 44.6%; top: 85.4%; width: 4%; pointer-events: none; filter: brightness(.7) saturate(.85) drop-shadow(.2cqw .3cqw .3cqw rgba(0,0,0,.6)); }
@@ -422,7 +424,7 @@
         <button class="hs" data-vsay="vcr" data-label="📼 VCR (blinking 12:00)" style="left:81%;top:39.5%;width:7.5%;height:6.2%"></button>
         <button class="hs" data-vsay="lamp" data-label="🌋 Lava lamp" style="left:92.9%;top:19.5%;width:3.6%;height:20%"></button>
         <button class="hs" data-vsay="statue" data-label="🗿 Gold goblin statue" style="left:89%;top:27%;width:3.4%;height:14%"></button>
-        <button class="hs" data-vsay="strip" data-label="🔌 Power strip (OSHA has entered the chat)" style="left:74.6%;top:85.8%;width:11.8%;height:12%"></button>
+        <button class="hs" id="vipStrip" data-label="🔌 Power strip (OSHA has entered the chat)" style="left:74.6%;top:85.8%;width:11.8%;height:12%"></button>
         <button class="hs" data-vsay="chips" data-label="🥔 Goblin Hole Chips" style="left:87.1%;top:84%;width:8.2%;height:14.3%"></button>
     </div></div>
     <div id="vipBar"><button class="btn go" id="vipSit">🪑 Sit down</button><button class="btn" id="vipLeave">🚪 Leave quietly</button><a class="btn" href="./" style="text-decoration:none"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a></div>
@@ -946,6 +948,20 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
     $('vipPoster').addEventListener('click', () => { tone(330, 0, .4, 'sine', .05); tone(495, .1, .5, 'sine', .04); $('vipMsg').textContent = '🕯️ ' + POSTER[Math.min(posterClicks++, POSTER.length - 1)]; });
     $('vipChair').addEventListener('click', sitDown);
     $('vipMid').addEventListener('click', sitDown);
+    // ---- the power strip changes the lava lamp's color. Goblin tech: nobody knows why. It just does. (Ada's color sheets) ----
+    const LAVA = [['classic', '251,113,33'], ['red', '239,68,68'], ['orange', '249,115,22'], ['yellow', '250,204,21'], ['green', '74,222,128'], ['blue', '56,189,248'], ['purple', '168,85,247'], ['pink', '244,114,182'], ['wheel_blobs', '250,204,21'], ['greg_heads', '220,38,38']];
+    const LAVA_SAY = { wheel_blobs: 'The blobs are tiny wheels now. They are spinning. Nobody plugged anything new in.', greg_heads: 'The lava is Greg. Little Greg heads, floating up and down. Ada has been notified. Ada is not surprised.' };
+    function setLava(k, zap) { const L = LAVA.find(x => x[0] === k) || LAVA[0], el = $('lava'), g = $('lavaGlow');
+        el.style.backgroundImage = `url("media/lava_${L[0]}.webp")`; el.style.setProperty('--lavaGlow', `rgba(${L[1]},.4)`); g.style.setProperty('--lavaGlow2', `rgba(${L[1]},.22)`);
+        if (zap) { el.classList.remove('zap'); void el.offsetWidth; el.classList.add('zap'); } }
+    setLava(S.get('painWheelLava', 'classic'));
+    let stripN = 0;
+    $('vipStrip').addEventListener('click', () => {
+        const i = LAVA.findIndex(x => x[0] === S.get('painWheelLava', 'classic')), nx = LAVA[(i + 1) % LAVA.length][0];
+        S.set('painWheelLava', nx); setLava(nx, true); noise(0, .08, .1, 3000); tone(90, 0, .12, 'sawtooth', .05);   // a little zzzt
+        $('vipMsg').textContent = '⚡ ' + (LAVA_SAY[nx] || pick(['You wiggle a plug. Zzzt. The lava lamp changes color. Nobody knows why. It just does.', 'Goblin tech. The power strip and the lava lamp are not connected. The lava lamp changed color anyway.',
+            'You flip the switch on the strip. Nothing it is plugged into changes. The lava lamp across the room does.', 'Zzzt. New color. OSHA has been notified. OSHA declined to board.']));
+    });
     $('vipDoor').addEventListener('click', () => { closeVip(); say('🚪 ' + pick(['You back out slowly. The monitors keep spinning without you.', 'Reb closes the door behind you. "Don\'t touch anything else."', 'You leave. The chair sighs.'])); });   // the middle monitor is the wheel inside the wheel
     document.querySelectorAll('.vipDesk').forEach(b => b.addEventListener('click', () => { sfx.click(); if (window.openVipPc) window.openVipPc(); }));   // the side monitors are degen1350's desktop
     $('vipChair').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); sitDown(); } });
