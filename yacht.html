@@ -387,7 +387,7 @@
         <button class="hs" data-vsay="head" data-label="🎧 Headset (still warm)" style="left:39.7%;top:55.4%;width:3.7%;height:5%"></button>
         <button class="hs" data-vsay="mug" data-label="☕ Goblin mug" style="left:44.5%;top:54%;width:2.8%;height:6%"></button>
         <button class="hs" id="vipDish" data-label="❄️ Snow globe dish" style="left:48.4%;top:54.6%;width:5.7%;height:6%"></button>
-        <button class="hs" data-vsay="door" data-label="🚪 Door (leaving is optional)" style="left:0;top:9%;width:4.4%;height:74%"></button>
+        <button class="hs" id="vipDoor" data-label="🚪 Door (back to the yacht)" style="left:0;top:9%;width:4.4%;height:74%"></button>
         <button class="hs vipDesk" id="vipMon1" data-label="🖥️ Monitor #1 (degen1350's desktop)" style="left:20.4%;top:37%;width:8.5%;height:16.8%"></button>
         <button class="hs" id="vipMid" data-label="🎡 THE WHEEL (sit down and play)" style="left:29%;top:36.5%;width:13.2%;height:17%"></button>
         <button class="hs vipDesk" id="vipMon3" data-label="🖥️ Monitor #3 (degen1350's desktop)" style="left:42.6%;top:37%;width:8.9%;height:16.8%"></button>
@@ -915,7 +915,8 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
         'A note taped to the back: "If you are reading this, you are already a member. Sit down."'];
     $('vipPoster').addEventListener('click', () => { tone(330, 0, .4, 'sine', .05); tone(495, .1, .5, 'sine', .04); $('vipMsg').textContent = '🕯️ ' + POSTER[Math.min(posterClicks++, POSTER.length - 1)]; });
     $('vipChair').addEventListener('click', sitDown);
-    $('vipMid').addEventListener('click', sitDown);   // the middle monitor is the wheel inside the wheel
+    $('vipMid').addEventListener('click', sitDown);
+    $('vipDoor').addEventListener('click', () => { closeVip(); say('🚪 ' + pick(['You back out slowly. The monitors keep spinning without you.', 'Reb closes the door behind you. "Don\'t touch anything else."', 'You leave. The chair sighs.'])); });   // the middle monitor is the wheel inside the wheel
     document.querySelectorAll('.vipDesk').forEach(b => b.addEventListener('click', () => { sfx.click(); if (window.openVipPc) window.openVipPc(); }));   // the side monitors are degen1350's desktop
     $('vipChair').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); sitDown(); } });
 
