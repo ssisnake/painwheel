@@ -328,7 +328,7 @@ function showItem(i) {
 $('dlg').addEventListener('click', (e) => { if (e.target === $('dlg')) $('dlg').close(); });
 
 const HELLO = ['Welcome to the Emporium. Everything is authentic. Mostly. Some of it.', 'Look with your eyes. Then buy with your gold.', 'Fresh from the guild bank. Don\'t tell the guild bank.',
-  'Every item here fell off a gryphon. Legally.', 'You break it, you bought it. You look at it too long, you also bought it.', 'Back again? Good. Stock turns over at 9 and 9. Central. Like civilized people.'];
+  'Every item here fell off a gryphon. Legally.', 'You break it, you bought it. You look at it too long, you also bought it.', 'Back again? Good. Stock turns over at 9 and 9. Central. Like civilized people.', "Hooded guy? Over there? I don't see anybody. He keeps hours. Mornings, lunch, after work, late. Don't ask me how I know."];
 const BUY_LINES = ['Pleasure doing business. The {item} is on its way to your bag.', 'SOLD. The {item} will be in your bag next time you\'re at the wheel.', 'Great choice. Terrible price. Great choice.',
   'No refunds. Ever. I want that understood. Enjoy the {item}.', 'Wrapped it in a Discord log for you. Free of charge. This time.'];
 const LOOK_LINES = ['Looking is free. For now.', 'That price goes up every time you put it down.', 'Fine. It\'ll be here. Probably. Until 9.'];
@@ -381,7 +381,7 @@ if (Math.random() < .5) $('axa').classList.add('right');   // some visits he sta
 })();
 
 if (!isOpen()) $('closed').style.display = 'flex';
-else { const first = !get('painWheelSeenEmporium', false); put('painWheelSeenEmporium', true); setTimeout(() => say(first ? 'Did you really climb out that window? You special or something?' : pick(HELLO), first ? 6000 : 4800), 700); /* no door chime: it's a tent */ }
+else { const first = !get('painWheelSeenEmporium', false); window.__empFirst = first; put('painWheelSeenEmporium', true); setTimeout(() => say(first ? 'Did you really climb out that window? You special or something?' : pick(HELLO), first ? 6000 : 4800), 700); /* no door chime: it's a tent */ }
 
 /* ---------- the Dusty Unlabeled Bottle: every day it rolls out under the table at ONE restock (9 AM or 9 PM, random which, never both).
    It looks like junk. It's a Knob Creek 21 with the label worn off, and it's the only thing Reb takes at the VIP door. ---------- */
@@ -389,7 +389,7 @@ const DUSTY = 'Dusty Unlabeled Bottle';
 const dustyHere = (id) => { const day = Math.floor(id / 2), r = rng(day * 31 + 5); r(); return (r() < .5 ? 0 : 1) === id % 2; };   // every day, at the morning OR the night restock (random which)
 const dustyPrice = () => Math.max(500, Math.round((gold() + vaultG()) * .02));
 function renderDusty() {
-  let el = $('dusty'); const show = dustyHere(ROT.id) && get('painWheelDustyBought', null) !== ROT.id;
+  let el = $('dusty'); if (el) el.remove(); return;   // (moved: the hooded stranger sells it now) const show = dustyHere(ROT.id) && get('painWheelDustyBought', null) !== ROT.id;
   if (!show) { if (el) el.remove(); return; }
   if (el) return;
   el = document.createElement('button'); el.id = 'dusty'; el.type = 'button'; el.title = 'Something under the table'; el.setAttribute('aria-label', 'A dusty bottle under the table');
@@ -509,7 +509,8 @@ setInterval(() => { showGold(); }, 5000);
 <script src="fish_song.js?v=31f920f8"></script>
 <script src="wallet.js?v=07cb4a3e"></script>
 <script>
-// ---- after dark, sometimes a hooded stranger with a tiny wheel lurks at the edge of the stall (Ada's "secret person"). Nobody knows who he is. ----
+// ---- the hooded stranger: our traveling merchant for rare and unusual things. He keeps hours (Central): 6-8 AM, noon-2 PM, 6-8 PM, 11 PM-1 AM,
+// so day people and night people both catch him. Your 2nd visit to the flea market he's always there, with Reb's dusty bottle (his introduction). ----
 (() => {
   const sc = document.getElementById('scene'); if (!sc) return;
   const SAY = ["...the little wheel says you should not have come at night.", "I sell nothing. I only spin. ...You wouldn't understand.", "Every wheel has a wheel inside it. Ask the VIP room.",
@@ -522,19 +523,29 @@ setInterval(() => { showGold(); }, 5000);
   const hasCart = () => !!get('painWheelCart', false), hasGlobe = () => !!((get('painWheelGlobes', {}) || {}).flea);
   const GLOBE_LINES = ["...A snow globe. Out of everything in this coat. Hehehe... alright, stranger.", "You want the snow globe? I've got a cursed amulet right here... no? Fine.",
     "It doesn't snow in the desert, stranger. That's what makes it special.", "Shake it gently. The little guy inside doesn't like it.", "Nobody's ever bought one of these. I was starting to think they were decorative."];
-  function coat() {
+  const bottleOwned = () => !!(get('painWheelStrangerBottle', false) || get('painWheelDustyBought', null) !== null || get('painWheelRebLetIn', false) || ((get('painWheelBag', {}) || {})[DUSTY]) || (get('painWheelPendingLoot', []) || []).some(l => l && l[2] === DUSTY));
+  function coat(intro) {
     const card = $('card'); card.style.setProperty('--q', '#a855f7');
     const row = (img, name, sub, price, owned, id) => `<div style="display:flex;gap:12px;align-items:center;margin:10px 0;padding:10px;border-radius:10px;background:rgba(0,0,0,.35);border:1px solid #57534e">
       <div style="width:84px;height:84px;flex:none;display:grid;place-items:center">${img}</div>
       <div style="flex:1;min-width:0;text-align:left"><b style="font-size:17px">${name}</b><div style="font-size:13px;color:#a8a29e">${sub}</div><div style="font:900 18px ui-monospace,monospace;color:#fde68a;margin-top:4px">${owned ? 'SOLD (to you)' : fmt(price)}</div></div>
       <button class="buy" type="button" data-item="${id}" style="flex:none" ${owned ? 'disabled' : ''}>${owned ? 'Owned' : 'Buy'}</button></div>`;
-    card.innerHTML = `<h2 style="margin-top:0">The stranger opens his coat</h2><p class="desc" style="margin-bottom:4px">"What're ya buyin'?"</p>` +
-      row('<img src="media/cart.webp" alt="" style="max-width:84px;image-rendering:auto">', 'Untested Game Cartridge', 'As-is. No returns. Says THE WHEEL on it. "This one works, stranger."', cartPrice(), hasCart(), 'cart') +
-      row('<div style="font-size:52px;line-height:1">🔮</div>', 'Flea Market Snow Globe', "Axazon's tent, in a little glass ball. The snow is sand.", globePrice(), hasGlobe(), 'globe') +
+    card.innerHTML = `<h2 style="margin-top:0">The stranger opens his coat</h2><p class="desc" style="margin-bottom:4px">${intro ? '"Somebody on a yacht has been looking for this, stranger. Hehehe..."' : '"What\'re ya buyin\'?"'}</p>` +
+      (bottleOwned() && !intro ? '' : row('<img src="media/bottle_dusty.webp" alt="" style="max-height:84px;image-rendering:auto">', DUSTY, 'Old. Dusty. No label. "Your bouncer friend will know what it is."', dustyPrice(), bottleOwned(), 'bottle')) +
+      (intro ? '' : row('<img src="media/cart.webp" alt="" style="max-width:84px;image-rendering:auto">', 'Untested Game Cartridge', 'As-is. No returns. Says THE WHEEL on it. "This one works, stranger."', cartPrice(), hasCart(), 'cart') +
+      row('<div style="font-size:52px;line-height:1">🔮</div>', 'Flea Market Snow Globe', "Axazon's tent, in a little glass ball. The snow is sand.", globePrice(), hasGlobe(), 'globe')) +
       `<div class="pct" style="margin-top:2px">Cash only. No cards. No vault. He doesn't have a reader, and he wouldn't tell you where he'd keep one.</div>
       <div class="row"><button class="no" type="button">"Is that all, stranger?"</button></div><div class="msg" role="status"></div>`;
     card.querySelectorAll('[data-item]').forEach(b => b.onclick = () => {
-      const isCart = b.dataset.item === 'cart', p = isCart ? cartPrice() : globePrice(), g = gold(), m = card.querySelector('.msg');
+      const m = card.querySelector('.msg');
+      if (b.dataset.item === 'bottle') {
+        if (bottleOwned()) { m.textContent = '"You already have it, stranger. Go give it to him."'; return; }
+        const p = dustyPrice(), g = gold(); if (g < p) { m.textContent = '"Not enough cash, stranger."' + (vaultG() > 0 ? ' (Your vault doesn\'t count. He wants it in your hand.)' : ''); return; }
+        put('painWheelGold', g - p); put('painWheelStrangerBottle', true); sfx('audio_token'); showGold();
+        const q = get('painWheelPendingLoot', []) || []; q.push(['poor', '🏷️ Bought from the stranger at the flea market', DUSTY]); put('painWheelPendingLoot', q);
+        m.textContent = '"Hehehe... thank you." It is heavier than it looks. Reb is on the yacht. At the VIP door. He will want this.'; b.disabled = true; b.textContent = 'Owned'; return;
+      }
+      const isCart = b.dataset.item === 'cart', p = isCart ? cartPrice() : globePrice(), g = gold();
       if (isCart ? hasCart() : hasGlobe()) { m.textContent = isCart ? '"You already have the only one that works, stranger."' : '"You already have one, stranger. What are you, a collector?"'; return; }
       if (g < p) { m.textContent = '"Not enough cash, stranger."' + (vaultG() > 0 ? ' (Your vault doesn\'t count. He wants it in your hand.)' : ''); return; }
       put('painWheelGold', g - p); sfx('audio_token'); showGold();
@@ -545,23 +556,26 @@ setInterval(() => { showGold(); }, 5000);
     card.querySelector('.no').onclick = () => $('dlg').close();
     $('dlg').showModal();
   }
+  const HOURS = [[6, 8], [12, 14], [18, 20], [23, 25]];   // Central; 23-25 = 11 PM to 1 AM
+  const hourCT = () => { const p = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', hour: 'numeric', minute: 'numeric', hour12: false }).formatToParts(new Date());
+    const h = +p.find(x => x.type === 'hour').value % 24, m = +p.find(x => x.type === 'minute').value; return h + m / 60; };
+  const inHours = () => { const h = hourCT(); return HOURS.some(([a, b]) => (h >= a && h < b) || (h + 24 >= a && h + 24 < b)); };
+  // count visits (one per tab). Anyone who'd been here before this update counts as visit 1, so their next visit is the introduction
+  let visits = get('painWheelEmporiumVisits', null);
+  if (!sessionStorage.getItem('pwEmpVisit')) { sessionStorage.setItem('pwEmpVisit', '1'); visits = (visits === null ? (window.__empFirst === false ? 1 : 0) : visits) + 1; put('painWheelEmporiumVisits', visits); }
+  const introNow = () => (visits || 0) === 2 && !get('painWheelStrangerMet', false);
+  window.strangerHours = () => 'He keeps hours: 6-8 AM, noon-2 PM, 6-8 PM and 11 PM-1 AM, Central. "He comes and goes. Mostly goes." —Axazon';
   const place = () => {
-    const night = sc.classList.contains('night');
-    if (night && !el && !sessionStorage.getItem('pwStranger')) {
-      const miss = get('painWheelStrangerMiss', 0) || 0;   // pity timer: 3 night visits without him and he's guaranteed on the next one
-      if (miss < 3 && Math.random() >= .35) { if (!sessionStorage.getItem('pwStrangerMissed')) { sessionStorage.setItem('pwStrangerMissed', '1'); put('painWheelStrangerMiss', miss + 1); } return; }
-      put('painWheelStrangerMiss', 0);
-      sessionStorage.setItem('pwStranger', '1');
+    const here = inHours() || introNow();
+    if (here && !el) {
       el = document.createElement('button'); el.type = 'button'; el.setAttribute('aria-label', 'A hooded stranger');
       el.style.cssText = 'position:absolute;left:-1%;top:47%;width:10.5%;padding:0;border:0;background:none;cursor:pointer;z-index:1;opacity:0;transition:opacity 3s, translate 1.4s ease-in';
       el.innerHTML = '<img src="media/emp_stranger.png?v=1" alt="" style="display:block;width:100%;height:auto;image-rendering:pixelated;filter:brightness(.72) saturate(.9) drop-shadow(0 0 .8cqw rgba(250,204,21,.25))">';
       sc.appendChild(el); setTimeout(() => el && (el.style.opacity = '.9'), 2500);
-      let n = 0;
-      el.onclick = (e) => { e.stopPropagation(); if (window.pwAch) pwAch('stranger'); n++;
-        if (n <= 3 || !(hasCart() && hasGlobe())) { coat(); return; }   // he always has something for you
-        const d = document.getElementById('say'); d.innerHTML = '<b>The stranger:</b> '; d.append(pick(SAY)); d.style.setProperty('--tail', '8%'); d.style.display = 'block'; clearTimeout(window.__strT); window.__strT = setTimeout(() => d.style.display = 'none', 5200);
-        if (n >= 5) { el.style.translate = '-120% 0'; el.style.opacity = '0'; setTimeout(() => { el && el.remove(); el = null; }, 1500); setTimeout(() => typeof say === 'function' && say("Who? There's nobody there. There's never anybody there. ...Was there?", 4200), 1700); } };
-    } else if (!night && el) { el.remove(); el = null; try { sessionStorage.removeItem('pwStranger'); sessionStorage.removeItem('pwStrangerMissed'); } catch (e) {} }   // daybreak: he can turn up again tonight
+      el.onclick = (e) => { e.stopPropagation(); if (window.pwAch) pwAch('stranger'); const intro = !get('painWheelStrangerMet', false); put('painWheelStrangerMet', true); coat(intro && !bottleOwned()); };
+    } else if (!here && el && !(document.getElementById('dlg') || {}).open) {   // his window closed: he slips away (never mid-sale)
+      const g = el; el = null; g.style.translate = '-120% 0'; g.style.opacity = '0'; setTimeout(() => g.remove(), 1500);
+    }
   };
   setTimeout(place, 1200); setInterval(place, 60000);
 })();
