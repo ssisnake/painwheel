@@ -146,6 +146,23 @@
     #vWheel { position: absolute; left: 38.4%; top: 68.6%; width: 23.2%; pointer-events: none; transition: transform 1.3s cubic-bezier(.5,0,.3,1); }
     #vWheel.spin { transform: rotate(540deg); }
     @media (prefers-reduced-motion: reduce) { #vWheel { transition: none; } }
+    /* the open vault: Ada's Guild Bank Vault menu pieces */
+    #vModal .card:has(#vOpen[style*="display: none"]) { }
+    .vuiHead { margin: 0 0 2px !important; text-align: center; } .vuiHead img { width: 100%; max-width: 380px; height: auto; display: block; margin: 0 auto; }
+    .vuiBal { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0 4px; }
+    .vuiBal div { display: flex; flex-direction: column; gap: 4px; }
+    .vuiBal img { width: 100%; height: auto; display: block; }
+    .vuiBal b { display: flex; align-items: center; justify-content: center; aspect-ratio: 485 / 112; background: url(media/vui_box.webp) center / 100% 100% no-repeat; color: #facc15; font: 700 clamp(15px, 4.4vw, 21px) 'Silkscreen', 'Pixelify Sans', ui-monospace, monospace; text-shadow: 0 0 8px rgba(250,204,21,.35); padding: 0 8px; overflow: hidden; white-space: nowrap; }
+    .vuiLbl { margin: 10px 0 4px; font: 900 12px var(--font-disp); letter-spacing: .14em; color: #a8927a; }
+    .vuiRow { display: grid; grid-template-columns: 1fr 1fr 1.05fr; gap: 6px; }
+    .vuiRow button, .vuiAmt button { padding: 0; border: 0; background: none; cursor: pointer; transition: transform .06s, filter .12s; }
+    .vuiRow button:hover, .vuiAmt button:hover { filter: brightness(1.15); } .vuiRow button:active, .vuiAmt button:active { transform: translateY(2px); filter: brightness(.9); }
+    .vuiRow img, .vuiAmt img { width: 100%; height: auto; display: block; }
+    .vuiAmt { display: grid; grid-template-columns: 2.4fr 1fr 1fr; gap: 6px; align-items: center; }
+    .vuiAmt input { min-width: 0; width: 100%; aspect-ratio: 532 / 83; border: 0; background: url(media/vui_field.webp) center / 100% 100% no-repeat; color: #fde68a; font: 700 18px ui-monospace, monospace; padding: 0 14px; outline: none; }
+    .vuiAmt input:focus { filter: drop-shadow(0 0 6px rgba(250,204,21,.5)); }
+    .vuiFdic { position: relative; margin-top: 12px; aspect-ratio: 1007 / 152; background: url(media/vui_fdic.webp) center / 100% 100% no-repeat; container-type: inline-size; }
+    .vuiFdic span { position: absolute; left: 3%; top: 53%; width: 94%; height: 29%; display: flex; align-items: center; justify-content: center; text-align: center; color: #d6b98a; font: 700 2.9cqw/1.1 var(--font-body); }
     #vaultMsg { min-height: 20px; text-align: center; font-weight: 800; font-size: 13px; color: #fca5a5; }
     .bal { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; }
     .bal div { border-radius: 10px; padding: 8px 10px; background: rgba(0,0,0,.35); border: 1px solid #6b4f2f; text-align: center; }
@@ -346,16 +363,19 @@
         <div id="vaultMsg"></div>
     </div>
     <div id="vOpen" style="display:none">
-        <h2>🏦 Guild Bank Vault</h2>
-        <p class="muted">Gold in here is offshore. The Goblin IRS can't tax it on reset day, and it still counts toward your leaderboard gold.</p>
-        <div class="bal"><div><small>Your wallet</small><b class="mono" id="vWallet">0</b></div><div><small>In the vault</small><b class="mono" id="vVault">0</b></div></div>
-        <div class="muted" style="margin:4px 0 4px;font-weight:900">STASH GOLD</div>
-        <div class="row"><button class="btn" data-dep=".1">10%</button><button class="btn" data-dep=".5">50%</button><button class="btn go" data-dep="1">Everything</button></div>
-        <div class="muted" style="margin:10px 0 4px;font-weight:900">TAKE GOLD OUT</div>
-        <div class="row"><button class="btn" data-wd=".1">10%</button><button class="btn" data-wd=".5">50%</button><button class="btn" data-wd="1">Everything</button></div>
-        <div class="muted" style="margin:10px 0 4px;font-weight:900">EXACT AMOUNT</div>
-        <div class="row" style="flex-wrap:wrap"><input id="vAmt" inputmode="decimal" autocomplete="off" placeholder="250k or 1.5m" style="flex:1 1 160px;min-width:0;font:700 20px ui-monospace,monospace;padding:10px 12px;border-radius:8px;border:2px solid #78716c;background:#1c1917;color:#fde68a"><button class="btn go" id="vAmtDep" style="white-space:nowrap">Stash</button><button class="btn" id="vAmtWd" style="white-space:nowrap">Take out</button></div>
-        <div class="fdic">🏛️ <b>FDIC INSURED</b> up to <b>250,000g</b> per goblin.<br><span>FDIC = Federal Deposit Insurance Cartel. Gold above 250,000g is insured by Kevin's word.</span></div>
+        <h2 class="vuiHead"><img src="media/vui_head.webp" alt="Guild Bank Vault"></h2>
+        <p class="muted" style="text-align:center">Gold in here is offshore. The Goblin IRS can't tax it on reset day, and it still counts toward your leaderboard gold.</p>
+        <div class="vuiBal">
+            <div><img src="media/vui_lbl_wallet.webp" alt="Your wallet"><b class="mono" id="vWallet">0</b></div>
+            <div><img src="media/vui_lbl_vault.webp" alt="In the vault"><b class="mono" id="vVault">0</b></div>
+        </div>
+        <div class="vuiLbl">STASH GOLD</div>
+        <div class="vuiRow"><button data-dep=".1"><img src="media/vui_in10.webp" alt="Stash 10%"></button><button data-dep=".5"><img src="media/vui_in50.webp" alt="Stash 50%"></button><button data-dep="1"><img src="media/vui_inall.webp" alt="Stash everything"></button></div>
+        <div class="vuiLbl">TAKE GOLD OUT</div>
+        <div class="vuiRow"><button data-wd=".1"><img src="media/vui_out10.webp" alt="Take out 10%"></button><button data-wd=".5"><img src="media/vui_out50.webp" alt="Take out 50%"></button><button data-wd="1"><img src="media/vui_outall.webp" alt="Take out everything"></button></div>
+        <div class="vuiLbl">EXACT AMOUNT</div>
+        <div class="vuiAmt"><input id="vAmt" inputmode="decimal" autocomplete="off" placeholder="250k or 1.5m"><button id="vAmtDep"><img src="media/vui_stash.webp" alt="Stash"></button><button id="vAmtWd"><img src="media/vui_takeout.webp" alt="Take out"></button></div>
+        <div class="vuiFdic" role="note" aria-label="FDIC insured up to 250,000g per goblin."><span>Anything over that is insured by Kevin's word.</span></div>
         <div id="iou"></div>
         <p class="muted" id="vNote" style="text-align:center;margin-top:10px"></p>
     </div>
@@ -423,7 +443,7 @@
   addEventListener('pointerdown', (e) => { const vipOpen = !!document.querySelector('#vip.open'); ['stage', 'vipStage'].forEach(id => { const h = document.getElementById(id); if (!h || (id === 'stage') === vipOpen) return; const r = h.getBoundingClientRect();
     if (e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom && r.width) last.set(h, { x: (e.clientX - r.left) / r.width * 100, y: (e.clientY - r.top) / r.height * 100, t: Date.now() }); }); }, true);
   window.bubAtClick = (host, text, ms) => {
-    const p = host && last.get(host); if (!p || Date.now() - p.t > 1500 || !text) return false;
+    const p = host && last.get(host); if (!p || Date.now() - p.t > 1500 || !text || document.querySelector('.modal.open')) return false;   // a popup is open: use the regular text box
     if (host.__bub) host.__bub.remove(); clearTimeout(host.__bubT);
     const b = document.createElement('div'); b.className = 'nbub'; b.textContent = text; host.appendChild(b); host.__bub = b;
     const down = p.y < 34, x = Math.max(18, Math.min(82, p.x));
