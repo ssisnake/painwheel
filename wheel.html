@@ -926,7 +926,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 15, 9:19 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 15, 9:48 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -2470,7 +2470,9 @@
         "🧲 MAGNETIC DPS BRACELETS: IMPROVES YOUR DAMAGE BY 0%. CLINICALLY UNTESTED. KEVIN WEARS FOUR.",
         "🍔 GOBLIN DRIVE-THRU: YOU WANT FRIES WITH THAT REPAIR BILL?",
         "🛋️ AFK RECLINERS: SO COMFORTABLE YOU'LL MISS THE ENTIRE PULL. AFKGHOUL APPROVED.",
-        "🔺 THE SECRET SOCIETY TAB DOES NOT EXIST. STOP ASKING ABOUT THE SECRET SOCIETY TAB. — NOBODY",
+        "🔺 THE RIGGANATI DOES NOT EXIST. STOP ASKING ABOUT THE RIGGANATI. — NOBODY",
+        "👁️ BIBLEDADDY SEEN WITH AN EYE ON HIS HEAD. RIGGANATI DENIES RECRUITING HEALERS.",
+        "🎡 THE ALL-SEEING WHEEL SEES YOU. IT IS NOT IMPRESSED.",
         "📈 REB'S LIVER IS NOW A PUBLICLY TRADED COMPANY. ANALYSTS RATE IT 'HOLD (YOUR BREATH)'",
         "🦖 BARRENS RAPTOR RENTALS: GUARANTEED TO DROP SILVER. (THEY DO NOT DROP SILVER.)",
         "🎤 KARAOKE NIGHT WITH MEPHISTO: EARPLUGS SOLD AT THE DOOR. EARPLUGS DO NOT HELP.",
@@ -10372,6 +10374,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         id: '2026-11-07-fixed', title: 'The claw, the liver and the ghost town', date: 'November 6-7, 2026',
         showAfter: Date.parse('2026-11-07T06:00:00Z'),   // re-issued Nov 7 with corrected notes, so it pops up again for everyone
         lines: [
+            ['🎡', "The Secret Society tab has a new name. The all-seeing wheel would like a word."],
             ['🥃', "Reb is working the VIP door on the yacht now. He can't be bought with gold. He CAN be bought."],
             ['🛥️', "You don't just buy the yacht anymore. Get the castle and a guy named Slick gives you a call."],
             ['🌵', "Forever is a once-a-year thing now. It opens on its anniversary week (Nov 4-10) and everyone goes. The rest of the year, the door's locked."],
@@ -10706,7 +10709,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
 
     // ---------- the shop panel ----------
     const SHOP_TABS = [['themes', '🎨 Themes'], ['cosmetics', '📍 Cosmetics'], ['consumables', '🧪 Consumables'], ['pets', '🐾 Pets'],
-        ['garage', '🚗 Garage'], ['curses', '🧿 Curses'], ['society', '🔺 Secret Society'], ['scratch', '🎟️ Scratch-offs'], ['lobby', '🇺🇸 Lobbying'], ['adblock', '🛡️ TsukBlock'], ['irs', '🧾 IRS']];
+        ['garage', '🚗 Garage'], ['curses', '🧿 Curses'], ['society', '🔺 The Rigganati'], ['scratch', '🎟️ Scratch-offs'], ['lobby', '🇺🇸 Lobbying'], ['adblock', '🛡️ TsukBlock'], ['irs', '🧾 IRS']];
     let shopTab = 'themes';
     var guildPlayers = [];
     function shopRow(icon, name, desc, btnLabel, onClick, state) {   // state: 'buy' | 'owned' | 'equip' | 'equipped'
@@ -10888,7 +10891,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             }, garage.rocket ? 'owned' : 'buy'));
         } else if (shopTab === 'society') {
             const intro = document.createElement('div'); intro.className = 'text-xs text-slate-300';
-            intro.textContent = 'Pay your initiation dues and climb the secret societies, one rank at a time. Each rank gets its own badge, achievement, and a guild-wide alert. Nobody is supposed to know about this tab.';
+            intro.textContent = 'Welcome to the Rigganati. Pay your initiation dues and climb the secret societies, one rank at a time. Each rank gets its own badge, achievement, and a guild-wide alert. Nobody is supposed to know about this tab.';
             add(intro);
             const aipacMax = aipacTotal >= AIPAC_TIERS[AIPAC_TIERS.length - 1][0];
             if (!aipacMax) {
@@ -12319,14 +12322,14 @@ const AUDIO_DOOR_CHIME = "media/audio_door_chime.mp3?v=34de5993";
         { e: '🦉', name: 'Bohemian Grove', cost: 1e29, ach: 'soc3', col: '#a3e635', desc: 'A weekend in the woods with very important people and one very large owl.', done: 'You burned an owl effigy in the redwoods. Kevin set the actual forest on fire.' },
         { e: '👁️', name: 'Illuminati', cost: 1e31, ach: 'soc4', col: '#facc15', desc: 'Control the world. Mostly the weather and the 2 AM ads.', done: 'You can now see everything. It is mostly Kevin standing in fire.' },
         { e: '🦎', name: 'Lizard People High Council', cost: 1e33, ach: 'soc5', col: '#4ade80', desc: 'Take off the human suit. It was getting itchy anyway.', done: 'Welcome, brother. Your human suit has been dry-cleaned.' },
-        { e: '📜', name: "Keepers of the Wheel's Rigging Manual", cost: 1e36, ach: 'soc6', col: '#f472b6', desc: 'The final secret. The one society that actually runs things.', done: "You've been handed The Wheel's Rigging Manual. Chapter 1: Ask ChAoTiC." }
+        { e: '📜', name: "Rigganati Inner Circle: Keepers of the Rigging Manual", cost: 1e36, ach: 'soc6', col: '#f472b6', desc: 'The final secret. The one society that actually runs things.', done: "You've been handed The Wheel's Rigging Manual. Chapter 1: Ask ChAoTiC." }
     ];
     let societyRank = store.get('painWheelSociety', 0);
     function renderSocietyBadge() {
         const b = $('societyBadge'), r = SOCIETY[societyRank - 1];
         if (!r) { b.classList.add('hidden'); return; }
         b.classList.remove('hidden'); b.style.borderColor = r.col; b.style.color = r.col;
-        b.innerHTML = '<div style="font-size:9px;letter-spacing:.14em;opacity:.8">MEMBER OF A SECRET SOCIETY</div><div></div>';
+        b.innerHTML = '<div style="font-size:9px;letter-spacing:.14em;opacity:.8">MEMBER OF THE RIGGANATI</div><div></div>';
         b.lastChild.textContent = r.e + ' ' + r.name.toUpperCase();
     }
     renderSocietyBadge();
