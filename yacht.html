@@ -87,7 +87,9 @@
     #gary img { display: block; width: 100%; height: 100%; }
     #gary b { position: absolute; left: 40.3%; top: 74%; width: 33.2%; height: 16%; display: grid; place-items: center; font: 900 .78cqw Georgia, serif; letter-spacing: .3em; color: #3b2210; text-shadow: 0 1px 0 rgba(255,240,200,.5); }
     #isle { position: absolute; left: 2.58%; top: 32.35%; width: 9.73%; height: 24.33%; border-radius: 50%; overflow: hidden; pointer-events: none;
-        background: #8a99a6 url("media/island_view.webp") 38% 46% / auto 100% no-repeat; }
+        background: linear-gradient(#2d333b 0%, #444c56 44%, #56606a 50%, #1a4a4f 51%, #0f3439 75%, #0a2428 100%); }
+    #isle .isl { position: absolute; aspect-ratio: 2048 / 768; background: url("media/island_view.webp") center / 100% 100% no-repeat;
+        -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%); mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 62%, transparent 100%); }
     #isle::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 50% 55%, rgba(196,204,212,.92), rgba(140,152,164,.96)); opacity: var(--fog, .9); }
     #isle::after { content: ""; position: absolute; inset: 0; border-radius: 50%; box-shadow: inset 0 0 1.4cqw rgba(0,0,0,.65); background: linear-gradient(135deg, rgba(255,255,255,.16), transparent 38%); }
     #isle.drift { animation: isleBob 9s ease-in-out infinite alternate; }
@@ -160,6 +162,13 @@
         max-width: min(640px, calc(100vw - 32px)); padding: 10px 16px; border-radius: 12px; background: rgba(12,6,2,.94); border: 2px solid #d4a24c;
         color: var(--ink); font-weight: 800; font-size: 14.5px; text-align: center; pointer-events: none; box-shadow: 0 10px 30px rgba(0,0,0,.6); }
     #say.show { opacity: 1; transform: translate(-50%, 0); }
+    /* text pops up next to what you clicked (generic bubble until the yacht/VIP bubble art comes) */
+    .nbub { position: absolute; z-index: 20; width: max-content; max-width: 34%; min-width: 12%; padding: .9cqw 1.2cqw; border-radius: 1cqw; background: rgba(18,10,6,.95); border: .18cqw solid #d4a24c;
+        color: #fef3c7; font: 800 max(15px, 1.05cqw)/1.35 var(--font-body); text-align: center; pointer-events: none; box-shadow: 0 .6cqw 1.6cqw rgba(0,0,0,.6); animation: nbIn .18s ease-out; }
+    .nbub::after { content: ""; position: absolute; left: var(--tx, 50%); width: 1.4cqw; height: 1.4cqw; background: inherit; border: inherit; border-width: 0 .18cqw .18cqw 0; transform: translateX(-50%) rotate(45deg); }
+    .nbub.up::after { bottom: -.8cqw; } .nbub.down::after { top: -.8cqw; transform: translateX(-50%) rotate(225deg); }
+    @keyframes nbIn { from { opacity: 0; } to { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { .nbub { animation: none; } }
     #achPop { position: fixed; left: 50%; top: 18px; transform: translate(-50%, -30px); opacity: 0; transition: opacity .3s, transform .3s; z-index: 61; pointer-events: none;
         padding: 10px 18px; border-radius: 12px; background: linear-gradient(90deg, #422006, #713f12); border: 2px solid var(--gold); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,.6); }
     #achPop.show { opacity: 1; transform: translate(-50%, 0); }
@@ -368,9 +377,9 @@
         <div id="vipSign" class="vipNeon">SIT DOWN????</div>
         <div id="lavaGlow"></div><div id="lava" aria-hidden="true"></div>
         <div id="deskGlobe"></div>
-        <img id="cartStack" src="media/cartstack.webp" alt=""><img id="cartLoose" src="media/cart.webp" alt="">
+        <img id="cartStack" src="media/cartstack.webp" alt="">
         <button id="vipSticky" data-label="📝 Sticky note (do not update)">DAYS SINCE<br>LAST KEVIN:<br><b>0</b></button>
-        <button id="vipPoster" data-label="🕯️ Definitely not a cult poster" style="left:11.6%;top:14.4%;width:5.1%;height:auto;border:0;padding:0;background:none;box-shadow:none;transform:none"><img src="media/vip_poster.png?v=1" alt="Church of the Eternal Spin" style="display:block;width:100%;height:auto;filter:brightness(.8) sepia(.15) drop-shadow(.2cqw .3cqw .3cqw rgba(0,0,0,.6))"><span id="pChapter" hidden>185</span></button>
+        <button id="vipPoster" data-label="🕯️ Definitely not a cult poster" style="left:9.9%;top:11.6%;width:8.4%;height:auto;border:0;padding:0;background:none;box-shadow:none;transform:none"><img src="media/vip_poster.png?v=1" alt="Church of the Eternal Spin" style="display:block;width:100%;height:auto;filter:brightness(.8) sepia(.15) drop-shadow(.2cqw .3cqw .3cqw rgba(0,0,0,.6))"><span id="pChapter" hidden>185</span></button>
         <button class="hs" id="vipChair" data-label="🪑 Sit down (it wasn't a question)" style="left:27.6%;top:50.5%;width:12.4%;height:46%"></button>
         <button class="hs" data-vsay="lotion" data-label="🧴 Lotion (for research)" style="left:18%;top:47.2%;width:2.6%;height:12.8%"></button>
         <button class="hs" data-vsay="trash" data-label="🗑️ Trash can (allergies, probably)" style="left:11.8%;top:67.5%;width:5.9%;height:20%"></button>
@@ -379,15 +388,15 @@
         <button class="hs" data-vsay="mug" data-label="☕ Goblin mug" style="left:44.5%;top:54%;width:2.8%;height:6%"></button>
         <button class="hs" id="vipDish" data-label="❄️ Snow globe dish" style="left:48.4%;top:54.6%;width:5.7%;height:6%"></button>
         <button class="hs" data-vsay="door" data-label="🚪 Door (leaving is optional)" style="left:0;top:9%;width:4.4%;height:74%"></button>
-        <button class="hs" data-vsay="mon" data-label="🖥️ Monitor #1 (Clippy lives here)" style="left:20.4%;top:37%;width:8.5%;height:16.8%"></button>
-        <button class="hs" data-vsay="mid" data-label="📺 The big screen (guess)" style="left:29%;top:36.5%;width:13.2%;height:17%"></button>
-        <button class="hs" id="vipMon3" data-vsay="mon3" data-label="🖥️ Monitor #3 (someone's desktop)" style="left:42.6%;top:37%;width:8.9%;height:16.8%"></button>
+        <button class="hs vipDesk" id="vipMon1" data-label="🖥️ Monitor #1 (degen1350's desktop)" style="left:20.4%;top:37%;width:8.5%;height:16.8%"></button>
+        <button class="hs" id="vipMid" data-label="🎡 THE WHEEL (sit down and play)" style="left:29%;top:36.5%;width:13.2%;height:17%"></button>
+        <button class="hs vipDesk" id="vipMon3" data-label="🖥️ Monitor #3 (degen1350's desktop)" style="left:42.6%;top:37%;width:8.9%;height:16.8%"></button>
         <button class="hs below" data-vsay="sign" data-label="💡 Neon sign (not a suggestion)" style="left:23%;top:19%;width:28%;height:12%"></button>
         <button class="hs" data-vsay="rope" data-label="🚧 A VIP rope inside the VIP room" style="left:1%;top:52%;width:10.8%;height:42%"></button>
         <button class="hs" data-vsay="pinup" data-label="🖼️ Framed poster (Gallywix calls it art)" style="left:56.7%;top:13%;width:7.4%;height:28.2%"></button>
         <button class="hs" data-vsay="shelf" data-label="🍾 Top shelf" style="left:57%;top:43.5%;width:9.4%;height:26%"></button>
         <button class="hs" data-vsay="bean" data-label="🫘 Beanbag" style="left:55%;top:66%;width:19%;height:29.5%"></button>
-        <button class="hs" id="vipCarts" data-label="📼 A stack of cartridges" style="left:44.3%;top:84.6%;width:8%;height:14.4%"></button>
+        <button class="hs" id="vipCarts" data-label="📼 A stack of cartridges" style="left:44.3%;top:84.6%;width:4.6%;height:14.4%"></button>
         <button class="hs" id="vipConsole" data-label="🕹️ WHEELTARI 2601" style="left:70.6%;top:33.8%;width:9.8%;height:11.8%"></button>
         <button class="hs" id="vipTv" data-label="📺 The TV (it's off)" style="left:73.1%;top:49.6%;width:14.6%;height:24%"></button>
         <button class="hs" data-vsay="vcr" data-label="📼 VCR (blinking 12:00)" style="left:81%;top:39.5%;width:7.5%;height:6.2%"></button>
@@ -408,6 +417,26 @@
 <div id="achPop"><small>ACHIEVEMENT UNLOCKED</small><b id="achName"></b></div>
 
 <script>
+// ---- text bubbles next to whatever you clicked (yacht + VIP room). If you didn't just click something (a knock, a timer), the old top/bottom text is used ----
+(() => {
+  const last = new WeakMap();
+  addEventListener('pointerdown', (e) => { const vipOpen = !!document.querySelector('#vip.open'); ['stage', 'vipStage'].forEach(id => { const h = document.getElementById(id); if (!h || (id === 'stage') === vipOpen) return; const r = h.getBoundingClientRect();
+    if (e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom && r.width) last.set(h, { x: (e.clientX - r.left) / r.width * 100, y: (e.clientY - r.top) / r.height * 100, t: Date.now() }); }); }, true);
+  window.bubAtClick = (host, text, ms) => {
+    const p = host && last.get(host); if (!p || Date.now() - p.t > 1500 || !text) return false;
+    if (host.__bub) host.__bub.remove(); clearTimeout(host.__bubT);
+    const b = document.createElement('div'); b.className = 'nbub'; b.textContent = text; host.appendChild(b); host.__bub = b;
+    const down = p.y < 34, x = Math.max(18, Math.min(82, p.x));
+    b.classList.add(down ? 'down' : 'up'); b.style.left = x + '%'; b.style.top = (down ? p.y + 4 : p.y - 3) + '%'; b.style.transform = down ? 'translateX(-50%)' : 'translate(-50%, -100%)';
+    b.style.setProperty('--tx', `calc(50% + ${((p.x - x) / 34 * 100).toFixed(0)}%)`);
+    host.__bubT = setTimeout(() => { b.remove(); if (host.__bub === b) host.__bub = null; }, Math.max(ms || 0, 2600 + text.length * 45));
+    return true;
+  };
+  // the VIP room writes into #vipMsg all over the place; when that change came from a click, show it as a bubble there instead
+  addEventListener('DOMContentLoaded', () => { const m = document.getElementById('vipMsg'), h = document.getElementById('vipStage'); if (!m || !h) return;
+    let busy = false;
+    new MutationObserver(() => { if (busy) return; const t = m.textContent; if (window.bubAtClick(h, t)) { m.style.visibility = 'hidden'; } else m.style.visibility = ''; }).observe(m, { childList: true, characterData: true, subtree: true }); });
+})();
 try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || {}; if (!m.gary) { m.gary = Date.now(); localStorage.setItem('painWheelMetNpcs', JSON.stringify(m)); } } catch (e) {}   // Gary the marlin is on the wall. He has your number now
 (function () {
     'use strict';
@@ -471,7 +500,7 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
 
     // ---------- speech bubble + achievement popup ----------
     let sayT = 0;
-    function say(text, ms = 3800) { const el = $('say'); el.textContent = text; el.classList.add('show'); clearTimeout(sayT); sayT = setTimeout(() => el.classList.remove('show'), ms); }
+    function say(text, ms = 3800) { if (window.bubAtClick && window.bubAtClick($('stage'), text, ms)) return; const el = $('say'); el.textContent = text; el.classList.add('show'); clearTimeout(sayT); sayT = setTimeout(() => el.classList.remove('show'), ms); }
     const defs = S.get('painWheelAchDefs', []);
     let achT = 0;
     function award(id) {
@@ -714,7 +743,9 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
     const evidence = () => Math.min(7, Object.keys(S.get('painWheelClues', {}) || {}).length);
     function renderIsle() {
         const n = evidence(), k = n / 7, el = $('isle');
-        el.style.backgroundSize = `auto ${Math.round(100 + 120 * k)}%`;   // 1x far out in the fog ... 2.2x right there
+        if (!el.firstChild) { const d = document.createElement('div'); d.className = 'isl'; el.appendChild(d); }
+        const W = 90 + 24 * n;   // picture width as % of the porthole: 90% (a speck on the horizon) ... 258% (right there)
+        Object.assign(el.firstChild.style, { width: W + '%', left: (50 - W * .39) + '%', top: (52 - W / 2.667 * .943 * .5) + '%' });
         el.style.setProperty('--fog', (0.9 * Math.pow(1 - k, .85)).toFixed(2));
         el.style.filter = `blur(${((1 - k) * 1.6).toFixed(2)}px) saturate(${(.55 + .45 * k).toFixed(2)})`;
     }
@@ -884,6 +915,8 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
         'A note taped to the back: "If you are reading this, you are already a member. Sit down."'];
     $('vipPoster').addEventListener('click', () => { tone(330, 0, .4, 'sine', .05); tone(495, .1, .5, 'sine', .04); $('vipMsg').textContent = '🕯️ ' + POSTER[Math.min(posterClicks++, POSTER.length - 1)]; });
     $('vipChair').addEventListener('click', sitDown);
+    $('vipMid').addEventListener('click', sitDown);   // the middle monitor is the wheel inside the wheel
+    document.querySelectorAll('.vipDesk').forEach(b => b.addEventListener('click', () => { sfx.click(); if (window.openVipPc) window.openVipPc(); }));   // the side monitors are degen1350's desktop
     $('vipChair').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); sitDown(); } });
 
     const MINI = [
