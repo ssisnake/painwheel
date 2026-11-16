@@ -39,10 +39,10 @@ window.pwAch = window.pwAch || ((id) => { try { const q = JSON.parse(localStorag
     setTimeout(() => { if (pop) pop.classList.remove('on'); }, 700);
   }
   window.fishSing = function (fallback, who) {
-    try {   // Something Smells Fishy: hear every singing swordfish (the Board, both on the yacht, Steve at the Emporium)
+    try {   // Something Smells Fishy: hear every singing swordfish (the Board, Gary on the yacht, Steve at the Emporium)
       const id = who || (/emporium/.test(location.pathname) ? 'emporium' : /yacht/.test(location.pathname) ? 'yacht' : 'board');
       const s = JSON.parse(localStorage.getItem('painWheelFishSung') || '{}') || {}; s[id] = 1; localStorage.setItem('painWheelFishSung', JSON.stringify(s));
-      if (['board', 'yacht', 'yacht2', 'emporium'].every(k => s[k]) && window.pwAch) pwAch('fishy');
+      if (['board', 'yacht', 'emporium'].every(k => s[k]) && window.pwAch) pwAch('fishy');
     } catch (e) {}
     let vol = 0.6;
     try { const v = parseFloat(localStorage.getItem('painWheelVolume')); if (!isNaN(v)) vol = Math.max(0, Math.min(1, v)); if (localStorage.getItem('painWheelMuted') === 'true') vol = 0; } catch (e) {}

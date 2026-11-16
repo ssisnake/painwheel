@@ -95,9 +95,9 @@ window.pwAch = window.pwAch || ((id) => { try { const q = JSON.parse(localStorag
   hot('dsk', L1, 34.2, W, 14.4, "Greg's Adventure (DEMO)", () => ok("Greg's Adventure (DEMO)", '🐏', "Greg's Adventure requires a 3dfx Voodoo2 graphics card.\n\nAlso: Greg is not authorized to operate heavy machinery, including this computer.", () => clippy("Ada had it uninstalled. Greg reinstalled it. Ada laminated a sign.")));
   hot('dsk', L2, 34.2, W, 11.6, 'Curses.exe', () => ok('Curses.exe', '💀', 'Curses.exe has performed an illegal operation and will be shut down.\n\nIf the problem persists, it is probably Kevin.', () => clippy("Somebody keeps buying curses at the 8/11 from this machine. I'm not saying who. It's degen1350.")));
   hot('dsk', L1, 50.2, W, 12.6, 'Security Cam Viewer', openCams);
-  hot('dsk', L2, 50.2, W, 11.4, 'The Wheel', () => {   // launches the WHEEL-2600 (the wheel inside the wheel)
+  hot('dsk', L2, 50.2, W, 11.4, 'The Wheel', () => {   // launches the wheel inside the wheel (the PC game; the Wheeltari 2601 on the TV is its own thing)
     clippy("Launching THE WHEEL. Again. From inside The Wheel. I'm not getting paid enough for this.");
-    const w = ok('The Wheel', '🎡', 'Loading WHEEL-2600...\nInsert cartridge. Blow on it. Insert it again.');
+    const w = ok('The Wheel', '🎡', 'Loading THE_WHEEL.EXE...\nPlease wait. Then wait more. It is 1998.');
     setTimeout(() => { w.remove(); close(); if (window.vipSitDown) window.vipSitDown(); setTimeout(() => { if (window.axaPlace && window.AXA_2600 && !document.querySelector('#miniCore [aria-label="Something in the background"]')) axaPlace(window.AXA_2600); }, 900); }, 1600);
   });
   hot('dsk', L1, 65.3, 8, 13, 'To Do... (Probably Not)', () => ok('To Do.txt - Notepad', '📝', '1. fix the claw  ✓ (Cogsworth)\n2. stop ADDing so hard  ✗\n3. find the hidden guy on the cams  ...\n4. return Ada\'s wrench\n5. tell Greg no\n6. tell Greg no again', () => clippy('Number 2 has been on there since 1998.')));
@@ -183,11 +183,9 @@ window.pwAch = window.pwAch || ((id) => { try { const q = JSON.parse(localStorag
   window.openVipPc = open;
 
   // ---------- the right monitor in the VIP room ----------
-  const mon = document.querySelector('[data-label="🖥️ Monitor #3 (also the wheel)"]');
-  if (mon && has811()) {
+  const mon = document.getElementById('vipMon3') || document.querySelector('[data-label="🖥️ Monitor #3 (also the wheel)"]');
+  if (mon && has811()) {   // the new VIP room (Ada) already shows his desktop on that monitor, so just make it clickable
     mon.removeAttribute('data-vsay'); mon.dataset.label = "🖥️ Monitor #3 (degen1350's computer)"; mon.title = "degen1350's computer";
-    const scrEl = mon.parentElement.querySelectorAll('.vipScr')[1];
-    if (scrEl) { Object.assign(scrEl.style, { left: '55.03%', top: '47.97%', width: '8.09%', height: '13.21%', clipPath: 'polygon(0 4.2%, 100% 0, 100% 100%, 0 96.1%)', borderRadius: '0', boxShadow: 'none' }); scrEl.innerHTML = ''; scrEl.style.background = '#000 url(media/pc_monitor.webp?v=2) center / 100% 100% no-repeat'; scrEl.style.filter = 'brightness(1.05) saturate(1.05)'; }
     mon.addEventListener('click', (e) => { e.stopPropagation(); e.preventDefault(); open(); }, true);
   }
 })();

@@ -22,8 +22,8 @@
   .item .emo { font-size: 5.6cqw; line-height: 1; filter: drop-shadow(0 0 .5cqw var(--q)); pointer-events: none; }
   .item:hover, .item:focus-visible { transform: translateY(-4%) scale(1.08); outline: none; z-index: 4; }
   .item:hover img, .item:focus-visible img { filter: drop-shadow(0 .35cqw 0 rgba(0,0,0,.55)) drop-shadow(0 0 1.1cqw var(--q)) brightness(1.15); }
-  #dusty { position: absolute; left: 41.5%; bottom: 5.5%; width: 2.4%; padding: 0; border: 0; background: none; cursor: pointer; z-index: 2; transform: rotate(-14deg); transition: transform .15s; }
-  #dusty img { width: 100%; display: block; filter: sepia(.9) brightness(.55) contrast(.8) saturate(.5) drop-shadow(0 .2cqw .1cqw rgba(0,0,0,.6)); }
+  #dusty { position: absolute; left: 41.5%; bottom: 5.5%; width: 1.9%; padding: 0; border: 0; background: none; cursor: pointer; z-index: 2; transform: rotate(-14deg); transition: transform .15s; }
+  #dusty img { width: 100%; display: block; filter: brightness(.8) drop-shadow(0 .2cqw .1cqw rgba(0,0,0,.6)); }
   #dusty:hover { transform: rotate(-8deg) scale(1.25); }
   .item.sold { cursor: default; } .item.sold img, .item.sold .emo { opacity: .25; filter: grayscale(1); }
   .item .new { position: absolute; top: -12%; right: -6%; padding: .15cqw .5cqw; border-radius: .4cqw; background: #dc2626; color: #fff; font: 900 .95cqw system-ui, sans-serif; letter-spacing: .04em; transform: rotate(8deg); box-shadow: 0 .2cqw 0 rgba(0,0,0,.5); }
@@ -169,7 +169,7 @@ const LOOT_SETS = [
         { id: 'lostfound', legacy: true, name: '📦 Guild Lost & Found', items: ["Kevin's ROG Ally Battery", "Axazon's Empty Heart Pill Bottle", "ChAoTiC's Last Nerve", "Rubber Replica of Bibledaddy's Finger", "Corrinne's Platinum Achievement"],
           perk: 'Every 10 minutes a guildie "returns" something you lost: a free random item.' }
     ];
-const ITEM_ICON = { 'Dusty Unlabeled Bottle': "media/photo_ico_bottle.png?v=0b4fa6fc", 'Golden Chocolate Donut': "media/photo_toy_donut.png?v=6ea2d469", 'Ret Paladin 6% Buff Coupon': "media/photo_item_coupon.png?v=b3ef1576", 'Ashbringer (Plastic Replica)': "media/photo_item_sword.png?v=55d3df90",
+const ITEM_ICON = { 'Dusty Unlabeled Bottle': "media/bottle_dusty.webp", 'Golden Chocolate Donut': "media/photo_toy_donut.png?v=6ea2d469", 'Ret Paladin 6% Buff Coupon': "media/photo_item_coupon.png?v=b3ef1576", 'Ashbringer (Plastic Replica)': "media/photo_item_sword.png?v=55d3df90",
         'Goblin Timeshare Brochure': "media/photo_item_brochure.png?v=14e29592", 'Knob Creek Single Barrel': "media/photo_item_barrel.png?v=1ead128c", 'Torn Discord Log': "media/photo_item_chatlog.png?v=bbaa2dd6", "Kevin's ROG Ally Battery": "media/photo_item_battery.png?v=ba703a5c",
         "ChAoTiC's Blown-Out Headset": "media/photo_item_headset.png?v=fcda3409", 'Frayed Leap of Faith Rope': "media/photo_item_rope.png?v=27ad2ab7", 'Jar of Sewer Pickle Juice': "media/photo_item_pickles.png?v=64117ec0", 'Expired Healthstone': "media/photo_item_healthstone.png?v=9cc10eb7",
         'Broken Hearthstone': "media/photo_item_hearthstone.png?v=04098f73", 'Half a Stale Cheeto': "media/photo_item_cheeto.png?v=5014fab4", 'Road Beer (Still Cold)': "media/photo_item_beer.png?v=6e999522", "Axazon's Empty Heart Pill Bottle": "media/photo_item_pills.png?v=3744a055",
@@ -338,7 +338,10 @@ const JOKES = {
   console: ['That\'s a prototype WHEEL-2600. Not for sale. Not even for you.', 'Found it on a yacht. The VIP room. You didn\'t see that.', 'The cartridges are in the back. The back is also a tarp.'],
   jar: ['Don\'t ask what\'s in the jar.', 'That jar has been on that shelf since before the shack. Before the desert.', 'Reb asked about the jar once. Reb doesn\'t ask anymore.']
 };
-document.querySelectorAll('.hs').forEach(h => h.onclick = () => { say(pick(JOKES[h.dataset.hs])); if (h.dataset.hs === 'fish' && window.fishSing) fishSing(); });   // Steve sings too
+let steveN = 0;
+document.querySelectorAll('.hs').forEach(h => h.onclick = () => {
+  if (h.dataset.hs === 'fish' && steveN++ > 0 && !get('painWheelGary', null)) return showGary();   // Steve is not for sale. His cousins are.
+  say(pick(JOKES[h.dataset.hs])); if (h.dataset.hs === 'fish' && window.fishSing) fishSing(); });   // Steve sings too
 const AXA_LINES = ['What. I\'m working.', 'Eyes on the merchandise, not the merchant.', 'Yes, the shoulders are looking at you. They do that.', 'This outfit is not for sale. I asked. I said no.',
   'Fishnet breathes. It\'s the desert. Do the math.', 'The halo is real. Don\'t ask how I got it.', 'Browse or buy. Loitering is 5% of your gold.',
   'Cash only. I don\'t take Goblin Express. The Black card tried to bite me.', 'Goblin Express? Put that away. I know where those come from. I know where they GO.', 'Does that say Goblin Express? That card has 34% interest and a lawyer. Gold only.'];
@@ -389,11 +392,11 @@ function renderDusty() {
   if (!show) { if (el) el.remove(); return; }
   if (el) return;
   el = document.createElement('button'); el.id = 'dusty'; el.type = 'button'; el.title = 'Something under the table'; el.setAttribute('aria-label', 'A dusty bottle under the table');
-  el.innerHTML = '<img src="media/photo_ico_bottle.png" alt="">'; el.onclick = showDusty; $('goods').appendChild(el);
+  el.innerHTML = '<img src="media/bottle_dusty.webp" alt="">'; el.onclick = showDusty; $('goods').appendChild(el);
 }
 function showDusty() {
   const card = $('card'), price = dustyPrice(); card.style.setProperty('--q', QCOL.poor);
-  card.innerHTML = `<div class="pic"><img src="media/photo_ico_bottle.png" alt="" style="filter: sepia(.9) brightness(.55) contrast(.8) saturate(.5)"></div><h2></h2><div class="ql">poor · not part of any set</div>
+  card.innerHTML = `<div class="pic"><img src="media/bottle_dusty.webp" alt="" style="image-rendering:auto"></div><h2></h2><div class="ql">poor · not part of any set</div>
     <p class="desc"></p><div class="price">${fmt(price)}</div><div class="pct">It was under the table. Axazon didn't even know he had it.</div>
     <div class="row"><button class="buy" type="button">🏷️ Buy it</button><button class="no" type="button">Just looking</button></div><div class="msg" role="status"></div>`;
   card.querySelector('h2').textContent = DUSTY; card.querySelector('.desc').textContent = '"' + pick(['That? Found it in the desert with the fish. Take it, it\'s taking up floor.', 'Old bottle. No label. Could be anything. Probably nothing.', 'You want the dusty bottle? Sure. Weirdo.']) + '"';
@@ -406,6 +409,28 @@ function showDusty() {
     const q = get('painWheelPendingLoot', []) || []; q.push(['poor', "🏷️ Bought at Axazon's Emporium", DUSTY]); put('painWheelPendingLoot', q);
     sfx('audio_token'); showGold(); renderDusty(); $('dlg').close();
     say(pick(['Pleasure doing business. Don\'t bring it back.', 'Sold. To the person who buys garbage. No refunds.', 'Huh. Somebody wanted that. Weird day.']), 4200, 'shield');
+  };
+  card.querySelector('.no').onclick = () => $('dlg').close();
+  $('dlg').showModal();
+}
+/* ---------- Gary: Axazon dug a whole crate of mounted swordfish out of the desert (the same crate the dusty bottle came from).
+   Steve stays on the wall, not for sale. One Gary per yacht, cash only: 5% of wallet + vault. ---------- */
+const garyPrice = () => Math.max(1000, Math.round((gold() + vaultG()) * .05));
+function showGary() {
+  const card = $('card'), price = garyPrice(), yacht = (get('painWheelHouseLevel', 0) || 0) >= 6; card.style.setProperty('--q', '#38bdf8');
+  card.innerHTML = `<div class="pic"><img src="media/fishpop_1.webp" alt="" style="image-rendering:auto;max-width:80%"></div><h2>Mounted Swordfish (his name is Gary)</h2><div class="ql">one per yacht · not part of any set</div>
+    <p class="desc"></p><div class="price">${fmt(price)}</div><div class="pct">Cash only. Comes with a plaque. The plaque says GARY. It cannot be changed.</div>
+    <div class="row"><button class="buy" type="button">🐟 Buy Gary</button><button class="no" type="button">Just looking</button></div><div class="msg" role="status"></div>`;
+  card.querySelector('.desc').textContent = '"' + (yacht ? pick(['Steve is not for sale. Steve is family. But I found a whole crate of his cousins in the desert. They all sing. They are all named Gary.', 'You want a fish for over that VIP door? I got a crate of them. Dug it up out by the shack. Do not ask why it was buried.'])
+    : 'A wall fish? You do not even have a wall big enough. Come back when you have a yacht.') + '"';
+  const buy = card.querySelector('.buy'); if (!yacht) buy.disabled = true;
+  buy.onclick = () => {
+    const p = garyPrice(), g = gold();
+    if (get('painWheelGary', null)) return;
+    if (g < p) { card.querySelector('.msg').textContent = vaultG() > 0 ? 'Not enough on you. Axazon wants cash, not vault promises.' : 'You can\'t afford Gary. Gary can tell. Gary is hurt.'; return; }
+    put('painWheelGold', g - p); put('painWheelGary', Date.now());
+    sfx('audio_token'); showGold(); $('dlg').close();
+    say(pick(['Sold. One Gary. He\'ll be on your wall when you get back to the yacht. Don\'t ask how.', 'Gary\'s yours. He sings. You were warned.', 'Pleasure. Steve says goodbye. Steve is lying, they never got along.']), 5200, 'shield');
   };
   card.querySelector('.no').onclick = () => $('dlg').close();
   $('dlg').showModal();
@@ -479,7 +504,7 @@ setInterval(() => { showGold(); }, 5000);
     f.style.transition = 'transform .6s, opacity .6s'; f.style.transform = 'rotate(-70deg) translateX(-60%)'; f.style.opacity = '0'; setTimeout(() => f.remove(), 700); };
 })();
 </script>
-<script src="fish_song.js?v=7e44e6a7"></script>
+<script src="fish_song.js?v=31f920f8"></script>
 <script src="wallet.js?v=07cb4a3e"></script>
 <script>
 // ---- after dark, sometimes a hooded stranger with a tiny wheel lurks at the edge of the stall (Ada's "secret person"). Nobody knows who he is. ----
@@ -490,22 +515,55 @@ setInterval(() => { showGold(); }, 5000);
     "Spin it? ...No. It's not ready for you yet.", "The skull slice. Always the skull slice. Remember that.",
     "What're ya buyin'?", "Got somethin' that might interest ya.", "Ahh... I'll buy it at a high price.", "Not enough cash, stranger.", "Welcome!", "Hehehe... thank you.", "Is that all, stranger?"];
   let el = null;
+  // ---- what's in his coat: the one Wheeltari cartridge that works (30% of wallet + vault) and the Flea Market snow globe (1%). Cash only, one of each ----
+  const cartPrice = () => Math.max(5000, Math.round((gold() + vaultG()) * .30)), globePrice = () => Math.max(100, Math.round((gold() + vaultG()) * .01));
+  const hasCart = () => !!get('painWheelCart', false), hasGlobe = () => !!((get('painWheelGlobes', {}) || {}).flea);
+  const GLOBE_LINES = ["...A snow globe. Out of everything in this coat. Hehehe... alright, stranger.", "You want the snow globe? I've got a cursed amulet right here... no? Fine.",
+    "It doesn't snow in the desert, stranger. That's what makes it special.", "Shake it gently. The little guy inside doesn't like it.", "Nobody's ever bought one of these. I was starting to think they were decorative."];
+  function coat() {
+    const card = $('card'); card.style.setProperty('--q', '#a855f7');
+    const row = (img, name, sub, price, owned, id) => `<div style="display:flex;gap:12px;align-items:center;margin:10px 0;padding:10px;border-radius:10px;background:rgba(0,0,0,.35);border:1px solid #57534e">
+      <div style="width:84px;height:84px;flex:none;display:grid;place-items:center">${img}</div>
+      <div style="flex:1;min-width:0;text-align:left"><b style="font-size:17px">${name}</b><div style="font-size:13px;color:#a8a29e">${sub}</div><div style="font:900 18px ui-monospace,monospace;color:#fde68a;margin-top:4px">${owned ? 'SOLD (to you)' : fmt(price)}</div></div>
+      <button class="buy" type="button" data-item="${id}" style="flex:none" ${owned ? 'disabled' : ''}>${owned ? 'Owned' : 'Buy'}</button></div>`;
+    card.innerHTML = `<h2 style="margin-top:0">The stranger opens his coat</h2><p class="desc" style="margin-bottom:4px">"What're ya buyin'?"</p>` +
+      row('<img src="media/cart.webp" alt="" style="max-width:84px;image-rendering:auto">', 'Untested Game Cartridge', 'As-is. No returns. Says THE WHEEL on it. "This one works, stranger."', cartPrice(), hasCart(), 'cart') +
+      row('<div style="font-size:52px;line-height:1">🔮</div>', 'Flea Market Snow Globe', "Axazon's tent, in a little glass ball. The snow is sand.", globePrice(), hasGlobe(), 'globe') +
+      `<div class="pct" style="margin-top:2px">Cash only. No cards. No vault. He doesn't have a reader, and he wouldn't tell you where he'd keep one.</div>
+      <div class="row"><button class="no" type="button">"Is that all, stranger?"</button></div><div class="msg" role="status"></div>`;
+    card.querySelectorAll('[data-item]').forEach(b => b.onclick = () => {
+      const isCart = b.dataset.item === 'cart', p = isCart ? cartPrice() : globePrice(), g = gold(), m = card.querySelector('.msg');
+      if (isCart ? hasCart() : hasGlobe()) { m.textContent = isCart ? '"You already have the only one that works, stranger."' : '"You already have one, stranger. What are you, a collector?"'; return; }
+      if (g < p) { m.textContent = '"Not enough cash, stranger."' + (vaultG() > 0 ? ' (Your vault doesn\'t count. He wants it in your hand.)' : ''); return; }
+      put('painWheelGold', g - p); sfx('audio_token'); showGold();
+      if (isCart) { put('painWheelCart', true); m.textContent = '"Hehehe... thank you." He presses it into your hand. It\'s warm. Take it to the yacht. The TV in the VIP room is waiting.'; }
+      else { const gl = get('painWheelGlobes', {}) || {}; gl.flea = Date.now(); put('painWheelGlobes', gl); m.textContent = '"' + GLOBE_LINES[Math.floor(Math.random() * GLOBE_LINES.length)] + '" It\'s in your yacht\'s globe case now. Don\'t ask how.'; }
+      b.disabled = true; b.textContent = 'Owned';
+    });
+    card.querySelector('.no').onclick = () => $('dlg').close();
+    $('dlg').showModal();
+  }
   const place = () => {
     const night = sc.classList.contains('night');
-    if (night && !el && !sessionStorage.getItem('pwStranger') && Math.random() < .35) {
+    if (night && !el && !sessionStorage.getItem('pwStranger')) {
+      const miss = get('painWheelStrangerMiss', 0) || 0;   // pity timer: 3 night visits without him and he's guaranteed on the next one
+      if (miss < 3 && Math.random() >= .35) { if (!sessionStorage.getItem('pwStrangerMissed')) { sessionStorage.setItem('pwStrangerMissed', '1'); put('painWheelStrangerMiss', miss + 1); } return; }
+      put('painWheelStrangerMiss', 0);
       sessionStorage.setItem('pwStranger', '1');
       el = document.createElement('button'); el.type = 'button'; el.setAttribute('aria-label', 'A hooded stranger');
       el.style.cssText = 'position:absolute;left:-1%;top:47%;width:10.5%;padding:0;border:0;background:none;cursor:pointer;z-index:1;opacity:0;transition:opacity 3s, translate 1.4s ease-in';
       el.innerHTML = '<img src="media/emp_stranger.png?v=1" alt="" style="display:block;width:100%;height:auto;image-rendering:pixelated;filter:brightness(.72) saturate(.9) drop-shadow(0 0 .8cqw rgba(250,204,21,.25))">';
       sc.appendChild(el); setTimeout(() => el && (el.style.opacity = '.9'), 2500);
       let n = 0;
-      el.onclick = (e) => { e.stopPropagation(); if (window.pwAch) pwAch('stranger'); const d = document.getElementById('say'); d.innerHTML = '<b>The stranger:</b> '; d.append(n++ === 0 ? "What're ya buyin'?" : SAY[Math.floor(Math.random() * SAY.length)]); d.style.setProperty('--tail', '8%'); d.style.display = 'block'; clearTimeout(window.__strT); window.__strT = setTimeout(() => d.style.display = 'none', 5200);
-        if (n >= 3) { el.style.translate = '-120% 0'; el.style.opacity = '0'; setTimeout(() => { el && el.remove(); el = null; }, 1500); setTimeout(() => typeof say === 'function' && say("Who? There's nobody there. There's never anybody there. ...Was there?", 4200), 1700); } };
+      el.onclick = (e) => { e.stopPropagation(); if (window.pwAch) pwAch('stranger'); n++;
+        if (n <= 3 || !(hasCart() && hasGlobe())) { coat(); return; }   // he always has something for you
+        const d = document.getElementById('say'); d.innerHTML = '<b>The stranger:</b> '; d.append(pick(SAY)); d.style.setProperty('--tail', '8%'); d.style.display = 'block'; clearTimeout(window.__strT); window.__strT = setTimeout(() => d.style.display = 'none', 5200);
+        if (n >= 5) { el.style.translate = '-120% 0'; el.style.opacity = '0'; setTimeout(() => { el && el.remove(); el = null; }, 1500); setTimeout(() => typeof say === 'function' && say("Who? There's nobody there. There's never anybody there. ...Was there?", 4200), 1700); } };
     } else if (!night && el) { el.remove(); el = null; }
   };
   setTimeout(place, 1200); setInterval(place, 60000);
 })();
 </script>
-<script>window.AXA_CAMEO = { id: 'emporium', host: '#scene', z: 1, filter: 'brightness(.55) saturate(.6) sepia(.2)', when: () => { const s = document.getElementById('scene'); return !!s && s.classList.contains('night'); } };</script><script src="axa_cameo.js?v=370eea98"></script>
+<script>window.AXA_CAMEO = { id: 'emporium', host: '#scene', z: 1, filter: 'brightness(.55) saturate(.6) sepia(.2)', when: () => { const s = document.getElementById('scene'); return !!s && s.classList.contains('night'); } };</script><script src="axa_cameo.js?v=5952bfe0"></script>
 <script src="logo_zoom.js?v=8c9b3e40"></script>
 </body></html>

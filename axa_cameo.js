@@ -8,11 +8,11 @@ window.AXA_PLACES = {   // x/y/w: % of that place's picture (top-left of the spr
   '811':    { name: 'The 8/11',       bg: 'media/store811_bg.jpg',      x: 96.4,  y: 82,   w: 2.6, ar: 1.778, op: .55, flip: true },
   gnome:    { name: 'Gnome Depot',    bg: 'media/gnome_bg.jpg',         x: 12.4,  y: 36.5, w: 2.1, ar: 1.778, op: .42 },
   emporium: { name: "Axazon's Emporium", bg: 'media/emporium_bg_night.jpg?v=1', x: 17.3, y: 79.2, w: 1.8, ar: 1.778, op: .5 },   // night only: peeking out from behind the left table leg
-  yacht:    { name: "Gallywix's Yacht", bg: 'media/yacht_interior.webp', x: 2.6,  y: 34,   w: 3.2, ar: 2.357, op: .45 },
+  yacht:    { name: "Gallywix's Yacht", bg: 'media/yacht_lobby.webp', x: 13.3, y: 49,   w: 2.2, ar: 2.359, op: .45 },   // squeezed in the gap between the porthole and the trophy case
   wheel:    { name: 'The Wheel',      bg: 'media/bpol_wheel.webp', x: 48, y: 40, w: 4, ar: 1.63, op: .9 },
-  '2600':   { name: 'WHEEL-2600',     bg: 'media/vip_room.webp',  x: 47,  y: 60, w: 1.2, ar: 2.357, op: .9 },
+  '2600':   { name: 'WHEELTARI 2601', bg: 'media/vip_room2.webp', x: 80,  y: 56, w: 1.2, ar: 2.359, op: .9 },
   evidence: { name: 'The Evidence Locker', bg: 'media/cfp_evidence.jpg', x: 80, y: 70, w: 6, ar: 1.4, op: .8 },
-  vip:      { name: 'The VIP Room',   bg: 'media/vip_room.webp',        x: 64.3,  y: 69.5, w: 1.5, ar: 2.357, op: .55 }
+  vip:      { name: 'The VIP Room',   bg: 'media/vip_room2.webp',       x: 67.6,  y: 60.5, w: 1.5, ar: 2.359, op: .55 }   // peeking over the beanbag
 };
 (function () {
   const spots = [].concat(window.AXA_CAMEO || []);

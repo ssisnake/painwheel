@@ -15,11 +15,11 @@
     .pill, h2, .btn, #title, .hs::after, #achPop b { font-family: var(--font-disp); }
     body { display: flex; align-items: center; justify-content: center; overflow: hidden; }
     /* the black bars above/below the room show a dim, blurred copy of it (painted once, never animated) */
-    body::before { content: ""; position: fixed; inset: -40px; background: url("media/yacht_interior.webp") center / cover no-repeat; filter: blur(28px) brightness(.32); z-index: -1; }
+    body::before { content: ""; position: fixed; inset: -40px; background: url("media/yacht_lobby.webp") center / cover no-repeat; filter: blur(28px) brightness(.32); z-index: -1; }
     #scroller { width: 100vw; height: 100vh; overflow: auto; display: flex; align-items: center; }
     /* the room: always the image's exact shape, as big as the screen allows (no cropping, no upscaling past the window) */
-    #stage { position: relative; flex: none; margin: auto; width: max(640px, min(100vw, calc((100vh - 78px) * 2576 / 1093))); aspect-ratio: 2576 / 1093;
-        background: #1a0f0a url("media/yacht_interior.webp") center / 100% 100% no-repeat; container-type: inline-size; user-select: none; }
+    #stage { position: relative; flex: none; margin: auto; width: max(640px, min(100vw, calc((100vh - 78px) * 2560 / 1085))); aspect-ratio: 2560 / 1085;
+        background: #1a0f0a url("media/yacht_lobby.webp") center / 100% 100% no-repeat; container-type: inline-size; user-select: none; }
     button { font: inherit; color: inherit; }
 
     /* clickable spots in the room */
@@ -40,13 +40,12 @@
 
     /* ambient light: transform/opacity only so it stays cheap */
     .glow { position: absolute; pointer-events: none; border-radius: 50%; will-change: opacity; }
-    #chandGlow { left: 46%; top: -10%; width: 22%; height: 45%; background: radial-gradient(closest-side, rgba(253,224,71,.28), transparent); animation: flicker 4s ease-in-out infinite alternate; }
-    #sticky { position: absolute; left: 64.6%; top: 33.5%; width: 3.6%; height: 6.6%; z-index: 4; cursor: pointer; border: 0; padding: .3cqw .25cqw;
-        background: linear-gradient(170deg, #fef08a, #fde047 70%, #facc15); color: #3b2210; transform: rotate(-7deg); box-shadow: .15cqw .3cqw .5cqw rgba(0,0,0,.55);
-        font-family: "Comic Sans MS", "Comic Neue", cursive; font-size: .62cqw; font-weight: 700; line-height: 1.15; text-align: left; transition: transform .15s; }
-    #sticky::before { content: ""; position: absolute; left: 30%; top: -.35cqw; width: 40%; height: .7cqw; background: rgba(255,255,255,.45); transform: rotate(3deg); }
-    #sticky:hover { transform: rotate(-3deg) scale(1.15); }
-    #hatchGlow { left: 74%; top: 74%; width: 26%; height: 30%; background: radial-gradient(closest-side, rgba(45,212,191,.32), transparent); animation: breathe 3.2s ease-in-out infinite alternate; }
+    #chandGlow { left: 48.6%; top: -10%; width: 22%; height: 45%; background: radial-gradient(closest-side, rgba(253,224,71,.28), transparent); animation: flicker 4s ease-in-out infinite alternate; }
+    #sticky { position: absolute; left: 87.1%; top: 37.6%; width: 3%; z-index: 4; cursor: pointer; border: 0; padding: 0; background: none; transform: rotate(9deg); transition: transform .15s; }
+    #sticky img { display: block; width: 100%; height: auto; filter: brightness(.92) drop-shadow(.1cqw .2cqw .2cqw rgba(0,0,0,.6)); }
+    #sticky:hover { transform: rotate(4deg) scale(1.9); z-index: 6; }
+    /* (the hatch is gone: the puzzle basement gets in another way) */
+    #hatchGlowGone { left: 74%; top: 74%; width: 26%; height: 30%; background: radial-gradient(closest-side, rgba(45,212,191,.32), transparent); animation: breathe 3.2s ease-in-out infinite alternate; }
     @keyframes flicker { 0% { opacity: .55 } 40% { opacity: .9 } 55% { opacity: .7 } 100% { opacity: 1 } }
     @keyframes breathe { from { opacity: .35 } to { opacity: 1 } }
 
@@ -78,10 +77,38 @@
     .plaque.spr.locked .t { filter: brightness(.75); opacity: .8; }
     .plaque.new .t { animation: shine 1.6s ease-in-out 3; }
     @keyframes shine { 50% { transform: scale(1.25); filter: drop-shadow(0 0 1cqw #fde047); } }
-    #cabNav { position: absolute; left: 31.6%; top: 72.6%; width: 9.2%; display: flex; align-items: center; justify-content: space-between; gap: .3cqw; z-index: 4; }
+    #cabNav { position: absolute; left: 21.2%; top: 64.7%; width: 17.6%; display: flex; align-items: center; justify-content: space-between; gap: .3cqw; z-index: 4; }
     #cabNav button { cursor: pointer; width: 1.7cqw; height: 1.7cqw; min-width: 22px; min-height: 22px; border-radius: 50%; border: 1px solid #d4a24c; background: rgba(40,22,10,.92); color: var(--gold2); font-weight: 900; font-size: max(11px, .8cqw); }
     #cabNav button:disabled { opacity: .3; cursor: default; }
     #cabCount { text-align: center; font-size: max(10px, .72cqw); font-weight: 900; color: var(--gold2); text-shadow: 0 1px 2px #000; line-height: 1.15; }
+
+    /* ---------- the new room (Ada): Gary's plaque, the porthole view, the snow globe case, Kevin's dome ---------- */
+    #gary { position: absolute; left: 40.156%; top: 11.982%; width: 16.484%; height: 18.249%; pointer-events: none; display: none; }
+    #gary img { display: block; width: 100%; height: 100%; }
+    #gary b { position: absolute; left: 40.3%; top: 74%; width: 33.2%; height: 16%; display: grid; place-items: center; font: 900 .78cqw Georgia, serif; letter-spacing: .3em; color: #3b2210; text-shadow: 0 1px 0 rgba(255,240,200,.5); }
+    #isle { position: absolute; left: 2.58%; top: 32.35%; width: 9.73%; height: 24.33%; border-radius: 50%; overflow: hidden; pointer-events: none;
+        background: #8a99a6 url("media/island_view.webp") 38% 46% / auto 100% no-repeat; }
+    #isle::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 50% 55%, rgba(196,204,212,.92), rgba(140,152,164,.96)); opacity: var(--fog, .9); }
+    #isle::after { content: ""; position: absolute; inset: 0; border-radius: 50%; box-shadow: inset 0 0 1.4cqw rgba(0,0,0,.65); background: linear-gradient(135deg, rgba(255,255,255,.16), transparent 38%); }
+    #isle.drift { animation: isleBob 9s ease-in-out infinite alternate; }
+    @keyframes isleBob { from { background-position-y: 44%; } to { background-position-y: 49%; } }
+    #globeCase { position: absolute; inset: 0; pointer-events: none; }
+    .gslot { position: absolute; pointer-events: auto; cursor: pointer; padding: 0; border: 0; background: none; display: flex; align-items: flex-end; justify-content: center; transform-origin: bottom center; transition: transform .12s; }
+    .gslot:hover { transform: scale(1.15); z-index: 3; }
+    .globe { position: relative; width: 100%; aspect-ratio: .82; pointer-events: none; }
+    .globe .gl { position: absolute; left: 4%; right: 4%; top: 0; aspect-ratio: 1; border-radius: 50%; overflow: hidden; display: grid; place-items: center;
+        background: radial-gradient(circle at 34% 30%, rgba(255,255,255,.75) 0 6%, rgba(255,255,255,.12) 18%, rgba(170,210,255,.2) 55%, rgba(80,120,170,.35)); box-shadow: inset 0 -.25cqw .4cqw rgba(255,255,255,.35), 0 0 .5cqw rgba(253,224,71,.35); }
+    .globe .gl i { font-style: normal; font-size: 1.15cqw; transform: translateY(.2cqw); }
+    .globe .gl s { position: absolute; inset: 0; text-decoration: none; background: radial-gradient(circle, #fff 0 .06cqw, transparent .07cqw) 0 0 / .55cqw .5cqw, radial-gradient(circle, #fff 0 .05cqw, transparent .06cqw) .25cqw .2cqw / .45cqw .6cqw; opacity: .55; }
+    .globe .gb { position: absolute; left: 10%; right: 10%; bottom: 0; height: 26%; border-radius: .3cqw .3cqw .15cqw .15cqw; background: linear-gradient(#a16207, #5b3416); border-top: .12cqw solid #fde68a; }
+    .gslot.shook .gl s { animation: snow 1.8s ease-out; }
+    @keyframes snow { 0% { background-position: 0 -1cqw, .25cqw -.8cqw; opacity: .95; } 100% { background-position: 0 .4cqw, .25cqw .6cqw; opacity: .55; } }
+    .gslot.empty { opacity: 0; }
+    #kevTro { position: absolute; left: 92.15%; bottom: 44%; width: 4.7%; display: none; pointer-events: none; }
+    #kevTro img { display: block; width: 100%; max-height: 13.6cqw; object-fit: contain; object-position: bottom; filter: drop-shadow(0 0 .5cqw rgba(253,224,71,.45)); }
+    #rebBottle { position: absolute; left: 3.4%; top: 75.5%; width: 2.5%; display: none; pointer-events: none; transform: rotate(-4deg); }
+    #rebBottle img { display: block; width: 100%; filter: brightness(.82) saturate(.85) drop-shadow(.2cqw .3cqw .2cqw rgba(0,0,0,.6)); }
+    @media (prefers-reduced-motion: reduce) { #isle.drift, .gslot.shook .gl s { animation: none; } }
 
     /* ---------- dialogs ---------- */
     .modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(5,3,2,.78); z-index: 50; padding: 16px; }
@@ -117,7 +144,7 @@
     .bal small { font-size: 11px; color: #a8927a; text-transform: uppercase; letter-spacing: .08em; font-weight: 800; }
     .fdic { margin-top: 10px; padding: 8px 10px; border-radius: 8px; border: 1px solid #b08d57; background: linear-gradient(#3a2a12, #23180a); color: #f5deb3; font-size: 12.5px; text-align: center; }
     .fdic span { color: #a8927a; font-size: 11px; }
-    #fdicPlate { position: absolute; left: 68.6%; top: 77.2%; width: 9.6%; height: 2.6%; white-space: nowrap; z-index: 4; cursor: pointer; border: 1px solid #6b4f1d; border-radius: .25cqw; padding: 0;
+    #fdicPlate { position: absolute; left: 76.2%; top: 75.2%; width: 9.6%; height: 2.6%; white-space: nowrap; z-index: 4; cursor: pointer; border: 1px solid #6b4f1d; border-radius: .25cqw; padding: 0;
         background: linear-gradient(#e9c46a, #b08d57 55%, #8a6a35); color: #2a1c08; font-size: .54cqw; font-weight: 900; letter-spacing: .03em; box-shadow: 0 .1cqw .3cqw rgba(0,0,0,.6); }
     #iou { margin-top: 8px; padding: 8px 10px; border-radius: 8px; background: #fef3c7; color: #3b2210; font-family: "Comic Sans MS", "Comic Neue", cursive; font-size: 13px; transform: rotate(-1.2deg); display: none; }
 
@@ -146,10 +173,10 @@
     #vip.open { display: block; }
     #vipScene { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transition: transform 1.3s cubic-bezier(.6,0,.3,1), opacity .5s 1s; transform-origin: 50% 52%; }
     #vipScene.zoom { transform: scale(5.2); opacity: 0; }
-    #vip::before { content: ""; position: absolute; inset: -40px; background: url("media/vip_room.webp") center / cover no-repeat; filter: blur(28px) brightness(.3); }
-    #vipStage { position: relative; flex: none; width: max(640px, min(100vw, calc(100vh * 2576 / 1093))); aspect-ratio: 2576 / 1093;
-        background: #120a08 url("media/vip_room.webp") center / 100% 100% no-repeat; container-type: inline-size; }
-    #vipSign { position: absolute; left: 35%; top: 30%; width: 30%; text-align: center; font-family: "Arial Black", Arial, sans-serif; font-weight: 900; font-size: 3.9cqw; letter-spacing: .05em; white-space: nowrap;
+    #vip::before { content: ""; position: absolute; inset: -40px; background: url("media/vip_room2.webp") center / cover no-repeat; filter: blur(28px) brightness(.3); }
+    #vipStage { position: relative; flex: none; width: max(640px, min(100vw, calc(100vh * 2560 / 1085))); aspect-ratio: 2560 / 1085;
+        background: #120a08 url("media/vip_room2.webp") center / 100% 100% no-repeat; container-type: inline-size; }
+    #vipSign { position: absolute; left: 22.6%; top: 21%; width: 29%; text-align: center; font-family: "Arial Black", Arial, sans-serif; font-weight: 900; font-size: 3.2cqw; letter-spacing: .05em; white-space: nowrap;
         color: #fdf4ff; -webkit-text-stroke: .12cqw #e879f9; text-shadow: 0 0 .5cqw #f0abfc, 0 0 1.4cqw #e879f9, 0 0 3cqw #c026d3; pointer-events: none; }
     .vipNeon { animation: vipNeon 2.6s ease-in-out infinite alternate; }
     .vipScr { position: absolute; display: grid; place-items: center; pointer-events: none; overflow: hidden; }
@@ -157,10 +184,11 @@
         background: radial-gradient(circle, #f8fafc 0 9%, transparent 10%), conic-gradient(#ef4444 0 60deg, #facc15 0 120deg, #22c55e 0 180deg, #f48cba 0 240deg, #a855f7 0 300deg, #0ea5e9 0);
         animation: vipSpin 7s linear infinite; opacity: .92; }
     .vipScrTxt { position: absolute; text-align: center; font: 900 .9cqw Arial, sans-serif; letter-spacing: .15em; color: #0c4a6e; pointer-events: none; }
-    #vipSticky { position: absolute; left: 42%; top: 56.2%; width: 3.6%; padding: .2cqw; border: 0; cursor: pointer; background: linear-gradient(170deg, #fef08a, #facc15); color: #3b2210;
-        font: 700 .5cqw/1.15 "Comic Sans MS", "Comic Neue", cursive; transform: rotate(-6deg); box-shadow: .1cqw .2cqw .4cqw rgba(0,0,0,.5); transition: transform .15s; }
-    #vipSticky b { font-size: 1.6em; }
-    #vipSticky:hover { transform: rotate(-2deg) scale(1.3); }
+    #vipSticky { position: absolute; left: 40.1%; top: 49.6%; width: 2.7%; aspect-ratio: .93; border: 0; padding: 0 0 0 .1cqw; cursor: pointer; color: #1c1917;
+        background: url("media/sticky_blank.webp") center / 100% 100% no-repeat; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        font: 700 .36cqw/1.1 "Comic Sans MS", "Comic Neue", cursive; transform: rotate(6deg); filter: drop-shadow(.1cqw .15cqw .15cqw rgba(0,0,0,.55)); transition: transform .15s; }
+    #vipSticky b { font-size: 2em; line-height: 1; color: #991b1b; }
+    #vipSticky:hover { transform: rotate(2deg) scale(2.4); z-index: 6; }
     /* the superfan poster, stuck to the angled wall on the right */
     #vipPoster { position: absolute; left: 77.8%; top: 22%; width: 8.4%; height: 37%; border: .25cqw solid #d4a24c; border-radius: .3cqw; padding: .5cqw .4cqw; cursor: pointer;
         background: radial-gradient(circle at 50% 42%, #4c1d95, #1e0b3a 70%); color: #fde68a; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: space-between;
@@ -175,6 +203,15 @@
     #vipPoster .pBot { font: 900 .62cqw Arial, sans-serif; letter-spacing: .08em; }
     #vipPoster .pFine { font: 700 .42cqw Arial, sans-serif; color: #c4b5fd; }
     @keyframes vipSpin { to { transform: rotate(360deg); } }
+    /* the lava lamp on the cable box (8 frames, slow) and the featured snow globe on the desk */
+    #lava { position: absolute; left: 93.25%; top: 20.9%; width: 2.9%; aspect-ratio: 124 / 344; pointer-events: none; background: url("media/lava_strip.webp") 0 0 / 800% 100% no-repeat;
+        animation: lava 7.2s steps(8) infinite; filter: drop-shadow(0 0 .8cqw rgba(251,113,33,.35)); }
+    @keyframes lava { to { background-position: 114.2857% 0; } }
+    #lavaGlow { position: absolute; left: 91.6%; top: 18%; width: 6.4%; height: 22%; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, rgba(251,113,33,.22), transparent); }
+    #deskGlobe { position: absolute; left: 50.25%; top: 51.3%; width: 2.1%; pointer-events: none; display: none; }
+    #deskGlobe .globe .gl i { font-size: 1.05cqw; }
+    #cartStack { position: absolute; left: 44.6%; top: 85.4%; width: 4%; pointer-events: none; filter: brightness(.7) saturate(.85) drop-shadow(.2cqw .3cqw .3cqw rgba(0,0,0,.6)); }
+    #cartLoose { position: absolute; left: 49.4%; top: 91.2%; width: 2.4%; pointer-events: none; transform: rotate(-24deg); filter: brightness(.62) saturate(.8) drop-shadow(.15cqw .2cqw .2cqw rgba(0,0,0,.6)); }
         @keyframes vipNeon { from { opacity: .78; } to { opacity: 1; } }
     #vipBar { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); display: flex; gap: 10px; z-index: 2; }
     #vipBar .btn { font-size: 16px; padding: 10px 18px; }
@@ -201,7 +238,7 @@
     @keyframes miniSail { from { left: -60px; } to { left: 100%; } }
     .bezel.atari { border-color: #2a1a0e; border-bottom-width: 34px; position: relative;
         background: #050b18; box-shadow: 0 0 0 2px #000, inset 0 0 0 3px #111, 0 0 40px rgba(251,146,60,.18); }
-    .bezel.atari::after { content: "WHEEL-2600 · VIDEO COMPUTER SYSTEM"; position: absolute; left: 0; right: 0; bottom: -28px; text-align: center;
+    .bezel.atari::after { content: "THE WHEEL · HOME PC EDITION"; position: absolute; left: 0; right: 0; bottom: -28px; text-align: center;
         font: 700 13px 'Pixelify Sans', ui-monospace, monospace; letter-spacing: .12em; color: #fdba74;
         background: repeating-linear-gradient(90deg, #4a2a12 0 6px, #5b3416 6px 9px, #3d220e 9px 14px); padding: 6px 0; }
     @media (prefers-reduced-motion: reduce) { #miniFinger, #miniYachts img { animation: none; } #miniYachts img { left: auto; } }
@@ -214,7 +251,7 @@
     #miniRes { min-height: 50px; max-width: 460px; font-weight: 800; font-size: 17px; color: #f1f5f9; line-height: 1.35; }
     #miniBtns { display: flex; gap: 10px; }
     #miniBtns .btn { font-size: 16px; padding: 10px 18px; }
-    @media (prefers-reduced-motion: reduce) { .vipMiniW, .vipNeon, #vipPoster .pWheel div { animation: none; } #vipScene { transition: opacity .3s; } }
+    @media (prefers-reduced-motion: reduce) { .vipMiniW, .vipNeon, #vipPoster .pWheel div, #lava { animation: none; } #vipScene { transition: opacity .3s; } }
     /* phones: no hover, so clickable spots get a soft sparkle; and a nudge to turn the phone sideways */
     @media (pointer: coarse) {
         .hs::before { content: "✨"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: max(14px, 1.4cqw); opacity: .55;
@@ -236,7 +273,6 @@
 <div id="scroller">
 <div id="stage">
     <div class="glow" id="chandGlow"></div>
-    <div class="glow" id="hatchGlow"></div>
 
     <div id="bar">
         <h1 class="logo-h1" id="title" style="margin:0;line-height:0"><img src="media/logo_yacht.png?v=1" alt="Gallywix's Yacht: Trophy Room &amp; Guild Bank Vault" style="height:64px;width:auto;display:block;filter:drop-shadow(0 3px 4px rgba(0,0,0,.5))"></h1>
@@ -250,19 +286,27 @@
     <div id="cabinet"></div>
     <div id="cabNav"><button id="pgPrev" aria-label="Previous shelf page">◀</button><div id="cabCount"></div><button id="pgNext" aria-label="Next shelf page">▶</button></div>
 
+    <!-- the new room (Ada): measured off the 2560x1085 art -->
+    <div id="isle" aria-hidden="true"></div>
+    <div id="gary"><img src="media/yacht_gary.webp" alt=""><b>GARY</b></div>
+    <div id="globeCase"></div>
+    <div id="kevTro"><img alt=""></div>
+    <div id="rebBottle"><img src="media/bottle_kc21.webp" alt=""></div>
+
     <!-- hotspots (percent of the room image) -->
-    <button id="sticky" title="A sticky note">combo:<br><b style="font-size:1.3em">1234</b><br>—Reb</button>
+    <button id="sticky" title="A sticky note"><img src="media/sticky_combo.webp" alt="Sticky note: combo is 1234, do NOT tell kevin. —Reb"></button>
     <button id="fdicPlate" title="A brass plaque">FDIC INSURED · 250,000g</button>
-    <button class="hs round" id="hsVault" data-label="🏦 Guild Bank Vault" style="left:63.2%;top:24%;width:20.4%;height:51%"></button>
-    <button class="hs below" id="hsHatch" data-label="⛓️ ???" style="left:77%;top:81%;width:21%;height:17.5%"></button>
-    <button class="hs" id="hsBar" data-label="🥇 Solid Gold Bar" style="left:61.7%;top:86.2%;width:6.1%;height:9.6%"></button>
-    <button class="hs below" id="hsChand" data-label="🪙 Coin Chandelier" style="left:50.8%;top:0;width:13.6%;height:22%"></button>
-    <button class="hs below" id="hsFish1" data-label="🐟 Gary (not his name)" style="left:0;top:5.5%;width:11.6%;height:13.5%"></button>
-    <button class="hs" id="hsFish2" data-label="🐟 The Other Swordfish" style="left:50.3%;top:25.4%;width:7%;height:9%"></button>
-    <button class="hs round" id="hsPort1" data-label="🌊 Porthole" style="left:0;top:29%;width:10.4%;height:32%"></button>
-    <button class="hs round" id="hsPort2" data-label="🌊 Porthole" style="left:50.4%;top:39%;width:5.6%;height:16.4%"></button>
-    <button class="hs" id="hsRope" data-label="🚧 VIP Section" style="left:51.9%;top:57.5%;width:8.2%;height:19.6%"></button>
-    <button class="hs" id="hsGauge" data-label="⏲️ Pressure Gauges" style="left:87.9%;top:33.2%;width:4.8%;height:6%"></button>
+    <button class="hs round" id="hsVault" data-label="🏦 Guild Bank Vault" style="left:71.6%;top:19.6%;width:19%;height:54%"></button>
+    <button class="hs" id="hsBar" data-label="🥇 Solid Gold Bar" style="left:62.1%;top:82%;width:9.4%;height:9.2%"></button>
+    <button class="hs below" id="hsChand" data-label="🪙 Coin Chandelier" style="left:52%;top:0;width:15.2%;height:21%"></button>
+    <button class="hs below" id="hsSign" data-label="📜 Certified Seaworthy" style="left:1.4%;top:11%;width:13.3%;height:15.5%"></button>
+    <button class="hs below" id="hsGary" data-label="🧱 An empty spot on the wall" style="left:41.2%;top:12.6%;width:15%;height:16.4%"></button>
+    <button class="hs round" id="hsPort1" data-label="🌊 Porthole" style="left:2.58%;top:32.35%;width:9.73%;height:24.33%"></button>
+    <button class="hs" id="hsRope" data-label="🚧 VIP Room" style="left:42.3%;top:30%;width:13.4%;height:46%"></button>
+    <button class="hs" id="hsBell" data-label="🛎️ Service bell" style="left:54.1%;top:45.6%;width:2.2%;height:9.6%"></button>
+    <button class="hs" id="hsDome" data-label="🏆 KEVIN (under glass)" style="left:91%;top:30.5%;width:8.6%;height:52%"></button>
+    <button class="hs" id="hsTable" data-label="🪑 Side table" style="left:0;top:82%;width:9.6%;height:18%"></button>
+    <button class="hs" id="hsGauge" data-label="⏲️ Pressure Gauges" style="left:93.4%;top:18.9%;width:5.6%;height:6%"></button>
 </div>
 </div>
 
@@ -316,23 +360,35 @@
     <div id="vipMsg"></div>
     <div id="vipScene"><div id="vipStage">
         <div id="vipSign" class="vipNeon">SIT DOWN????</div>
-        <div class="vipScr" style="left:36.6%;top:47.5%;width:8.25%;height:10.5%"><div class="vipMiniW"></div></div>
-        <div class="vipScr" style="left:55.05%;top:47.5%;width:8.25%;height:10.5%"><div class="vipMiniW" style="animation-duration:5.5s"></div></div>
-        <div class="vipScrTxt" style="left:45.45%;top:48.4%;width:8.95%">THE WHEEL</div>
+        <div id="lavaGlow"></div><div id="lava" aria-hidden="true"></div>
+        <div id="deskGlobe"></div>
+        <img id="cartStack" src="media/cartstack.webp" alt=""><img id="cartLoose" src="media/cart.webp" alt="">
         <button id="vipSticky" data-label="📝 Sticky note (do not update)">DAYS SINCE<br>LAST KEVIN:<br><b>0</b></button>
-        <button id="vipPoster" data-label="🕯️ Definitely not a cult poster" style="left:76.3%;top:21%;width:11.4%;height:auto;border:0;padding:0;background:none;box-shadow:none"><img src="media/vip_poster.png?v=1" alt="Church of the Eternal Spin" style="display:block;width:100%;height:auto;filter:brightness(.88) drop-shadow(-.3cqw .4cqw .4cqw rgba(0,0,0,.6))"><span id="pChapter" hidden>185</span></button>
-        <button class="hs" id="vipChair" data-label="🪑 Sit down (it wasn't a question)" style="left:45%;top:50.5%;width:9.2%;height:47%"></button>
-        <button class="hs" data-vsay="lotion" data-label="🧴 Lotion (for carpal tunnel)" style="left:37%;top:58.6%;width:2.6%;height:8.6%"></button>
-        <button class="hs" data-vsay="trash" data-label="🗑️ Trash can (allergies, probably)" style="left:31.9%;top:74.5%;width:4.8%;height:15%"></button>
-        <button class="hs" data-vsay="pc" data-label="🖥️ Gaming PC to run this game?" style="left:59.4%;top:71%;width:4.6%;height:20%"></button>
-        <button class="hs" data-vsay="head" data-label="🎧 Headset (still warm)" style="left:54.9%;top:62.6%;width:3.5%;height:4.4%"></button>
-        <button class="hs below" data-vsay="web" data-label="🕸️ Cobweb (the spider is a fan)" style="left:66.5%;top:8%;width:9%;height:19%"></button>
-        <button class="hs" data-vsay="door" data-label="🚪 Door (leaving is optional)" style="left:12%;top:22%;width:6.6%;height:60%"></button>
-        <button class="hs" data-vsay="mon" data-label="🖥️ Monitor #1 (it's the wheel)" style="left:36.6%;top:47.5%;width:8.25%;height:10.5%"></button>
-        <button class="hs" data-vsay="mon" data-label="🖥️ Monitor #3 (also the wheel)" style="left:55.05%;top:47.5%;width:8.25%;height:10.5%"></button>
-        <button class="hs" data-vsay="mid" data-label="📺 The big screen (guess)" style="left:45.45%;top:46.5%;width:8.95%;height:4%"></button>
-        <button class="hs below" data-vsay="sign" data-label="💡 Neon sign (not a suggestion)" style="left:37%;top:30%;width:26%;height:9%"></button>
-        <button class="hs" data-vsay="rope" data-label="🚧 A VIP rope inside the VIP room" style="left:14.5%;top:60%;width:10%;height:30%"></button>
+        <button id="vipPoster" data-label="🕯️ Definitely not a cult poster" style="left:11.6%;top:14.4%;width:5.1%;height:auto;border:0;padding:0;background:none;box-shadow:none;transform:none"><img src="media/vip_poster.png?v=1" alt="Church of the Eternal Spin" style="display:block;width:100%;height:auto;filter:brightness(.8) sepia(.15) drop-shadow(.2cqw .3cqw .3cqw rgba(0,0,0,.6))"><span id="pChapter" hidden>185</span></button>
+        <button class="hs" id="vipChair" data-label="🪑 Sit down (it wasn't a question)" style="left:27.6%;top:50.5%;width:12.4%;height:46%"></button>
+        <button class="hs" data-vsay="lotion" data-label="🧴 Lotion (for research)" style="left:18%;top:47.2%;width:2.6%;height:12.8%"></button>
+        <button class="hs" data-vsay="trash" data-label="🗑️ Trash can (allergies, probably)" style="left:11.8%;top:67.5%;width:5.9%;height:20%"></button>
+        <button class="hs" data-vsay="pc" data-label="🖥️ Gaming PC to run this game?" style="left:44%;top:64%;width:4.5%;height:19.4%"></button>
+        <button class="hs" data-vsay="head" data-label="🎧 Headset (still warm)" style="left:39.7%;top:55.4%;width:3.7%;height:5%"></button>
+        <button class="hs" data-vsay="mug" data-label="☕ Goblin mug" style="left:44.5%;top:54%;width:2.8%;height:6%"></button>
+        <button class="hs" id="vipDish" data-label="❄️ Snow globe dish" style="left:48.4%;top:54.6%;width:5.7%;height:6%"></button>
+        <button class="hs" data-vsay="door" data-label="🚪 Door (leaving is optional)" style="left:0;top:9%;width:4.4%;height:74%"></button>
+        <button class="hs" data-vsay="mon" data-label="🖥️ Monitor #1 (Clippy lives here)" style="left:20.4%;top:37%;width:8.5%;height:16.8%"></button>
+        <button class="hs" data-vsay="mid" data-label="📺 The big screen (guess)" style="left:29%;top:36.5%;width:13.2%;height:17%"></button>
+        <button class="hs" id="vipMon3" data-vsay="mon3" data-label="🖥️ Monitor #3 (someone's desktop)" style="left:42.6%;top:37%;width:8.9%;height:16.8%"></button>
+        <button class="hs below" data-vsay="sign" data-label="💡 Neon sign (not a suggestion)" style="left:23%;top:19%;width:28%;height:12%"></button>
+        <button class="hs" data-vsay="rope" data-label="🚧 A VIP rope inside the VIP room" style="left:1%;top:52%;width:10.8%;height:42%"></button>
+        <button class="hs" data-vsay="pinup" data-label="🖼️ Framed poster (Gallywix calls it art)" style="left:56.7%;top:13%;width:7.4%;height:28.2%"></button>
+        <button class="hs" data-vsay="shelf" data-label="🍾 Top shelf" style="left:57%;top:43.5%;width:9.4%;height:26%"></button>
+        <button class="hs" data-vsay="bean" data-label="🫘 Beanbag" style="left:55%;top:66%;width:19%;height:29.5%"></button>
+        <button class="hs" id="vipCarts" data-label="📼 A stack of cartridges" style="left:44.3%;top:84.6%;width:8%;height:14.4%"></button>
+        <button class="hs" id="vipConsole" data-label="🕹️ WHEELTARI 2601" style="left:70.6%;top:33.8%;width:9.8%;height:11.8%"></button>
+        <button class="hs" id="vipTv" data-label="📺 The TV (it's off)" style="left:73.1%;top:49.6%;width:14.6%;height:24%"></button>
+        <button class="hs" data-vsay="vcr" data-label="📼 VCR (blinking 12:00)" style="left:81%;top:39.5%;width:7.5%;height:6.2%"></button>
+        <button class="hs" data-vsay="lamp" data-label="🌋 Lava lamp" style="left:92.9%;top:19.5%;width:3.6%;height:20%"></button>
+        <button class="hs" data-vsay="statue" data-label="🗿 Gold goblin statue" style="left:89%;top:27%;width:3.4%;height:14%"></button>
+        <button class="hs" data-vsay="strip" data-label="🔌 Power strip (OSHA has entered the chat)" style="left:74.6%;top:85.8%;width:11.8%;height:12%"></button>
+        <button class="hs" data-vsay="chips" data-label="🥔 Goblin Hole Chips" style="left:87.1%;top:84%;width:8.2%;height:14.3%"></button>
     </div></div>
     <div id="vipBar"><button class="btn go" id="vipSit">🪑 Sit down</button><button class="btn" id="vipLeave">🚪 Leave quietly</button><a class="btn" href="./" style="text-decoration:none"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a></div>
     <div id="mini">
@@ -442,14 +498,13 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
     renderGold();
 
     // ---------- trophy cabinet ----------
-    // Shelf spots, measured off the art (percent of the room). Each bay has 5 shelves; the right bay sits deeper so it is narrower.
-    const BAYS = [
-        { x0: 21.1, x1: 30.4, per: 4, shelves: [26.6, 38.0, 48.7, 58.9, 67.9] },
-        { x0: 31.9, x1: 40.3, per: 4, shelves: [30.4, 40.4, 49.6, 58.5, 67.4] },
-        { x0: 41.7, x1: 48.0, per: 3, shelves: [30.9, 40.6, 49.6, 57.9, 66.0] }
-    ];
+    // Shelf spots, measured off Ada's case (px of the 2560x1085 room): 6 glass columns x 5 shelves = 30 per page. The case is drawn in
+    // perspective, so the shelves sit a little lower on the right and the columns get narrower.
+    const COLX = [531, 632, 731, 824, 908, 985], COLW = [100, 98, 94, 86, 80, 74];
+    const SHELF = [[325, 357], [424, 441], [518, 524], [607, 605], [694, 687]];   // shelf height at the left column / right column
     const SLOTS = [];
-    for (let r = 0; r < 5; r++) BAYS.forEach(b => { for (let i = 0; i < b.per; i++) SLOTS.push({ x: b.x0 + (b.x1 - b.x0) * (i + .5) / b.per, y: b.shelves[r], w: (b.x1 - b.x0) / b.per }); });
+    for (let r = 0; r < 5; r++) COLX.forEach((x, i) => { const t = (x - COLX[0]) / (COLX[5] - COLX[0]), y = SHELF[r][0] + (SHELF[r][1] - SHELF[r][0]) * t;
+        SLOTS.push({ x: x / 25.6, y: y / 10.85, w: COLW[i] * .9 / 25.6 }); });
     const PER_PAGE = SLOTS.length;
     // a few achievements get their own trophy
     const ICONS = { kevind: '🤡', yacht: '🛥️', castle: '🏰', debtfree: '💸', taxman: '🧾', goldcookie: '🍪', cluck: '🐔', clippy: '📎', fenderbender: '🚑',
@@ -461,7 +516,7 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
         spins500: 'wheel_gold', spins1000: 'wheel_gold', spins2000: 'wheel_gold', spins5000: 'wheel_diamond', spins10000: 'wheel_diamond',
         debtfree: 'coins', jackpot: 'coins', vault: 'coins', boughttop: 'coins', rugpull: 'coins', castle: 'castle', yacht: 'yacht', aboard: 'yacht', rocket: 'rocket',
         soc1: 'pyramid', soc4: 'pyramid', soc2: 'coffin', soc3: 'owl', soc5: 'snake', soc6: 'manual', clawwin: 'claw', clawall: 'claw', goldcookie: 'cookie', cluck: 'chicken',
-        weewoo: 'ambulance', mash: 'ambulance', fenderbender: 'copcar', rui: 'copcar', golddonut: 'donut', taxman: 'tax', seized: 'tax', goblincard: 'tax',
+        cartridge: 'cartridge', weewoo: 'ambulance', mash: 'ambulance', fenderbender: 'copcar', rui: 'copcar', golddonut: 'donut', taxman: 'tax', seized: 'tax', goblincard: 'tax',
         brickphone: 'brickphone', voodoo: 'voodoo', purpleheart: 'purpleheart', foreveralone: 'tumbleweed',
         noone: 'noone', penis: 'penis', sixtyseven: 'sixtyseven', kromall: 'kromall', greedy: 'greedy', fire: 'fire', glaive: 'glaive', carl: 'carl', collector: 'collector', murderrow: 'murderrow', mephist: 'mephist', rigger: 'rigger', orangetext: 'orangetext', collector1: 'collector1', collectorall: 'collectorall', konami: 'konami', adclick: 'adclick', drip: 'drip', boughtaotc: 'boughtaotc', aotclegit: 'aotclegit', chocobar: 'chocobar', hearth: 'hearth', finger: 'finger', cartel: 'cartel', queue: 'queue', wheelception: 'wheelception', wheelception5: 'wheelception5', clippy: 'clippy' };   // batch 2: every achievement has its own trophy now
     // older stand-ins for the few that are not in the set yet
@@ -477,11 +532,11 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
         defs.slice(page * PER_PAGE, (page + 1) * PER_PAGE).forEach((d, i) => {
             const s = SLOTS[i], have = !!got[d.id], b = document.createElement('button');
             b.className = 'plaque ' + (have ? 'got' : 'locked') + (fresh === d.id ? ' new' : '');
-            b.style.cssText = `left:${s.x - s.w / 2}%;width:${s.w}%;top:${s.y - 8.2}%;height:8.2%`;
+            b.style.cssText = `left:${s.x - s.w / 2}%;width:${s.w}%;top:${s.y - 7.6}%;height:7.6%`;
             b.innerHTML = '<span class="t"></span><span class="base"></span>';
-            if (have && isSet(d)) { b.classList.add('spr'); b.firstChild.innerHTML = `<img src="media/${sprFor(d)}" alt="" style="height:3.9cqw;width:auto;max-width:100%;image-rendering:pixelated;vertical-align:bottom">`; }
+            if (have && isSet(d)) { b.classList.add('spr'); b.firstChild.innerHTML = `<img src="media/${sprFor(d)}" alt="" style="height:2.95cqw;width:auto;max-width:100%;image-rendering:pixelated;vertical-align:bottom">`; }
             else if (have && sprFor(d)) b.firstChild.innerHTML = `<img src="media/${sprFor(d)}" alt="" style="height:1.25em;width:auto;max-width:100%;image-rendering:pixelated;vertical-align:middle">`;
-            else if (!have) { b.classList.add('spr'); b.firstChild.innerHTML = '<img src="media/trophy_locked.png" alt="" style="height:3.6cqw;width:auto;max-width:100%;image-rendering:pixelated;vertical-align:bottom">'; }
+            else if (!have) { b.classList.add('spr'); b.firstChild.innerHTML = '<img src="media/trophy_locked.png" alt="" style="height:2.7cqw;width:auto;max-width:100%;image-rendering:pixelated;vertical-align:bottom">'; }
             else b.firstChild.textContent = iconFor(d);
             b.title = have || !d.secretName ? d.name : 'Secret achievement';
             b.addEventListener('click', () => showTrophy(d, got[d.id]));
@@ -601,16 +656,6 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
         el.textContent = `IOU ${fmt(iou)}. I will pay it bak I promis. Its for a mount. —Kevin  P.S. the combo was 1234 lol`;
     }
 
-    // ---------- the hatch (Uncle Touchy's Puzzle Basement, someday) ----------
-    const HATCH = ['The chains rattle. Something down there giggles.', 'A voice from below: "Not yet, sweetie."', 'The padlock is warm. Why is the padlock warm?',
-        'You hear dice rolling. Then a whiteboard marker. Then a scream.', 'There is a note under the hatch: "PUZZLES COMING SOON. —U.T."', 'The teal glow pulses when you get close. It likes you.'];
-    let hatchClicks = 0;
-    $('hsHatch').addEventListener('click', () => {
-        sfx.chains(); hatchClicks++;
-        const h = $('hsHatch'); h.classList.remove('shake'); void h.offsetWidth; h.classList.add('shake');
-        say('⛓️ ' + (hatchClicks === 1 ? "Locked. Chained. Glowing. It says \"Uncle Touchy's Puzzle Basement\" in very small letters." : pick(HATCH)), 4500);
-    });
-
     // ---------- little things to poke ----------
     let barBites = 0;
     $('hsBar').addEventListener('click', () => {
@@ -631,16 +676,83 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
             'Gallywix had it made from the guild repair fund.', 'It sways. The yacht is not moving. Why is it swaying?']));
         chandAt = Date.now();
     });
-    let shantyAt = 0;
-    $('hsFish1').addEventListener('click', () => { if (Date.now() - shantyAt > 16000) { shantyAt = Date.now(); if (window.fishSing) fishSing(() => sfx.shanty()); else sfx.shanty(); }
-        say('🐟🎵 ' + pick(['Gary turns his head and sings you a sea shanty. You did not ask for this. (Do not call him Gary.)', 'WHAT SHALL WE DO WITH A DRUNKEN REB. EAR-LY IN THE MORNING.', 'The swordfish sings. His name is not Gary. He sings anyway.', 'Way hay and up she rises. The yacht does not. It is in the desert.']), 5500); });
-    $('hsFish2').addEventListener('click', () => { if (window.fishSing) fishSing(null, 'yacht2'); });   // he finally gets to sing too
-    $('hsFish2').addEventListener('click', () => say('🐟 ' + pick(['Reb caught this one. It was already dead. It was in a freezer aisle.', 'The plaque says "THE ONE THAT GOT AWAY." It did not get away.',
-        'This swordfish has seen things. It will not sing for you.', 'Kevin named it Gary. Do not call it Gary. It hates that.'])));
-    const VIEWS = ['A murloc presses its face to the glass. MRGLGLGL.', 'Kevin is swimming next to the yacht. He fell off the dock. Again.', 'Is that... Mankrik\'s wife?',
-        'Just ocean. Endless, beautiful ocean. And a floating Kevin.', 'A naga waves. You wave back. It was a threat.', 'The Undermine Coast Guard is following you. Gallywix owes them money.',
-        'A sea turtle drifts past. It toots. Somewhere, Whistlethy toots back.'];
-    ['hsPort1', 'hsPort2'].forEach(id => $(id).addEventListener('click', () => { tone(520, 0, .25, 'sine', .05); say('🌊 ' + pick(VIEWS)); }));
+    // ---------- Gary: the swordfish over the VIP door. New yacht owners start with an empty wall; Axazon sells him (a crate from the desert).
+    // Anyone who already had the yacht before the remodel keeps theirs. ----------
+    if (S.get('painWheelGary', null) === null && S.get('painWheelYachtVisited', false)) S.set('painWheelGary', 'grandfathered');
+    const hasGary = () => !!S.get('painWheelGary', null);
+    function renderGary() { const g = hasGary(); $('gary').style.display = g ? 'block' : 'none'; $('hsGary').dataset.label = g ? '🐟 Gary (it says so right there)' : '🧱 An empty spot on the wall'; }
+    renderGary();
+    let shantyAt = 0, wallClicks = 0;
+    $('hsGary').addEventListener('click', () => {
+        if (!hasGary()) { sfx.click(); say('🧱 ' + ['An empty spot above the VIP door. Four screw holes. A dust outline shaped like something long and pointy.',
+            'Something used to hang here. Or it will. The screws are still in the wall, waiting.', 'Axazon was bragging about a crate of "wall fish" he dug up in the desert. Just saying.',
+            'Reb: "We had a fish there. Kevin sold it." You did not have a fish there. "Kevin sold it anyway."'][wallClicks++ % 4], 5200); return; }
+        if (Date.now() - shantyAt > 16000) { shantyAt = Date.now(); if (window.fishSing) fishSing(() => sfx.shanty()); else sfx.shanty(); }
+        say('🐟🎵 ' + pick(['Gary turns his head and sings you a sea shanty. You did not ask for this.', 'WHAT SHALL WE DO WITH A DRUNKEN REB. EAR-LY IN THE MORNING.', 'His name is Gary. It says so on the plaque. He is very proud of the plaque.',
+            'Way hay and up she rises. The yacht does not. It is in the desert.', 'Gary has a cousin at the flea market. They do not talk.']), 5500);
+    });
+    // ---------- the porthole: an island nobody put on the map. Every piece of evidence you find, the fog thins and it drifts closer ----------
+    const evidence = () => Math.min(7, Object.keys(S.get('painWheelClues', {}) || {}).length);
+    function renderIsle() {
+        const n = evidence(), k = n / 7, el = $('isle');
+        el.style.backgroundSize = `auto ${Math.round(100 + 120 * k)}%`;   // 1x far out in the fog ... 2.2x right there
+        el.style.setProperty('--fog', (0.9 * Math.pow(1 - k, .85)).toFixed(2));
+        el.style.filter = `blur(${((1 - k) * 1.6).toFixed(2)}px) saturate(${(.55 + .45 * k).toFixed(2)})`;
+        el.classList.add('drift');
+    }
+    renderIsle();
+    const VIEWS = [
+        ['Fog. Thick fog. Something big is out there. You can\'t make it out.', 'Just fog. And a light, somewhere in it. Blinking? No. Turning.', 'A murloc presses its face to the glass. MRGLGLGL. Then the fog takes it.'],
+        ['There is a shape in the fog. An island? It isn\'t on any map. Gallywix checked. Gallywix can\'t read maps.', 'A lighthouse. Out here. Somebody is keeping that light on.', 'Kevin is swimming next to the yacht. He fell off the dock. Again.'],
+        ['An island. A lighthouse, a cottage, and a big striped building. None of it was there last week.', 'You can see a tent on the beach. Is that... a flea market? Out here?', 'A barrel with a goblin face floats past. It looks back at you.'],
+        ['It\'s close now. Close enough to see flags on the beach. Close enough to see that the striped building has no windows.', 'The yacht is drifting toward it. Nobody is steering. Nobody has ever been steering.', 'A bottle bobs by with a note in it. It\'s too far to grab. For now.']];
+    $('hsPort1').addEventListener('click', () => { tone(520, 0, .25, 'sine', .05); const n = evidence(); say('🌊 ' + pick(VIEWS[n >= 6 ? 3 : n >= 4 ? 2 : n >= 1 ? 1 : 0]), 5200); });
+    // ---------- Kevin's participation trophy: it gets fancier the more times the wheel lands on Kevin ----------
+    const KEV_AT = [1, 10, 25, 50, 100, 250];
+    const KEV_NAME = ["You're Winner", "You're Winner (Deluxe)", "You're Winner (With Heart)", "You're Winner (Gift Wrapped)", "You're Winner (Royal Edition)", 'PARTICIPATION TROPHY'];
+    const kevins = () => ((S.get('painWheelStats', {}) || {}).byType || {}).KEVIN || 0;
+    const kevTier = () => KEV_AT.filter(n => kevins() >= n).length;
+    function renderKev() { const t = kevTier(); $('kevTro').style.display = t ? 'block' : 'none'; if (t) $('kevTro').firstChild.src = `media/kevtrophy_${t}.webp`; }
+    renderKev();
+    $('hsDome').addEventListener('click', () => {
+        sfx.click(); const t = kevTier(), n = kevins(), next = KEV_AT[t];
+        if (!t) { say('🏆 An empty glass dome. The tag says KEVIN. Kevin has not ruined your day yet. Give it time.', 5000); return; }
+        $('tBig').innerHTML = `<img src="media/kevtrophy_${t}.webp" alt="" style="height:170px;width:auto">`;
+        $('tName').textContent = KEV_NAME[t - 1] + ' · tier ' + t + ' of 6';
+        $('tDesc').textContent = ["It's a cup. It's cracked. It's yours. The plaque says kevin in lowercase.", 'Now with a medal. The medal is a little poop. It is smiling at you.', 'It has a crown now. And a heart flag. Kevin is so proud of you.',
+            'A bow. Ribbons. The rubber chicken has been polished.', 'Streamers. A bigger crown. Gallywix wants to borrow it for a photo.', 'Trumpets. A royal robe. Your name is not on it. It says KEVIN. It will always say KEVIN.'][t - 1];
+        $('tDate').textContent = `Landed on Kevin ${n.toLocaleString()} time${n === 1 ? '' : 's'}.` + (next ? ` Next upgrade at ${next}.` : ' It cannot get any fancier. Kevin has given you everything.');
+        open('tModal');
+    });
+    // ---------- the snow globe case (16 spots). One globe per place; the stranger at the flea market sells the first one ----------
+    const GLOBES = { flea: { name: 'Flea Market', scene: '⛺', line: "Axazon's tent, in a globe. The snow is sand. It never settles." } };
+    const GX = [1510, 1566, 1624, 1682], GY = [455, 523, 590, 658];
+    const myGlobes = () => Object.entries(S.get('painWheelGlobes', {}) || {}).filter(([k]) => GLOBES[k]).sort((a, b) => a[1] - b[1]).map(([k]) => k);
+    function renderGlobes() {
+        const box = $('globeCase'), mine = myGlobes(); box.textContent = '';
+        for (let i = 0; i < 16; i++) {
+            const k = mine[i], b = document.createElement('button'); b.type = 'button'; b.className = 'gslot' + (k ? '' : ' empty');
+            const w = 52 / 25.6, h = w * 1.22 * 2.359;
+            b.style.cssText = `left:${(GX[i % 4] / 25.6 - w / 2).toFixed(2)}%;top:${(GY[Math.floor(i / 4)] / 10.85 - h).toFixed(2)}%;width:${w.toFixed(2)}%;height:${h.toFixed(2)}%`;
+            b.setAttribute('aria-label', k ? GLOBES[k].name + ' snow globe' : 'An empty snow globe stand');
+            if (k) b.innerHTML = `<div class="globe"><div class="gl"><i>${GLOBES[k].scene}</i><s></s></div><div class="gb"></div></div>`;
+            b.addEventListener('click', () => {
+                if (!k) { sfx.click(); say('❄️ ' + pick(['An empty stand. Every place has a snow globe somewhere. Somebody is selling them.', 'Sixteen stands. ' + mine.length + ' globe' + (mine.length === 1 ? '' : 's') + '. The case is judging you.', 'A little brass tag: "RESERVED". For what? It does not say.'])); return; }
+                b.classList.remove('shook'); void b.offsetWidth; b.classList.add('shook'); [1400, 1700, 2100].forEach((f, j) => tone(f, j * .07, .2, 'sine', .03));
+                say('❄️ ' + GLOBES[k].name + ' snow globe. ' + GLOBES[k].line);
+            });
+            box.appendChild(b);
+        }
+    }
+    renderGlobes();
+    // ---------- little extras ----------
+    $('hsSign').addEventListener('click', () => { sfx.click(); say('📜 ' + pick(['CERTIFIED SEAWORTHY. Inspection performed by Greg.', 'Greg is a ram. Greg ate the first inspection form. This is the second one.',
+        'The yacht is parked in the desert. Greg says that counts as "not sinking." Technically correct.', 'There is a hoof print where the signature should be.'])); });
+    $('hsBell').addEventListener('click', () => { tone(1568, 0, .5, 'sine', .07); tone(2093, .01, .4, 'sine', .03);
+        say('🛎️ ' + pick(['Ding. Reb, from behind the door: "WE\'RE CLOSED."', 'Ding. Nobody comes. Ding. Nobody comes. Ding. "WHAT."', 'Ding. A tiny voice from the VIP room: "...sit down."', 'The bell is for service. There is no service. There is only Reb.'])); });
+    $('hsTable').addEventListener('click', () => { sfx.click(); if (lsGet('painWheelRebLetIn', false)) say('🥃 ' + pick(["Reb's Knob Creek 21. Empty. He drank it in one night. He says he's \"saving the bottle.\"", 'The bottle is empty. Reb keeps it here "for the vibes." He waters it.', "Barrel No. 037. Reb has it written on his arm now. In pen. He won't wash it off."]));
+        else say('🪑 ' + pick(['A little side table. Perfect for a drink. There is no drink. Reb is looking at you like it is your fault.', 'The table has a ring stain where a really old bottle used to sit. Reb misses it.'])); });
+    const showRebBottle = () => { $('rebBottle').style.display = lsGet('painWheelRebLetIn', false) ? 'block' : 'none'; };
     // ---------- 🚧 VIP section: a door, a lonely gaming PC, and the wheel inside the wheel ----------
     const VIP_MSGS = ['Past the velvet rope there is a door. Past the door there is... this.', 'The room is empty except for one desk. The monitors are on. Nobody has logged off in years.',
         'It hums. The fans spin. The chair is still warm. Who was sitting here?', 'A neon sign. A gaming chair. A can of Mana Energy. It is calling to you.'];
@@ -670,7 +782,7 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
             setTimeout(openVip, 900); return;
         }
         if (takeDusty()) {
-            lsPut('painWheelRebLetIn', true);
+            lsPut('painWheelRebLetIn', true); showRebBottle();
             say('🥃 You hand Reb the dusty bottle. He wipes it on his shirt. Reads the label. Reads it again. "...is this a TWENTY-ONE? Where did you GET this?" He unhooks the rope without looking up from it.', 7000);
             setTimeout(openVip, 4200); return;
         }
@@ -707,14 +819,46 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
             'It\'s "for carpal tunnel." That\'s the official story and the yacht is sticking to it.'],
         trash: ['A trash can full of tissues. Someone in here has terrible allergies. Yes. Allergies.',
             'Nobody has emptied this since the last Kevin. Nobody is volunteering.', 'You peek inside. You un-peek. Some things are better left in the can.'],
-        mon: ['Both side monitors show the wheel. The middle one also shows the wheel. Triple-monitor setup, one game.', 'The resolution is 4K. The wheel looks exactly the same.',
-            'There is a sticky note on the bezel: "if it lands on Kevin, it was lag."', 'A browser tab is open in the corner: "how to un-spin a wheel".'],
-        mid: ['THE WHEEL. In giant letters. In case you forgot what room this is.', 'The screensaver is the wheel spinning. The wallpaper is the wheel not spinning.'],
+        mon: ['A desktop with a picture of the 8/11 at night. Clippy is in the corner, mid-sentence. He has been mid-sentence since 1998.', 'Clippy: "It looks like you\'re looking at a monitor. Would you like help with that?"',
+            'The wallpaper is the 8/11. The screensaver is also the 8/11. Somebody really likes the 8/11.', 'A browser tab is open in the corner: "how to un-spin a wheel".'],
+        mon3: ['Another desktop. Another 8/11 wallpaper. This one is at sunset. The icons are all locked.', 'The password hint says "the store". You type "8/11". Wrong. You type "7/11". Very wrong.',
+            'It wants a password. Maybe once the 8/11 is open, somebody will leave it logged in.'],
+        mid: ['THE WHEEL. In giant letters. In case you forgot what room this is.', 'The screensaver is the wheel spinning. The wallpaper is the wheel not spinning.', 'There are polaroids taped all around the wheel. One of them is you. When was that taken?'],
+        mug: ['A goblin mug. Cold coffee from 2019. Somehow it is still warm.', 'The mug says nothing. The goblin on it says everything.'],
+        pinup: ['A framed poster of a goblin lady. It is signed "To my #1 fan." It is not addressed to Gallywix. He framed it anyway.', 'Gallywix says it is "art." Gallywix bought it at the 8/11.', 'Her eyes follow you around the room. Everybody\'s eyes in here follow you around the room.'],
+        shelf: ['The top shelf. Every bottle is open. None of them is a Knob Creek 21. Reb checked. Twice.', 'Three little gold goblins guard the booze. They were facing the TV yesterday. Now they are facing you.'],
+        bean: ['A beanbag. It has a goblin-shaped dent in it from 9 years of sitting. It still remembers him.', 'You sit in the beanbag. You are never getting up. Somebody will have to roll you out.', 'It makes a sound when you touch it. Not a beanbag sound.'],
+        vcr: ['The VCR is blinking 12:00. It has been 12:00 since the yacht was built.', 'There is a tape in it labeled "KEVIN BLOOPERS VOL. 9". There were 8 more volumes.'],
+        lamp: ['A lava lamp. It has been on for nine years. The blobs have formed a society.', 'The blobs go up. The blobs come down. You lose 20 minutes.'],
+        statue: ['A gold goblin statue on top of the cable box. It is warm. Why is it warm.', 'The statue is holding a tiny wheel. Nobody gave it a tiny wheel.'],
+        strip: ['A power strip plugged into a power strip plugged into the wall. It sparks a little. That is normal for a yacht.', 'Seven plugs. One outlet. OSHA has been notified. OSHA declined to board.'],
+        chips: ['Goblin Hole Chips. Original Regret flavor. The bag is open. The chips are stale. You eat one anyway.', 'The ingredients list just says "yes".', 'There is one chip left. Do not eat the last chip. Reb counts them.'],
         sign: ['SIT DOWN????  Four question marks. It is not asking.', 'The neon buzzes louder every time you look at the door.', 'Gallywix paid 40,000g for this sign. It was supposed to say "SIT DOWN." The extra question marks were free.'],
         rope: ['A velvet rope. Inside the VIP room. There is a VIP room inside the VIP room?', "Reb: \"You're not on the list.\" You are already inside. \"Still not on the list.\""]
     };
-    document.querySelectorAll('[data-vsay]').forEach(b => b.addEventListener('click', () => { sfx.click(); $('vipMsg').textContent = pick(VIP_SAY[b.dataset.vsay]); }));
+    document.querySelectorAll('[data-vsay]').forEach(b => b.addEventListener('click', () => { const L = VIP_SAY[b.dataset.vsay]; if (!L) return; sfx.click(); $('vipMsg').textContent = pick(L); }));   // (degen1350's monitor drops its line once the 8/11 opens)
     $('vipSticky').addEventListener('click', () => { sfx.click(); $('vipMsg').textContent = pick(['DAYS SINCE LAST KEVIN: 0. The 0 is written in pen. It has never been changed.', 'Someone tried to write a 1 once. It was crossed out the same day.']); });
+    // the featured snow globe sits in the velvet dish on the desk
+    function renderDeskGlobe() {
+        const mine = myGlobes(), want = S.get('painWheelGlobeDesk', ''), k = mine.includes(want) ? want : mine[0], el = $('deskGlobe');
+        el.style.display = k ? 'block' : 'none'; if (k) el.innerHTML = `<div class="globe"><div class="gl"><i>${GLOBES[k].scene}</i><s></s></div><div class="gb"></div></div>`;
+        return k;
+    }
+    renderDeskGlobe();
+    $('vipDish').addEventListener('click', () => {
+        sfx.click(); const mine = myGlobes();
+        if (!mine.length) { $('vipMsg').textContent = '❄️ ' + pick(['A velvet dish, made for a snow globe. It is empty. It looks lonely.', 'The dish has a little brass tag: "FEATURED GLOBE". There is no globe. Somebody sells them, somewhere.']); return; }
+        const cur = renderDeskGlobe(), nx = mine[(mine.indexOf(cur) + 1) % mine.length]; S.set('painWheelGlobeDesk', nx); renderDeskGlobe();
+        $('vipMsg').textContent = '❄️ ' + (mine.length > 1 ? `You swap in the ${GLOBES[nx].name} globe. ` : `The ${GLOBES[nx].name} globe. Your only globe. It gets the dish. `) + GLOBES[nx].line;
+    });
+    let cartClicks = 0;
+    $('vipCarts').addEventListener('click', () => {
+        tone(220, 0, .08, 'square', .04);
+        const own = !!S.get('painWheelCart', false);
+        $('vipMsg').textContent = '📼 ' + (own ? pick(['Every one of these is a dud. Yours is not. You checked. Twice.', 'You blow on one of the duds out of respect. Still a dud.', 'A whole stack of THE WHEEL and not one of them works. Except yours. Yours is special.'])
+            : ['Every single one says THE WHEEL. Every single one.', 'You blow on one. You put it in. Nothing. You blow on it again. Still nothing.', "They're all THE WHEEL and none of them work. It is the only game ever made for this console.",
+            'Somebody must have a working one. Somebody shady. Somebody who only comes out at night.'][Math.min(cartClicks++, 3)]);
+    });
     // the superfan poster: keep clicking and the shrine reveals itself
     let posterClicks = 0;
     const POSTER = ['"THE WHEEL PROVIDES." Somebody really means it.', 'Under the poster: a tiny shelf with three candles and a Kevin slice in a frame.',
@@ -842,6 +986,8 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
     addEventListener('resize', () => { if ($('mini').classList.contains('open') && !miniSpinning) renderMini(); });
     addEventListener('keydown', (e) => { if (e.key === 'Escape' && $('vip').classList.contains('open')) closeVip(); });
 
+    showRebBottle();
+    window.yachtAward = award;   // the Wheeltari (wheeltari.js) hands out its own trophy
     $('hsGauge').addEventListener('click', () => {
         sfx.hiss(); const g = $('hsGauge'); g.classList.remove('spinGauge'); void g.offsetWidth; g.classList.add('spinGauge');
         say('⏲️ ' + pick(['Pressure: KEVIN. Do not tap the gauge.', 'You tapped the gauge. The pipes hiss angrily.', 'Left gauge: "FINE". Right gauge: "THIS IS FINE".', 'The needle points at "Ret Paladin DPS". It is off the chart.']));
@@ -849,7 +995,7 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
 
     // ---------- welcome aboard ----------
     award('aboard');
-    if (!S.get('painWheelYachtVisited', false)) { S.set('painWheelYachtVisited', true); setTimeout(() => say('🛥️ Welcome aboard! Click around. Your trophies are in the cabinet, your gold goes in the vault, and the hatch... leave the hatch alone.', 6500), 600); }
+    if (!S.get('painWheelYachtVisited', false)) { S.set('painWheelYachtVisited', true); setTimeout(() => say('🛥️ Welcome aboard! Click around. Your trophies are in the cabinet, your gold goes in the vault, and Reb is guarding the VIP door. Do not ask Reb anything.', 6500), 600); }
     if (location.hash === '#vip') setTimeout(openVip, 600);   // arriving from the conspiracy board's VIP Room photo
 })();
 </script>
@@ -905,10 +1051,10 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
   addEventListener('wfchange', sync); document.addEventListener('visibilitychange', sync);
 })();
 </script>
-<script src="fish_song.js?v=7e44e6a7"></script>
+<script src="fish_song.js?v=31f920f8"></script>
 <script src="wallet.js?v=07cb4a3e"></script>
-<script>window.AXA_CAMEO = [{ id: 'yacht', host: '#stage', z: 1, filter: 'brightness(.55) saturate(.5) hue-rotate(160deg)' }, { id: 'vip', host: '#vipStage', z: 1, filter: 'brightness(.5) saturate(.7)' }];
-window.AXA_2600 = { id: '2600', host: '#miniCore', x: 3.5, y: 87.3, w: 3.6, z: 3, filter: 'brightness(.85) saturate(.6) contrast(1.2)', op: .95, clip: 'inset(0 0 46% 0)' };   // bobbing in the WHEEL-2600's little ocean</script><script src="axa_cameo.js?v=370eea98"></script><script src="vip_pc.js?v=eb7e2433"></script>
+<script>window.AXA_CAMEO = [{ id: 'yacht', host: '#stage', z: 1, filter: 'brightness(.5) saturate(.6)' }, { id: 'vip', host: '#vipStage', z: 1, filter: 'brightness(.5) saturate(.7)', clip: 'inset(0 0 42% 0)' }];
+window.AXA_2600 = { id: '2600', host: '#miniCore', x: 3.5, y: 87.3, w: 3.6, z: 3, filter: 'brightness(.85) saturate(.6) contrast(1.2)', op: .95, clip: 'inset(0 0 46% 0)' };   // bobbing in the WHEEL-2600's little ocean</script><script src="axa_cameo.js?v=5952bfe0"></script><script src="vip_pc.js?v=a8483c8d"></script><script src="wheeltari.js?v=0a1991e4"></script>
 <script src="logo_zoom.js?v=8c9b3e40"></script>
 <script>(() => { const b = document.getElementById('bar'); if (b && b.parentElement !== document.body) document.body.prepend(b); })();</script>
 <script>

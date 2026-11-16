@@ -926,7 +926,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 15, 9:48 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 16, 2:04 AM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -4882,7 +4882,7 @@
         { id: 'clawall', name: 'Emptied the Island', desc: 'Win every prize out of the claw machine. Nobody gets what they came for. Except you.' },
         { id: 'foreveralone', name: 'Forever Alone', desc: 'Stay in the Forever ghost town for 3 minutes. Just you, Clippy and the tumbleweeds.' },
         { id: 'clawwin', name: 'Claw & Order', desc: "Win a prize from the claw machine on Little St. Jeff's Prize Island." },
-        { id: 'wheelception5', name: 'Wheelception', desc: "Go 5 wheels deep on the WHEEL-2600 in the yacht's VIP room. We have to go deeper.", secret: true, secretName: true },
+        { id: 'wheelception5', name: 'Wheelception', desc: "Go 5 wheels deep on the PC in the yacht's VIP room. We have to go deeper.", secret: true, secretName: true },
         { id: 'purpleheart', name: 'Purple Heart',            desc: 'Wounded in the line of duty: you survived the Fish Incident. (Land on God_Help_Us.)' },
         { id: 'cluck',      name: 'CLUCK!',                   desc: 'Complete the Westfall chicken\'s quest.' },
         { id: 'clippy',     name: "It Looks Like You're Adopting a Paperclip", desc: 'Find and adopt the secret pet.', secret: true, secretName: true },
@@ -4898,7 +4898,8 @@
         { id: 'stranger',   name: "What're Ya Buyin'?",       desc: 'Meet the stranger at the Emporium after dark.', secret: true, secretName: true },
         { id: 'knock',      name: "Who's There?",             desc: 'Hear the knock on the VIP room door.', secret: true, secretName: true },
         { id: 'axacam5',    name: 'Caught on Camera',         desc: 'Catch Axazon hiding in 5 different places.' },
-        { id: 'gregpet',    name: 'Heavy Machinery Not Included', desc: 'Win Greg from the claw machine.', secret: true, secretName: true }
+        { id: 'gregpet',    name: 'Heavy Machinery Not Included', desc: 'Win Greg from the claw machine.', secret: true, secretName: true },
+        { id: 'cartridge',  name: 'The Collector',            desc: 'Find the one Wheeltari cartridge that actually works, and play it in the VIP room.', secret: true, secretName: true }
     ];
     const PURPLE_HEART_SVG = '<svg viewBox="0 0 64 80" width="44" height="55" aria-hidden="true"><path d="M20 0h24v22H20z" fill="#7e22ce"/><path d="M20 0h4v22h-4zM40 0h4v22h-4z" fill="#f5f5f4"/><path d="M28 0h8v22h-8z" fill="#a855f7"/><path d="M32 74 C10 58 4 46 4 36 C4 26 12 20 20 20 C26 20 30 24 32 28 C34 24 38 20 44 20 C52 20 60 26 60 36 C60 46 54 58 32 74Z" fill="#facc15" stroke="#a16207" stroke-width="2"/><path d="M32 68 C14 55 10 45 10 37 C10 30 15 26 21 26 C26 26 29 29 32 33 C35 29 38 26 43 26 C49 26 54 30 54 37 C54 45 50 55 32 68Z" fill="#7e22ce"/><ellipse cx="32" cy="45" rx="7" ry="9" fill="#fde68a" opacity=".9"/></svg>';
     let achQueue = [], achShowing = false;
@@ -5146,6 +5147,8 @@
     const PHOTO_SIREN_3 = "media/photo_siren_3.png?v=a4dc9666";
 const PHOTO_ICO_FLASK = "media/photo_ico_flask.png?v=679d8d67";
 const PHOTO_ICO_SCROLL = "media/photo_ico_scroll.png?v=40f99205";
+const PHOTO_BOTTLE_DUSTY = "media/bottle_dusty.webp";   // Ada: the Knob Creek 21 under a layer of desert dust
+const PHOTO_RIGGANATI = "media/rigganati_eye.webp";   // Ada: the all-seeing wheel
 const PHOTO_ICO_BOTTLE = "media/photo_ico_bottle.png?v=0b4fa6fc";
 const PHOTO_ICO_TV = "media/photo_ico_tv.png?v=8a2a4c7b";
 const PHOTO_ICO_SHIELD = "media/photo_ico_shield.png?v=116053c1";
@@ -5160,7 +5163,7 @@ const PHOTO_ICO_MOONSUN = "media/photo_ico_moonsun.png?v=477894a5";
 const PHOTO_ICO_PALETTE = "media/photo_ico_palette.png?v=a8a3cd6d";
 const PHOTO_ICO_QUILL = "media/photo_ico_quill.png?v=564eff8e";
 const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
-    const SPRITE_OF = { '📌': PHOTO_PIN_LEFT, '📜': PHOTO_ICO_SCROLL, '🥃': PHOTO_ICO_BOTTLE, '📺': PHOTO_ICO_TV, '🛡️': PHOTO_ICO_SHIELD, '🔺': PHOTO_ICO_PYRAMID, '🇺🇸': PHOTO_ICO_BRIEFCASE, '🧾': PHOTO_ICO_TAXFORM, '🪪': PHOTO_ICO_IDCARD, '🌗': PHOTO_ICO_MOONSUN, '🔎': PHOTO_ICO_TEXTSIZE, '📞': PHOTO_TOY_PHONE, '🖐️': PHOTO_FINGER, '🍪': PHOTO_COOKIE_GOLD, '🍩': PHOTO_TOY_DONUT, '🧸': PHOTO_TOYBOX, '🚀': PHOTO_ROCKET,
+    const SPRITE_OF = { '📌': PHOTO_PIN_LEFT, '📜': PHOTO_ICO_SCROLL, '🥃': PHOTO_ICO_BOTTLE, '📺': PHOTO_ICO_TV, '🛡️': PHOTO_ICO_SHIELD, '🔺': PHOTO_RIGGANATI, '🇺🇸': PHOTO_ICO_BRIEFCASE, '🧾': PHOTO_ICO_TAXFORM, '🪪': PHOTO_ICO_IDCARD, '🌗': PHOTO_ICO_MOONSUN, '🔎': PHOTO_ICO_TEXTSIZE, '📞': PHOTO_TOY_PHONE, '🖐️': PHOTO_FINGER, '🍪': PHOTO_COOKIE_GOLD, '🍩': PHOTO_TOY_DONUT, '🧸': PHOTO_TOYBOX, '🚀': PHOTO_ROCKET,
         '🏐': PHOTO_VOLLEY, '🐔': PHOTO_CHICKEN, '🛸': PHOTO_UFO, '🧮': PHOTO_GIZ_GRIN, '🪙': PHOTO_COIN_1, '🫀': PHOTO_CLS_LIVER, '🥳': PHOTO_PARTY_HAT,
         '🛒': PHOTO_ICO_SHOP, '⚙️': PHOTO_ICO_SETTINGS, '📊': PHOTO_ICO_STATS, '🎒': PHOTO_ICO_BAG, '🏚️': PHOTO_HOUSE_0, '🛖': PHOTO_HOUSE_1, '🏠': PHOTO_HOUSE_2,
         '🏡': PHOTO_HOUSE_3, '🏘️': PHOTO_HOUSE_4, '🏰': PHOTO_HOUSE_5, '🛥️': PHOTO_YACHT_BIG, '🐾': PHOTO_CHICKEN, '🧿': PHOTO_TOY_DOLL, '🌾': PHOTO_CHICKEN,
@@ -7530,7 +7533,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         else if (e.key === 'painWheelTitles' && v && typeof v === 'object' && !Array.isArray(v)) { Object.assign(ownedTitles, v); }
         else if (e.key === 'painWheelAllTimeSpins') { const n = parseInt(e.newValue, 10); if (n > allTimeSpins) { allTimeSpins = n; updateSpinBadge(); } }
     });
-    const ITEM_ICON = { 'Dusty Unlabeled Bottle': PHOTO_ICO_BOTTLE, 'Golden Chocolate Donut': PHOTO_TOY_DONUT, 'Ret Paladin 6% Buff Coupon': PHOTO_ITEM_COUPON, 'Ashbringer (Plastic Replica)': PHOTO_ITEM_SWORD,
+    const ITEM_ICON = { 'Dusty Unlabeled Bottle': PHOTO_BOTTLE_DUSTY, 'Golden Chocolate Donut': PHOTO_TOY_DONUT, 'Ret Paladin 6% Buff Coupon': PHOTO_ITEM_COUPON, 'Ashbringer (Plastic Replica)': PHOTO_ITEM_SWORD,
         'Goblin Timeshare Brochure': PHOTO_ITEM_BROCHURE, 'Knob Creek Single Barrel': PHOTO_ITEM_BARREL, 'Torn Discord Log': PHOTO_ITEM_CHATLOG, "Kevin's ROG Ally Battery": PHOTO_ITEM_BATTERY,
         "ChAoTiC's Blown-Out Headset": PHOTO_ITEM_HEADSET, 'Frayed Leap of Faith Rope': PHOTO_ITEM_ROPE, 'Jar of Sewer Pickle Juice': PHOTO_ITEM_PICKLES, 'Expired Healthstone': PHOTO_ITEM_HEALTHSTONE,
         'Broken Hearthstone': PHOTO_ITEM_HEARTHSTONE, 'Half a Stale Cheeto': PHOTO_ITEM_CHEETO, 'Road Beer (Still Cold)': PHOTO_ITEM_BEER, "Axazon's Empty Heart Pill Bottle": PHOTO_ITEM_PILLS,
@@ -8012,7 +8015,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         if (brokerBox || houseLevel !== 5) return; const next = HOUSE_LEVELS[6]; if (!next) return;
         const box = brokerBox = document.createElement('div'); box.className = 'call-box';
         box.style.cssText = 'position:fixed;z-index:79;left:16px;bottom:84px;width:min(380px,calc(100vw - 32px));padding:12px 14px;border-radius:14px;border:2px solid #facc15;background:linear-gradient(170deg,#1c1407,#2a1d0a);color:#fef3c7;box-shadow:0 12px 30px rgba(0,0,0,.6);font-size:16px';
-        box.innerHTML = `<div style="display:flex;gap:10px;align-items:center"><div style="width:52px;height:52px;border-radius:50%;background:#0b1220;border:2px solid #facc15;display:flex;align-items:center;justify-content:center;flex:none;font-size:30px">🛥️</div>
+        box.innerHTML = `<div style="display:flex;gap:10px;align-items:center"><img src="media/slick.webp" alt="Slick Rizzlebolt" style="width:64px;height:64px;border-radius:50%;flex:none;object-fit:cover;box-shadow:0 0 10px rgba(250,204,21,.45)">
             <div style="min-width:0"><div style="font-family:'JetBrains Mono',monospace;font-weight:800;color:#facc15;font-size:12px;letter-spacing:.12em">📞 ${incoming ? 'INCOMING CALL' : 'CALLING...'}</div><div style="font-weight:800;font-size:18px">Slick Rizzlebolt, Yacht Broker</div></div></div>
             <div data-l style="margin-top:8px;font-weight:700;display:none"></div><div data-o style="margin-top:8px;display:none"></div><div data-m style="margin-top:6px;color:#fca5a5;font-size:14px"></div>
             <div data-b style="display:flex;gap:8px;margin-top:10px"></div>`;
@@ -8646,6 +8649,34 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(.32, t + .18); g.gain.exponentialRampToValueAtTime(0.0001, t + .85);
             s.connect(f); f.connect(g); g.connect(outGain); s.start(t); s.stop(t + .9); } catch (e) {}
     }
+    function fingerBlast() {   // the rocket hit the wheel: the finger launches, tumbles, bounces once, slides off-screen... and crawls back ~17s later
+        const home = $('nickFinger'); if (!home || home.style.display === 'none' || home.style.visibility === 'hidden') return;
+        const r = home.getBoundingClientRect(); if (!r.width) return;
+        const cursed = !!garage.voodoo, glow = cursed ? 'drop-shadow(0 0 14px rgba(168,85,247,.95))' : 'drop-shadow(0 0 12px #fde68a)';
+        const f = document.createElement('img'); f.src = $('nickFingerImg').getAttribute('src') || PHOTO_FINGER; f.alt = "Bibledaddy's Finger";
+        const fw = $('nickFingerImg').offsetWidth || 112;   // the finger's real size (its box on the wheel turns with the wheel)
+        f.style.cssText = `position:fixed;z-index:81;left:${r.left}px;top:${r.top}px;width:${fw * 1.4}px;height:auto;pointer-events:none;filter:${glow} drop-shadow(0 6px 8px rgba(0,0,0,.6))`;
+        home.style.visibility = 'hidden'; document.body.appendChild(f); playWhoosh();
+        const side = r.left + r.width / 2 > innerWidth / 2 ? 1 : -1, dx = side * (innerWidth * .38 + Math.random() * innerWidth * .08), floor = innerHeight - r.top - fw * 1.4 - 8, off = side * (innerWidth + 200);
+        f.animate([{ transform: 'translate(0,0) rotate(0)' }, { transform: `translate(${dx * .35}px,${-Math.min(380, r.top + 40)}px) rotate(720deg)`, offset: .35 },
+            { transform: `translate(${dx * .75}px,${floor}px) rotate(1260deg)`, offset: .68 }, { transform: `translate(${dx * .85}px,${floor - 70}px) rotate(1350deg)`, offset: .78 },
+            { transform: `translate(${dx * .95}px,${floor}px) rotate(1440deg)`, offset: .87 }, { transform: `translate(${off}px,${floor}px) rotate(1440deg)` }], { duration: 2800, easing: 'ease-out', fill: 'forwards' });
+        floatBubble(pick(['🖐️ FINGER OVERBOARD', '🖐️ THE FINGER HAS LEFT THE WHEEL', '🖐️ there it goes (again)']), r.left + r.width / 2, r.top - 20, 2000);
+        setTimeout(() => chatBurst(["BIBLEDADDY'S FINGER HAS LEFT THE WHEEL", "it's ok it knows the way home", 'why is it smoking', 'nick is going to be SO mad', 'F for the finger'], 3, 1100), 1200);
+        setTimeout(() => {   // ...and back it comes, inchworming along the bottom of the screen, then hops back onto the wheel
+            f.remove();
+            if (!garage.finger) { home.style.visibility = ''; return; }
+            const now = home.getBoundingClientRect(), hx = (now.width ? now.left : r.left), hy = (now.width ? now.top : r.top), h = fw * .7;
+            const c = document.createElement('img'); c.src = $('nickFingerImg').getAttribute('src') || PHOTO_FINGER; c.alt = '';
+            const startX = side > 0 ? innerWidth + 40 : -h - 40, groundY = innerHeight - h - 10;
+            c.style.cssText = `position:fixed;z-index:81;left:0;top:0;width:${fw}px;height:auto;pointer-events:none;filter:${glow} drop-shadow(0 4px 6px rgba(0,0,0,.6));transform:translate(${startX}px,${groundY}px)`;
+            document.body.appendChild(c);
+            floatBubble(cursed ? '🖐️ *the finger is back. it is glowing. it is ANGRY*' : '🖐️ *the finger is crawling back. it is smoking a little*', hx, innerHeight - 90, 3200);
+            const crawl = c.animate([{ transform: `translate(${startX}px,${groundY}px) scaleX(${-side})` }, { transform: `translate(${(startX + hx) / 2}px,${groundY}px) scaleX(${-side * .7})`, offset: .5 },
+                { transform: `translate(${hx}px,${groundY}px) scaleX(${-side})`, offset: .82 }, { transform: `translate(${hx}px,${hy}px) scaleX(${-side})` }], { duration: 8200, easing: 'steps(20, end)', fill: 'forwards' });
+            crawl.onfinish = () => { c.remove(); home.style.visibility = ''; if (cursed) moveToast("🖐️ The finger climbed back onto the wheel. It's glowing a little brighter than before. It remembers."); };
+        }, 15000 + Math.random() * 4000);
+    }
     function fingerEscape() {   // the finger on the SPIN button goes flying when you spin, or tries to crawl away
         const home = $('nickFinger'); if (!home || home.style.display === 'none' || home.style.visibility === 'hidden') return;
         const r = home.getBoundingClientRect(); if (!r.width) return;
@@ -9217,6 +9248,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
     const TITLE_H = {"degen": 132, "emperor": 121, "kevin": 137, "liver": 136, "lobbyist": 123, "murder": 135, "patron": 126, "ret": 136, "tycoon": 128, "unbuffed": 128};
     function renderTitle() {   // a themed title turns your whole name tag into that title's banner (stretched in the middle like a 9-slice)
         const el = $('titleShow'); const a0 = (typeof TITLE_ART !== 'undefined') && TITLE_ART[titleChoice]; if (el) el.textContent = titleChoice ? (a0 ? titleChoice : `«${titleChoice}»`) : '';
+        if (el && titleChoice === 'The Collector') el.innerHTML = '<img src="media/cart.webp" alt="" style="height:1.25em;width:auto;vertical-align:-.3em;margin-right:.3em">The Collector<img src="media/cart.webp" alt="" style="height:1.25em;width:auto;vertical-align:-.3em;margin-left:.3em;transform:scaleX(-1)">';   // the one working cartridge, on both sides
         const tag = $('playerTag'); if (!tag) return;
         const a = (typeof TITLE_ART !== 'undefined') && TITLE_ART[titleChoice];
         tag.classList.toggle('tb-plate', !!a);
@@ -9243,7 +9275,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         'the Island Emptier': ['clawall', 'Win every prize in the claw machine.'], 'Five Wheels Deep': ['wheelception5', 'Go five wheels deep.'],
         'Forever Alone': ['foreveralone', 'Be alone in Forever.'], 'Debt Free': ['debtfree', 'Pay off every debt you owe.'], 'Ascended Degenerate': ['spins10000', 'Spin the wheel 10,000 times.'],
         'Unsupervised': ['unsupervised', 0], "Karen's Problem": ['karen50', 0], 'Gnome Alone': ['gnomealone', 0], 'Employee of the Never': ['never811', 0],
-        'No Refunds Ever': ['norefunds', 0], 'I Paid for WinRAR': ['winrar', 0], 'Something Smells Fishy': ['fishy', 0], 'Shit Out of Luck': ['scratch13', 0] };
+        'No Refunds Ever': ['norefunds', 0], 'I Paid for WinRAR': ['winrar', 0], 'Something Smells Fishy': ['fishy', 0], 'Shit Out of Luck': ['scratch13', 0], 'The Collector': ['cartridge', 0] };
     function titleBanner(t, w, locked) {   // the banner with the title written on the parchment
         const a = TITLE_ART[t]; if (!a) return `<span style="font-weight:800">${t}</span>`;
         const h = Math.round(w * 0.27), bw = w * (a.b[2] - a.b[0]) / 100, bh = h * (a.b[3] - a.b[1]) / 100;
@@ -9857,6 +9889,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             document.body.animate([{ transform: 'translate(0,0)' }, { transform: 'translate(-9px,5px)' }, { transform: 'translate(8px,-5px)' }, { transform: 'translate(-4px,2px)' }, { transform: 'translate(0,0)' }], { duration: 500 });
             let dur;
             if (toWheel) {
+                if (window.__fingerOn) setTimeout(fingerBlast, 60);   // Bibledaddy's finger goes flying off the wheel (it crawls back)
                 setWheelOnFire(9);
                 funEvent('🔥 THE ROCKET HIT THE WHEEL 🔥', 4000);
                 setTimeout(() => sqPost('chaotic', 'the wheel is on fire. i did not rig this one. (i rigged the other ones)'), 4000);
@@ -10371,9 +10404,18 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         ]
     };
     const UPDATE_NOTES = {
-        id: '2026-11-07-fixed', title: 'The claw, the liver and the ghost town', date: 'November 6-7, 2026',
-        showAfter: Date.parse('2026-11-07T06:00:00Z'),   // re-issued Nov 7 with corrected notes, so it pops up again for everyone
+        id: '2026-11-16-yacht', title: 'The yacht got a remodel', date: 'November 6-16, 2026',
+        showAfter: Date.parse('2026-11-16T08:00:00Z'),
         lines: [
+            ['🛥️', "The yacht got a full remodel (art by Ada): a new trophy case, a real VIP door, and a porthole with a view. The view changes. Keep investigating."],
+            ['🐟', "Gary has a plaque now. If your yacht is new, that wall is empty. Somebody at the flea market might be able to help with that."],
+            ['❄️', "There's a snow globe case on the yacht. It's mostly empty. Somebody, somewhere, is selling them."],
+            ['🏆', "Kevin has his own trophy now, under glass. It gets fancier every time he ruins your day."],
+            ['🕹️', "The VIP room got redecorated: a beanbag, a lava lamp, and an old wood TV with a console on top. The console only has one game. It's everywhere. None of them work."],
+            ['⛓️', "The hatch on the yacht is gone. Uncle Touchy says he'll find another way in. That's not comforting."],
+            ['🚀', "When the rocket hits the wheel, anything sitting on the wheel goes flying. It comes back. Mostly."],
+            ['📞', "Slick has a face now. You'll wish he didn't."],
+            ['🍾', "The dusty bottle at the flea market got real art. Still dusty. Still just a bottle. Probably."],
             ['🎡', "The Secret Society tab has a new name. The all-seeing wheel would like a word."],
             ['🥃', "Reb is working the VIP door on the yacht now. He can't be bought with gold. He CAN be bought."],
             ['🛥️', "You don't just buy the yacht anymore. Get the castle and a guy named Slick gives you a call."],
@@ -12329,7 +12371,7 @@ const AUDIO_DOOR_CHIME = "media/audio_door_chime.mp3?v=34de5993";
         const b = $('societyBadge'), r = SOCIETY[societyRank - 1];
         if (!r) { b.classList.add('hidden'); return; }
         b.classList.remove('hidden'); b.style.borderColor = r.col; b.style.color = r.col;
-        b.innerHTML = '<div style="font-size:9px;letter-spacing:.14em;opacity:.8">MEMBER OF THE RIGGANATI</div><div></div>';
+        b.innerHTML = '<div style="font-size:9px;letter-spacing:.14em;opacity:.8;display:flex;align-items:center;gap:4px;justify-content:center"><img src="' + PHOTO_RIGGANATI + '" alt="" style="height:16px;width:auto">MEMBER OF THE RIGGANATI</div><div></div>';
         b.lastChild.textContent = r.e + ' ' + r.name.toUpperCase();
     }
     renderSocietyBadge();
@@ -12555,7 +12597,7 @@ const AUDIO_DOOR_CHIME = "media/audio_door_chime.mp3?v=34de5993";
     applyTheme();
     window.addEventListener('load', () => { resizeCanvases(); tuneTickerSpeed(); requestAnimationFrame(loop); });
     </script>
-<script>window.AXA_CAMEO = { id: 'wheel', host: '#logoWrap', x: 54, y: -13, w: 5.6, z: 1, filter: 'brightness(.55) saturate(.7)', op: .95, clip: 'inset(0 0 52% 0)' };</script><script src="axa_cameo.js?v=370eea98"></script>
+<script>window.AXA_CAMEO = { id: 'wheel', host: '#logoWrap', x: 54, y: -13, w: 5.6, z: 1, filter: 'brightness(.55) saturate(.7)', op: .95, clip: 'inset(0 0 52% 0)' };</script><script src="axa_cameo.js?v=5952bfe0"></script>
 <script src="logo_zoom.js?v=8c9b3e40"></script>
 </body>
 </html>
