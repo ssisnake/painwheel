@@ -28,18 +28,34 @@
   .tap:hover, .tap:focus-visible { border-color: #fde68a; box-shadow: 0 0 18px #fde68a; outline: none; }
   #cup { position: absolute; display: none; translate: -50% 0; image-rendering: pixelated; pointer-events: none; z-index: 5; transition: opacity 1.2s; }
   @keyframes wob { 25% { transform: rotate(-6deg); } 75% { transform: rotate(6deg); } }
-  /* the ATM: a green-screen teller that moves gold between your wallet and your Guild Bank Vault */
-  #atm { position: fixed; inset: 0; z-index: 70; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.6); padding: 16px; }
+  /* the ATM (Ada's 8/11 ATM): insert your card, punch the PIN on the keypad, move gold between your wallet and your Guild Bank Vault */
+  #atm { position: fixed; inset: 0; z-index: 70; display: none; align-items: center; justify-content: center; background: rgba(0,0,0,.66); padding: 12px; }
   #atm.open { display: flex; }
-  #atm .box { width: min(460px, 100%); background: #3f3f46; border: 6px solid #27272a; border-radius: 14px; padding: 14px; box-shadow: 0 20px 60px rgba(0,0,0,.6); color: #e7e5e4; font: 18px system-ui, sans-serif; }
-  #atm .scr { background: #052e16; border: 4px solid #18181b; border-radius: 8px; padding: 12px 14px; color: #4ade80; font: 700 18px ui-monospace, monospace; min-height: 96px; text-shadow: 0 0 6px rgba(74,222,128,.5); line-height: 1.45; }
-  #atm .scr b { color: #bbf7d0; } #atm .scr .err { color: #fca5a5; }
-  #atm .row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-  #atm button { flex: 1 1 0; min-width: 70px; font: 800 18px system-ui, sans-serif; padding: 10px; border-radius: 8px; border: 0; background: #d6d3d1; color: #1c1917; cursor: pointer; box-shadow: 0 3px 0 #78716c; }
-  #atm button:active { translate: 0 2px; box-shadow: 0 1px 0 #78716c; }
-  #atm button.go { background: #22c55e; color: #052e16; box-shadow: 0 3px 0 #15803d; } #atm button.x { background: #f87171; color: #450a0a; box-shadow: 0 3px 0 #b91c1c; }
-  #atm input { flex: 2 1 140px; min-width: 0; font: 700 20px ui-monospace, monospace; padding: 10px 12px; border-radius: 8px; border: 3px solid #18181b; background: #052e16; color: #4ade80; }
-  #atm .lbl { margin: 12px 0 0; font: 800 14px system-ui, sans-serif; letter-spacing: .08em; color: #d6d3d1; }
+  #atm .box { width: min(440px, 100%, calc((100vh - 230px) / 1.55)); max-height: calc(100vh - 24px); overflow: auto; display: flex; flex-direction: column; align-items: center; gap: 10px; color: #e7e5e4; font: 18px system-ui, sans-serif; scrollbar-width: thin; }
+  #atmMach { position: relative; width: 100%; aspect-ratio: 627 / 603; background: url(media/atm811_machine.webp) center / 100% 100% no-repeat; container-type: inline-size; flex: none; filter: drop-shadow(0 16px 30px rgba(0,0,0,.6)); }
+  #atmScr { position: absolute; left: 11.6%; top: 20.4%; width: 48.4%; height: 35.4%; border-radius: 3.5% / 5%; background: radial-gradient(ellipse at 50% 45%, #0f3d1e, #06210f 75%); overflow: hidden;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 1.4cqw; padding: 2cqw; color: #7dfc9a; font: 700 4.1cqw/1.15 'Silkscreen', 'Pixelify Sans', ui-monospace, monospace; text-shadow: 0 0 1.2cqw rgba(74,222,128,.55); }
+  #atmScr::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px), linear-gradient(135deg, rgba(255,255,255,.08), transparent 35%); }
+  #atmScr .big { font-size: 6.4cqw; color: #a7ffbd; } #atmScr .sm { font-size: 3.1cqw; opacity: .8; } #atmScr .err { color: #ff7a7a; text-shadow: 0 0 1.2cqw rgba(248,113,113,.6); } #atmScr b { color: #d9ffe3; }
+  #atmScr .pin { letter-spacing: 1.6cqw; font-size: 6.4cqw; }
+  #atmSlot, #atmCash { position: absolute; left: 66.5%; width: 28.1%; padding: 0; border: 0; background: center / 100% 100% no-repeat; cursor: pointer; }
+  #atmSlot { top: 38.1%; height: 23.7%; } #atmCash { top: 65.2%; height: 27.2%; cursor: default; }
+  #atmSlot:hover:not(.in) { filter: brightness(1.12) drop-shadow(0 0 1.4cqw rgba(253,224,71,.5)); }
+  #atmCard { display: flex; align-items: center; gap: 12px; padding: 8px 12px; border-radius: 12px; background: rgba(12,10,8,.85); border: 2px solid #57534e; cursor: pointer; font: 800 16px system-ui, sans-serif; color: #fde68a; }
+  #atmCard img { width: 130px; height: auto; display: block; filter: drop-shadow(0 4px 6px rgba(0,0,0,.6)); transition: transform .15s; }
+  #atmCard:hover img { transform: translateY(-3px) rotate(-3deg); }
+  #atmPad { display: none; grid-template-columns: repeat(5, 1fr); gap: 6px; width: 100%; }
+  #atmPad button, #atmFn button { padding: 0; border: 0; background: none; cursor: pointer; transition: transform .06s; }
+  #atmPad button:active, #atmFn button:active { transform: translateY(3px) scale(.97); filter: brightness(.9); }
+  #atmPad img, #atmFn img { width: 100%; height: auto; display: block; }
+  #atmFn { display: none; grid-template-columns: 1fr 1fr 1fr .9fr; gap: 6px; width: 100%; }
+  #atmMain { display: none; width: 100%; }
+  #atm .row { display: flex; gap: 6px; flex-wrap: wrap; width: 100%; }
+  #atm .row button { flex: 1 1 0; min-width: 62px; font: 800 16px 'Silkscreen', ui-monospace, monospace; padding: 9px 6px; border-radius: 8px; border: 2px solid #44403c; background: linear-gradient(#efe3cc, #cdbb98); color: #1c1917; cursor: pointer; box-shadow: 0 3px 0 #57534e; }
+  #atm .row button:active { translate: 0 2px; box-shadow: 0 1px 0 #57534e; }
+  #atm .row button.go { background: linear-gradient(#86c25a, #4d8a2c); color: #0d2a06; } #atm .row button.x { background: linear-gradient(#ef6b55, #b8392a); color: #2a0703; }
+  #atm .lbl { margin: 8px 0 4px; font: 800 13px system-ui, sans-serif; letter-spacing: .1em; color: #d6d3d1; text-shadow: 0 1px 2px #000; }
+  @media (prefers-reduced-motion: reduce) { #atmCard img { transition: none; } }
   /* the Gnome Depot flyer taped to the door */
   #flyer { position: absolute; left: 26.9%; top: 35.5%; width: 4.4%; z-index: 3; padding: 0; border: 0; background: none; cursor: pointer; rotate: -4deg; transition: rotate .15s, scale .15s; }
   #flyer img { display: block; width: 100%; height: auto; filter: drop-shadow(.1cqw .2cqw .2cqw rgba(0,0,0,.45)); }
@@ -96,7 +112,8 @@
   #closed a { font: 800 18px system-ui, sans-serif; padding: 9px 18px; border-radius: 10px; background: #f59e0b; color: #1c1917; text-decoration: none; }
   #shopFrame { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; z-index: 60; background: transparent; opacity: 0; transition: opacity .2s; }
   #shopWait { position: fixed; inset: 0; z-index: 59; display: flex; align-items: center; justify-content: center; background: rgba(2,6,23,.55); color: #fde68a; font: 800 22px system-ui, sans-serif; text-shadow: 0 2px 0 #000; }
-</style></head><body>
+</style><link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+</head><body>
 <header><h1 class="logo-h1"><img src="media/logo_811.png" alt="The 8/11"></h1><span id="goldBox"></span><nav><a class="alt" href="./"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a><a class="alt" href="#" id="catalogBtn">🛒 The whole catalog</a><a href="wheel.html">🎡 Back to The Wheel</a></nav></header>
 <div class="wrap"><div class="scroller"><div class="scene" id="scene">
   <img id="tube" alt=""><div class="lampglow" id="lampGlow"></div><div class="lamp" id="lamp"></div>
@@ -111,14 +128,14 @@
   <div id="say" role="status"></div>
   <div id="notice" role="dialog" aria-modal="true" aria-label="Gnome Depot is open"><img id="noticeImg" alt="A Gnome Depot flyer on the 8/11 door: NOT grand opening, next door"><div class="row"><button id="noticeGo">Go next door</button><button class="alt" id="noticeX">Maybe later</button></div></div>
   <div id="atm" role="dialog" aria-modal="true" aria-label="ATM"><div class="box">
-    <div class="scr" id="atmScr"></div>
-    <div id="atmPin"><div class="row"><input id="atmPinIn" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="PIN" aria-label="PIN"><button class="go" id="atmPinGo">Enter</button><button class="x" id="atmX1">Cancel</button></div></div>
-    <div id="atmMain" style="display:none">
-      <div class="lbl">PUT GOLD IN THE VAULT</div><div class="row"><button data-adep=".1">10%</button><button data-adep=".5">50%</button><button data-adep="1">All</button></div>
-      <div class="lbl">TAKE GOLD OUT</div><div class="row"><button data-awd=".1">10%</button><button data-awd=".5">50%</button><button data-awd="1">All</button></div>
-      <div class="lbl">EXACT AMOUNT</div><div class="row"><input id="atmAmt" inputmode="decimal" autocomplete="off" placeholder="250k or 1.5m" aria-label="Amount"><button class="go" id="atmDep">In</button><button id="atmWd">Out</button></div>
-      <div class="row"><button class="x" id="atmX2">Take card &amp; leave</button></div>
+    <div id="atmMach"><div id="atmScr" aria-live="polite"></div><button id="atmSlot" type="button" aria-label="Card slot"></button><div id="atmCash" aria-hidden="true"></div></div>
+    <button id="atmCard" type="button"><img alt="Your card"><span>Insert your card</span></button>
+    <div id="atmPad"></div><div id="atmFn"></div>
+    <div id="atmMain">
+      <div class="lbl">PUT GOLD IN THE VAULT</div><div class="row"><button data-adep=".1">10%</button><button data-adep=".5">50%</button><button data-adep="1">All</button><button class="go" id="atmDep">Typed</button></div>
+      <div class="lbl">TAKE GOLD OUT</div><div class="row"><button data-awd=".1">10%</button><button data-awd=".5">50%</button><button data-awd="1">All</button><button class="go" id="atmWd">Typed</button></div>
     </div>
+    <div class="row"><button class="x" id="atmX1">Take card &amp; leave</button></div>
   </div></div>
 
   <div id="closed"><b>CLOSED</b><p>The 8/11 is closed. It is open 11 days a week, just not for you yet.<br>Land on <b style="font-size:inherit;color:#fb923c">8/11</b> on the wheel to open it. The shop lives in here.</p><a href="wheel.html">🎡 Go spin</a></div>
@@ -396,41 +413,84 @@ function slurpee(f) {
   }, 2300);
 }
 document.querySelectorAll('[data-f]').forEach(b => b.onclick = () => slurpee(b.dataset.f));
-// ---------- the ATM: same PIN as your Guild Bank Vault, moves gold between your wallet and the vault (no fees, the clerk unplugged that part) ----------
+// ---------- the ATM (Ada's 8/11 ATM): insert your card (your Goblin Express if you have one), PIN is the same as your Guild Bank Vault,
+// then type an amount on the keypad (or use the % buttons) to move gold between your wallet and the vault. No fees: the clerk unplugged that part. ----------
 const VAULT_PIN = '1234';
-let atmTries = 0;
+let atmTries = 0, atmState = 'idle', atmBuf = '';
 const vaultBal = () => Math.max(0, Number(get('painWheelVault', 0)) || 0);
 const atmScr = (html) => { $('atmScr').innerHTML = html; };
-const atmBal = (msg) => atmScr(`${msg ? msg + '<br>' : ''}WALLET: <b>${fmt(get('painWheelGold', 0))}</b><br>VAULT:&nbsp; <b>${fmt(vaultBal())}</b>`);
+const atmCardTier = () => { if (!get('painWheelGoblinCard', false)) return 'plain'; const n = get('painWheelCardCharges', 0) || 0; return n >= 50 ? 'black' : n >= 10 ? 'plat' : 'red'; };
+const atmCardName = { plain: 'your sad debit card', red: 'your Goblin Express', black: 'your Goblin Express Black', plat: 'your Goblin Express Platinum' };
+let atmAC = null;
+const atmBeep = (f = 1150, d = .07) => { try { const v = parseFloat(localStorage.getItem('painWheelVolume')); const vv = isNaN(v) ? .6 : Math.max(0, Math.min(1, v)); if (!vv) return;
+  atmAC = atmAC || new (window.AudioContext || window.webkitAudioContext)(); if (atmAC.state === 'suspended') atmAC.resume();
+  const o = atmAC.createOscillator(), g = atmAC.createGain(); o.type = 'square'; o.frequency.value = f; g.gain.setValueAtTime(.035 * vv, atmAC.currentTime); g.gain.exponentialRampToValueAtTime(.0001, atmAC.currentTime + d);
+  o.connect(g); g.connect(atmAC.destination); o.start(); o.stop(atmAC.currentTime + d + .02); } catch (e) {} };
+const atmSlot = (k) => { $('atmSlot').style.backgroundImage = `url(media/atm811_slot_${k}.webp)`; $('atmSlot').classList.toggle('in', k !== 'empty'); };
+const atmCash = (k) => { $('atmCash').style.backgroundImage = `url(media/atm811_cash${k}.webp)`; };
+const atmBal = (msg) => atmScr(`${msg ? `<div class="sm">${msg}</div>` : ''}<div>WALLET <b>${fmt(get('painWheelGold', 0))}</b></div><div>VAULT <b>${fmt(vaultBal())}</b></div>` +
+  (atmBuf ? `<div class="pin" style="letter-spacing:0">${atmBuf.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}g</div>` : '<div class="sm">TYPE AN AMOUNT</div>'));
+// keypad: Ada's keys
+(() => { const pad = $('atmPad'); [1, 2, 3, 4, 5, 6, 7, 8, 9, 0].forEach(n => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', String(n)); b.innerHTML = `<img src="media/atm811_k${n}.webp" alt="">`; b.onclick = () => atmKey(String(n)); pad.appendChild(b); });
+  const fn = $('atmFn'); [['enter', 'Enter'], ['clear', 'Clear'], ['cancel', 'Cancel'], ['help', 'Help']].forEach(([k, l]) => { const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', l); b.innerHTML = `<img src="media/atm811_${k}.webp" alt="">`; b.onclick = () => atmKey(k); fn.appendChild(b); }); })();
+function atmShow(st) {
+  atmState = st;
+  $('atmCard').style.display = st === 'idle' ? '' : 'none';
+  $('atmPad').style.display = $('atmFn').style.display = st === 'idle' ? 'none' : 'grid';
+  $('atmMain').style.display = st === 'main' ? 'block' : 'none';
+}
 function openAtm() {
-  $('atm').classList.add('open'); $('atmPin').style.display = ''; $('atmMain').style.display = 'none'; $('atmPinIn').value = ''; atmTries = 0;
-  atmScr('GOBLIN SAVINGS &amp; LOAN<br>INSERT CARD. ENTER PIN.<br><span style="opacity:.7">(same as your vault. it is on a sticky note.)</span>');
-  setTimeout(() => $('atmPinIn').focus(), 50);
+  $('atm').classList.add('open'); atmTries = 0; atmBuf = ''; atmShow('idle'); atmSlot('empty'); atmCash(0);
+  const t = atmCardTier(); $('atmCard').querySelector('img').src = `media/atm811_card_${t}.webp`; $('atmCard').querySelector('span').textContent = 'Insert ' + atmCardName[t];
+  atmScr('<div class="big">8/11</div><div>ATM</div><div>INSERT CARD</div><div class="sm">(the PIN is the same as your vault)</div>');
 }
-const closeAtm = () => { $('atm').classList.remove('open'); showGold(); };
-function atmPin() {
-  if ($('atmPinIn').value === VAULT_PIN) { $('atmPin').style.display = 'none'; $('atmMain').style.display = ''; atmBal('WELCOME BACK, VALUED GOBLIN.'); return; }
-  atmTries++; $('atmPinIn').value = '';
-  atmScr(atmTries >= 3 ? '<span class="err">CARD EATEN.</span><br>JUST KIDDING. TRY AGAIN.<br><span style="opacity:.7">hint: the yacht vault door has a sticky note on it.</span>' : '<span class="err">WRONG PIN.</span><br>ENTER PIN.');
+function atmInsert() {
+  if (atmState !== 'idle') return;
+  const t = atmCardTier(); atmBeep(400, .12);
+  atmSlot(t === 'plain' ? 'eaten' : t); setTimeout(() => { if (t !== 'plain') atmSlot('empty'); }, 700);
+  setTimeout(() => { $('atmSlot').classList.add('in'); }, 710);
+  atmBuf = ''; atmShow('pin'); atmScr('<div>ENTER PIN</div><div class="pin">[____]</div>');
 }
-const parseAmt = (t) => { const m = String(t).toLowerCase().replace(/[,\s_g]/g, '').match(/^(\d*\.?\d+)([kmbt]?)$/); if (!m) return NaN; return Math.floor(+m[1] * ({ '': 1, k: 1e3, m: 1e6, b: 1e9, t: 1e12 })[m[2]]); };
+const atmPinScr = (err) => atmScr(`${err ? `<div class="err">${err}</div>` : '<div>ENTER PIN</div>'}<div class="pin">[${'*'.repeat(atmBuf.length)}${'_'.repeat(4 - atmBuf.length)}]</div>`);
+function atmKey(k) {
+  if (/^\d$/.test(k)) { atmBeep(); if (atmState === 'pin') { if (atmBuf.length < 4) atmBuf += k; atmPinScr(); if (atmBuf.length === 4) setTimeout(() => atmKey('enter'), 220); } else if (atmState === 'main') { if (atmBuf.length < 15) atmBuf = (atmBuf + k).replace(/^0+/, ''); atmBal(); } return; }
+  if (k === 'clear') { atmBeep(700); atmBuf = ''; atmState === 'pin' ? atmPinScr() : atmBal(); return; }
+  if (k === 'cancel') { atmBeep(500, .12); closeAtm(); return; }
+  if (k === 'help') { atmBeep(900); atmScr('<div class="sm">HELP</div><div>' + ['THERE IS NO HELP.', 'HAVE YOU TRIED THE STICKY NOTE ON THE VAULT?', 'THE CLERK CANNOT HELP YOU. THE CLERK CANNOT HELP ANYONE.', 'PRESS CANCEL TO GET YOUR CARD BACK. PROBABLY.'][Math.floor(Math.random() * 4)] + '</div>'); setTimeout(() => atmState === 'pin' ? atmPinScr() : atmState === 'main' ? atmBal() : 0, 2600); return; }
+  if (k === 'enter') {
+    if (atmState === 'pin') {
+      if (atmBuf === VAULT_PIN) { atmBeep(1400, .1); atmBuf = ''; atmScr('<div>PROCESSING...</div><div class="big">⌛</div>'); setTimeout(() => { atmShow('main'); atmBal('WELCOME BACK, VALUED GOBLIN.'); }, 700); return; }
+      atmTries++; atmBuf = ''; atmBeep(180, .25);
+      if (atmTries >= 3) atmScr('<div class="err">CARD EATEN.</div><div>JUST KIDDING.</div><div class="sm">hint: the yacht vault door has a sticky note on it</div>');
+      else atmPinScr('INVALID PIN. TRY AGAIN.');
+      return;
+    }
+    if (atmState === 'main') atmBal(atmBuf ? 'PICK IN OR OUT BELOW' : 'TYPE AN AMOUNT FIRST');
+  }
+}
+const closeAtm = () => { $('atm').classList.remove('open'); atmState = 'idle'; showGold(); };
 function atmMove(dir, want) {
   const g = Math.max(0, Number(get('painWheelGold', 0)) || 0), v = vaultBal();
-  if (!(want > 0)) { atmBal('<span class="err">NUMBERS ONLY. LIKE 5000, 250K OR 1.5M.</span>'); return; }
+  if (!(want > 0)) { atmBal('<span class="err">TYPE AN AMOUNT ON THE KEYPAD.</span>'); return; }
   const amt = Math.min(Math.floor(want), dir === 'in' ? g : v);
-  if (amt <= 0) { atmBal(`<span class="err">${dir === 'in' ? 'YOUR WALLET IS EMPTY.' : 'THE VAULT IS EMPTY. JUST ECHOES.'}</span>`); return; }
+  if (amt <= 0) { atmBal(`<span class="err">${dir === 'in' ? 'INSUFFICIENT FUNDS.' : 'THE VAULT IS EMPTY. JUST ECHOES.'}</span>`); atmBeep(180, .25); return; }
   if (dir === 'in') { put('painWheelGold', g - amt); put('painWheelVault', Math.min(1e300, v + amt)); } else { put('painWheelVault', v - amt); put('painWheelGold', Math.min(1e300, g + amt)); }
-  showGold(); atmBal(dir === 'in' ? `DEPOSITED ${fmt(amt)}. OFFSHORE. SHHH.` : `DISPENSED ${fmt(amt)}. SPEND IT ON SLURPEES.`);
+  atmBuf = ''; showGold(); atmBeep(1300, .08); setTimeout(() => atmBeep(1700, .1), 90);
+  atmBal(dir === 'in' ? `DEPOSITED ${fmt(amt)}. OFFSHORE. SHHH.` : `DISPENSED ${fmt(amt)}. SPEND IT ON SLURPEES.`);
+  if (dir === 'out') { atmCash(1); setTimeout(() => atmCash(2), 260); setTimeout(() => atmCash(0), 2600); }
 }
-$('atmPinGo').onclick = atmPin; $('atmPinIn').onkeydown = (e) => { if (e.key === 'Enter') atmPin(); };
-$('atmX1').onclick = $('atmX2').onclick = closeAtm;
+$('atmSlot').onclick = atmInsert; $('atmCard').onclick = atmInsert;
+$('atmX1').onclick = closeAtm;
 $('atm').addEventListener('click', (e) => { if (e.target.id === 'atm') closeAtm(); });
-addEventListener('keydown', (e) => { if (e.key === 'Escape' && $('atm').classList.contains('open')) closeAtm(); });
+addEventListener('keydown', (e) => {
+  if (!$('atm').classList.contains('open')) return;
+  if (e.key === 'Escape') closeAtm();
+  else if (/^\d$/.test(e.key)) atmKey(e.key); else if (e.key === 'Enter') atmKey('enter'); else if (e.key === 'Backspace') { atmBuf = atmBuf.slice(0, -1); atmState === 'pin' ? atmPinScr() : atmState === 'main' ? atmBal() : 0; }
+});
 document.querySelectorAll('[data-adep]').forEach(b => b.onclick = () => atmMove('in', Math.max(0, Number(get('painWheelGold', 0)) || 0) * +b.dataset.adep));
 document.querySelectorAll('[data-awd]').forEach(b => b.onclick = () => atmMove('out', vaultBal() * +b.dataset.awd));
-$('atmDep').onclick = () => { atmMove('in', parseAmt($('atmAmt').value)); $('atmAmt').value = ''; };
-$('atmWd').onclick = () => { atmMove('out', parseAmt($('atmAmt').value)); $('atmAmt').value = ''; };
-$('atmAmt').onkeydown = (e) => { if (e.key === 'Enter') $('atmDep').click(); };
+$('atmDep').onclick = () => atmMove('in', +atmBuf);
+$('atmWd').onclick = () => atmMove('out', +atmBuf);
 
 </script>
 <script>
