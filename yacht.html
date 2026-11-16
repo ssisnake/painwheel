@@ -644,11 +644,37 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
     // ---------- 🚧 VIP section: a door, a lonely gaming PC, and the wheel inside the wheel ----------
     const VIP_MSGS = ['Past the velvet rope there is a door. Past the door there is... this.', 'The room is empty except for one desk. The monitors are on. Nobody has logged off in years.',
         'It hums. The fans spin. The chair is still warm. Who was sitting here?', 'A neon sign. A gaming chair. A can of Mana Energy. It is calling to you.'];
+    // Reb works the door. He only lets you in for the Dusty Unlabeled Bottle from Axazon's Emporium (a Knob Creek 21 with the label worn off).
+    // Once he's had it you're on the list for good, and anyone who was already inside before the bouncer showed up stays on it.
+    const DUSTY = 'Dusty Unlabeled Bottle';
+    const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } };
+    const lsPut = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+    const onList = () => lsGet('painWheelRebLetIn', false) || lsGet('painWheelSeenVip', false);
+    function takeDusty() {   // pull one bottle out of the bag (or out of a purchase the wheel hasn't unpacked yet)
+        const bag = lsGet('painWheelBag', {}) || {};
+        if (bag[DUSTY] && bag[DUSTY].n > 0) { if (--bag[DUSTY].n <= 0) delete bag[DUSTY]; lsPut('painWheelBag', bag); return true; }
+        const q = lsGet('painWheelPendingLoot', []) || [], k = q.findIndex(l => l && l[2] === DUSTY);
+        if (k >= 0) { q.splice(k, 1); lsPut('painWheelPendingLoot', q); return true; }
+        return false;
+    }
+    const NOPE = ['Reb: "You\'re not on the list." It\'s your yacht. "Still not on the list."',
+        'Reb: "Members only. Membership costs one (1) bottle of something GOOD. Not that shop swill."',
+        'Reb: "I can be bought. I just can\'t be bought with gold. Or cheap whiskey. Bring me something old."',
+        'Reb crosses his arms. "Heard the flea market gets weird stuff in. Old stuff. From the desert. Just saying."',
+        'The velvet rope is held up by two brass poles and pure ego. Reb is the third pole.'];
     let vipRopeClicks = 0;
     $('hsRope').addEventListener('click', () => {
-        if (++vipRopeClicks === 1) { say('🚧 ' + pick(['Reb: "You\'re not on the list." It\'s your yacht. "Still not on the list."', 'The velvet rope is held up by two brass poles and pure ego.'])); return; }
-        say('🚧 Reb sighs and unhooks the rope. "Fine. Don\'t touch anything."', 2600);
-        setTimeout(openVip, 900);
+        if (onList()) {
+            if (++vipRopeClicks === 1) { say('🚧 ' + pick(['Reb: "Oh. It\'s you. Fine."', 'Reb looks you up and down. "...You\'re on the list. Unfortunately."'])); }
+            else say('🚧 Reb sighs and unhooks the rope. "Don\'t touch anything."', 2600);
+            setTimeout(openVip, 900); return;
+        }
+        if (takeDusty()) {
+            lsPut('painWheelRebLetIn', true);
+            say('🥃 You hand Reb the dusty bottle. He wipes it on his shirt. Reads the label. Reads it again. "...is this a TWENTY-ONE? Where did you GET this?" He unhooks the rope without looking up from it.', 7000);
+            setTimeout(openVip, 4200); return;
+        }
+        say('🚧 ' + NOPE[vipRopeClicks++ % NOPE.length], 4200);
     });
     function openVip() {
         try { localStorage.setItem('painWheelSeenVip', 'true'); } catch (e) {}

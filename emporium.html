@@ -22,6 +22,9 @@
   .item .emo { font-size: 5.6cqw; line-height: 1; filter: drop-shadow(0 0 .5cqw var(--q)); pointer-events: none; }
   .item:hover, .item:focus-visible { transform: translateY(-4%) scale(1.08); outline: none; z-index: 4; }
   .item:hover img, .item:focus-visible img { filter: drop-shadow(0 .35cqw 0 rgba(0,0,0,.55)) drop-shadow(0 0 1.1cqw var(--q)) brightness(1.15); }
+  #dusty { position: absolute; left: 41.5%; bottom: 5.5%; width: 2.4%; padding: 0; border: 0; background: none; cursor: pointer; z-index: 2; transform: rotate(-14deg); transition: transform .15s; }
+  #dusty img { width: 100%; display: block; filter: sepia(.9) brightness(.55) contrast(.8) saturate(.5) drop-shadow(0 .2cqw .1cqw rgba(0,0,0,.6)); }
+  #dusty:hover { transform: rotate(-8deg) scale(1.25); }
   .item.sold { cursor: default; } .item.sold img, .item.sold .emo { opacity: .25; filter: grayscale(1); }
   .item .new { position: absolute; top: -12%; right: -6%; padding: .15cqw .5cqw; border-radius: .4cqw; background: #dc2626; color: #fff; font: 900 .95cqw system-ui, sans-serif; letter-spacing: .04em; transform: rotate(8deg); box-shadow: 0 .2cqw 0 rgba(0,0,0,.5); }
   /* price stickers on the hanging tags */
@@ -97,7 +100,7 @@ const LOOT = {
         "Platemage's RAW MOVES Skateboard": 'epic', "Tsukaar's Whistlethy": 'epic', "Dylan's Welding Mask": 'rare', "Vinny's Brick Phone Charger": 'uncommon',
         "Hawkeyes' Sponsorship Billboard": 'legendary', "ChAoTiC's Radar Gun": 'rare' }).forEach(([n, q]) => { if (!LOOT[q].includes(n)) LOOT[q].push(n); });
 const ITEM_DESC = {
-        "Reb's Empty Bottle": 'Still smells like a Tuesday raid night.', 'Half a Stale Cheeto': 'The other half is in the keyboard.',
+        "Reb's Empty Bottle": 'Still smells like a Tuesday raid night.', 'Dusty Unlabeled Bottle': 'An old, dusty bottle. The label is long gone. Probably junk.', 'Half a Stale Cheeto': 'The other half is in the keyboard.',
         "Kevin's Participation Trophy": 'Awarded for showing up. Barely.', 'Broken Hearthstone': 'Cooldown: forever.',
         'Soggy Croissant Crumb': 'The gnome missed one.', 'Torn Discord Log': 'Exhibit A.', 'Jar of Sewer Pickle Juice': 'Dalaran\'s finest.',
         'Frayed Leap of Faith Rope': 'Used. Many times. On you.', 'Expired Healthstone': 'Best before Wrath of the Lich King.', "The Shack's Broken Internet Dish": 'Two bars. In 1987. The skeleton is still waiting on a download.',
@@ -166,7 +169,7 @@ const LOOT_SETS = [
         { id: 'lostfound', legacy: true, name: '📦 Guild Lost & Found', items: ["Kevin's ROG Ally Battery", "Axazon's Empty Heart Pill Bottle", "ChAoTiC's Last Nerve", "Rubber Replica of Bibledaddy's Finger", "Corrinne's Platinum Achievement"],
           perk: 'Every 10 minutes a guildie "returns" something you lost: a free random item.' }
     ];
-const ITEM_ICON = { 'Golden Chocolate Donut': "media/photo_toy_donut.png?v=6ea2d469", 'Ret Paladin 6% Buff Coupon': "media/photo_item_coupon.png?v=b3ef1576", 'Ashbringer (Plastic Replica)': "media/photo_item_sword.png?v=55d3df90",
+const ITEM_ICON = { 'Dusty Unlabeled Bottle': "media/photo_ico_bottle.png?v=0b4fa6fc", 'Golden Chocolate Donut': "media/photo_toy_donut.png?v=6ea2d469", 'Ret Paladin 6% Buff Coupon': "media/photo_item_coupon.png?v=b3ef1576", 'Ashbringer (Plastic Replica)': "media/photo_item_sword.png?v=55d3df90",
         'Goblin Timeshare Brochure': "media/photo_item_brochure.png?v=14e29592", 'Knob Creek Single Barrel': "media/photo_item_barrel.png?v=1ead128c", 'Torn Discord Log': "media/photo_item_chatlog.png?v=bbaa2dd6", "Kevin's ROG Ally Battery": "media/photo_item_battery.png?v=ba703a5c",
         "ChAoTiC's Blown-Out Headset": "media/photo_item_headset.png?v=fcda3409", 'Frayed Leap of Faith Rope': "media/photo_item_rope.png?v=27ad2ab7", 'Jar of Sewer Pickle Juice': "media/photo_item_pickles.png?v=64117ec0", 'Expired Healthstone': "media/photo_item_healthstone.png?v=9cc10eb7",
         'Broken Hearthstone': "media/photo_item_hearthstone.png?v=04098f73", 'Half a Stale Cheeto': "media/photo_item_cheeto.png?v=5014fab4", 'Road Beer (Still Cold)': "media/photo_item_beer.png?v=6e999522", "Axazon's Empty Heart Pill Bottle": "media/photo_item_pills.png?v=3744a055",
@@ -272,10 +275,11 @@ function render() {
     t.innerHTML = sold ? 'SOLD' : `${short(priceFor(i))}<small>${it.q}</small>`;
     goods.appendChild(t);
   });
+  renderDusty();
 }
 function tick() {
   const r = rotation();
-  if (r.id !== ROT.id) { ROT = r; STOCK = stockFor(r.id); render(); say('Fresh stock just came off the truck. Don\'t ask which truck.'); }
+  if (r.id !== ROT.id) { ROT = r; STOCK = stockFor(r.id); render(); renderDusty(); say('Fresh stock just came off the truck. Don\'t ask which truck.'); }
   const h = Math.floor(r.left / 36e5), m = Math.floor(r.left % 36e5 / 6e4);
   $('rot').innerHTML = `🕘 New stock in <b>${h ? h + 'h ' : ''}${m}m</b> (${r.next} Central)`;
 }
@@ -374,8 +378,40 @@ if (Math.random() < .5) $('axa').classList.add('right');   // some visits he sta
 
 if (!isOpen()) $('closed').style.display = 'flex';
 else { const first = !get('painWheelSeenEmporium', false); put('painWheelSeenEmporium', true); setTimeout(() => say(first ? 'Did you really climb out that window? You special or something?' : pick(HELLO), first ? 6000 : 4800), 700); /* no door chime: it's a tent */ }
+
+/* ---------- the Dusty Unlabeled Bottle: some days it rolls out under the table at ONE restock (9 AM or 9 PM, never both).
+   It looks like junk. It's a Knob Creek 21 with the label worn off, and it's the only thing Reb takes at the VIP door. ---------- */
+const DUSTY = 'Dusty Unlabeled Bottle';
+const dustyHere = (id) => { const day = Math.floor(id / 2), r = rng(day * 31 + 5); return r() < .15 && (r() < .5 ? 0 : 1) === id % 2; };
+const dustyPrice = () => Math.max(500, Math.round((gold() + vaultG()) * .02));
+function renderDusty() {
+  let el = $('dusty'); const show = dustyHere(ROT.id) && get('painWheelDustyBought', null) !== ROT.id;
+  if (!show) { if (el) el.remove(); return; }
+  if (el) return;
+  el = document.createElement('button'); el.id = 'dusty'; el.type = 'button'; el.title = 'Something under the table'; el.setAttribute('aria-label', 'A dusty bottle under the table');
+  el.innerHTML = '<img src="media/photo_ico_bottle.png" alt="">'; el.onclick = showDusty; $('goods').appendChild(el);
+}
+function showDusty() {
+  const card = $('card'), price = dustyPrice(); card.style.setProperty('--q', QCOL.poor);
+  card.innerHTML = `<div class="pic"><img src="media/photo_ico_bottle.png" alt="" style="filter: sepia(.9) brightness(.55) contrast(.8) saturate(.5)"></div><h2></h2><div class="ql">poor · not part of any set</div>
+    <p class="desc"></p><div class="price">${fmt(price)}</div><div class="pct">It was under the table. Axazon didn't even know he had it.</div>
+    <div class="row"><button class="buy" type="button">🏷️ Buy it</button><button class="no" type="button">Just looking</button></div><div class="msg" role="status"></div>`;
+  card.querySelector('h2').textContent = DUSTY; card.querySelector('.desc').textContent = '"' + pick(['That? Found it in the desert with the fish. Take it, it\'s taking up floor.', 'Old bottle. No label. Could be anything. Probably nothing.', 'You want the dusty bottle? Sure. Weirdo.']) + '"';
+  const buy = card.querySelector('.buy');
+  buy.onclick = () => {
+    const p = dustyPrice(), g = gold();
+    if (g < p) { card.querySelector('.msg').textContent = 'You can\'t afford it. Axazon can tell. It\'s a dusty bottle, man.'; return; }
+    if (get('painWheelDustyBought', null) === ROT.id) return;
+    put('painWheelGold', g - p); put('painWheelDustyBought', ROT.id);
+    const q = get('painWheelPendingLoot', []) || []; q.push(['poor', "🏷️ Bought at Axazon's Emporium", DUSTY]); put('painWheelPendingLoot', q);
+    sfx('audio_token'); showGold(); renderDusty(); $('dlg').close();
+    say(pick(['Pleasure doing business. Don\'t bring it back.', 'Sold. To the person who buys garbage. No refunds.', 'Huh. Somebody wanted that. Weird day.']), 4200, 'shield');
+  };
+  card.querySelector('.no').onclick = () => $('dlg').close();
+  $('dlg').showModal();
+}
 addEventListener('storage', (e) => { if (e.key === 'painWheelGold') { showGold(); render(); } if (e.key === 'painWheelEmporium' || e.key === 'painWheelFound') render(); });
-render(); tick(); setInterval(tick, 15000);
+render(); renderDusty(); tick(); setInterval(tick, 15000);
 setInterval(() => { showGold(); }, 5000);
 </script>
 <script>

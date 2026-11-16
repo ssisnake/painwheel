@@ -926,7 +926,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 15, 4:59 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 15, 9:00 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -7365,7 +7365,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
     const Q_WEIGHT = { poor: 40, common: 25, uncommon: 20, rare: 10, epic: 4, legendary: 1 };
     const Q_SELL = { poor: 50, common: 100, uncommon: 250, rare: 600, epic: 1500, legendary: 5000 };
     const ITEM_DESC = {
-        "Reb's Empty Bottle": 'Still smells like a Tuesday raid night.', 'Half a Stale Cheeto': 'The other half is in the keyboard.',
+        "Reb's Empty Bottle": 'Still smells like a Tuesday raid night.', 'Dusty Unlabeled Bottle': 'An old, dusty bottle. The label is long gone. Probably junk.', 'Half a Stale Cheeto': 'The other half is in the keyboard.',
         "Kevin's Participation Trophy": 'Awarded for showing up. Barely.', 'Broken Hearthstone': 'Cooldown: forever.',
         'Soggy Croissant Crumb': 'The gnome missed one.', 'Torn Discord Log': 'Exhibit A.', 'Jar of Sewer Pickle Juice': 'Dalaran\'s finest.',
         'Frayed Leap of Faith Rope': 'Used. Many times. On you.', 'Expired Healthstone': 'Best before Wrath of the Lich King.', "The Shack's Broken Internet Dish": 'Two bars. In 1987. The skeleton is still waiting on a download.',
@@ -7528,7 +7528,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         else if (e.key === 'painWheelTitles' && v && typeof v === 'object' && !Array.isArray(v)) { Object.assign(ownedTitles, v); }
         else if (e.key === 'painWheelAllTimeSpins') { const n = parseInt(e.newValue, 10); if (n > allTimeSpins) { allTimeSpins = n; updateSpinBadge(); } }
     });
-    const ITEM_ICON = { 'Golden Chocolate Donut': PHOTO_TOY_DONUT, 'Ret Paladin 6% Buff Coupon': PHOTO_ITEM_COUPON, 'Ashbringer (Plastic Replica)': PHOTO_ITEM_SWORD,
+    const ITEM_ICON = { 'Dusty Unlabeled Bottle': PHOTO_ICO_BOTTLE, 'Golden Chocolate Donut': PHOTO_TOY_DONUT, 'Ret Paladin 6% Buff Coupon': PHOTO_ITEM_COUPON, 'Ashbringer (Plastic Replica)': PHOTO_ITEM_SWORD,
         'Goblin Timeshare Brochure': PHOTO_ITEM_BROCHURE, 'Knob Creek Single Barrel': PHOTO_ITEM_BARREL, 'Torn Discord Log': PHOTO_ITEM_CHATLOG, "Kevin's ROG Ally Battery": PHOTO_ITEM_BATTERY,
         "ChAoTiC's Blown-Out Headset": PHOTO_ITEM_HEADSET, 'Frayed Leap of Faith Rope': PHOTO_ITEM_ROPE, 'Jar of Sewer Pickle Juice': PHOTO_ITEM_PICKLES, 'Expired Healthstone': PHOTO_ITEM_HEALTHSTONE,
         'Broken Hearthstone': PHOTO_ITEM_HEARTHSTONE, 'Half a Stale Cheeto': PHOTO_ITEM_CHEETO, 'Road Beer (Still Cold)': PHOTO_ITEM_BEER, "Axazon's Empty Heart Pill Bottle": PHOTO_ITEM_PILLS,
@@ -10322,6 +10322,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         id: '2026-11-07-fixed', title: 'The claw, the liver and the ghost town', date: 'November 6-7, 2026',
         showAfter: Date.parse('2026-11-07T06:00:00Z'),   // re-issued Nov 7 with corrected notes, so it pops up again for everyone
         lines: [
+            ['🥃', "Reb is working the VIP door on the yacht now. He can't be bought with gold. He CAN be bought."],
             ['🌵', "Forever is a once-a-year thing now. It opens on its anniversary week (Nov 4-10) and everyone goes. The rest of the year, the door's locked."],
             ['🐏', "Greg is in the claw machine now. Nobody knows how he got in there. He says he used a crane."],
             ['🏆', "14 new achievements, and a pile of new titles you can only earn. Some of them won't tell you how."],
