@@ -843,6 +843,10 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
         $('vipScene').classList.remove('zoom'); $('mini').classList.remove('open'); $('vipBar').style.display = '';
         $('vip').classList.add('open'); sfx.clunk();
     }
+    function standUp() {   // back to the VIP room, not out of it
+        $('mini').classList.remove('open'); $('vipScene').classList.remove('zoom'); miniSpinning = false; $('vipBar').style.display = '';
+        $('vipMsg').textContent = '🧍 You stand up. Your back cracks. It is 4 AM. How is it 4 AM?';
+    }
     function closeVip() { $('vip').classList.remove('open'); $('mini').classList.remove('open'); $('vipScene').classList.remove('zoom'); miniSpinning = false; }   // shut the WHEEL-2600 too, or its music keeps going
     $('vipLeave').addEventListener('click', () => { closeVip(); say('🚪 You back out slowly. The monitors keep spinning without you.'); });
     function sitDown() {
@@ -952,7 +956,7 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
         $('miniUp').addEventListener('click', () => {
             if (miniSpinning) return;
             if (depth > 1) { depth--; renderMini(); $('miniRes').textContent = 'You climb back up one wheel. It feels like progress. It is not.'; }
-            else { closeVip(); say('🧍 You stand up. Your back cracks. It is 4 AM. How is it 4 AM?', 4500); }
+            else { standUp(); }
         });
     }
     const MINI_RES = 168;   // the wheel is drawn this many pixels wide, then scaled up with no smoothing
@@ -1036,7 +1040,7 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
         $('miniRes').textContent = line();
     }
     addEventListener('resize', () => { if ($('mini').classList.contains('open') && !miniSpinning) renderMini(); });
-    addEventListener('keydown', (e) => { if (e.key === 'Escape' && $('vip').classList.contains('open')) closeVip(); });
+    addEventListener('keydown', (e) => { if (e.key === 'Escape' && $('vip').classList.contains('open')) { if ($('mini').classList.contains('open')) { if (!miniSpinning) standUp(); } else closeVip(); } });
 
     showRebBottle();
     window.yachtAward = award;   // the Wheeltari (wheeltari.js) hands out its own trophy
