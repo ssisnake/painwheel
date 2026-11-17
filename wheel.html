@@ -693,6 +693,16 @@
         #wildChicken { position: fixed; z-index: 59; bottom: 64px; left: -80px; font-size: 46px; line-height: 1; cursor: pointer; user-select: none; transition: left linear; }
         #wildChicken .em { display: inline-block; animation: chickenWalk .35s ease-in-out infinite alternate; }
         #wildChicken.flip .em { transform: scaleX(-1); }
+        #wildChicken .em { animation: none !important; }
+        #wildChicken .ck { height: 72px; aspect-ratio: 109 / 120; background: url(media/chick_walk.webp) 0 0 / 700% 100% no-repeat; animation: ckWalk .7s steps(7) infinite; }
+        #wildChicken .ck.flap { aspect-ratio: 137 / 120; background-image: url(media/chick_flap.webp); background-size: 400% 100%; animation: ckFlap .5s steps(4) 2; }
+        #wildChicken .ck.peck { aspect-ratio: 140 / 120; background-image: url(media/chick_peck.webp); background-size: 400% 100%; animation: ckFlap .6s steps(4) 1; }
+        @keyframes ckWalk { to { background-position: 116.667% 0; } }
+        @keyframes ckFlap { to { background-position: 133.333% 0; } }
+        #wildChicken .qm { position: absolute; left: 50%; bottom: 76px; width: 22px; transform: translateX(-50%); filter: drop-shadow(0 0 1px #000) drop-shadow(0 0 1px #000) drop-shadow(0 0 5px rgba(250,204,21,.6)); animation: qmBob 1.4s ease-in-out infinite; pointer-events: none; }
+        #wildChicken .qm.dim { filter: grayscale(1) brightness(.75) drop-shadow(0 0 1px #000) drop-shadow(0 0 1px #000); }
+        @keyframes qmBob { 50% { translate: 0 -4px; } }
+        @media (prefers-reduced-motion: reduce) { #wildChicken .ck { animation-duration: 1.4s; } #wildChicken .qm { animation: none; } }
         @keyframes chickenWalk { from { translate: 0 0; } to { translate: 0 -4px; } }
         #wildChicken .bub { position: absolute; bottom: 52px; left: 50%; transform: translateX(-50%); white-space: nowrap; background: #fffbe6; color: #111; font-size: 12px; font-weight: 800; padding: 3px 8px; border-radius: 8px; border: 1.5px solid #111; }
         .quest-box { background: linear-gradient(180deg,#f5e6c4,#e6cf9c); color: #3b2512; border: 3px solid #7c5a2a; box-shadow: 0 10px 40px rgba(0,0,0,.7); font-family: Georgia, serif; }
@@ -936,7 +946,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 17, 12:09 AM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 17, 12:34 AM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -1647,7 +1657,7 @@
     const PHOTO_MURLOC_SHEET = "media/photo_murloc_sheet.png?v=d192bf7f";
     const PHOTO_ROCKET = "media/photo_rocket.png?v=9509701f";
     const PHOTO_ROCKET_FLY = "media/photo_rocket_fly.png?v=4aae4aa4";
-    const PHOTO_CHICKEN = "media/photo_chicken.png?v=d6697602";
+    const PHOTO_CHICKEN = "media/chick_still.webp";   // Ada (Nov 17)
     const PHOTO_WHELP = "media/photo_whelp.png?v=e83a9376";
     const PHOTO_LOGO = "media/photo_logo.png?v=7e59cc27";
     const PHOTO_BTN_BAG = "media/photo_btn_bag.png?v=083dadee";
@@ -5175,10 +5185,10 @@
     const PHOTO_SQ_SPEAKER_OFF = "media/photo_sq_speaker_off.png?v=42ecc9aa";
     const PHOTO_GARY_AV = "media/photo_gary_av.jpg?v=2bdbaf59";
     const PHOTO_GARY = "media/photo_gary.png?v=15f92dd2";
-    const PHOTO_FEATHER_1 = "media/photo_feather_1.png?v=9d32942e";
-    const PHOTO_FEATHER_2 = "media/photo_feather_2.png?v=a9b729f2";
-    const PHOTO_FEATHER_3 = "media/photo_feather_3.png?v=72ca84c7";
-    const PHOTO_FEATHER_4 = "media/photo_feather_4.png?v=3785e6d1";
+    const PHOTO_FEATHER_1 = "media/feather_new_1.webp";   // Ada (Nov 17)
+    const PHOTO_FEATHER_2 = "media/feather_new_2.webp";   // Ada (Nov 17)
+    const PHOTO_FEATHER_3 = "media/feather_new_3.webp";   // Ada (Nov 17)
+    const PHOTO_FEATHER_4 = "media/feather_new_4.webp";   // Ada (Nov 17)
     const PHOTO_SIREN_0 = "media/photo_siren_0.png?v=7aff4960";
     const PHOTO_SIREN_1 = "media/photo_siren_1.png?v=3ed3735c";
     const PHOTO_SIREN_2 = "media/photo_siren_2.png?v=c8988e96";
@@ -10462,6 +10472,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             ['📞', "Slick has a face now. You'll wish he didn't."],
             ['❄️', "Snow globes are a thing now (art by Ada). Each place has one, and each one is earned its own way. The Wheel's is for the truly committed."],
             ['📏', "The top bar is slimmer: smaller buttons, and the Forever button only shows up during Forever Week."],
+            ['🐔', "The Westfall Chicken got a glow-up (art by Ada): it actually walks now, pecks when you poke it, and shows a ! when it has a quest for you."],
             ['🛡️', "TsukBlock moved out of the store into its own box, with its own button in the top bar (art by Ada). No 8/11 required. When Tsussie eats an ad, you'll know."],
             ['🕴️', "There's a hooded stranger at the flea market now, and he keeps hours: 6-8 AM, noon-2 PM, 6-8 PM and 11 PM-1 AM (Central). He sells rare and unusual things. The second time you visit, he'll be waiting for you."],
             ['🏧', "The 8/11 ATM got a real machine (art by Ada). Insert your card, punch your PIN on the keypad, watch the cash come out. Your Goblin Express goes in the slot if you have one."],
@@ -12188,7 +12199,9 @@ const AUDIO_DOOR_CHIME = "media/audio_door_chime.mp3?v=34de5993";
     // Buy Special Chicken Feed in the shop, feed the next chicken, it lays an egg, the egg hatches into your pet.
     let cluckStage = store.get('painWheelCluck', 0);   // 0 none · 1 need feed · 2 have feed · 3 done
     let wildChicken = null;
-    function setCluck(n) { cluckStage = n; store.set('painWheelCluck', n); renderQuestTracker(); }
+    function setCluck(n) { cluckStage = n; store.set('painWheelCluck', n); renderQuestTracker();
+        const q = wildChicken && wildChicken.querySelector('.qm');   // the chicken's quest mark follows along
+        if (q) { if (n === 3) q.remove(); else { q.src = n === 0 ? 'media/quest_bang.webp' : 'media/quest_q.webp'; q.classList.toggle('dim', n === 1); } } }
     function renderQuestTracker() {
         const t = $('questTracker'), on = cluckStage === 1 || cluckStage === 2;
         t.classList.toggle('hidden', !on); t.classList.toggle('flex', on);
@@ -12206,13 +12219,16 @@ const AUDIO_DOOR_CHIME = "media/audio_door_chime.mp3?v=34de5993";
         if (wildChicken || pets.chicken || cluckStage === 3) return;
         if (!force && !idleScreen()) return;
         const c = document.createElement('div'); c.id = 'wildChicken'; c.title = 'Westfall Chicken';
-        c.innerHTML = `<div class="bub hidden"></div><span class="em"><img class="chicken-spr" src="${PHOTO_CHICKEN}" alt="🐔" style="width:58px;height:auto;display:block"></span>`;
+        // quest giver marks, WoW style: ! = has a quest for you, grey ? = you're on it, gold ? = ready to turn in
+        const qm = cluckStage === 0 ? '<img class="qm" src="media/quest_bang.webp" alt="">' : cluckStage === 1 ? '<img class="qm dim" src="media/quest_q.webp" alt="">' : cluckStage === 2 ? '<img class="qm" src="media/quest_q.webp" alt="">' : '';
+        c.innerHTML = `<div class="bub hidden"></div>${qm}<span class="em"><div class="ck" role="img" aria-label="Westfall Chicken"></div></span>`;
         c.dataset.need = '1'; c.dataset.got = '0';   // just type chicken once (no slash needed)
         const ltr = Math.random() < 0.5, secs = 28;
-        if (ltr) c.classList.add('flip');   // the emoji faces left, so flip it when walking right
+        if (ltr) c.classList.add('flip');   // Ada's chicken faces left, so flip it when walking right
         c.style.left = ltr ? '-80px' : 'calc(100vw + 20px)';
         document.body.appendChild(c); wildChicken = c;
         c.addEventListener('click', () => {
+            const ck = c.querySelector('.ck'); if (ck) { ck.classList.remove('flap', 'peck'); void ck.offsetWidth; ck.classList.add(Math.random() < .5 ? 'flap' : 'peck'); ck.onanimationend = () => ck.classList.remove('flap', 'peck'); }
             if (cluckStage === 2) return feedChicken();
             if (IS_TOUCH) return chickenEmote();   // no keyboard on a phone: a tap is a cluck
             chickenSay(pick(['Bawk?', '*stares at you*', '*pecks the ground*', 'bok bok', '(psst: just type chicken)']));
