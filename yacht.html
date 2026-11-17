@@ -801,7 +801,8 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
         open('tModal');
     });
     // ---------- the snow globe case (16 spots). One globe per place; the stranger at the flea market sells the first one ----------
-    const GLOBES = { flea: { name: 'Flea Market', scene: '⛺', line: "Axazon's tent, in a globe. The snow is sand. It never settles." } };
+    const GLOBES = { wheel: { name: 'The Wheel', scene: '🎡', big: 'media/globe_wheel_big.webp', line: 'A souvenir for 1,000 spins. The wheel inside has an eye in the middle. It is looking at you.' },
+        flea: { name: 'Flea Market', scene: '⛺', line: "Axazon's tent, in a globe. The snow is sand. It never settles." } };
     const GX = [1510, 1566, 1624, 1682], GY = [455, 523, 590, 658];
     const myGlobes = () => Object.entries(S.get('painWheelGlobes', {}) || {}).filter(([k]) => GLOBES[k]).sort((a, b) => a[1] - b[1]).map(([k]) => k);
     function renderGlobes() {
@@ -815,7 +816,8 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
             b.addEventListener('click', () => {
                 if (!k) { sfx.click(); say('❄️ ' + pick(['An empty stand. Every place has a snow globe somewhere. Somebody is selling them.', 'Sixteen stands. ' + mine.length + ' globe' + (mine.length === 1 ? '' : 's') + '. The case is judging you.', 'A little brass tag: "RESERVED". For what? It does not say.'])); return; }
                 b.classList.remove('shook'); void b.offsetWidth; b.classList.add('shook'); [1400, 1700, 2100].forEach((f, j) => tone(f, j * .07, .2, 'sine', .03));
-                say('❄️ ' + GLOBES[k].name + ' snow globe. ' + GLOBES[k].line);
+                if (!GLOBES[k].big) say('❄️ ' + GLOBES[k].name + ' snow globe. ' + GLOBES[k].line);
+                if (GLOBES[k].big) { $('tBig').innerHTML = `<img src="${GLOBES[k].big}" alt="" style="width:100%;max-width:420px;height:auto;border-radius:10px">`; $('tName').textContent = GLOBES[k].name + ' snow globe'; $('tDesc').textContent = GLOBES[k].line; $('tDate').textContent = 'Shake gently.'; open('tModal'); }
             });
             box.appendChild(b);
         }

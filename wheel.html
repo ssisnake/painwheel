@@ -514,6 +514,10 @@
         .plate-tag { position: absolute; left: 50%; bottom: -10px; transform: translateX(-50%); white-space: nowrap; padding: 1px 7px; border-radius: 6px; background: #451a03; border: 1px solid #f59e0b; color: #fde68a; font: 800 12px/1.3 system-ui, sans-serif; pointer-events: none; }
         @media (max-width: 640px) { .plate-count { font-size: 11px; } .plate-tag { font-size: 10px; bottom: -8px; } }
         .plate-img { height: 58px; width: auto; image-rendering: pixelated; }
+        /* TsukBlock shortcut: a stand-in plate until Ada's art (same height as the other plates) */
+        .tsuk-plate { height: 58px; display: inline-flex !important; align-items: center; gap: 6px; padding: 0 12px 0 8px; line-height: 1; border-radius: 10px; border: 3px solid #b8862f !important; background: linear-gradient(#3a2614, #1c1209) !important; box-shadow: inset 0 0 0 2px #2a1a0b, 0 2px 0 #0b0703; }
+        .tsuk-plate img { height: 34px; width: auto; } .tsuk-plate span { font: 900 14px/1.05 system-ui, sans-serif; letter-spacing: .06em; color: #fde68a; text-align: left; }
+        @media (max-width: 640px) { .tsuk-plate { height: 34px; padding: 0 6px; } .tsuk-plate img { height: 22px; } .tsuk-plate span { font-size: 10px; } }
         .hdr-ico { display: inline-block; height: 1.9em; width: auto; vertical-align: middle; margin: -.3em .25em -.2em 0; image-rendering: pixelated; }
         .spr-ico { display: inline-block; width: auto; vertical-align: middle; image-rendering: pixelated; }
         img.spr-ico[src*="photo_ico_"] { image-rendering: auto; }   /* the painted icon sheet: smooth, not blocky */
@@ -742,6 +746,7 @@
             <button id="shopBtn" class="plate-btn cursor-pointer" title="Shop" aria-label="Shop"><img class="plate-img" data-plate="SHOP" alt="Shop"></button>
             <button id="toyBtn" title="Show / hide your toys (bottom-right corner)" style="display:none" class="plate-btn cursor-pointer"><img class="plate-img" data-plate="TOYS" alt="Toys"><span id="toyLbl" class="plate-count" style="display:none"></span></button>
             <button id="partyBtn" title="Party mode" class="plate-btn cursor-pointer"><img class="plate-img" data-plate="PARTY" alt="Party"><img id="partyHatImg" alt="" hidden></button>
+            <button id="tsukBtn" class="plate-btn cursor-pointer tsuk-plate" title="TsukBlock (ad blocker)" aria-label="TsukBlock"><img alt="" id="tsukBtnIco"><span>TSUK<br>BLOCK</span></button>
             <button id="foreverBtn" title="WoW Forever is out" class="plate-btn cursor-pointer"><img class="plate-img" data-plate="FOREVER" alt="Forever"><span class="plate-tag"></span></button>
         </div>
     </header>
@@ -926,7 +931,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 16, 2:59 AM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 16, 8:56 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -4985,6 +4990,15 @@
         const total = Math.max(stats.spins, allTimeSpins, guildSpinsNow());   // old spins and your other devices (guild board) count too
         [[10, 'spins10'], [25, 'spins25'], [50, 'spins50'], [100, 'spins100'], [250, 'spins250'], [500, 'spins500'], [1000, 'spins1000'], [2000, 'spins2000'], [5000, 'spins5000'], [10000, 'spins10000']]
             .forEach(([n, id]) => { if (total >= n) unlock(id); });
+        if (total >= 1000) giveWheelGlobe();
+    }
+    function giveWheelGlobe() {   // The Wheel's snow globe (Ada): your 1,000th spin pops it out. Already past 1,000? You get it on your next spin
+        const gl = store.get('painWheelGlobes', {}) || {}; if (gl.wheel) return; gl.wheel = Date.now(); store.set('painWheelGlobes', gl);
+        setTimeout(() => { const o = document.createElement('div'); o.style.cssText = 'position:fixed;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.72);padding:16px';
+            o.innerHTML = '<div style="max-width:560px;width:100%;text-align:center;color:#fde68a;font-family:system-ui,sans-serif"><img src="media/globe_wheel_big.webp" alt="The Wheel snow globe" style="width:100%;height:auto;border-radius:14px;box-shadow:0 0 40px rgba(250,204,21,.35)">'
+              + '<div style="font:900 26px system-ui,sans-serif;margin-top:12px">❄️ 1,000 SPINS. HERE\'S A SOUVENIR.</div><div style="font-size:17px;color:#e7e5e4;margin-top:6px">The Wheel snow globe. Please get help. (It\'s in the snow globe case on your yacht.)</div>'
+              + '<button type="button" style="margin-top:14px;font:800 17px system-ui;padding:10px 26px;border-radius:10px;border:0;background:#facc15;color:#1c1917;cursor:pointer">Shake it</button></div>';
+            o.addEventListener('click', () => o.remove()); document.body.appendChild(o); try { playAchievementSound(); } catch (e) {} }, 2600);
     }
     function sciGold(g) {   // big gold reads better as 1.23e15 than as a wall of digits
         if (g === null || g === undefined || g === '' || !isFinite(+g)) return '—';
@@ -10416,6 +10430,8 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             ['⛓️', "The hatch on the yacht is gone. Uncle Touchy says he'll find another way in. That's not comforting."],
             ['🚀', "When the rocket hits the wheel, anything sitting on the wheel goes flying. It comes back. Mostly."],
             ['📞', "Slick has a face now. You'll wish he didn't."],
+            ['❄️', "Snow globes are a thing now (art by Ada). Each place has one, and each one is earned its own way. The Wheel's is for the truly committed."],
+            ['🛡️', "TsukBlock has a button in the top bar now. One click and Tsussie is there."],
             ['🕴️', "There's a hooded stranger at the flea market now, and he keeps hours: 6-8 AM, noon-2 PM, 6-8 PM and 11 PM-1 AM (Central). He sells rare and unusual things. The second time you visit, he'll be waiting for you."],
             ['🏧', "The 8/11 ATM got a real machine (art by Ada). Insert your card, punch your PIN on the keypad, watch the cash come out. Your Goblin Express goes in the slot if you have one."],
             ['🌋', "The VIP room's power strip changes the lava lamp's color. The two are not connected. Goblin tech. Don't ask."],
@@ -11181,6 +11197,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         TITLES.filter(([t]) => ownedTitles[t]).forEach(([t]) => { lookTile(tl, titleChoice === t, t, TITLE_ART[t] ? titleBanner(t, 230) : '<img src="media/nameplate.png" alt="" style="height:26px;width:auto">', () => equipTitle(t)); if (TITLE_ART[t]) tl.lastChild.classList.add('title-tile'); });
     }
     function openLooks() { if (EMBED_SHOP) { try { parent.postMessage({ shop: 'go', href: 'wheel.html#go=looks' }, location.origin); } catch (e) {} return; } closeShop(); $('settingsBtn').click(); setTimeout(() => { const el = $('looksSection'); if (el) el.scrollIntoView({ block: 'start', behavior: 'smooth' }); }, 60); }
+    $('tsukBtnIco').src = PHOTO_ICO_SHIELD; $('tsukBtn').addEventListener('click', () => openShop('adblock'));   // straight to the TsukBlock tab
     $('looksShop').addEventListener('click', () => { const p = $('settingsPanel'); p.classList.add('hidden'); p.classList.remove('flex'); openShop('cosmetics'); });
     $('settingsBtn').addEventListener('click', renderLooks);
     function rebuildThemePicker() {
