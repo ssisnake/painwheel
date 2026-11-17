@@ -106,6 +106,8 @@
     .gslot.shook .gl s { animation: snow 1.8s ease-out; }
     @keyframes snow { 0% { background-position: 0 -1cqw, .25cqw -.8cqw; opacity: .95; } 100% { background-position: 0 .4cqw, .25cqw .6cqw; opacity: .55; } }
     .gslot.empty { opacity: 0; }
+    .gspr { display: block; width: 100%; height: auto; filter: drop-shadow(0 .2cqw .2cqw rgba(0,0,0,.55)); }
+    .gslot.shook .gspr { animation: gShake .5s ease-in-out; } @keyframes gShake { 25% { transform: rotate(-8deg); } 75% { transform: rotate(8deg); } }
     #kevTro { position: absolute; left: 92.15%; bottom: 44%; width: 4.7%; display: none; pointer-events: none; }
     #kevTro img { display: block; width: 100%; max-height: 13.6cqw; object-fit: contain; object-position: bottom; filter: drop-shadow(0 0 .5cqw rgba(253,224,71,.45)); }
     #rebBottle { position: absolute; left: 3.4%; top: 75.5%; width: 2.5%; display: none; pointer-events: none; transform: rotate(-4deg); }
@@ -801,9 +803,11 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
         open('tModal');
     });
     // ---------- the snow globe case (16 spots). One globe per place; the stranger at the flea market sells the first one ----------
-    const GLOBES = { wheel: { name: 'The Wheel', scene: '🎡', big: 'media/globe_wheel_big.webp', line: 'A souvenir for 1,000 spins. The wheel inside has an eye in the middle. It is looking at you.' },
+    const GLOBES = { wheel: { name: 'The Wheel', scene: '🎡', sprite: 'media/globe_wheel.webp', big: 'media/globe_wheel_big.webp', line: 'A souvenir for 1,000 spins. The wheel inside has an eye in the middle. It is looking at you.' },
         flea: { name: 'Flea Market', scene: '⛺', line: "Axazon's tent, in a globe. The snow is sand. It never settles." } };
     const GX = [1510, 1566, 1624, 1682], GY = [455, 523, 590, 658];
+    const globeHtml = (k) => GLOBES[k].sprite ? `<img class="gspr" src="${GLOBES[k].sprite}" alt="">`   // Ada's little globe
+        : `<div class="globe"><div class="gl"><i>${GLOBES[k].scene}</i><s></s></div><div class="gb"></div></div>`;
     const myGlobes = () => Object.entries(S.get('painWheelGlobes', {}) || {}).filter(([k]) => GLOBES[k]).sort((a, b) => a[1] - b[1]).map(([k]) => k);
     function renderGlobes() {
         const box = $('globeCase'), mine = myGlobes(); box.textContent = '';
@@ -812,12 +816,12 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
             const w = 52 / 25.6, h = w * 1.22 * 2.359;
             b.style.cssText = `left:${(GX[i % 4] / 25.6 - w / 2).toFixed(2)}%;top:${(GY[Math.floor(i / 4)] / 10.85 - h).toFixed(2)}%;width:${w.toFixed(2)}%;height:${h.toFixed(2)}%`;
             b.setAttribute('aria-label', k ? GLOBES[k].name + ' snow globe' : 'An empty snow globe stand');
-            if (k) b.innerHTML = `<div class="globe"><div class="gl"><i>${GLOBES[k].scene}</i><s></s></div><div class="gb"></div></div>`;
+            if (k) b.innerHTML = globeHtml(k);
             b.addEventListener('click', () => {
                 if (!k) { sfx.click(); say('❄️ ' + pick(['An empty stand. Every place has a snow globe somewhere. Somebody is selling them.', 'Sixteen stands. ' + mine.length + ' globe' + (mine.length === 1 ? '' : 's') + '. The case is judging you.', 'A little brass tag: "RESERVED". For what? It does not say.'])); return; }
                 b.classList.remove('shook'); void b.offsetWidth; b.classList.add('shook'); [1400, 1700, 2100].forEach((f, j) => tone(f, j * .07, .2, 'sine', .03));
                 if (!GLOBES[k].big) say('❄️ ' + GLOBES[k].name + ' snow globe. ' + GLOBES[k].line);
-                if (GLOBES[k].big) { $('tBig').innerHTML = `<img src="${GLOBES[k].big}" alt="" style="width:100%;max-width:420px;height:auto;border-radius:10px">`; $('tName').textContent = GLOBES[k].name + ' snow globe'; $('tDesc').textContent = GLOBES[k].line; $('tDate').textContent = 'Shake gently.'; open('tModal'); }
+                if (GLOBES[k].big) { $('tBig').innerHTML = `<img src="${GLOBES[k].big}" alt="" style="width:100%;max-width:420px;height:auto;filter:drop-shadow(0 0 18px rgba(250,204,21,.3))">`; $('tName').textContent = GLOBES[k].name + ' snow globe'; $('tDesc').textContent = GLOBES[k].line; $('tDate').textContent = 'Shake gently.'; open('tModal'); }
             });
             box.appendChild(b);
         }
@@ -924,7 +928,7 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
     // the featured snow globe sits in the velvet dish on the desk
     function renderDeskGlobe() {
         const mine = myGlobes(), want = S.get('painWheelGlobeDesk', ''), k = mine.includes(want) ? want : mine[0], el = $('deskGlobe');
-        el.style.display = k ? 'block' : 'none'; if (k) el.innerHTML = `<div class="globe"><div class="gl"><i>${GLOBES[k].scene}</i><s></s></div><div class="gb"></div></div>`;
+        el.style.display = k ? 'block' : 'none'; if (k) el.innerHTML = globeHtml(k);
         return k;
     }
     renderDeskGlobe();
