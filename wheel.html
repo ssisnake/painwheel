@@ -931,7 +931,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 16, 9:53 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 16, 10:44 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -9257,13 +9257,12 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         ['the Kevin-Touched', 1000], ['Ret Enjoyer', 2500], ['Liver Donor', 5000], ['of the Murder Row', 10000], ['Certified Degenerate', 25000],
         ['the Unbuffed', 50000], ['Goblin Tycoon', 100000], ['Patron of Reb', 250000], ['the Lobbyist', 1000000], ['Wheel Emperor', 10000000],
         ['the Island Emptier', 0], ['Five Wheels Deep', 0], ['Forever Alone', 0], ['Debt Free', 0], ['Ascended Degenerate', 0],
-        ['Unsupervised', 0], ["Karen's Problem", 0], ['Gnome Alone', 0], ['Employee of the Never', 0], ['No Refunds Ever', 0], ['I Paid for WinRAR', 0], ['Something Smells Fishy', 0], ['Shit Out of Luck', 0]
+        ['Unsupervised', 0], ["Karen's Problem", 0], ['Gnome Alone', 0], ['Employee of the Never', 0], ['No Refunds Ever', 0], ['I Paid for WinRAR', 0], ['Something Smells Fishy', 0], ['Shit Out of Luck', 0], ['The Collector', 0]
     ];
     let ownedTitles = store.get('painWheelTitles', {}), titleChoice = store.get('painWheelTitle', '');
-    const TITLE_H = {"degen": 132, "emperor": 121, "kevin": 137, "liver": 136, "lobbyist": 123, "murder": 135, "patron": 126, "ret": 136, "tycoon": 128, "unbuffed": 128};
+    const TITLE_H = {"collector": 206, "degen": 132, "emperor": 121, "kevin": 137, "liver": 136, "lobbyist": 123, "murder": 135, "patron": 126, "ret": 136, "tycoon": 128, "unbuffed": 128};
     function renderTitle() {   // a themed title turns your whole name tag into that title's banner (stretched in the middle like a 9-slice)
-        const el = $('titleShow'); const a0 = (typeof TITLE_ART !== 'undefined') && TITLE_ART[titleChoice]; if (el) el.textContent = titleChoice ? (a0 ? titleChoice : `«${titleChoice}»`) : '';
-        if (el && titleChoice === 'The Collector') el.innerHTML = '<img src="media/cart.webp" alt="" style="height:1.25em;width:auto;vertical-align:-.3em;margin-right:.3em">The Collector<img src="media/cart.webp" alt="" style="height:1.25em;width:auto;vertical-align:-.3em;margin-left:.3em;transform:scaleX(-1)">';   // the one working cartridge, on both sides
+        const el = $('titleShow'); const a0 = (typeof TITLE_ART !== 'undefined') && TITLE_ART[titleChoice]; if (el) el.textContent = titleChoice ? (a0 ? (a0.named ? '' : titleChoice) : `«${titleChoice}»`) : '';
         const tag = $('playerTag'); if (!tag) return;
         const a = (typeof TITLE_ART !== 'undefined') && TITLE_ART[titleChoice];
         tag.classList.toggle('tb-plate', !!a);
@@ -9283,7 +9282,8 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         'Goblin Tycoon':        { f: 'tycoon',   b: [31, 30, 76, 70], how: 'Upgrade your house to an Undermine Castle.', ok: () => !!achieved.castle },
         'Patron of Reb':        { f: 'patron',   b: [27, 33, 75, 71], how: 'Give Reb water 10 times.', ok: () => store.get('painWheelWaterCount', 0) >= 10 },
         'the Lobbyist':         { f: 'lobbyist', b: [31, 33, 84, 68], how: 'Reach the Gold lobbying tier.', ok: () => !!achieved.aipac4 },
-        'Wheel Emperor':        { f: 'emperor',  b: [25, 33, 73, 71], how: 'Spin the wheel 5,000 times.', ok: () => allTimeSpins >= 5000 }
+        'Wheel Emperor':        { f: 'emperor',  b: [25, 33, 73, 71], how: 'Spin the wheel 5,000 times.', ok: () => allTimeSpins >= 5000 },
+        'The Collector':        { f: 'collector', b: [31, 40, 91, 86], named: true, how: 'A secret. Ada says no hints.', ok: () => !!achieved.cartridge }   // named: the banner already says "The Collector" (Ada)
     };
     // titles earned straight from an achievement. secret: the Shop doesn't say how. (Banner art for these comes later from Ada; until then they use the nameplate.)
     const TITLE_ACH = {
@@ -9295,6 +9295,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         const a = TITLE_ART[t]; if (!a) return `<span style="font-weight:800">${t}</span>`;
         const h = Math.round(w * 0.27), bw = w * (a.b[2] - a.b[0]) / 100, bh = h * (a.b[3] - a.b[1]) / 100;
         const fs = Math.max(10, Math.min(bh * 0.62, bw / (t.length * 0.52)));
+        if (a.named) return `<span class="tbanner${locked ? ' locked' : ''}" style="width:${w}px;height:${Math.round(w * (TITLE_H[a.f] || 130) / 480)}px"><img src="media/title_${a.f}.webp" alt="${t}"></span>`;   // the name is painted on
         return `<span class="tbanner${locked ? ' locked' : ''}" style="width:${w}px;height:${h}px"><img src="media/title_${a.f}.webp" alt=""><b style="left:${a.b[0]}%;top:${a.b[1]}%;width:${a.b[2] - a.b[0]}%;height:${a.b[3] - a.b[1]}%;font-size:${fs.toFixed(1)}px">${t}</b></span>`;
     }
     function titleToast(t) {

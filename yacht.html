@@ -188,11 +188,12 @@
         color: var(--ink); font-weight: 800; font-size: 14.5px; text-align: center; pointer-events: none; box-shadow: 0 10px 30px rgba(0,0,0,.6); }
     #say.show { opacity: 1; transform: translate(-50%, 0); }
     /* text pops up next to what you clicked (generic bubble until the yacht/VIP bubble art comes) */
-    .nbub { position: absolute; z-index: 20; width: max-content; max-width: 34%; min-width: 12%; padding: .9cqw 1.2cqw; border-radius: 1cqw; background: rgba(18,10,6,.95); border: .18cqw solid #d4a24c;
-        color: #fef3c7; font: 800 max(15px, 1.05cqw)/1.35 var(--font-body); text-align: center; pointer-events: none; box-shadow: 0 .6cqw 1.6cqw rgba(0,0,0,.6); animation: nbIn .18s ease-out; }
-    .nbub::after { content: ""; position: absolute; left: var(--tx, 50%); width: 1.4cqw; height: 1.4cqw; background: inherit; border: inherit; border-width: 0 .18cqw .18cqw 0; transform: translateX(-50%) rotate(45deg); }
-    .nbub.up::after { bottom: -.8cqw; } .nbub.down::after { top: -.8cqw; transform: translateX(-50%) rotate(225deg); }
-    @keyframes nbIn { from { opacity: 0; } to { opacity: 1; } }
+    /* Ada's speech bubbles: the yacht's (goblin captain) and the VIP room's (top-hat goblin). The tail is painted on, so the bubble sits with its tail on what you clicked */
+    .nbub { position: absolute; z-index: 20; pointer-events: none; animation: nbIn .18s ease-out; }
+    .nbub img { display: block; width: 100%; height: auto; filter: drop-shadow(0 .6cqw 1.2cqw rgba(0,0,0,.6)); }
+    .nbub.flip img { transform: scaleX(-1); }
+    .nbub span { position: absolute; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; color: #2b1607; font: 800 max(15px, 1.02cqw)/1.3 var(--font-body); text-shadow: 0 1px 0 rgba(255,240,210,.45); }
+    @keyframes nbIn { from { opacity: 0; transform: translateY(.6cqw); } to { opacity: 1; } }
     @media (prefers-reduced-motion: reduce) { .nbub { animation: none; } }
     #achPop { position: fixed; left: 50%; top: 18px; transform: translate(-50%, -30px); opacity: 0; transition: opacity .3s, transform .3s; z-index: 61; pointer-events: none;
         padding: 10px 18px; border-radius: 12px; background: linear-gradient(90deg, #422006, #713f12); border: 2px solid var(--gold); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,.6); }
@@ -319,7 +320,7 @@
     <div id="chandGlint" aria-hidden="true"></div>
 
     <div id="bar">
-        <h1 class="logo-h1" id="title" style="margin:0;line-height:0"><img src="media/logo_yacht.png?v=1" alt="Gallywix's Yacht: Trophy Room &amp; Guild Bank Vault" style="height:64px;width:auto;display:block;filter:drop-shadow(0 3px 4px rgba(0,0,0,.5))"></h1>
+        <h1 class="logo-h1" id="title" style="margin:0;line-height:0"><img src="media/ban_yacht.webp" alt="Yacht Showroom: Gallywix's yacht, trophy room and Guild Bank Vault" style="height:64px;width:auto;display:block;filter:drop-shadow(0 3px 4px rgba(0,0,0,.5))"></h1>
         <div id="rightBar">
             <div class="pill mono" id="goldPill" hidden>💰 0g</div>
             <nav></nav><span id="goldBox"></span>
@@ -402,7 +403,7 @@
 
 
 <!-- VIP room: past the velvet rope there is a door, and past the door... -->
-<div id="vip">
+<div id="vip"><img id="vipBanner" src="media/ban_vip.webp" alt="VIP Room" style="position:absolute;left:14px;top:10px;height:64px;width:auto;z-index:3;filter:drop-shadow(0 3px 4px rgba(0,0,0,.6))">
     <div id="vipMsg"></div>
     <div id="vipScene"><div id="vipStage">
         <div id="vipSign" class="vipNeon">SIT DOWN????</div>
@@ -456,10 +457,20 @@
   window.bubAtClick = (host, text, ms) => {
     const p = host && last.get(host); if (!p || Date.now() - p.t > 1500 || !text || document.querySelector('.modal.open')) return false;   // a popup is open: use the regular text box
     if (host.__bub) host.__bub.remove(); clearTimeout(host.__bubT);
-    const b = document.createElement('div'); b.className = 'nbub'; b.textContent = text; host.appendChild(b); host.__bub = b;
-    const down = p.y < 34, x = Math.max(18, Math.min(82, p.x));
-    b.classList.add(down ? 'down' : 'up'); b.style.left = x + '%'; b.style.top = (down ? p.y + 4 : p.y - 3) + '%'; b.style.transform = down ? 'translateX(-50%)' : 'translate(-50%, -100%)';
-    b.style.setProperty('--tx', `calc(50% + ${((p.x - x) / 34 * 100).toFixed(0)}%)`);
+    // which bubble: [image, aspect (h/w), text box l/t/w/h as % of the bubble, tail tip x %]
+    const K = host.id === 'vipStage' ? ['media/bub_vbub.webp', .396, [31, 37, 45, 38], 66] : ['media/bub_ybub.webp', .432, [27, 27, 47, 45], 68];
+    const W = Math.min(52, Math.max(32, 28 + text.length * .17));   // % of the room: longer lines get a wider bubble
+    const hostAR = host.clientHeight / host.clientWidth, Hp = W * K[1] / hostAR;   // bubble height as % of the room
+    let flip = false, tip = K[3];
+    let left = p.x - W * tip / 100;
+    if (left < 1) { flip = true; tip = 100 - K[3]; left = p.x - W * tip / 100; }   // too close to the left wall: mirror it
+    left = Math.max(1, Math.min(99 - W, left));
+    const above = p.y - Hp > 1, top = above ? p.y - Hp : Math.min(p.y + 3, 99 - Hp);
+    const b = document.createElement('div'); b.className = 'nbub' + (flip ? ' flip' : ''); host.appendChild(b); host.__bub = b;
+    b.innerHTML = `<img src="${K[0]}" alt=""><span></span>`; const sp = b.lastChild; sp.textContent = text;
+    const tl = flip ? 100 - K[2][0] - K[2][2] : K[2][0];
+    Object.assign(sp.style, { left: tl + '%', top: K[2][1] + '%', width: K[2][2] + '%', height: K[2][3] + '%' });
+    Object.assign(b.style, { left: left + '%', top: top + '%', width: W + '%' });
     host.__bubT = setTimeout(() => { b.remove(); if (host.__bub === b) host.__bub = null; }, Math.max(ms || 0, 2600 + text.length * 45));
     return true;
   };
