@@ -936,7 +936,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 17, 12:05 AM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 17, 12:09 AM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -4200,6 +4200,23 @@
                 o.connect(f); o2.connect(f); f.connect(g); g.connect(masterGain);
                 o.start(now + t); o2.start(now + t); o.stop(now + t + 0.25); o2.stop(now + t + 0.25);
             });
+        } catch (e) {}
+    }
+
+    function playDeflateSound() {   // Volley gets speared: a rubbery squeak that sags, then the air goes out of him (synth, mono, quiet)
+        if (!soundOn()) return;
+        try { ensureAudio(); const now = audioCtx.currentTime;
+            const o = audioCtx.createOscillator(), f = audioCtx.createBiquadFilter(), g = audioCtx.createGain();
+            o.type = 'square'; o.frequency.setValueAtTime(1150, now); o.frequency.linearRampToValueAtTime(1350, now + .06); o.frequency.exponentialRampToValueAtTime(330, now + .55);
+            f.type = 'bandpass'; f.frequency.value = 1400; f.Q.value = 3;
+            g.gain.setValueAtTime(.001, now); g.gain.linearRampToValueAtTime(.22, now + .02); g.gain.exponentialRampToValueAtTime(.001, now + .6);
+            o.connect(f); f.connect(g); g.connect(masterGain); o.start(now); o.stop(now + .62);
+            const len = Math.floor(audioCtx.sampleRate * 1.3), buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate), d = buf.getChannelData(0);
+            for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+            const n = audioCtx.createBufferSource(), nf = audioCtx.createBiquadFilter(), ng = audioCtx.createGain(); n.buffer = buf;
+            nf.type = 'bandpass'; nf.Q.value = 1.4; nf.frequency.setValueAtTime(4200, now + .45); nf.frequency.exponentialRampToValueAtTime(900, now + 1.7);
+            ng.gain.setValueAtTime(.001, now + .45); ng.gain.linearRampToValueAtTime(.1, now + .55); ng.gain.exponentialRampToValueAtTime(.001, now + 1.75);
+            n.connect(nf); nf.connect(ng); ng.connect(masterGain); n.start(now + .45); n.stop(now + 1.8);
         } catch (e) {}
     }
 
@@ -8325,7 +8342,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         };
         setTimeout(() => {   // STAB
             const spr = m.querySelector('.murloc-spr'); if (spr) spr.style.animation = 'murSpear .25s steps(6) infinite, murWaddle .12s ease-in-out infinite alternate';
-            stuck = true; ride(); breaking('LOCAL MURLOC IMPALES VOLLEYBALL. VOLLEY: "..."'); if (soundOn()) { if (AUDIO_CLUSSY) playClip('clussy', AUDIO_CLUSSY, playHonkSound); else playHonkSound(); }   // the sad squeak of a punctured ball
+            stuck = true; ride(); breaking('LOCAL MURLOC IMPALES VOLLEYBALL. VOLLEY: "..."'); playDeflateSound();   // the sad squeak of a punctured ball (its own sound now, not Clussy's)
             petSay('volley', pick(['...!!! (Volley is on the spear now)', '... (this is worse than the island)', '... (Volley is a kebab)']));
             chatBurst(['THE MURLOC GOT VOLLEY', 'VOLLEYYYYY', 'WILSON NOOOO', 'mrgl kebab', 'someone call the coast guard', 'not the ball'], 4, 2200);
             if (Math.random() < .5) setTimeout(() => sqPost('yacht', pick(['the murloc is walking around with Volley on a stick. please advise', 'lost: one volleyball. last seen on a spear. reward: none', "Gary would like it known he is NOT next"])), 2500);
