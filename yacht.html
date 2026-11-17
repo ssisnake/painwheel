@@ -839,7 +839,7 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
     // ---------- the snow globe case (16 spots). One globe per place; the stranger at the flea market sells the first one ----------
     const GLOBES = { yacht: { name: "Gallywix's Yacht", scene: '🛥️', sprite: 'media/globe_yacht.webp', big: 'media/globe_yacht_big.webp', line: 'A yacht parked in the desert, an iceberg, a gold bar, and Gary in a captain\'s hat. It was stuck in the chandelier. Nobody knows how long.' },
         wheel: { name: 'The Wheel', scene: '🎡', sprite: 'media/globe_wheel.webp', big: 'media/globe_wheel_big.webp', line: 'A souvenir for 1,000 spins. The wheel inside has an eye in the middle. It is looking at you.' },
-        flea: { name: 'Flea Market', scene: '⛺', line: "Axazon's tent, in a globe. The snow is sand. It never settles." } };
+        flea: { name: "Axazon's Emporium", scene: '⛺', sprite: 'media/globe_flea.webp', big: 'media/globe_flea_big.webp', line: "Axazon in his full glam, the cobra in a fez and sunglasses, and a sign that says BARGAIN$!. The snow is sand. It never settles." } };
     const GX = [1510, 1566, 1624, 1682], GY = [455, 523, 590, 658];
     const globeHtml = (k) => GLOBES[k].sprite ? `<img class="gspr" src="${GLOBES[k].sprite}" alt="">`   // Ada's little globe
         : `<div class="globe"><div class="gl"><i>${GLOBES[k].scene}</i><s></s></div><div class="gb"></div></div>`;

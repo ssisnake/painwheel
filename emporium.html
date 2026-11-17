@@ -533,7 +533,7 @@ setInterval(() => { showGold(); }, 5000);
     card.innerHTML = `<h2 style="margin-top:0">The stranger opens his coat</h2><p class="desc" style="margin-bottom:4px">${intro ? '"Somebody on a yacht has been looking for this, stranger. Hehehe..."' : '"What\'re ya buyin\'?"'}</p>` +
       (bottleOwned() && !intro ? '' : row('<img src="media/bottle_dusty.webp" alt="" style="max-height:84px;image-rendering:auto">', DUSTY, 'Old. Dusty. No label. "Your bouncer friend will know what it is."', dustyPrice(), bottleOwned(), 'bottle')) +
       (intro ? '' : row('<img src="media/cart.webp" alt="" style="max-width:84px;image-rendering:auto">', 'Untested Game Cartridge', 'As-is. No returns. Says THE WHEEL on it. "This one works, stranger."', cartPrice(), hasCart(), 'cart') +
-      row('<div style="font-size:52px;line-height:1">🔮</div>', 'Flea Market Snow Globe', "Axazon's tent, in a little glass ball. The snow is sand.", globePrice(), hasGlobe(), 'globe')) +
+      row('<img src="media/globe_flea.webp" alt="" style="max-height:84px;image-rendering:auto">', 'Flea Market Snow Globe', "Axazon's tent, in a little glass ball. The snow is sand.", globePrice(), hasGlobe(), 'globe')) +
       `<div class="pct" style="margin-top:2px">Cash only. No cards. No vault. He doesn't have a reader, and he wouldn't tell you where he'd keep one.</div>
       <div class="row"><button class="no" type="button">"Is that all, stranger?"</button></div><div class="msg" role="status"></div>`;
     card.querySelectorAll('[data-item]').forEach(b => b.onclick = () => {
