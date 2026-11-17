@@ -514,6 +514,7 @@
         .plate-tag { position: absolute; left: 50%; bottom: -10px; transform: translateX(-50%); white-space: nowrap; padding: 1px 7px; border-radius: 6px; background: #451a03; border: 1px solid #f59e0b; color: #fde68a; font: 800 12px/1.3 system-ui, sans-serif; pointer-events: none; }
         @media (max-width: 640px) { .plate-count { font-size: 11px; } .plate-tag { font-size: 10px; bottom: -8px; } }
         .plate-img { height: 58px; width: auto; image-rendering: pixelated; }
+        @keyframes tsukIn { from { opacity: 0; transform: translate(-50%, -12px) scale(.96); } to { opacity: 1; transform: translateX(-50%); } }
         #shopPanel.tsuk-solo .shop-title, #shopPanel.tsuk-solo #shopTabs, #shopPanel.tsuk-solo #shopBack811 { display: none !important; } #shopPanel.tsuk-solo #tsukBan { display: block !important; }
         #shopPanel.tsuk-solo .shop-box { border-color: #db2777 !important; background: linear-gradient(170deg,#2a0a1a,#0f172a 50%,#1a0712) !important; }
         /* TsukBlock shortcut: a stand-in plate until Ada's art (same height as the other plates) */
@@ -933,7 +934,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 16, 11:28 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 16, 11:31 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -6791,14 +6792,18 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         let t = String(text); TSUK_TYPOS.filter(() => Math.random() < 0.45).forEach(([re, to]) => { t = t.replace(re, to); });
         return t.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]).replace(/[bdpqmwBDPQ]/g, ch => Math.random() < 0.4 ? `<span style="color:#f472b6">${ch}</span>` : ch);
     }
-    function tsukBlocked(id) {
+    function tsukBlocked(id) {   // the notification IS Ada's BLOCKED banner now, with the line underneath
         const n = store.get('painWheelTsukCount', 0) + 1; store.set('painWheelTsukCount', n);
         const mode = store.get('painWheelTsukMode', 'off');
-        moveToast(mode === 'free' && Math.random() < 0.35 ? `🛡️ TsukBlock Free blocked an ad! Upgrade to TsukBlock Premium to block even more ads (like this one).`
-            : `🛡️ Tsukaar taunted an ad and is tanking it for you. (${n.toLocaleString()} ads blocked${mode === 'rikers' ? ', 0 escaped' : ''})`);
-        $('moveToast').innerHTML = tsukify($('moveToast').textContent);
-        const bb = document.createElement('img'); bb.src = 'media/tsuk_banner_blocked.webp'; bb.alt = 'TsukBlock: ad blocked'; bb.style.cssText = 'position:fixed;z-index:96;left:50%;top:110px;width:min(520px,90vw);height:auto;transform:translateX(-50%);pointer-events:none;transition:opacity .5s;filter:drop-shadow(0 6px 14px rgba(0,0,0,.6))';
-        document.body.appendChild(bb); setTimeout(() => bb.style.opacity = '0', 2200); setTimeout(() => bb.remove(), 2800);   // Ada's BLOCKED banner
+        const line = mode === 'free' && Math.random() < 0.35 ? `TsukBlock Free blocked an ad! Upgrade to TsukBlock Premium to block even more ads (like this one).`
+            : `Tsukaar taunted an ad and is tanking it for you. (${n.toLocaleString()} ads blocked${mode === 'rikers' ? ', 0 escaped' : ''})`;
+        const old = document.getElementById('tsukNote'); if (old) old.remove();
+        const d = document.createElement('div'); d.id = 'tsukNote'; d.setAttribute('role', 'status');
+        d.style.cssText = 'position:fixed;z-index:96;left:50%;top:100px;width:min(540px,92vw);transform:translateX(-50%);pointer-events:none;transition:opacity .5s;text-align:center;animation:tsukIn .25s ease-out';
+        d.innerHTML = '<img src="media/tsuk_banner_blocked.webp" alt="TsukBlock: ad blocked" style="display:block;width:100%;height:auto;filter:drop-shadow(0 6px 14px rgba(0,0,0,.6))">'
+            + '<div style="display:inline-block;margin-top:-6px;padding:7px 14px;border-radius:10px;background:rgba(26,7,18,.94);border:2px solid #db2777;color:#fde2ef;font:800 calc(15px * var(--ts, 1))/1.35 system-ui,sans-serif;box-shadow:0 4px 12px rgba(0,0,0,.5)"></div>';
+        d.lastChild.innerHTML = tsukify(line); document.body.appendChild(d);
+        setTimeout(() => d.style.opacity = '0', 3600); setTimeout(() => d.remove(), 4200);
     }
     function runAdEffect(fx) {
         const root = document.documentElement;
