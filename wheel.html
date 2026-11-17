@@ -751,8 +751,8 @@
             <button id="shopBtn" class="plate-btn cursor-pointer" title="Shop" aria-label="Shop"><img class="plate-img" data-plate="SHOP" alt="Shop"></button>
             <button id="toyBtn" title="Show / hide your toys (bottom-right corner)" style="display:none" class="plate-btn cursor-pointer"><img class="plate-img" data-plate="TOYS" alt="Toys"><span id="toyLbl" class="plate-count" style="display:none"></span></button>
             <button id="partyBtn" title="Party mode" class="plate-btn cursor-pointer"><img class="plate-img" data-plate="PARTY" alt="Party"><img id="partyHatImg" alt="" hidden></button>
-            <button id="tsukBtn" class="plate-btn cursor-pointer" title="TsukBlock (ad blocker)" aria-label="TsukBlock"><img class="plate-img" data-plate="TSUK" src="media/plate_tsuk.webp" alt="TsukBlock"></button>
-            <button id="foreverBtn" title="WoW Forever is out" class="plate-btn cursor-pointer"><img class="plate-img" data-plate="FOREVER" alt="Forever"><span class="plate-tag"></span></button>
+            <button id="tsukBtn" class="plate-btn cursor-pointer" title="TsukBlock (ad blocker)" aria-label="TsukBlock"><img class="plate-img" data-plate="TSUK" src="media/plate_tsuk2.webp" alt="TsukBlock"></button>
+            <button id="foreverBtn" title="WoW Forever is out" class="plate-btn cursor-pointer" style="display:none"><img class="plate-img" data-plate="FOREVER" alt="Forever"><span class="plate-tag"></span></button>
         </div>
     </header>
     <div class="forever-only w-full px-4 py-2 border-b border-slate-800/80 items-center justify-center text-center font-bold text-slate-300" style="background:#0f0b16;font-size:calc(15px * var(--ts, 1))">👹 Uwutek is busy playing WoW Forever too. Why aren't you?</div>
@@ -936,7 +936,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 16, 11:53 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 17, 12:05 AM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -7669,7 +7669,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
     $('bossIconImg').src = PHOTO_UWU_ICON; $('bossArtImg').src = PHOTO_UWU_ART; $('partyHatImg').src = PHOTO_PARTY_HAT;
     $('liverIcon').src = PHOTO_CLS_LIVER;
     document.querySelectorAll('.hdr-ico').forEach(im => { im.src = { PET: PHOTO_CHICKEN, STATS: PHOTO_ICO_STATS, SETTINGS: PHOTO_ICO_SETTINGS, BAG: PHOTO_ICO_BAG, HOME: PHOTO_ICO_HOME, SHOP: PHOTO_ICO_SHOP }[im.dataset.ico]; });
-    document.querySelectorAll('.plate-img').forEach(im => { im.src = { STATS: PHOTO_BTN_STATS, SETTINGS: PHOTO_BTN_SETTINGS, BAG: PHOTO_BTN_BAG, HOME: PHOTO_BTN_HOME, SHOP: PHOTO_BTN_SHOP, TOYS: PHOTO_BTN_TOYS, PARTY: PHOTO_BTN_PARTY, FOREVER: PHOTO_BTN_FOREVER, HEARTH: PHOTO_BTN_HEARTH, TSUK: 'media/plate_tsuk.webp' }[im.dataset.plate] || im.src; });   // (never blank out a plate that isn't in the list)
+    document.querySelectorAll('.plate-img').forEach(im => { im.src = { STATS: PHOTO_BTN_STATS, SETTINGS: PHOTO_BTN_SETTINGS, BAG: PHOTO_BTN_BAG, HOME: PHOTO_BTN_HOME, SHOP: PHOTO_BTN_SHOP, TOYS: PHOTO_BTN_TOYS, PARTY: PHOTO_BTN_PARTY, FOREVER: PHOTO_BTN_FOREVER, HEARTH: PHOTO_BTN_HEARTH, TSUK: 'media/plate_tsuk2.webp' }[im.dataset.plate] || im.src; });   // (never blank out a plate that isn't in the list)
 
     function uwuKeyboardCheck() {   // after the Lower DPS popup closes, Uwutek pops up in the boss card to check your keyboard
         const art = $('bossArt'), img = $('bossArtImg'); if (!art || !img) return;
@@ -10444,6 +10444,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             ['🚀', "When the rocket hits the wheel, anything sitting on the wheel goes flying. It comes back. Mostly."],
             ['📞', "Slick has a face now. You'll wish he didn't."],
             ['❄️', "Snow globes are a thing now (art by Ada). Each place has one, and each one is earned its own way. The Wheel's is for the truly committed."],
+            ['📏', "The top bar is slimmer: smaller buttons, and the Forever button only shows up during Forever Week."],
             ['🛡️', "TsukBlock moved out of the store into its own box, with its own button in the top bar (art by Ada). No 8/11 required. When Tsussie eats an ad, you'll know."],
             ['🕴️', "There's a hooded stranger at the flea market now, and he keeps hours: 6-8 AM, noon-2 PM, 6-8 PM and 11 PM-1 AM (Central). He sells rare and unusual things. The second time you visit, he'll be waiting for you."],
             ['🏧', "The 8/11 ATM got a real machine (art by Ada). Insert your card, punch your PIN on the keypad, watch the cash come out. Your Goblin Express goes in the slot if you have one."],
@@ -11290,7 +11291,8 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         const fb = $('foreverBtn'), tag = fb && fb.querySelector('.plate-tag'), yr = String(new Date().getFullYear());
         const sync = () => {
             const week = isForeverWeek(), inside = document.body.classList.contains('ghost-town');
-            if (fb) { fb.classList.toggle('forever-closed', !week && !inside); fb.title = week ? 'Forever (it is Forever Week)' : 'Forever: closed until Nov 4'; }
+            if (fb) { fb.style.display = week || inside ? '' : 'none';   // only shows up during Forever Week (Nov 4-10)
+                fb.classList.toggle('forever-closed', !week && !inside); fb.title = week ? 'Forever (it is Forever Week)' : 'Forever: closed until Nov 4'; }
             if (tag && !inside) tag.textContent = week ? 'this week!' : 'Nov 4';
             if (inside && !week) { toggleForever(); funEvent("🌵 Forever Week is over. Everybody came back. Nobody's talking about it.", 5000); }
         };
