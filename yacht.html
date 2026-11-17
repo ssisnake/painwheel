@@ -106,6 +106,12 @@
     .gslot.shook .gl s { animation: snow 1.8s ease-out; }
     @keyframes snow { 0% { background-position: 0 -1cqw, .25cqw -.8cqw; opacity: .95; } 100% { background-position: 0 .4cqw, .25cqw .6cqw; opacity: .55; } }
     .gslot.empty { opacity: 0; }
+    .gslot.fresh { animation: gNew 1.6s ease-in-out 4; } @keyframes gNew { 50% { filter: drop-shadow(0 0 1.2cqw rgba(253,224,71,.95)); } }
+    #chandGlint { position: absolute; left: 60.6%; top: 13%; width: 1.9%; box-shadow: 0 0 .8cqw rgba(160,210,255,.7); aspect-ratio: 1; border-radius: 50%; pointer-events: none; display: none;
+        background: radial-gradient(circle at 35% 30%, #fff 0 18%, rgba(190,225,255,.75) 30%, rgba(120,170,230,.35) 60%, transparent 72%); animation: glint 3.2s ease-in-out infinite; }
+    @keyframes glint { 0%, 100% { opacity: .35; transform: scale(.85); } 50% { opacity: .9; transform: scale(1.1); } }
+    #globeDrop { position: absolute; width: 2.1%; z-index: 8; pointer-events: none; }
+    @media (prefers-reduced-motion: reduce) { #chandGlint, .gslot.fresh { animation: none; } #chandGlint { opacity: .8; } }
     .gspr { display: block; width: 100%; height: auto; filter: drop-shadow(0 .2cqw .2cqw rgba(0,0,0,.55)); }
     .gslot.shook .gspr { animation: gShake .5s ease-in-out; } @keyframes gShake { 25% { transform: rotate(-8deg); } 75% { transform: rotate(8deg); } }
     #kevTro { position: absolute; left: 92.15%; bottom: 44%; width: 4.7%; display: none; pointer-events: none; }
@@ -310,6 +316,7 @@
 <div id="scroller">
 <div id="stage">
     <div class="glow" id="chandGlow"></div>
+    <div id="chandGlint" aria-hidden="true"></div>
 
     <div id="bar">
         <h1 class="logo-h1" id="title" style="margin:0;line-height:0"><img src="media/logo_yacht.png?v=1" alt="Gallywix's Yacht: Trophy Room &amp; Guild Bank Vault" style="height:64px;width:auto;display:block;filter:drop-shadow(0 3px 4px rgba(0,0,0,.5))"></h1>
@@ -743,8 +750,35 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
         else say('🍫 Still chocolate. Still delicious. Still fraud.');
     });
     let chandAt = 0;
+    // ---- the yacht's snow globe is stuck in the chandelier. Shake it 3 times and it falls (bounces off Gary if he's up) and Reb tells you about the case ----
+    const hasYachtGlobe = () => !!((S.get('painWheelGlobes', {}) || {}).yacht);
+    const showGlint = () => { $('chandGlint').style.display = hasYachtGlobe() ? 'none' : 'block'; if (!hasYachtGlobe()) $('hsChand').dataset.label = '🪙 Coin Chandelier (something round is stuck up there)'; };
+    showGlint();
+    let chandShakes = 0;
+    function dropYachtGlobe() {
+        const st = $('stage'), g = document.createElement('div'); g.id = 'globeDrop'; g.innerHTML = globeHtml('yacht'); st.appendChild(g);
+        $('chandGlint').style.display = 'none'; $('hsChand').dataset.label = '🪙 Coin Chandelier';
+        const gary = hasGary(), slot = { x: GX[0] / 25.6 - 1.05, y: GY[0] / 10.85 - 6 };
+        const path = gary ? [[60.6, 12], [55.5, 24], [52, 20], [49, 52], [47.5, 78], [46.5, 70], [45.5, 78]] : [[60.6, 12], [59, 40], [58, 78], [57, 70], [56.2, 78]];
+        const kf = path.map(([x, y], i) => ({ left: x + '%', top: y + '%', transform: `rotate(${i * 70}deg)` }));
+        const a = g.animate(kf, { duration: gary ? 1500 : 1150, easing: 'ease-in', fill: 'forwards' });
+        setTimeout(() => { if (gary) { tone(330, 0, .12, 'triangle', .06); say('🐟 BONK. It bounces off Gary. Gary sings one note about it.'); } }, gary ? 380 : 0);
+        a.onfinish = () => { tone(520, 0, .1, 'sine', .05);
+            setTimeout(() => { const b = g.animate([{ left: g.style.left || path.at(-1)[0] + '%', top: path.at(-1)[1] + '%', transform: 'rotate(0)' }, { left: slot.x + '%', top: (slot.y - 8) + '%', transform: 'rotate(0) scale(1.4)', offset: .6 }, { left: slot.x + '%', top: slot.y + '%', transform: 'rotate(0)' }], { duration: 1300, easing: 'ease-in-out', fill: 'forwards' });
+                b.onfinish = () => { g.remove(); const gl = S.get('painWheelGlobes', {}) || {}; gl.yacht = Date.now(); S.set('painWheelGlobes', gl); renderGlobes();
+                    const first = document.querySelector('#globeCase .gslot'); if (first) first.classList.add('fresh');
+                    [1400, 1760, 2100].forEach((f, j) => tone(f, j * .08, .25, 'sine', .035));
+                    say('🚪 Reb pokes his head out of the VIP door: "That goes in the case. The one with sixteen holes. Don\'t ask who\'s filling it. Every place has one." The door shuts.', 7500); };
+            }, 650); };
+    }
     $('hsChand').addEventListener('click', () => {
         sfx.coins();
+        if (!hasYachtGlobe()) {
+            chandShakes++; const ch = document.querySelector('#chandGlow'); if (ch) { ch.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-.4%)' }, { transform: 'translateX(.4%)' }, { transform: 'translateX(0)' }], { duration: 300 }); }
+            if (chandShakes === 1) { say('🪙 The chandelier jingles... and something round clinks against the coins. Something glass.'); return; }
+            if (chandShakes === 2) { say('🪙 You shake it harder. It is wedged in there tight. One more good shove.'); return; }
+            say('🪙 You give it everything you have. Something falls out of the chandelier!'); dropYachtGlobe(); return;
+        }
         const day = new Date().toDateString();
         if (S.get('painWheelChandDay', '') !== day) {
             S.set('painWheelChandDay', day); fresh(); gold = Math.min(1e300, gold + 1); saveGold();
@@ -803,7 +837,8 @@ try { const m = JSON.parse(localStorage.getItem('painWheelMetNpcs') || '{}') || 
         open('tModal');
     });
     // ---------- the snow globe case (16 spots). One globe per place; the stranger at the flea market sells the first one ----------
-    const GLOBES = { wheel: { name: 'The Wheel', scene: '🎡', sprite: 'media/globe_wheel.webp', big: 'media/globe_wheel_big.webp', line: 'A souvenir for 1,000 spins. The wheel inside has an eye in the middle. It is looking at you.' },
+    const GLOBES = { yacht: { name: "Gallywix's Yacht", scene: '🛥️', line: 'A yacht parked in the desert. In a snow globe. It was stuck in the chandelier. Nobody knows how long.' },
+        wheel: { name: 'The Wheel', scene: '🎡', sprite: 'media/globe_wheel.webp', big: 'media/globe_wheel_big.webp', line: 'A souvenir for 1,000 spins. The wheel inside has an eye in the middle. It is looking at you.' },
         flea: { name: 'Flea Market', scene: '⛺', line: "Axazon's tent, in a globe. The snow is sand. It never settles." } };
     const GX = [1510, 1566, 1624, 1682], GY = [455, 523, 590, 658];
     const globeHtml = (k) => GLOBES[k].sprite ? `<img class="gspr" src="${GLOBES[k].sprite}" alt="">`   // Ada's little globe
