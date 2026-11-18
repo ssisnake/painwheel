@@ -59,7 +59,7 @@
   .btnrow { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 14px; }
   .big { font: 800 19px system-ui, sans-serif; padding: 10px 18px; border-radius: 10px; border: 0; cursor: pointer; background: #f59e0b; color: #1c1917; }
   .big.alt { background: #6b1d3a; color: #fde7c4; } .big:disabled { background: #57534e; color: #d6d3d1; cursor: default; }
-  .buckets { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }
+  .buckets { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); max-width: 520px; margin-inline: auto; gap: 14px; margin-top: 12px; }
   .bucket { background: #2b0f22; border: 2px solid #7c2d12; border-radius: 12px; padding: 12px; text-align: center; }
   .bucket img { width: 100%; max-width: 220px; height: auto; display: block; margin: 0 auto 6px; }
   .bucket b { font-size: 20px; color: #fbbf24; display: block; } .bucket small { font-size: 16px; color: #e7d3b8; }
@@ -129,7 +129,7 @@
   <p id="cageLine"></p>
   <div class="buckets">
     <div class="bucket" id="bkLo"><img id="bkLoImg" src="media/cas_bucket_lo0.webp" alt=""><b>Bucket o' Tokens</b><small id="bkLoTxt"></small></div>
-    <div class="bucket locked" id="bkHi"><img id="bkHiImg" src="media/cas_bucket_hi0.webp" alt=""><b>High Roller Bucket</b><small id="bkHiTxt"></small></div>
+    <div class="bucket" id="bkHi" hidden><img id="bkHiImg" src="media/cas_bucket_hi0.webp" alt=""><b>High Roller Bucket</b><small id="bkHiTxt"></small></div>
   </div>
   <p style="color:#e7d3b8;font-size:17px">Tokens are for the slots. Chips are for the tables. You'll trade gold for both, right here.</p>
   <div class="btnrow"><button class="big" disabled>Buy tokens</button><button class="big" disabled>Buy chips</button><button class="big alt" id="cageClose">Back to the floor</button></div>
@@ -258,7 +258,8 @@ function openCage() {
   $('cageLine').textContent = pick(["The cashier is still counting. The exchange opens soon.", "The cashier bit a coin to check it. It was your coin. Exchange opens soon.", "CLOSED FOR RE-COUNTING. The cashier lost count at seven."]);
   $('bkLoImg').src = 'media/cas_bucket_lo' + lv + '.webp';
   $('bkLoTxt').textContent = n ? `You have ${n} casino token${n === 1 ? '' : 's'}. The bucket has a crack in it. That is not our problem.` : 'Empty. Like your promises. Land on the casino slice for tokens.';
-  $('bkHiTxt').textContent = 'High rollers only. The velvet rope is for your own protection.';
+  $('bkHi').hidden = !get('painWheelCasinoHighRoller', false);   // SECRET: the purple bucket only exists once the pit boss gives it to you (every casino achievement)
+  $('bkHiTxt').textContent = 'The pit boss gave you this. He has never given anyone anything.';
   $('exMsg').textContent = ''; $('cage').classList.add('open');
 }
 $('cageClose').onclick = () => $('cage').classList.remove('open');
