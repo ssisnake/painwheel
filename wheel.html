@@ -263,6 +263,17 @@
         #viceFx.show { display: grid; } #viceFx.on { opacity: 1; }
         #viceFx b { font: italic 900 clamp(56px, 11vw, 150px)/1 Georgia, 'Times New Roman', serif; letter-spacing: .05em; -webkit-text-stroke: 3px #000; paint-order: stroke fill; text-shadow: 0 6px 0 #000; }
         #viceFx.busted b { color: #93c5fd; } #viceFx.wasted b { color: #ef4444; }
+        #viceFx img { width: min(900px, 86vw); height: auto; filter: drop-shadow(0 10px 30px rgba(0,0,0,.7)); }
+        body.vice-city #logoWrap > button { display: none !important; }   /* Axa's logo hiding spot is on the normal logo */
+        #viceClippy { display: none; position: fixed; left: 10px; bottom: 10px; z-index: 74; height: 170px; padding: 0; border: 0; background: none; cursor: pointer; filter: drop-shadow(0 6px 14px rgba(0,0,0,.6)); transition: transform .2s; }
+        #viceClippy img { height: 100%; width: auto; display: block; } #viceClippy:hover, #viceClippy:focus-visible { transform: translateY(-4px) rotate(-2deg); outline: none; filter: drop-shadow(0 0 12px #f472b6); }
+        body.vice-city #viceClippy { display: block; }
+        @media (max-width: 767px) { body.vice-city #viceClippy { display: none; } }
+        #viceTalk { display: none; position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 96; width: min(760px, calc(100vw - 32px)); align-items: center; gap: 16px; padding: 14px 20px 14px 14px; border-radius: 16px; background: linear-gradient(135deg, rgba(30,8,48,.96), rgba(59,7,100,.96)); border: 3px solid #22d3ee; box-shadow: 0 0 0 3px #ec4899, 0 0 30px rgba(236,72,153,.55), 0 20px 50px rgba(0,0,0,.6); color: #fff; }
+        #viceTalk.on { display: flex; }
+        #viceTalk img { height: 150px; width: auto; flex: none; }
+        #viceTalk b { display: block; font: 900 22px/1.1 system-ui, sans-serif; color: #f9a8d4; letter-spacing: .04em; margin-bottom: 6px; }
+        #viceTalk span { font: 700 20px/1.4 system-ui, sans-serif; }
         #viceFx span { font: 800 clamp(18px, 2.2vw, 26px)/1.3 system-ui, sans-serif; color: #fff; text-shadow: 0 2px 4px #000; max-width: 34ch; }
         @media (prefers-reduced-motion: reduce) { #viceFx { transition: none; } }
         .clippy-pet .pet-bubble { position: absolute; left: 40px; top: -10px; width: 200px; background: #fffbe6; color: #111; font-size: 11px; font-weight: 700; line-height: 1.3; border: 1.5px solid #111; border-radius: 10px; padding: 6px 8px; box-shadow: 2px 2px 0 #111; }
@@ -958,7 +969,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 18, 1:27 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 18, 1:32 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -3038,6 +3049,7 @@
             default: {
                 const pats = patternsFor(c);
                 if (t.id === "KEVIN") return themeKevinPattern(c, s) || pats[s.kevinAlt ? 'fel' : 'kanaplus'];
+                if (activeThemeId === 'vice' && !t.fill) { const k = slices.indexOf(s) % VICE_SLICE.length; return radial(c, cx, cy, r0, r1, VICE_SLICE[k]); }
                 return (t.fill && pats[t.fill]) || s.bg;
             }
         }
@@ -4395,7 +4407,7 @@
         c.fillStyle = kevinTakeover ? (i % 2 ? '#991b1b' : '#b91c1c') : fillFor(c, t, s, cx, cy, innerR, r);
         c.fill();
         c.lineWidth = opts.active ? 2.5 : (opts.zoom ? 1 : (s.type === "KEVIN" ? 0.5 : rb ? 1.8 : 1.25));
-        c.strokeStyle = opts.active ? "#fbbf24" : (rb ? rb.border : s.border);
+        c.strokeStyle = opts.active ? "#fbbf24" : (rb ? rb.border : activeThemeId === 'vice' && !t.fill ? 'rgba(24,6,32,.6)' : s.border);
         if (opts.buff > 0) {                                     // holy glow on buffed Ret slices
             const pulse = 0.6 + 0.4 * Math.sin(performance.now() * 0.004);
             c.shadowColor = `rgba(255, 215, 0, ${0.9 * pulse})`; c.shadowBlur = 14 + 10 * (opts.buff / RET_GROWTH_MAX);
@@ -4406,14 +4418,15 @@
 
         c.translate(cx, cy); c.rotate(mid);
         c.textAlign = "right"; c.textBaseline = "middle";
-        c.fillStyle = rb ? rb.text : (t.whiteText ? "#ffffff" : s.text);
+        const viceSlice = activeThemeId === 'vice' && !t.fill && s.type !== 'KEVIN';
+        c.fillStyle = rb ? rb.text : (t.whiteText || viceSlice ? "#ffffff" : s.text);
         const shownLabel = kevinTakeover ? 'Kevin' : s.label;
         const long = shownLabel.length > 30;
         let px;
         if (opts.zoom) px = Math.max(10, opts.zw * (long ? 0.018 : s.type !== "KEVIN" ? 0.024 : 0.036));
         else px = Math.max(8, r * (s.type === "KEVIN" ? 0.027 : long ? 0.015 : 0.02));
         c.font = `${(s.type === "KEVIN" && !opts.zoom) ? "600" : (opts.zoom ? "800" : "900")} ${px}px Inter, sans-serif`;
-        if ((t.fill && t.fill !== "rainbow") || s.type === "KEVIN") { c.shadowColor = "rgba(0,0,0,0.95)"; c.shadowBlur = opts.zoom ? 5 : 4; }
+        if ((t.fill && t.fill !== "rainbow") || s.type === "KEVIN" || viceSlice) { c.shadowColor = "rgba(0,0,0,0.95)"; c.shadowBlur = opts.zoom ? 5 : 4; }
 
         const edge = opts.zoom ? r - 14 : r * 0.96;
         if (t.portrait && momPhotoImg.complete && !kevinTakeover) {
@@ -6463,8 +6476,11 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             ['PRESS START', 'GAME OVER (IT WAS KEVIN)'])
     );
     // Vice Week's look (not in the picker or the shop: the Vice Week button turns it on)
-    const VICE_THEME = { id: 'vice', name: 'Vice Week 🌴', when: () => false, bg: '#14081f',
-        tint: 'radial-gradient(ellipse at 50% 0%, rgba(236,72,153,0.32), transparent 60%), radial-gradient(ellipse at 50% 100%, rgba(20,184,166,0.28), transparent 60%), linear-gradient(180deg, #14081f, #2a0f3a 55%, #3b1238)',
+    var VICE_SLICE = [   // neon sunset: dark purple at the hub, hot color at the rim
+        [[0, '#1e0b2e'], [0.55, '#9d174d'], [1, '#ec4899']], [[0, '#1e0b2e'], [0.55, '#9a3412'], [1, '#fb923c']], [[0, '#0b1e2e'], [0.55, '#0f766e'], [1, '#2dd4bf']],
+        [[0, '#1e0b2e'], [0.55, '#6b21a8'], [1, '#c084fc']], [[0, '#1e0b2e'], [0.55, '#be185d'], [1, '#fda4af']], [[0, '#1e0b2e'], [0.55, '#a16207'], [1, '#facc15']]];
+    const VICE_THEME = { id: 'vice', name: 'Vice Week 🌴', when: () => false, bg: '#14081f', palm: true, sunsetSlices: true, bgSize: 'cover', logo: 'media/vice_logo.webp',   // background: Ada's Vice painting, dimmed so the panels stay readable
+        tint: 'linear-gradient(180deg, rgba(12,4,24,.5), rgba(12,4,24,.7)), url(media/vice_bg.webp)',
         pain: '#f472b6', badge: ['🌴 ', ' 🌅'], tagline: 'Neon Decision Engine • Sunset Mode • No Witnesses',
         kevin: [['#831843', '🌴', '🕶️', '#fbcfe8'], ['#134e4a', '🌅', '💵', '#99f6e4']], kevinLabel: '🕶️ Kevin', drift: ['🌴', '💵', '🕶️', '🌅'],
         ads: ['🌴 VICE WEEK SALE: EVERYTHING IS STOLEN, SO EVERYTHING IS FREE. (NOTHING IS FREE.)', '🕶️ SUNGLASSES AT NIGHT: NOW 2 FOR 1 AT THE 8/11',
@@ -6532,6 +6548,18 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         const k = theme.id + (alt ? 'A' : 'B');
         if (themeTiles[k]) return themeTiles[k];
         const [bg, e1, e2] = theme.kevin[alt ? 0 : 1];
+        if (theme.palm) return (themeTiles[k] = makeTile(56, 56, (g) => {   // Vice Week: sunset tiles with little palm trees instead of emoji
+            const gr = g.createLinearGradient(0, 0, 0, 56); (alt ? [[0, '#3b0764'], [.55, '#db2777'], [1, '#f97316']] : [[0, '#1e1b4b'], [.55, '#a21caf'], [1, '#14b8a6']]).forEach(([o, c]) => gr.addColorStop(o, c));
+            g.fillStyle = gr; g.fillRect(0, 0, 56, 56);
+            g.fillStyle = alt ? 'rgba(254,240,138,.55)' : 'rgba(253,164,175,.45)'; g.beginPath(); g.arc(alt ? 40 : 16, 40, 9, 0, Math.PI * 2); g.fill();
+            const palm = (x, y, h) => {   // trunk + 5 fronds, dark silhouette
+                g.strokeStyle = 'rgba(24,6,32,.85)'; g.lineCap = 'round'; g.lineWidth = Math.max(1.5, h * .11);
+                g.beginPath(); g.moveTo(x, y); g.quadraticCurveTo(x + h * .15, y - h * .5, x + h * .05, y - h); g.stroke();
+                const tx = x + h * .05, ty = y - h; g.lineWidth = Math.max(1.2, h * .09);
+                [[-.55, .25], [-.4, -.05], [.05, -.25], [.45, -.05], [.6, .25]].forEach(([dx, dy]) => { g.beginPath(); g.moveTo(tx, ty); g.quadraticCurveTo(tx + dx * h * .5, ty + dy * h * .5 - h * .12, tx + dx * h, ty + dy * h + h * .12); g.stroke(); });
+            };
+            palm(alt ? 12 : 40, 54, 26); palm(alt ? 30 : 22, 56, 16);
+        }));
         return (themeTiles[k] = makeTile(56, 56, (g) => {
             g.fillStyle = bg; g.fillRect(0, 0, 56, 56);
             g.globalAlpha = 0.55; g.font = '18px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
@@ -6553,6 +6581,8 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         document.body.style.backgroundImage = th ? th.tint : '';
         document.body.style.backgroundColor = th && th.bg ? th.bg : '';
         document.body.style.backgroundAttachment = 'fixed';
+        document.body.style.backgroundSize = th && th.bgSize ? th.bgSize : ''; document.body.style.backgroundPosition = th && th.bgSize ? 'center' : '';
+        if ($('logoImg')) $('logoImg').src = th && th.logo ? th.logo : PHOTO_LOGO;   // Vice Week swaps in Ada's neon logo
         $('painWord').style.color = th ? th.pain : '';
         const badgeHTML = (b) => { const k = (b || '').trim(); return SPRITE_EMOJI[k] ? `<img src="${SPRITE_EMOJI[k]}" alt="${k}" style="display:inline-block;height:1.5em;width:auto;vertical-align:middle;margin:0 .2em;filter:drop-shadow(0 2px 3px rgba(0,0,0,.5))">` : (b || '').replace(/[<>&]/g, ''); };
         $('themeBadgeL').innerHTML = th ? badgeHTML(th.badge[0]) : '';
@@ -11386,7 +11416,9 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
     function viceCard(kind) {   // a slow gray fade with BUSTED or WASTED, then it fades back. No flashing
         let fx = $('viceFx'); if (!fx) { fx = document.createElement('div'); fx.id = 'viceFx'; fx.setAttribute('role', 'status'); fx.innerHTML = '<b></b><span></span>'; document.body.appendChild(fx); }
         clearTimeout(viceCard.t); clearTimeout(viceCard.t2);
-        fx.className = 'show ' + kind; fx.querySelector('b').textContent = kind.toUpperCase(); fx.querySelector('span').textContent = pick(VICE_SUB[kind]);
+        if (!fx.querySelector('img')) { const im = document.createElement('img'); im.alt = ''; fx.prepend(im); }
+        fx.className = 'show ' + kind; fx.querySelector('img').src = 'media/vice_' + kind + '.webp'; fx.querySelector('img').alt = kind.toUpperCase();
+        fx.querySelector('b').textContent = ''; fx.querySelector('span').textContent = pick(VICE_SUB[kind]);
         requestAnimationFrame(() => requestAnimationFrame(() => fx.classList.add('on')));
         viceCard.t = setTimeout(() => { fx.classList.remove('on'); viceCard.t2 = setTimeout(() => fx.className = '', 1300); }, 4200);
     }
@@ -11396,7 +11428,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             viceHeat = 0; renderHeat(); viceCard('busted'); unlock('vicebusted');
             if (garage.police && !vehicles.cop) setTimeout(drivePolice, 1500);
             chatBurst(['BUSTED', 'BUSTED KEKW', 'chaotic got him', 'free him', 'license and registration', 'he had it coming'], 5, 3000);
-            setTimeout(() => petSay('clippy', pick(["I didn't see nothin'. I was in the Recycle Bin the whole time.", "Don't say nothin' to the cops. I'll get you a lawyer. It's me. I'm the lawyer."])), 2500);
+            setTimeout(() => viceTalk(pick(["I didn't see nothin'. I was in the Recycle Bin the whole time.", "Don't say nothin' to the cops. I'll get you a lawyer. It's me. I'm the lawyer."])), 5000);
         });
         else if (Math.random() < 0.06) afterModal(() => {
             viceCard('wasted'); unlock('vicewasted');
@@ -11416,10 +11448,20 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             unlock('viceweek');
             funEvent('🌴 WELCOME TO VICE WEEK. The whole guild is playing the new GTA. Spins raise your heat. Nobody saw nothin\'.', 5500);
             chatBurst(['VICE WEEK', 'GTA IS OUT', 'raid is cancelled', 'sunset pog', '🌴🌴🌴', 'here we go'], 6, 2500);
-            setTimeout(() => { if (pets.clippy) petSay('clippy', "Ay. You like the shirt? Me and the new game, we share a birthday. Thirty years old. Show some respect."); }, 3000);
+            setTimeout(() => viceTalk("Ay. You like the shirt? Me and the new game, we share a birthday. Thirty years old. Show some respect."), 3000);
         } else funEvent('🌅 You left Vice. The sunset will be here all week. It never sets. That is kind of the whole thing.', 4000);
     }
     $('viceBtn').addEventListener('click', () => toggleVice());
+    function viceTalk(text, ms) {   // Clippy, full size, in a neon talk box
+        let t = $('viceTalk'); if (!t) { t = document.createElement('div'); t.id = 'viceTalk'; t.setAttribute('role', 'status'); t.innerHTML = '<img src="media/vice_clippy.webp" alt=""><div><b>CLIPPY</b><span></span></div>'; document.body.appendChild(t); t.onclick = () => t.classList.remove('on'); }
+        t.querySelector('span').textContent = text; t.classList.add('on');
+        clearTimeout(viceTalk.t); viceTalk.t = setTimeout(() => t.classList.remove('on'), ms || 6500);
+    }
+    {   // the big Clippy in the bottom-left corner (Vice Week only)
+        const b = document.createElement('button'); b.id = 'viceClippy'; b.type = 'button'; b.title = 'Talk to Clippy'; b.setAttribute('aria-label', 'Talk to Clippy');
+        b.innerHTML = '<img src="media/vice_clippy.webp" alt="">'; document.body.appendChild(b);
+        b.addEventListener('click', () => viceTalk(pickFresh(VICE_CLIPPY)));
+    }
     (function viceSeason() {   // the button only shows during Vice Week; when the week ends, everyone gets sent home
         const vb = $('viceBtn'), tag = vb && vb.querySelector('.plate-tag');
         const sync = () => {
