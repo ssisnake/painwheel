@@ -94,6 +94,11 @@
   .rchip { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: 3.1cqw; aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; font: 900 .95cqw/1 system-ui, sans-serif; color: #fff; text-shadow: 0 .08cqw .1cqw #000; pointer-events: none;
     border: .3cqw dashed rgba(255,255,255,.85); box-shadow: 0 0 0 .18cqw rgba(0,0,0,.55), 0 .3cqw .5cqw rgba(0,0,0,.6); }
   .rchip.dark { color: #111; text-shadow: none; border-color: rgba(0,0,0,.55); }
+  .rchip.art { border: 0; box-shadow: none; background: center / contain no-repeat; filter: drop-shadow(0 .25cqw .3cqw rgba(0,0,0,.65)); }
+  .rchip.art .val { position: absolute; left: 50%; bottom: -.55cqw; translate: -50% 0; padding: .08cqw .45cqw; border-radius: .6cqw; background: rgba(20,6,16,.88); border: .1cqw solid #fbbf24; color: #fde68a; font: 900 .85cqw/1.15 system-ui, sans-serif; white-space: nowrap; }
+  .buygrid .rchip.art .val { font-size: 13px; bottom: -6px; padding: 1px 6px; border-width: 1px; }
+  #rRack .rchip.art .val { font-size: .95cqw; }
+  #rRack .cnt { bottom: auto !important; top: -.8cqw; left: auto !important; right: -1cqw; translate: none !important; padding: .1cqw .4cqw; border-radius: .7cqw; background: #15803d; color: #fff !important; font-size: .9cqw !important; }
   #rRack { left: 73.4%; top: 91%; width: 23%; height: 8%; display: flex; align-items: center; justify-content: center; gap: .6cqw; }
   #rRack .rchip { position: relative; left: auto; top: auto; translate: none; width: 3.6cqw; font-size: 1.05cqw; pointer-events: auto; cursor: pointer; transition: transform .12s; }
   #rRack .rchip:hover { transform: translateY(-.3cqw); } #rRack .rchip.on { transform: translateY(-.5cqw) scale(1.12); box-shadow: 0 0 0 .25cqw #fde68a, 0 0 1.2cqw #fde68a; }
@@ -424,7 +429,8 @@ const RL_STEP = 360 / 37, RL_C = [795, 563], RL_TRACK = 262, RL_SETTLE = 142;
 const CHIPS = [[1e3, '#f5f5f4', 1], [1e4, '#2563eb'], [5e4, '#ea580c'], [1e5, '#facc15', 1], [1e6, '#cbd5e1', 1], [1e9, '#7e22ce'], [1e12, '#dc2626'], [1e15, '#16a34a'], [1e20, '#ec4899'], [1e25, '#111827'], [1e50, '#ca8a04']];
 const short = (n) => n < 1e3 ? String(Math.round(n)) : n < 1e6 ? +(n / 1e3).toFixed(1) + 'K' : n < 1e9 ? +(n / 1e6).toFixed(1) + 'M' : n < 1e12 ? +(n / 1e9).toFixed(1) + 'B' : n < 1e15 ? +(n / 1e12).toFixed(1) + 'T' : (n / Math.pow(10, Math.floor(Math.log10(n)))).toFixed(1).replace('.0', '') + 'e' + Math.floor(Math.log10(n));
 const chipFor = (n) => { let c = CHIPS[0]; CHIPS.forEach(x => { if (n >= x[0]) c = x; }); return c; };
-const chipEl = (n, cls, extra) => { const c = chipFor(n); return `<span class="rchip${c[2] ? ' dark' : ''}${cls ? ' ' + cls : ''}" style="background:radial-gradient(circle at 35% 30%, rgba(255,255,255,.35), transparent 55%), ${c[1]}">${short(n)}${extra || ''}</span>`; };
+const CHIP_ART = ['1e3', '1e4', '5e4', '1e5', '1e6', '1e9', '1e12', '1e15', '1e20', '1e25', '1e50'];   // Ada's chip art, same order as CHIPS (Googol 1e100 + Black Hole are saved for high roller status)
+const chipEl = (n, cls, extra) => { const c = chipFor(n); return `<span class="rchip art${cls ? ' ' + cls : ''}" style="background-image:url(media/rl_chip_${CHIP_ART[CHIPS.indexOf(c)]}.webp)"><b class="val">${short(n)}</b>${extra || ''}</span>`; };
 const RLP = (x) => (x / 25.6) + '%', RLQ = (y) => (y / 12.8) + '%';
 // ---- your chips (painWheelChips: how many of each chip you own). They stay yours until you cash out at the cage ----
 const chips = () => { const c = get('painWheelChips', {}); return c && typeof c === 'object' ? c : {}; };
