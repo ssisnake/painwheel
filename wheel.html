@@ -975,7 +975,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 18, 1:42 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 18, 1:46 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -4006,16 +4006,18 @@
     const musicVol = () => { const v = store.get('painWheelMusicVol', .5); return typeof v === 'number' ? Math.max(0, Math.min(1, v)) : .5; };
     // ---------- background music (Pixabay: maksymmalko, tatamusic), crossfading, quiet, pauses when you leave the window ----------
     const WHEEL_BGM = [1, 2, 3, 4, 5, 6, 7, 8].map(n => `media/audio_bgm_wheel${n}.mp3?v=bg1`);   // 8 songs: people spend the most time here
+    const VICE_BGM = [1, 2, 3, 4].map(n => `media/audio_bgm_vice${n}.mp3?v=v1`);   // Wheel: Vice City (Pixabay: monume, mondamusic x2, Aries Beats)
+    const bgmList = () => document.body.classList.contains('vice-city') ? VICE_BGM : WHEEL_BGM;
     let bgmI = Math.floor(Math.random() * 8), bgmA = null, bgmDucked = false;
     let horrorBgm = null, horrorBgmOn = false;   // Ret Vision's horror ambience: hard cuts in and out, no fades (it's a jump scare)
     const bgmTarget = () => (EMBED_SHOP || !musicOn() || bgmDucked || horrorBgmOn || document.hidden || !window.__wf || document.body.classList.contains('ghost-town')) ? 0 : .5 * musicVol() * currentVolume;
     function bgmRamp(a, to, ms, done) { const from = a.volume, t0 = performance.now(); (function st() { const k = Math.min(1, (performance.now() - t0) / ms); a.volume = Math.max(0, Math.min(1, from + (to - from) * k)); if (k < 1) requestAnimationFrame(st); else if (done) done(); })(); }
     function bgmStart(i) {
-        if (EMBED_SHOP) return; bgmI = i % WHEEL_BGM.length; const a = new Audio(WHEEL_BGM[bgmI]); a.volume = 0;
+        if (EMBED_SHOP) return; bgmI = i % bgmList().length; const a = new Audio(bgmList()[bgmI]); a.volume = 0;
         const old = bgmA; bgmA = a; if (old) bgmRamp(old, 0, 4000, () => old.pause());
         if (bgmTarget() > 0) a.play().then(() => bgmRamp(a, bgmTarget(), 3000)).catch(() => {});
-        a.addEventListener('timeupdate', function nx() { if (a.duration && a.currentTime > a.duration - 5 && bgmA === a) { a.removeEventListener('timeupdate', nx); bgmStart((bgmI + 1 + Math.floor(Math.random() * Math.max(1, WHEEL_BGM.length - 1))) % WHEEL_BGM.length); } });
-        a.addEventListener('ended', () => { if (bgmA === a) bgmStart((bgmI + 1 + Math.floor(Math.random() * Math.max(1, WHEEL_BGM.length - 1))) % WHEEL_BGM.length); });
+        a.addEventListener('timeupdate', function nx() { if (a.duration && a.currentTime > a.duration - 5 && bgmA === a) { a.removeEventListener('timeupdate', nx); bgmStart((bgmI + 1 + Math.floor(Math.random() * Math.max(1, bgmList().length - 1))) % bgmList().length); } });
+        a.addEventListener('ended', () => { if (bgmA === a) bgmStart((bgmI + 1 + Math.floor(Math.random() * Math.max(1, bgmList().length - 1))) % bgmList().length); });
     }
     const sliceHold = { sound: 0, popup: false };
     function sliceDuck(ms) { sliceHold.sound = Math.max(sliceHold.sound, Date.now() + ms); sliceHold.popup = true; bgmDucked = true; bgmApply(); clearTimeout(sliceDuck.t); sliceDuck.t = setTimeout(sliceRelease, ms + 50); }
@@ -11448,6 +11450,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         if (on && !force && !isViceWeek()) { funEvent("🌴 Wheel: Vice City runs Nov 19-25. The sunset is closed until then.", 4000); return; }
         if (on && document.body.classList.contains('ghost-town')) { funEvent("🌵 Everybody is in Forever right now. Vice City can wait.", 4000); return; }
         document.body.classList.toggle('vice-city', on); store.set('painWheelVice', on); applyTheme();
+        if (bgmA) bgmStart(Math.floor(Math.random() * bgmList().length));   // crossfade into the other playlist
         if (!on) { viceHeat = 0; renderHeat(); }
         const vb = $('viceBtn'); if (vb) { vb.classList.toggle('plate-on', on); vb.querySelector('.plate-tag').textContent = on ? 'leave?' : 'this week!'; vb.blur(); }
         if (on) {
@@ -11476,7 +11479,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             if (tag && !inside) tag.textContent = 'this week!';
             if (inside && !week && !store.get('painWheelViceTest', false)) { toggleVice(); funEvent('🌅 Wheel: Vice City is over. Everybody came back. Kevin is still wanted in three states.', 5000); }
         };
-        setTimeout(() => { if (!EMBED_SHOP && isViceWeek() && store.get('painWheelVice', false) && !document.body.classList.contains('vice-city') && !document.body.classList.contains('ghost-town')) { document.body.classList.add('vice-city'); applyTheme(); const vb2 = $('viceBtn'); if (vb2) { vb2.classList.add('plate-on'); vb2.querySelector('.plate-tag').textContent = 'leave?'; } } sync(); }, 3600);   // stayed in last time: still in
+        setTimeout(() => { if (!EMBED_SHOP && isViceWeek() && store.get('painWheelVice', false) && !document.body.classList.contains('vice-city') && !document.body.classList.contains('ghost-town')) { document.body.classList.add('vice-city'); applyTheme(); if (bgmA) bgmStart(Math.floor(Math.random() * bgmList().length)); const vb2 = $('viceBtn'); if (vb2) { vb2.classList.add('plate-on'); vb2.querySelector('.plate-tag').textContent = 'leave?'; } } sync(); }, 3600);   // stayed in last time: still in
         setInterval(sync, 60000);
     })();
     function lockShopBtn() {   // a padlock and gray on the Shop button until the 8/11 opens
