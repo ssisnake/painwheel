@@ -268,6 +268,23 @@ const sfx = (name, g) => { try { if (!vol()) return; AC = AC || new (window.Audi
   if (BUF[name]) return go(BUF[name]); fetch('media/' + name + '.mp3').then(r => r.arrayBuffer()).then(ab => AC.decodeAudioData(ab)).then(b => { BUF[name] = b; go(b); }).catch(() => {}); } catch (e) {} };
 const blip = (f, ms, type) => { try { if (!vol()) return; AC = AC || new (window.AudioContext || window.webkitAudioContext)(); const o = AC.createOscillator(), g = AC.createGain(); o.type = type || 'square'; o.frequency.value = f; g.gain.setValueAtTime(.06 * vol(), AC.currentTime); g.gain.exponentialRampToValueAtTime(.0001, AC.currentTime + ms / 1000); o.connect(g); g.connect(AC.destination); o.start(); o.stop(AC.currentTime + ms / 1000); } catch (e) {} };
 addEventListener('pointerdown', () => { if (AC && AC.state === 'suspended') AC.resume(); }, { once: true });
+// the room's background noise (Aaron's ElevenLabs casino crowd, made seamless): a quiet gapless loop that starts on your first click
+let ambSrc = null, ambGain = null;
+function ambience() {
+  if (ambSrc || !vol()) return;
+  try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume();
+    fetch('media/audio_cas_el_ambience.mp3').then(r => r.arrayBuffer()).then(ab => AC.decodeAudioData(ab)).then(b => {
+      if (ambSrc) return; ambSrc = AC.createBufferSource(); ambGain = AC.createGain(); ambSrc.buffer = b; ambSrc.loop = true;
+      ambSrc.loopStart = 0.06; ambSrc.loopEnd = b.duration - 0.06;   // skip the mp3's padding so the loop has no gap
+      ambGain.gain.setValueAtTime(0, AC.currentTime); ambGain.gain.linearRampToValueAtTime(0.55 * vol(), AC.currentTime + 2.5);   // fade in
+      ambSrc.connect(ambGain); ambGain.connect(AC.destination); ambSrc.start(0, 0.06);
+    }).catch(() => {});
+  } catch (e) {}
+}
+addEventListener('pointerdown', ambience, { once: true });
+addEventListener('keydown', ambience, { once: true });
+document.addEventListener('visibilitychange', () => { if (!AC) return; if (document.hidden) AC.suspend(); else AC.resume(); });   // quiet when you switch tabs
+addEventListener('storage', (e) => { if (e.key === 'painWheelVolume' && ambGain && AC) ambGain.gain.setTargetAtTime(0.55 * vol(), AC.currentTime, 0.2); });
 
 // ---------- Ada's animation layers ----------
 const P = (x) => (x / 25.6) + '%', Q = (y) => (y / 12.8) + '%';
