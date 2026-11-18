@@ -98,7 +98,7 @@ const LOOT = {
     Object.entries({ 'Miniature The Wheel': 'rare', 'Wheel Slice Flag': 'uncommon', 'Goblin Gold Bar': 'epic', 'Murloc Scale': 'uncommon', 'Iceberg Ice Shards': 'common',
         'WHEEL-2600 Console': 'epic', "The Skeleton's Coffee Mug": 'rare', 'Used Scratcher': 'poor', 'Moldy Hot Dog': 'poor', "ChAoTiC's Fuzzy Cuffs": 'rare',
         "Platemage's RAW MOVES Skateboard": 'epic', "Tsukaar's Whistlethy": 'epic', "Dylan's Welding Mask": 'rare', "Vinny's Brick Phone Charger": 'uncommon',
-        "Hawkeyes' Sponsorship Billboard": 'legendary', "ChAoTiC's Radar Gun": 'rare' }).forEach(([n, q]) => { if (!LOOT[q].includes(n)) LOOT[q].push(n); });
+        "Hawkeyez' Sponsorship Billboard": 'legendary', "ChAoTiC's Radar Gun": 'rare' }).forEach(([n, q]) => { if (!LOOT[q].includes(n)) LOOT[q].push(n); });
 const ITEM_DESC = {
         "Reb's Empty Bottle": 'Still smells like a Tuesday raid night.', 'Dusty Unlabeled Bottle': 'An old, dusty bottle. The label is long gone. Probably junk.', 'Half a Stale Cheeto': 'The other half is in the keyboard.',
         "Kevin's Participation Trophy": 'Awarded for showing up. Barely.', 'Broken Hearthstone': 'Cooldown: forever.',
@@ -131,7 +131,7 @@ const ITEM_DESC = {
         'Used Scratcher': 'One more ticket away. Always one more ticket away.', 'Moldy Hot Dog': 'Load-bearing. Rolled since 2019. Now it has a beard.',
         "ChAoTiC's Fuzzy Cuffs": "Pink. Fuzzy. Department issue. Don't ask what department.", "Platemage's RAW MOVES Skateboard": 'RAW MOVES. Platemage has never landed a kickflip. Platemage has landed on plenty of bosses.',
         "Tsukaar's Whistlethy": 'The most turtly whistle to ever exist. Evelyn made it. Handle with care.', "Dylan's Welding Mask": 'Best Canadian welder NA. Still cannot hunt.',
-        "Vinny's Brick Phone Charger": 'Charges the brick phone in 9 hours. Lasts 20 minutes. Worth it.', "Hawkeyes' Sponsorship Billboard": 'This raid brought to you by Hawkeyes. He paid for the repairs. Again.',
+        "Vinny's Brick Phone Charger": 'Charges the brick phone in 9 hours. Lasts 20 minutes. Worth it.', "Hawkeyez' Sponsorship Billboard": 'This raid brought to you by Hawkeyez. He paid for the repairs. Again.',
         "ChAoTiC's Radar Gun": 'Clocked the wheel doing 88 in a 25. No ticket. Sellable.'
     });
 const LOOT_SETS = [
@@ -146,7 +146,7 @@ const LOOT_SETS = [
         { id: 's811', name: '🏪 The 8/11', items: ['Slurpee (any flavor)', 'Half a Stale Cheeto', 'Road Beer (Still Cold)', 'Used Scratcher', 'Moldy Hot Dog'],
           perk: '10% off everything in the shop.' },
         { id: 'guild', name: '🛡️ Degenerate Rejects', items: ["Axazon's Empty Heart Pill Bottle", "Bibledaddy's Holy Lasso", "ChAoTiC's Fuzzy Cuffs", "Reb's Liver (Mint Condition)", "Platemage's RAW MOVES Skateboard",
-            "Corrinne's Platinum Achievement", "Kevin's Participation Trophy", "Tsukaar's Whistlethy", "Dylan's Welding Mask", "Vinny's Brick Phone Charger", "Hawkeyes' Sponsorship Billboard"],
+            "Corrinne's Platinum Achievement", "Kevin's Participation Trophy", "Tsukaar's Whistlethy", "Dylan's Welding Mask", "Vinny's Brick Phone Charger", "Hawkeyez' Sponsorship Billboard"],
           perk: 'Every other set perk is 50% stronger, the title «Degenerate Reject», and your name glows.' },
         { id: 'irs', soon: true, name: '🧾 Goblin IRS', items: [], slots: 5, perk: 'Story set. Coming soon...' },
         { id: 'casino', soon: true, name: "🎰 Chief Kick a Bitch's Casino", items: [], slots: 5, perk: 'Casino luck. Coming soon...' },
@@ -176,7 +176,7 @@ const ITEM_ICON = { 'Dusty Unlabeled Bottle': "media/bottle_dusty.webp", 'Golden
         "Bibledaddy's Holy Lasso": "media/photo_item_lasso.png?v=f12b594c", "Rubber Replica of Bibledaddy's Finger": "media/photo_item_finger.png?v=78b04efe", "Corrinne's Platinum Achievement": "media/photo_item_badge.png?v=b7832eda", "Kevin's Participation Trophy": "media/photo_item_trophy.png?v=74f92c51", "Reb's Liver (Mint Condition)": "media/photo_item_liver.png?v=008933cd" , 'Miniature The Wheel': "media/photo_item_miniwheel.png?v=80e0d796", 'Wheel Slice Flag': "media/photo_item_flag.png?v=4ecc8573", 'Goblin Gold Bar': "media/photo_item_goldbar.png?v=b0f5d96a", 'Murloc Scale': "media/photo_item_scale.png?v=9faa7710",
         'Iceberg Ice Shards': "media/photo_item_ice.png?v=0af7d741", 'WHEEL-2600 Console': "media/photo_item_console.png?v=3adcc14a", "The Skeleton's Coffee Mug": "media/photo_item_mug.png?v=7d39a3f1", 'Used Scratcher': "media/photo_item_scratcher.png?v=2c5048a6", 'Moldy Hot Dog': "media/photo_item_hotdog.png?v=107fc00d",
         "ChAoTiC's Fuzzy Cuffs": "media/photo_item_cuffs.png?v=5ce03f6b", "Platemage's RAW MOVES Skateboard": "media/photo_item_skateboard.png?v=2da893ac", "Tsukaar's Whistlethy": "media/photo_item_whistle.png?v=7eecff48", "Dylan's Welding Mask": "media/photo_item_weldmask.png?v=5fa9b7e2",
-        "Vinny's Brick Phone Charger": "media/photo_item_charger.png?v=26f4e9b3", "Hawkeyes' Sponsorship Billboard": "media/photo_item_billboard.png?v=6461f96d", "ChAoTiC's Radar Gun": "media/photo_item_radar.png?v=fb0fff34", 'Slurpee (any flavor)': "media/photo_item_slurpee.png?v=0f9b0e11" };
+        "Vinny's Brick Phone Charger": "media/photo_item_charger.png?v=26f4e9b3", "Hawkeyez' Sponsorship Billboard": "media/photo_item_billboard.png?v=6461f96d", "ChAoTiC's Radar Gun": "media/photo_item_radar.png?v=fb0fff34", 'Slurpee (any flavor)': "media/photo_item_slurpee.png?v=0f9b0e11" };
 const $ = (id) => document.getElementById(id);
 const pick = (a) => a[Math.floor(Math.random() * a.length)];
 const get = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } };

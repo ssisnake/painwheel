@@ -97,7 +97,7 @@
   #rRack { left: 73.4%; top: 91%; width: 23%; height: 8%; display: flex; align-items: center; justify-content: center; gap: .6cqw; }
   #rRack .rchip { position: relative; left: auto; top: auto; translate: none; width: 3.6cqw; font-size: 1.05cqw; pointer-events: auto; cursor: pointer; transition: transform .12s; }
   #rRack .rchip:hover { transform: translateY(-.3cqw); } #rRack .rchip.on { transform: translateY(-.5cqw) scale(1.12); box-shadow: 0 0 0 .25cqw #fde68a, 0 0 1.2cqw #fde68a; }
-  #rInfo { left: 73.4%; top: 86.9%; width: 23%; text-align: center; font: 800 1.15cqw/1.25 system-ui, sans-serif; color: #fde68a; text-shadow: 0 .1cqw .2cqw #000; }
+  #rInfo { left: 71%; top: 84.2%; width: 28% !important; width: 23%; text-align: center; font: 800 1.15cqw/1.25 system-ui, sans-serif; color: #fde68a; text-shadow: 0 .1cqw .2cqw #000; }
   #rMsg { left: 3%; top: 2.5%; width: 42%; min-height: 4.2%; padding: .5cqw 1cqw; border-radius: .8cqw; background: rgba(28,8,22,.9); border: .2cqw solid #f59e0b; text-align: center; font: 800 1.3cqw/1.3 system-ui, sans-serif; color: #fde7c4; }
   .rbtn { position: absolute; padding: 0; border: 0; background: none; cursor: pointer; transition: transform .1s, filter .1s; }
   .rbtn img { display: block; width: 100%; height: auto; pointer-events: none; }
@@ -106,10 +106,24 @@
   #rRecent { left: 3.711%; top: 87.27%; width: 12.27%; }
   .rcell { position: absolute; top: 93.67%; width: 1.25%; height: 3.125%; display: grid; place-items: center; font: 900 .95cqw/1 system-ui, sans-serif; color: #fff; border-radius: .2cqw; }
   #rCrown { width: 3.05%; translate: -50% -85%; pointer-events: none; display: none; filter: drop-shadow(0 0 .8cqw #facc15); }
-  #rMarker { left: 50%; top: 50%; translate: -50% -50%; width: 46%; display: none; padding: 1.4cqw; border-radius: 1.2cqw; background: rgba(28,8,22,.97); border: .3cqw solid #f59e0b; box-shadow: 0 0 2cqw rgba(192,38,211,.5); text-align: center; z-index: 5; }
-  #rMarker.on { display: block; } #rMarker img { width: 7cqw; } #rMarker p { font: 800 1.45cqw/1.4 system-ui, sans-serif; color: #fde7c4; margin: .6cqw 0 1cqw; }
-  #rMarker .big { font-size: 1.4cqw; margin: 0 .4cqw; }
-  /* Exxon-Hawkeyes bailout: once per player, when you go broke at the casino */
+  #rBuy { position: absolute; right: 12.8%; top: 1%; z-index: 6; font-size: max(16px, 1.3cqw); }
+  .rchip .x { position: absolute; right: -.5cqw; top: -.5cqw; width: 1.5cqw; height: 1.5cqw; border-radius: 50%; background: #7f1d1d; color: #fff; border: .12cqw solid #fff; font: 900 1cqw/1.3cqw system-ui, sans-serif; text-align: center; pointer-events: auto; cursor: pointer; }
+  .rchip .x:hover { background: #dc2626; }
+  #rRack .cnt { position: absolute; bottom: -1.2cqw; left: 50%; translate: -50% 0; font: 900 .95cqw/1 system-ui, sans-serif; color: #fde68a; text-shadow: 0 .1cqw .15cqw #000; white-space: nowrap; }
+  #rRack .none { font: 800 1.2cqw/1.3 system-ui, sans-serif; color: #fde7c4; text-align: center; }
+  #buy { z-index: 80; } .buybox { width: min(760px, 100%); } .buyline { color: #e7d3b8; }
+  .buyh { margin: 14px 0 6px; font: 900 19px system-ui, sans-serif; color: #fbbf24; } .buyh small { font-weight: 600; font-size: 15px; color: #d6c3a8; }
+  .buysrc { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 8px; }
+  .buysrc button { text-align: left; padding: 10px 12px; border-radius: 10px; border: 3px solid #7c2d12; background: #2b0f22; color: #fde7c4; cursor: pointer; font: 700 16px/1.35 system-ui, sans-serif; }
+  .buysrc button b { display: block; font-size: 18px; color: #fde68a; } .buysrc button.on { border-color: #facc15; box-shadow: 0 0 12px rgba(250,204,21,.5); }
+  .buysrc button:disabled { opacity: .45; cursor: default; }
+  .buygrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 10px; }
+  .buygrid button { position: relative; display: grid; justify-items: center; gap: 4px; padding: 8px 4px; border-radius: 10px; border: 2px solid #44142e; background: #22091a; color: #fde7c4; cursor: pointer; font: 700 14px system-ui, sans-serif; }
+  .buygrid button:hover { border-color: #f59e0b; } .buygrid .rchip { position: relative; left: auto; top: auto; translate: none; width: 54px; font-size: 14px; border-width: 4px; }
+  .buygrid .incart { position: absolute; top: -8px; right: -6px; min-width: 26px; padding: 2px 6px; border-radius: 13px; background: #16a34a; color: #fff; font: 900 15px system-ui, sans-serif; }
+  .buysum { margin-top: 14px; padding: 12px; border-radius: 10px; background: #2b0f22; font: 700 18px/1.5 system-ui, sans-serif; text-align: center; } .buysum b { color: #fde68a; } .buysum .warn { color: #fca5a5; }
+  .buymsg { min-height: 1.4em; margin-top: 10px; text-align: center; font: 800 18px system-ui, sans-serif; color: #fde68a; }
+  /* Exxon-Hawkeyez bailout: once per player, when you go broke at the casino */
   #bailout { position: fixed; inset: 0; z-index: 95; display: none; align-items: center; justify-content: center; padding: 16px; background: rgba(0,0,0,0); transition: background 1.2s; }
   #bailout.on { display: flex; } #bailout.dim { background: rgba(0,0,0,.82); }
   #bailout .notice { width: min(640px, 100%); background: #fbfaf5; color: #111; border-radius: 6px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.7); opacity: 0; transform: translateY(12px); transition: opacity .9s .5s, transform .9s .5s; font-family: Georgia, 'Times New Roman', serif; }
@@ -172,8 +186,8 @@
     <div class="bucket" id="bkLo"><img id="bkLoImg" src="media/cas_bucket_lo0.webp" alt=""><b>Bucket o' Tokens</b><small id="bkLoTxt"></small></div>
     <div class="bucket" id="bkHi" hidden><img id="bkHiImg" src="media/cas_bucket_hi0.webp" alt=""><b>High Roller Bucket</b><small id="bkHiTxt"></small></div>
   </div>
-  <p style="color:#e7d3b8;font-size:17px">Tokens are for the slots. Chips are for the tables. You'll trade gold for both, right here.</p>
-  <div class="btnrow"><button class="big" disabled>Buy tokens</button><button class="big" disabled>Buy chips</button><button class="big alt" id="cageClose">Back to the floor</button></div>
+  <p style="color:#e7d3b8;font-size:17px">Tokens are for the slots. Chips are for the tables. Buy chips with your gold, your vault, or credit. Cash them out here any time, at full value.</p>
+  <div class="btnrow"><button class="big" disabled title="Slots are coming">Buy tokens</button><button class="big" id="cageBuy">Buy chips</button><button class="big" id="cageCash">Cash out chips</button><button class="big alt" id="cageClose">Back to the floor</button></div>
   <div id="exMsg"></div>
 </div></div>
 
@@ -187,15 +201,25 @@
   <button class="big alt" id="slotClose">✕ Back</button>
 </div></div>
 
-<!-- Exxon-Hawkeyes bailout (Ada's idea) -->
-<div id="bailout" role="dialog" aria-modal="true" aria-label="Exxon-Hawkeyes bailout"><div class="notice">
-  <div class="bar"><span>⛽ EXXON-HAWKEYES</span><span>🦅</span></div>
+<!-- buying chips: from your gold on hand, your vault, or on credit (Goblin Express card, or a pit boss marker if you don't have one) -->
+<div id="buy" class="dlg" role="dialog" aria-modal="true" aria-label="Buy chips"><div class="box buybox">
+  <h2>🪙 Buy Chips</h2>
+  <p id="buyLine" class="buyline"></p>
+  <div class="buyh">1. Pay with</div><div id="buySrc" class="buysrc"></div>
+  <div class="buyh">2. Pick chips <small>(click a chip to add one · right-click to take one back)</small></div><div id="buyGrid" class="buygrid"></div>
+  <div id="buySum" class="buysum"></div>
+  <div class="btnrow"><button class="big" id="buyGo">Buy</button><button class="big alt" id="buyClear">Empty cart</button><button class="big alt" id="buyClose">Done</button></div>
+  <div id="buyMsg" class="buymsg"></div>
+</div></div>
+<!-- Exxon-Hawkeyez bailout (Ada's idea) -->
+<div id="bailout" role="dialog" aria-modal="true" aria-label="Exxon-Hawkeyez bailout"><div class="notice">
+  <div class="bar"><span>⛽ EXXON-HAWKEYEZ</span><span>🦅</span></div>
   <div class="body"><small>Official Notice · Emergency Gambling Relief Fund</small>
-    <p>Your catastrophic financial decisions have been subsidized by Hawkeyes. Please gamble irresponsibly.</p>
+    <p>Your catastrophic financial decisions have been subsidized by Hawkeyez. Please gamble irresponsibly.</p>
     <div class="amt" id="bailAmt"></div>
     <div class="ach">🏆 Achievement unlocked: Too Stupid to Fail</div>
-    <div class="sig">This offer is valid once per lifetime. Hawkeyes has been informed. Hawkeyes is not surprised.</div>
-    <div class="btnrow"><button class="big" id="bailOk">Thank you, Hawkeyes</button></div>
+    <div class="sig">This offer is valid once per lifetime. Hawkeyez has been informed. Hawkeyez is not surprised.</div>
+    <div class="btnrow"><button class="big" id="bailOk">Thank you, Hawkeyez</button></div>
   </div></div></div>
 <!-- Wheel Roulette (Ada's table) -->
 <div id="roul" class="dlg" role="dialog" aria-modal="true" aria-label="Wheel Roulette"><div class="rstage" id="rStage">
@@ -213,7 +237,7 @@
   <button class="rbtn" id="rCoco" aria-label="Coconut drink" style="left:62.11%;top:86.72%;width:4.53%"><img src="media/rl_coco.webp" alt=""></button>
   <img class="abs" src="media/rl_cup.webp" alt="" style="left:67.97%;top:90.78%;width:4.22%;pointer-events:none">
   <div class="abs" id="rInfo"></div><div class="abs" id="rRack"></div>
-  <div class="abs" id="rMarker" role="dialog" aria-label="Goblin Express marker"><img src="media/cas_hh_smirk.webp" alt=""><p id="rMarkerTxt"></p><button class="big" id="rMarkerYes">Take the marker</button><button class="big alt" id="rMarkerNo">No thanks</button></div>
+  <button class="big" id="rBuy">🪙 Buy chips</button>
   <button class="big alt" id="roulClose">✕ Leave table</button>
 </div></div>
 
@@ -392,7 +416,7 @@ document.querySelectorAll('.dlg').forEach(d => d.addEventListener('click', (e) =
 addEventListener('keydown', (e) => { if (e.key === 'Escape') document.querySelectorAll('.dlg.open').forEach(d => { if (d.id === 'roul') closeRoulette(); else d.classList.remove('open'); }); });
 
 
-// ---------- Wheel Roulette: real gold, single zero, standard payouts (house keeps about 2.7%). Broke? The pit boss offers a Goblin Express marker ----------
+// ---------- Wheel Roulette: single zero, standard payouts (house keeps about 2.7%). You bet CHIPS: buy them with gold, your vault, or credit ----------
 const RL_BETS = [["0",1142,370,71,287,[0],35],["3",1213,370,68,98,[3],35],["6",1281,370,70,98,[6],35],["9",1351,370,66,98,[9],35],["12",1417,370,68,98,[12],35],["15",1485,370,68,98,[15],35],["18",1553,370,72,98,[18],35],["21",1625,370,68,98,[21],35],["24",1693,370,66,98,[24],35],["27",1759,370,70,98,[27],35],["30",1829,370,70,98,[30],35],["33",1899,370,74,98,[33],35],["36",1973,370,70,98,[36],35],["column_3",2043,370,93,98,[3,6,9,12,15,18,21,24,27,30,33,36],2],["2",1213,468,68,93,[2],35],["5",1281,468,70,93,[5],35],["8",1351,468,66,93,[8],35],["11",1417,468,68,93,[11],35],["14",1485,468,68,93,[14],35],["17",1553,468,72,93,[17],35],["20",1625,468,68,93,[20],35],["23",1693,468,66,93,[23],35],["26",1759,468,70,93,[26],35],["29",1829,468,70,93,[29],35],["32",1899,468,74,93,[32],35],["35",1973,468,70,93,[35],35],["column_2",2043,468,93,93,[2,5,8,11,14,17,20,23,26,29,32,35],2],["1",1213,561,68,96,[1],35],["4",1281,561,70,96,[4],35],["7",1351,561,66,96,[7],35],["10",1417,561,68,96,[10],35],["13",1485,561,68,96,[13],35],["16",1553,561,72,96,[16],35],["19",1625,561,68,96,[19],35],["22",1693,561,66,96,[22],35],["25",1759,561,70,96,[25],35],["28",1829,561,70,96,[28],35],["31",1899,561,74,96,[31],35],["34",1973,561,70,96,[34],35],["column_1",2043,561,93,96,[1,4,7,10,13,16,19,22,25,28,31,34],2],["dozen_1",1170,657,299,82,[1,2,3,4,5,6,7,8,9,10,11,12],2],["dozen_2",1469,657,317,82,[13,14,15,16,17,18,19,20,21,22,23,24],2],["dozen_3",1786,657,310,82,[25,26,27,28,29,30,31,32,33,34,35,36],2],["low",1170,739,148,83,[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],1],["even",1318,739,152,83,[2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36],1],["red",1470,739,155,83,[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36],1],["black",1625,739,161,83,[2,4,6,8,10,11,13,15,17,20,22,24,26,28,29,31,33,35],1],["odd",1786,739,161,83,[1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35],1],["high",1947,739,149,83,[19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36],1]];
 const RL_ORDER = [0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26], RL_RED = new Set([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]);
 const RL_STEP = 360 / 37, RL_C = [795, 563], RL_TRACK = 262, RL_SETTLE = 142;
@@ -400,64 +424,112 @@ const RL_STEP = 360 / 37, RL_C = [795, 563], RL_TRACK = 262, RL_SETTLE = 142;
 const CHIPS = [[1e3, '#f5f5f4', 1], [1e4, '#2563eb'], [5e4, '#ea580c'], [1e5, '#facc15', 1], [1e6, '#cbd5e1', 1], [1e9, '#7e22ce'], [1e12, '#dc2626'], [1e15, '#16a34a'], [1e20, '#ec4899'], [1e25, '#111827'], [1e50, '#ca8a04']];
 const short = (n) => n < 1e3 ? String(Math.round(n)) : n < 1e6 ? +(n / 1e3).toFixed(1) + 'K' : n < 1e9 ? +(n / 1e6).toFixed(1) + 'M' : n < 1e12 ? +(n / 1e9).toFixed(1) + 'B' : n < 1e15 ? +(n / 1e12).toFixed(1) + 'T' : (n / Math.pow(10, Math.floor(Math.log10(n)))).toFixed(1).replace('.0', '') + 'e' + Math.floor(Math.log10(n));
 const chipFor = (n) => { let c = CHIPS[0]; CHIPS.forEach(x => { if (n >= x[0]) c = x; }); return c; };
-const chipEl = (n, cls) => { const c = chipFor(n); return `<span class="rchip${c[2] ? ' dark' : ''}${cls ? ' ' + cls : ''}" style="background:radial-gradient(circle at 35% 30%, rgba(255,255,255,.35), transparent 55%), ${c[1]}">${short(n)}</span>`; };
+const chipEl = (n, cls, extra) => { const c = chipFor(n); return `<span class="rchip${c[2] ? ' dark' : ''}${cls ? ' ' + cls : ''}" style="background:radial-gradient(circle at 35% 30%, rgba(255,255,255,.35), transparent 55%), ${c[1]}">${short(n)}${extra || ''}</span>`; };
 const RLP = (x) => (x / 25.6) + '%', RLQ = (y) => (y / 12.8) + '%';
-let rBets = {}, rHist = [], rLast = null, rSpinning = false, rChip = 0, rRot = 0, rMarkerNeed = 0;
+// ---- your chips (painWheelChips: how many of each chip you own). They stay yours until you cash out at the cage ----
+const chips = () => { const c = get('painWheelChips', {}); return c && typeof c === 'object' ? c : {}; };
+const chipCount = (v) => Math.max(0, Math.floor(Number(chips()[String(v)]) || 0));
+const chipsAdd = (v, n) => { const c = chips(), k = String(v); c[k] = Math.max(0, (Number(c[k]) || 0) + n); if (!c[k]) delete c[k]; put('painWheelChips', c); };
+const chipsValue = () => CHIPS.reduce((a, [v]) => a + v * chipCount(v), 0);
+function payInChips(amt) {   // winnings come back as the biggest chips that fit; anything under 1K is handed over as gold
+  for (let i = CHIPS.length - 1; i >= 0; i--) { const v = CHIPS[i][0], n = Math.floor(amt / v + 1e-9); if (n > 0) { chipsAdd(v, n); amt -= n * v; } }
+  if (amt >= 1) { put('painWheelGold', gold() + Math.round(amt)); showGold(); }
+}
+let rBets = {}, rHist = [], rLast = null, rSpinning = false, rChip = 0, rRot = 0;
 $('rBets').innerHTML = RL_BETS.map(([id, x, y, w, h]) => `<button class="rbet" data-id="${id}" aria-label="Bet on ${id.replace('_', ' ')}" style="left:${RLP(x)};top:${RLQ(y)};width:${RLP(w)};height:${RLQ(h)}"></button>`).join('');
 const rMsg = (t) => { $('rMsg').textContent = t; };
-const rTotal = () => Object.values(rBets).reduce((a, b) => a + b, 0);
-function rRack() {   // the chips you can afford (the 6 biggest that fit), plus the 1K chip so a broke player can still ask for a marker
-  const g = gold(), fit = CHIPS.filter(c => c[0] <= Math.max(g, 1e3)).slice(-6);
-  if (!fit.some(c => c[0] === rChip)) rChip = fit[0][0];
-  $('rRack').innerHTML = fit.map(c => chipEl(c[0], c[0] === rChip ? 'on' : '').replace('<span', `<span role="button" tabindex="0" data-v="${c[0]}" aria-label="Chip ${short(c[0])}"`)).join('');
-  $('rRack').querySelectorAll('[data-v]').forEach(el => { el.onclick = () => { rChip = +el.dataset.v; blip(1200, 40); rRack(); }; el.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') el.click(); }; });
-  $('rInfo').textContent = `On the table: ${fmt(rTotal())} · Gold: ${fmt(g)}`;
+const rTotal = () => Object.values(rBets).reduce((a, l) => a + l.reduce((x, y) => x + y, 0), 0);
+function rRack() {   // the chips you own (biggest 6 kinds), with how many of each
+  const own = CHIPS.filter(([v]) => chipCount(v) > 0).slice(-6);
+  if (!own.length) { rChip = 0; $('rRack').innerHTML = '<div class="none">No chips. Press 🪙 Buy chips (top right).</div>'; }
+  else {
+    if (!own.some(([v]) => v === rChip)) rChip = own[0][0];
+    $('rRack').innerHTML = own.map(([v]) => chipEl(v, v === rChip ? 'on' : '', `<i class="cnt">×${chipCount(v).toLocaleString()}</i>`).replace('<span', `<span role="button" tabindex="0" data-v="${v}" aria-label="Chip ${short(v)}, you have ${chipCount(v)}"`)).join('');
+    $('rRack').querySelectorAll('[data-v]').forEach(el => { el.onclick = () => { rChip = +el.dataset.v; blip(1200, 40); rRack(); }; el.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') el.click(); }; });
+  }
+  $('rInfo').textContent = `On the table: ${fmt(rTotal())} · Your chips: ${fmt(chipsValue())}`;
 }
 function rDraw() {
-  document.querySelectorAll('.rbet').forEach(b => { const a = rBets[b.dataset.id]; b.innerHTML = a ? chipEl(a) : ''; });
-  rRack(); $('rSpin').disabled = rSpinning; $('rClear').disabled = $('rUndo').disabled = rSpinning || !rHist.length; $('rRepeat').disabled = rSpinning || !rLast;
+  document.querySelectorAll('.rbet').forEach(b => { const l = rBets[b.dataset.id]; b.innerHTML = l && l.length ? chipEl(l.reduce((x, y) => x + y, 0), '', rSpinning ? '' : '<i class="x" role="button" aria-label="Take these chips back" title="Take these chips back">×</i>') : ''; });
+  document.querySelectorAll('.rbet .x').forEach(x => x.onclick = (e) => { e.stopPropagation(); rRemove(x.closest('.rbet').dataset.id); });
+  rRack(); $('rSpin').disabled = rSpinning; $('rClear').disabled = $('rUndo').disabled = rSpinning || !rHist.length; $('rRepeat').disabled = rSpinning || !rLast; $('rBuy').disabled = rSpinning;
 }
-function rTake(n) { const g = gold(); if (g < n) return false; put('painWheelGold', g - n); showGold(); return true; }
-function rGive(n) { if (n > 0) { put('painWheelGold', gold() + n); showGold(); } }
 function rPlace(id, v, quiet) {
   if (rSpinning) return false;
-  if (!rTake(v)) { rOfferMarker(v); return false; }
-  rBets[id] = (rBets[id] || 0) + v; rHist.push([id, v]); $('rCrown').style.display = 'none'; document.querySelectorAll('.rbet.win').forEach(b => b.classList.remove('win'));
+  if (!v || chipCount(v) < 1) { if (!quiet) { if (!chipsValue() && broke()) hawkeyezBailout(); else { rMsg(v ? `You are out of ${short(v)} chips. Buy more, or pick a different chip.` : 'You have no chips. Buy some first (🪙 Buy chips, top right).'); openBuy(); } } return false; }
+  chipsAdd(v, -1); (rBets[id] = rBets[id] || []).push(v); rHist.push([id, v]); $('rCrown').style.display = 'none'; document.querySelectorAll('.rbet.win').forEach(b => b.classList.remove('win'));
   if (!quiet) { sfx('audio_cas_el_chips_place', .7); rDraw(); }
   return true;
 }
-document.querySelectorAll('.rbet').forEach(b => b.onclick = () => { if (rPlace(b.dataset.id, rChip)) rMsg(pick(['Bet placed. The wheel is already laughing.', 'Chips down. No take-backs. (There is an UNDO button. Coward.)', 'Nice bet. The house agrees. The house loves it.', 'Placed. Ada nods. Ada is not even at this table.'])); });
-$('rUndo').onclick = () => { if (rSpinning || !rHist.length) return; const [id, v] = rHist.pop(); rBets[id] -= v; if (rBets[id] <= 0) delete rBets[id]; rGive(v); blip(500, 60); rDraw(); };
-$('rClear').onclick = () => { if (rSpinning || !rHist.length) return; rGive(rTotal()); rBets = {}; rHist = []; blip(400, 80); rMsg('Table cleared. Your gold came back. It looks relieved.'); rDraw(); };
+function rRemove(id) {   // made a mistake? take a whole spot's chips back (right-click the spot, or its little ×)
+  if (rSpinning || !rBets[id]) return; rBets[id].forEach(v => chipsAdd(v, 1)); delete rBets[id]; rHist = rHist.filter(([i]) => i !== id);
+  blip(500, 60); rMsg('Chips back in your rack. Nobody saw that. (Everybody saw that.)'); rDraw();
+}
+document.querySelectorAll('.rbet').forEach(b => {
+  b.onclick = () => { if (rPlace(b.dataset.id, rChip)) rMsg(pick(['Bet placed. The wheel is already laughing.', 'Chips down. Changed your mind? Click the little × on the chips.', 'Nice bet. The house agrees. The house loves it.', 'Placed. Ada nods. Ada is not even at this table.'])); };
+  b.oncontextmenu = (e) => { e.preventDefault(); rRemove(b.dataset.id); };
+});
+$('rUndo').onclick = () => { if (rSpinning || !rHist.length) return; const [id, v] = rHist.pop(); const l = rBets[id]; l.splice(l.lastIndexOf(v), 1); if (!l.length) delete rBets[id]; chipsAdd(v, 1); blip(500, 60); rDraw(); };
+function rClearAll() { Object.values(rBets).forEach(l => l.forEach(v => chipsAdd(v, 1))); rBets = {}; rHist = []; }
+$('rClear').onclick = () => { if (rSpinning || !rHist.length) return; rClearAll(); blip(400, 80); rMsg('Table cleared. Your chips came back. They look relieved.'); rDraw(); };
 $('rRepeat').onclick = () => {
-  if (rSpinning || !rLast) return; const need = rLast.reduce((a, [, v]) => a + v, 0);
-  if (gold() < need) { rOfferMarker(need); return; }
+  if (rSpinning || !rLast) return;
+  const need = {}; rLast.forEach(([, v]) => need[v] = (need[v] || 0) + 1);
+  if (Object.entries(need).some(([v, n]) => chipCount(+v) < n)) { rMsg('Not enough chips to repeat that. Buy more first.'); openBuy(); return; }
   rLast.forEach(([id, v]) => rPlace(id, v, true)); sfx('audio_cas_el_chips_place', .7); rMsg('Same bets as last time. Insanity is doing the same thing and expecting a different result. Good luck!'); rDraw();
 };
-function hawkeyesBailout() {   // once per player: you went broke at the casino and Exxon-Hawkeyes steps in
-  put('painWheelHawkeyesBailout', Date.now());
-  const total = gold() + (Number(get('painWheelVault', 0)) || 0), amt = Math.round(Math.max(1e4, total * 0.02));
-  rGive(amt); $('bailAmt').textContent = '+' + fmt(amt) + ' emergency gambling money';
+const broke = () => gold() < 1e3 && (Number(get('painWheelVault', 0)) || 0) < 1e3;
+function hawkeyezBailout() {   // once per player: you went broke at the casino and Exxon-Hawkeyez steps in (paid in chips, of course)
+  if (get('painWheelHawkeyezBailout', 0) || Math.random() >= 0.34) { rMsg('You are broke. The pit boss can write you a marker (🪙 Buy chips → credit).'); openBuy(); return; }
+  put('painWheelHawkeyezBailout', Date.now());
+  const total = gold() + (Number(get('painWheelVault', 0)) || 0) + chipsValue(), amt = Math.round(Math.max(1e4, total * 0.02));
+  payInChips(amt); $('bailAmt').textContent = '+' + fmt(amt) + ' in emergency gambling chips';
   if (window.pwAch) pwAch('toostupid');
   const b = $('bailout'); b.classList.add('on'); requestAnimationFrame(() => requestAnimationFrame(() => b.classList.add('dim'))); sfx('audio_exxon', .8);
-  rMsg('Exxon-Hawkeyes paid your way. Do not make him regret it. (You will make him regret it.)'); rDraw();
+  rMsg('Exxon-Hawkeyez paid your way. Do not make him regret it. (You will make him regret it.)'); rDraw();
 }
 $('bailOk').onclick = () => { const b = $('bailout'); b.classList.remove('dim'); setTimeout(() => b.classList.remove('on'), 400); };
-function rOfferMarker(need) {   // the pit boss leans over: a Goblin Express marker, 400% APR, no questions (lots of questions)
-  if (gold() < 1e3 && !get('painWheelHawkeyesBailout', 0) && Math.random() < 0.34) { hawkeyesBailout(); return; }   // flat broke: sometimes Hawkeyes shows up first (once ever)
-  const total = gold() + (Number(get('painWheelVault', 0)) || 0), debt = Number(get('painWheelDebt', 0)) || 0;
-  const limit = Math.max(1e6, total * 0.5), avail = limit - debt, amt = Math.min(avail, Math.max(need * 5, total * 0.05, 5000));
-  if (avail < need) { rMsg('Goblin Express DECLINED. Even the goblins think you should go home.'); return; }
-  rMarkerNeed = Math.round(amt);
-  $('rMarkerTxt').textContent = `${HOST_NAME}: "Short? No problem. I can front you ${fmt(rMarkerNeed)} on a Goblin Express marker. 400% APR. Totally normal. Everybody does it."`;
-  $('rMarker').classList.add('on');
+// ---- the chip menu: pay with gold on hand, the vault, or credit ----
+let buySrc = 'hand', cart = {};
+const credit = () => { const total = gold() + (Number(get('painWheelVault', 0)) || 0), debt = Number(get('painWheelDebt', 0)) || 0; return Math.max(0, Math.max(1e6, total * 0.5) - debt); };   // same limit as the Goblin Express card on the wheel
+const hasCard = () => !!get('painWheelGoblinCard', false);
+const srcAvail = (k) => k === 'hand' ? gold() : k === 'vault' ? (Number(get('painWheelVault', 0)) || 0) : credit();
+const cartTotal = () => Object.entries(cart).reduce((a, [v, n]) => a + v * n, 0);
+function renderBuy() {
+  const S = [['hand', '💰 Gold on hand', fmt(gold())], ['vault', '🏦 Guild Bank Vault', fmt(srcAvail('vault'))], ['credit', hasCard() ? '💳 Goblin Express card' : '📜 Pit boss marker', fmt(credit()) + ' credit · 400% APR']];
+  $('buySrc').innerHTML = S.map(([k, n, v]) => `<button type="button" data-k="${k}" class="${buySrc === k ? 'on' : ''}"><b>${n}</b>${v}</button>`).join('');
+  $('buySrc').querySelectorAll('button').forEach(b => b.onclick = () => { buySrc = b.dataset.k; sfx('audio_cas_el_menu', .6); renderBuy(); });
+  $('buyGrid').innerHTML = CHIPS.map(([v]) => `<button type="button" data-v="${v}" aria-label="Add a ${short(v)} chip">${chipEl(v)}<span>${v < 1e6 ? fmt(v) : short(v) + ' gold'}</span>${cart[v] ? `<i class="incart">${cart[v].toLocaleString()}</i>` : ''}</button>`).join('');
+  $('buyGrid').querySelectorAll('button').forEach(b => { const v = +b.dataset.v;
+    b.onclick = (e) => { cart[v] = (cart[v] || 0) + (e.shiftKey ? 10 : 1); sfx('audio_cas_el_menu', .6); renderBuy(); };
+    b.oncontextmenu = (e) => { e.preventDefault(); if (cart[v]) { cart[v]--; if (!cart[v]) delete cart[v]; blip(600, 30); renderBuy(); } }; });
+  const t = cartTotal(), av = srcAvail(buySrc), after = av - t;
+  $('buySum').innerHTML = t ? `Cart: <b>${fmt(t)}</b> in chips · ${buySrc === 'credit' ? `adds <b class="warn">${fmt(t)}</b> to your Goblin debt (400% APR)` : `${buySrc === 'vault' ? 'Vault' : 'Gold on hand'} after: <b class="${after < 0 ? 'warn' : ''}">${after < 0 ? 'NOT ENOUGH' : fmt(after)}</b>`}`
+    : `Your chips: <b>${fmt(chipsValue())}</b> · Click chips to fill the cart (shift-click adds 10).`;
+  $('buyGo').disabled = !t || t > av;
 }
-$('rMarkerYes').onclick = () => {
-  const debt = Number(get('painWheelDebt', 0)) || 0; put('painWheelDebt', debt + rMarkerNeed); rGive(rMarkerNeed);
-  put('painWheelCasinoMarkers', (get('painWheelCasinoMarkers', 0) || 0) + 1); put('painWheelCardCharges', (get('painWheelCardCharges', 0) || 0) + 1);
-  $('rMarker').classList.remove('on'); sfx('audio_cas_el_chips_collect2', .6); rMsg(`Marker signed. +${fmt(rMarkerNeed)}. The pit boss is smiling. That is never good.`); rDraw();
+function openBuy() { cart = {}; $('buyMsg').textContent = ''; $('buyLine').textContent = pick(['The cashier slides the chip tray over. "Gold, vault, or credit? We take all three. We LOVE credit."', 'Chips! Everybody needs chips. Chips are just gold that forgot it was gold.', 'Pay with the vault? Bold. The pit boss just stood up a little straighter.']); renderBuy(); $('buy').classList.add('open'); }
+$('buyGo').onclick = () => {
+  const t = cartTotal(); if (!t || t > srcAvail(buySrc)) return;
+  if (buySrc === 'hand') put('painWheelGold', gold() - t);
+  else if (buySrc === 'vault') put('painWheelVault', (Number(get('painWheelVault', 0)) || 0) - t);
+  else { put('painWheelDebt', (Number(get('painWheelDebt', 0)) || 0) + t); put(hasCard() ? 'painWheelCardCharges' : 'painWheelCasinoMarkers', (get(hasCard() ? 'painWheelCardCharges' : 'painWheelCasinoMarkers', 0) || 0) + 1); }
+  Object.entries(cart).forEach(([v, n]) => chipsAdd(+v, n)); cart = {}; showGold(); sfx('audio_cas_el_chips_collect2', .7);
+  $('buyMsg').textContent = buySrc === 'credit' ? pick(['Charged. The goblins thank you. Their children thank you.', 'Marker signed. The pit boss is smiling. That is never good.']) : buySrc === 'vault' ? 'Straight out of the vault. Kevin watched you do it.' : 'Chips bought. Good luck. You will need it.';
+  renderBuy(); if ($('roul').classList.contains('open')) rDraw();
 };
-$('rMarkerNo').onclick = () => { $('rMarker').classList.remove('on'); rMsg('Smart. Rare, but smart.'); };
+$('buyClear').onclick = () => { cart = {}; renderBuy(); };
+const MENU_SFX = 'audio_cas_el_menu_press';   // Aaron's ElevenLabs menu press (on trial: chip menu + cage buttons)
+['buyGo', 'buyClear', 'buyClose', 'rBuy', 'cageBuy', 'cageCash', 'cageClose'].forEach(id => $(id).addEventListener('pointerdown', () => sfx(MENU_SFX, .6)));
+$('buySrc').addEventListener('pointerdown', () => sfx(MENU_SFX, .5));
+$('buyClose').onclick = () => { $('buy').classList.remove('open'); if ($('roul').classList.contains('open')) rDraw(); };
+$('rBuy').onclick = () => { if (!rSpinning) { sfx('audio_cas_el_menu', .6); openBuy(); } };
+$('cageBuy').onclick = () => { $('cage').classList.remove('open'); openBuy(); };
+$('cageCash').onclick = () => {   // cash out: every chip back to gold on hand, at full value
+  const v = chipsValue(); if (!v) { $('exMsg').textContent = 'You have no chips to cash out.'; return; }
+  put('painWheelChips', {}); put('painWheelGold', gold() + v); showGold(); sfx('audio_cas_el_chips_collect3', .7);
+  $('exMsg').textContent = `Cashed out ${fmt(v)}. The cashier counted it twice. Then bit it.`;
+};
 function rBall(angle, r) { const a = angle * Math.PI / 180; $('rBall').style.left = RLP(RL_C[0] + r * Math.sin(a)); $('rBall').style.top = RLQ(RL_C[1] - r * Math.cos(a)); }
 function rCells() {
   const rec = get('painWheelRouletteRecent', []) || [], X = [125, 157, 189, 220, 252, 284, 315, 347];
@@ -470,7 +542,7 @@ $('rSpin').onclick = () => {
   const rnd = new Uint32Array(1); crypto.getRandomValues(rnd); const result = rnd[0] % 37;   // the result is decided first; the animation just shows it
   const idx = RL_ORDER.indexOf(result), R0 = rRot % 360, R1 = R0 + 540 + Math.random() * 360, DUR = still ? 600 : 4500;
   sfx('audio_cas_el_roulette_spin' + (1 + Math.floor(Math.random() * 5)), .8);
-  rMsg(pick(['No more bets! The ball is rolling.', 'Round and round. Your gold watches nervously.', 'Spinning... Clippy is calculating the odds. Clippy is crying.']));
+  rMsg(pick(['No more bets! The ball is rolling.', 'Round and round. Your chips watch nervously.', 'Spinning... Clippy is calculating the odds. Clippy is crying.']));
   const t0 = performance.now(), eo = (t) => 1 - Math.pow(1 - t, 3);
   (function step(now) {
     const t = Math.min(1, (now - t0) / DUR), R = R0 + (R1 - R0) * eo(t); rRot = R;
@@ -482,19 +554,19 @@ $('rSpin').onclick = () => {
 };
 function rResolve(n) {
   let won = 0, lost = 0;
-  RL_BETS.forEach(([id, , , , , nums, net]) => { const a = rBets[id]; if (!a) return; if (nums.includes(n)) won += a * (net + 1); else lost += a; });
+  RL_BETS.forEach(([id, , , , , nums, net]) => { const l = rBets[id]; if (!l) return; const a = l.reduce((x, y) => x + y, 0); if (nums.includes(n)) won += a * (net + 1); else lost += a; });
   const area = RL_BETS.find(b => b[0] === String(n)), win = document.querySelector(`.rbet[data-id="${n}"]`);
   if (win) win.classList.add('win');
   $('rCrown').style.left = RLP(area[1] + area[3] / 2); $('rCrown').style.top = RLQ(area[2]); $('rCrown').style.display = 'block';
   const rec = [n].concat(get('painWheelRouletteRecent', []) || []).slice(0, 8); put('painWheelRouletteRecent', rec); rCells();
   const col = n === 0 ? 'GREEN' : RL_RED.has(n) ? 'RED' : 'BLACK', bet = rTotal();
-  rGive(won); rBets = {}; rHist = [];
+  rBets = {}; rHist = []; if (won) payInChips(won);
   put('painWheelRouletteSpins', (get('painWheelRouletteSpins', 0) || 0) + 1);
   if (won > 0) {
     put('painWheelRouletteWins', (get('painWheelRouletteWins', 0) || 0) + 1);
     if (rLast.some(([id]) => /^\d+$/.test(id) && +id === n)) put('painWheelRouletteStraight', true);   // hit a single number
     sfx(won >= bet * 10 ? 'audio_cas_el_jackpot' + (1 + Math.floor(Math.random() * 2)) : 'audio_cas_el_chips_collect' + (2 + Math.floor(Math.random() * 2)), .8);
-    rMsg(`${n} ${col}! You won ${fmt(won)}${won > bet ? ` (up ${fmt(won - bet)})` : ''}. ` + pick(['The pit boss is pretending to be happy for you.', 'Cindy cheered. The bouncers did not.', 'Quit while you are ahead? Nobody ever does.']));
+    rMsg(`${n} ${col}! You won ${fmt(won)} in chips${won > bet ? ` (up ${fmt(won - bet)})` : ''}. ` + pick(['The pit boss is pretending to be happy for you.', 'Cindy cheered. The bouncers did not.', 'Quit while you are ahead? Nobody ever does.']));
   } else {
     if (lost > 0) sfx('audio_cas_el_chips_collect1', .7);   // the dealer sweeps your chips
     rMsg(`${n} ${col}. ` + (n === 0 ? 'The house takes it all. The house picked green. The house ALWAYS picks green.' : pick(['The dealer sweeps your chips. Gently. Like a funeral.', 'So close. (It was not close.)', 'The wheel has spoken. It said no.', 'Spin again? The wheel would love that.'])));
@@ -504,14 +576,14 @@ function rResolve(n) {
 $('rBell').onclick = () => { blip(1568, 260, 'sine'); setTimeout(() => blip(1568, 200, 'sine'), 120); rMsg(pick(['🛎️ Ding! Cindy is on her way. She is always on her way.', '🛎️ The pit boss heard the bell. He is pretending he did not.', '🛎️ Ding ding! Nothing happened. Ding ding! Still nothing.'])); };
 $('rCoco').onclick = () => rMsg(pick(['🥥 A coconut drink. Cindy left it here. It is probably for you. Probably.', '🥥 Drinking while gambling? Bold. Very bold. The house approves.', '🥥 The umbrella is the best part. Do not eat the umbrella.']));
 function openRoulette() {
-  rBets = {}; rHist = []; rSpinning = false; rCells(); rDraw(); $('rMarker').classList.remove('on'); $('rCrown').style.display = 'none';
+  rBets = {}; rHist = []; rSpinning = false; rCells(); rDraw(); $('rCrown').style.display = 'none';
   $('rRotor').style.transform = `rotate(${rRot}deg)`; rBall(rRot + 90, RL_SETTLE);
-  rMsg(pick(['Welcome to Wheel Roulette! Pick a chip (bottom right), click the table, then SPIN.', 'Place your bets! Red, black, or the number of your ex.', 'Single zero. Fair odds. The house still wins. Slowly. Lovingly.']));
+  rMsg(chipsValue() ? pick(['Welcome to Wheel Roulette! Pick a chip (bottom right), click the table, then SPIN.', 'Place your bets! Red, black, or the number of your ex.', 'Single zero. Fair odds. The house still wins. Slowly. Lovingly.']) : 'Welcome to Wheel Roulette! First, buy some chips: 🪙 Buy chips (top right).');
   $('roul').classList.add('open');
 }
-function closeRoulette() { if (rSpinning) return; if (rHist.length) { rGive(rTotal()); rBets = {}; rHist = []; } $('roul').classList.remove('open'); }   // bets that never spun come back to you
+function closeRoulette() { if (rSpinning) return; rClearAll(); $('roul').classList.remove('open'); }   // bets that never spun go back in your rack
 $('roulClose').onclick = closeRoulette;
-addEventListener('storage', (e) => { if (e.key === 'painWheelGold' && $('roul').classList.contains('open') && !rSpinning) rRack(); });
+addEventListener('storage', (e) => { if (/^painWheel(Gold|Chips|Vault|Debt)$/.test(e.key || '') && $('roul').classList.contains('open') && !rSpinning) rRack(); });
 
 // ---------- everything else you can click ----------
 const LINES = {
