@@ -268,6 +268,14 @@
         #viceClippy { display: none; position: fixed; left: 10px; bottom: 10px; z-index: 74; height: 170px; padding: 0; border: 0; background: none; cursor: pointer; filter: drop-shadow(0 6px 14px rgba(0,0,0,.6)); transition: transform .2s; }
         #viceClippy img { height: 100%; width: auto; display: block; } #viceClippy:hover, #viceClippy:focus-visible { transform: translateY(-4px) rotate(-2deg); outline: none; filter: drop-shadow(0 0 12px #f472b6); }
         body.vice-city #viceClippy { display: block; }
+        /* Vice City: Clippy pet wears the shirt (Ada's 8 poses, eyes baked in) and every bubble is neon */
+        .clippy-pet.vice-pose .googly { display: none; }
+        .clippy-pet.vice-pose .clippy-img { height: 2.4em; }
+        body.vice-city .clippy-pet .pet-bubble { background: none; border: 12px solid transparent; border-image: url(media/vice_chat9.png) 24 fill stretch; border-radius: 0; box-shadow: none; color: #fdf2f8; font-size: 13px; padding: 2px 4px; left: 78px; top: -6px; width: 230px; }
+        body.vice-city .gb { border-image: url(media/vice_chat9.png) 24 fill stretch !important; border-width: 14px !important; color: #fdf2f8 !important; }
+        body.vice-city .gb::after { display: none !important; }
+        #chatTitleVice { display: none; height: 24px; width: auto; vertical-align: middle; }
+        body.vice-city #chatTitleVice { display: inline-block; } body.vice-city #chatTitle { display: none; }
         @media (max-width: 767px) { body.vice-city #viceClippy { display: none; } }
         #viceTalk { display: none; position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 96; width: min(760px, calc(100vw - 32px)); align-items: center; gap: 16px; padding: 14px 20px 14px 14px; border-radius: 16px; background: linear-gradient(135deg, rgba(30,8,48,.96), rgba(59,7,100,.96)); border: 3px solid #22d3ee; box-shadow: 0 0 0 3px #ec4899, 0 0 30px rgba(236,72,153,.55), 0 20px 50px rgba(0,0,0,.6); color: #fff; }
         #viceTalk.on { display: flex; }
@@ -975,7 +983,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 18, 1:46 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 18, 1:48 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -1263,7 +1271,7 @@
             <div id="chatHome"></div>
             <div id="chatCard" class="bg-slate-900/90 border border-slate-800 rounded-2xl shadow-xl flex flex-col overflow-hidden" style="height: 340px;">
                 <div id="chatHead" class="flex items-center justify-between gap-2 px-4 py-2 border-b border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400">
-                    <span>💬 Stream chat</span><span class="flex items-center gap-2"><span id="chatViewers" class="text-[10px] text-red-400 normal-case">🔴 1,337 viewers</span><button id="chatPop" class="pop-btn" title="Pop chat out into its own window">⧉</button></span>
+                    <span><span id="chatTitle">💬 Stream chat</span><img id="chatTitleVice" src="media/vice_chatbtn.webp" alt="Chat"></span><span class="flex items-center gap-2"><span id="chatViewers" class="text-[10px] text-red-400 normal-case">🔴 1,337 viewers</span><button id="chatPop" class="pop-btn" title="Pop chat out into its own window">⧉</button></span>
                 </div>
                 <div id="chatLog" class="flex-1 px-3 py-2 text-[12px] leading-snug select-text" style="overflow-y:auto; scrollbar-width:thin; scrollbar-color:#475569 transparent;"></div>
             </div>
@@ -4974,7 +4982,8 @@
         { id: 'cartridge',  name: 'The Collector',            desc: 'Find the one Wheeltari cartridge that actually works, and play it in the VIP room.', secret: true, secretName: true },
         { id: 'viceweek',   name: 'Welcome to Vice',          desc: 'Go to Wheel: Vice City (the new GTA\'s launch week, Nov 19-25).', secret: true },
         { id: 'vicebusted', name: 'BUSTED',                   desc: 'Hit 5 stars during Wheel: Vice City and get caught by ChAoTiC.', secret: true },
-        { id: 'vicewasted', name: 'WASTED',                   desc: 'Get WASTED during Wheel: Vice City. It just happens sometimes.', secret: true }
+        { id: 'vicewasted', name: 'WASTED',                   desc: 'Get WASTED during Wheel: Vice City. It just happens sometimes.', secret: true },
+        { id: 'vice100',    name: 'Starfish Island HOA',      desc: 'Spin 100 times during Wheel: Vice City. You keep the Vice City theme all year.', secret: true }
     ];
     const PURPLE_HEART_SVG = '<svg viewBox="0 0 64 80" width="44" height="55" aria-hidden="true"><path d="M20 0h24v22H20z" fill="#7e22ce"/><path d="M20 0h4v22h-4zM40 0h4v22h-4z" fill="#f5f5f4"/><path d="M28 0h8v22h-8z" fill="#a855f7"/><path d="M32 74 C10 58 4 46 4 36 C4 26 12 20 20 20 C26 20 30 24 32 28 C34 24 38 20 44 20 C52 20 60 26 60 36 C60 46 54 58 32 74Z" fill="#facc15" stroke="#a16207" stroke-width="2"/><path d="M32 68 C14 55 10 45 10 37 C10 30 15 26 21 26 C26 26 29 29 32 33 C35 29 38 26 43 26 C49 26 54 30 54 37 C54 45 50 55 32 68Z" fill="#7e22ce"/><ellipse cx="32" cy="45" rx="7" ry="9" fill="#fde68a" opacity=".9"/></svg>';
     let achQueue = [], achShowing = false;
@@ -6483,11 +6492,11 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             ['HIGH SCORE BEATEN BY KEVIN. HE DIED ON LEVEL 1.', 'PIXELS ARE BACK. RESOLUTION IS NOT.'],
             ['PRESS START', 'GAME OVER (IT WAS KEVIN)'])
     );
-    // Vice Week's look (not in the picker or the shop: the Vice Week button turns it on)
+    // Vice City's look: the event button turns it on; 100 spins during the event lets you keep it as a theme (not sold in the shop)
     var VICE_SLICE = [   // neon sunset: dark purple at the hub, hot color at the rim
         [[0, '#1e0b2e'], [0.55, '#9d174d'], [1, '#ec4899']], [[0, '#1e0b2e'], [0.55, '#9a3412'], [1, '#fb923c']], [[0, '#0b1e2e'], [0.55, '#0f766e'], [1, '#2dd4bf']],
         [[0, '#1e0b2e'], [0.55, '#6b21a8'], [1, '#c084fc']], [[0, '#1e0b2e'], [0.55, '#be185d'], [1, '#fda4af']], [[0, '#1e0b2e'], [0.55, '#a16207'], [1, '#facc15']]];
-    const VICE_THEME = { id: 'vice', name: 'Wheel: Vice City 🌴', when: () => false, bg: '#14081f', palm: true, sunsetSlices: true, bgSize: 'cover', logo: 'media/vice_logo.webp',   // background: Ada's Vice painting, dimmed so the panels stay readable
+    const VICE_THEME = { id: 'vice', name: 'Wheel: Vice City 🌴', when: () => false, shop: true, group: 'reward', cost: 0, bg: '#14081f', palm: true, sunsetSlices: true, bgSize: 'cover', logo: 'media/vice_logo.webp',   // background: Ada's Vice painting, dimmed so the panels stay readable
         tint: 'linear-gradient(180deg, rgba(12,4,24,.5), rgba(12,4,24,.7)), url(media/vice_bg.webp)',
         pain: '#f472b6', badge: ['🌴 ', ' 🌅'], tagline: 'Neon Decision Engine • Sunset Mode • No Witnesses',
         kevin: [['#831843', '🌴', '🕶️', '#fbcfe8'], ['#134e4a', '🌅', '💵', '#99f6e4']], kevinLabel: '🕶️ Kevin', drift: ['🌴', '💵', '🕶️', '🌅'],
@@ -6498,6 +6507,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
                'RAID NIGHT CANCELLED. NOBODY WAS GOING TO SHOW UP ANYWAY.', 'CHAOTIC REPORTS A RECORD NUMBER OF ARRESTS. ALL OF THEM WERE KEVIN.',
                'CLIPPY SEEN IN A BLUE FLORAL SHIRT. WHEN ASKED, HE SAID: I AIN\'T SAYIN\' NOTHIN\'.', 'LOCAL MAN WAITS 12 YEARS FOR A GAME, SPENDS 3 HOURS ON THE CHARACTER CREATOR.'],
         callouts: ["NOBODY SAW NOTHIN'", 'FIVE STARS AND RISING', "IT'S A NICE NIGHT FOR A SPIN"] };
+    THEMES.push(VICE_THEME);
     // one theme per class, in class colors
     [
         ['dk', 'Death Knight 💀', '#C41E3A', ['💀', '❄️'], 'Rune-Powered Decision Engine • Death Grip Included',
@@ -8355,6 +8365,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
     function petSay(k, text) {
         if (k === 'clippy' && document.body.classList.contains('ghost-town')) text = "Why aren't we playing Forever?";   // in Forever, Clippy has exactly one thought
         else if (k === 'clippy' && document.body.classList.contains('vice-city') && !petSay.raw && Math.random() < 0.75) text = pick(VICE_CLIPPY);   // Vice Week: floral shirt, new attitude
+        if (k === 'clippy' && document.body.classList.contains('vice-city') && !vicePose.hold) vicePose(pick(['shades', 'point', 'thumbs_up', 'wave', 'brick_phone']), 4500);
         const w = $('pet-' + k); if (!w) return;
         const b = w.querySelector('.pet-bubble'); b.textContent = text; b.classList.remove('hidden');
         b.style.marginLeft = '0px';   // keep the bubble on screen (Clippy lives against the right edge)
@@ -8702,7 +8713,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         return true;
     }
     function oshaClippyEye() {   // Clippy pokes one of his own googly eyes out
-        const c = $('pet-clippy'), eye = c && c.querySelector('.googly i'); if (!eye || eye.style.visibility === 'hidden') return false;
+        const c = $('pet-clippy'), eye = c && c.querySelector('.googly i'); if (!eye || eye.style.visibility === 'hidden' || c.classList.contains('vice-pose')) return false;
         const r = eye.getBoundingClientRect(); if (!onView(r)) return false;
         const e = document.createElement('div'); e.style.cssText = `position:fixed;z-index:81;left:${r.left}px;top:${r.top}px;width:${Math.max(12, r.width * 1.4)}px;height:${Math.max(12, r.width * 1.4)}px;border-radius:50%;background:#fff;border:2px solid #111;pointer-events:none`;
         e.innerHTML = '<i style="position:absolute;left:25%;top:25%;width:50%;height:50%;border-radius:50%;background:#111"></i>';
@@ -9395,7 +9406,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         'the Island Emptier': ['clawall', 'Win every prize in the claw machine.'], 'Five Wheels Deep': ['wheelception5', 'Go five wheels deep.'],
         'Forever Alone': ['foreveralone', 'Be alone in Forever.'], 'Debt Free': ['debtfree', 'Pay off every debt you owe.'], 'Ascended Degenerate': ['spins10000', 'Spin the wheel 10,000 times.'],
         'Unsupervised': ['unsupervised', 0], "Karen's Problem": ['karen50', 0], 'Gnome Alone': ['gnomealone', 0], 'Employee of the Never': ['never811', 0],
-        'No Refunds Ever': ['norefunds', 0], 'I Paid for WinRAR': ['winrar', 0], 'Something Smells Fishy': ['fishy', 0], 'Shit Out of Luck': ['scratch13', 0], 'The Collector': ['cartridge', 0] };
+        'No Refunds Ever': ['norefunds', 0], 'I Paid for WinRAR': ['winrar', 0], 'Something Smells Fishy': ['fishy', 0], 'Shit Out of Luck': ['scratch13', 0], 'The Collector': ['cartridge', 0], 'Starfish Island HOA': ['vice100', 'Spin 100 times during Wheel: Vice City.'] };
     function titleBanner(t, w, locked) {   // the banner with the title written on the parchment
         const a = TITLE_ART[t]; if (!a) return `<span style="font-weight:800">${t}</span>`;
         const h = Math.round(w * 0.27), bw = w * (a.b[2] - a.b[0]) / 100, bh = h * (a.b[3] - a.b[1]) / 100;
@@ -10829,6 +10840,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             if (c.isConnected) requestAnimationFrame(follow);
         })();
         setInterval(() => { if (!document.hidden && Math.random() < 0.5) petSay('clippy', PETS.clippy.say()); }, 30000);
+        if (document.body.classList.contains('vice-city')) viceClippyPet(true);
     }
 
     // ---------- scratch-offs: buy, then scratch all ----------
@@ -11431,15 +11443,21 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         viceCard.t = setTimeout(() => { fx.classList.remove('on'); viceCard.t2 = setTimeout(() => fx.className = '', 1300); }, 4200);
     }
     function viceAfterSpin(s) {
+        const vs = store.get('painWheelViceSpins', 0) + 1; store.set('painWheelViceSpins', vs);
+        if (vs >= 100 && !ownedThemes.vice) afterModal(() => {   // the reward: keep the Vice City look all year, plus the title
+            ownedThemes.vice = true; store.set('painWheelOwnedThemes', ownedThemes); unlock('vice100'); try { rebuildThemePicker(); } catch (e) {}
+            funEvent('🌴 100 spins in Vice City. The Vice City theme is yours to keep (Settings → Theme), and the Starfish Island HOA wants a word.', 7000);
+            viceTalk("A hundred spins. Ay, you're one of us now. The HOA on Starfish Island sent a welcome basket. Don't open it.");
+        });
         if (Math.random() < 0.5 && viceHeat < 5) { viceHeat++; renderHeat(); if (viceHeat === 5) chat(pick(['5 STARS', 'he has 5 stars LMAO', 'chaotic is on his way', 'WANTED'])); }
         if (viceHeat >= 5 && Math.random() < 0.35) afterModal(() => {
-            viceHeat = 0; renderHeat(); viceCard('busted'); unlock('vicebusted');
+            viceHeat = 0; renderHeat(); viceCard('busted'); unlock('vicebusted'); vicePose('busted_hands_up', 7000, true);
             if (garage.police && !vehicles.cop) setTimeout(drivePolice, 1500);
             chatBurst(['BUSTED', 'BUSTED KEKW', 'chaotic got him', 'free him', 'license and registration', 'he had it coming'], 5, 3000);
             setTimeout(() => viceTalk(pick(["I didn't see nothin'. I was in the Recycle Bin the whole time.", "Don't say nothin' to the cops. I'll get you a lawyer. It's me. I'm the lawyer."])), 5000);
         });
         else if (Math.random() < 0.06) afterModal(() => {
-            viceCard('wasted'); unlock('vicewasted');
+            viceCard('wasted'); unlock('vicewasted'); vicePose('panic', 6000, true);
             if (garage.ambulance && !vehicles.amb) setTimeout(driveAmbulance, 1500);
             chatBurst(['WASTED', 'LMAO WASTED', 'F', 'press F', 'bibledaddy incoming', 'the wheel got him'], 5, 3000);
         });
@@ -11449,7 +11467,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         const on = !document.body.classList.contains('vice-city');
         if (on && !force && !isViceWeek()) { funEvent("🌴 Wheel: Vice City runs Nov 19-25. The sunset is closed until then.", 4000); return; }
         if (on && document.body.classList.contains('ghost-town')) { funEvent("🌵 Everybody is in Forever right now. Vice City can wait.", 4000); return; }
-        document.body.classList.toggle('vice-city', on); store.set('painWheelVice', on); applyTheme();
+        document.body.classList.toggle('vice-city', on); store.set('painWheelVice', on); applyTheme(); viceClippyPet(on);
         if (bgmA) bgmStart(Math.floor(Math.random() * bgmList().length));   // crossfade into the other playlist
         if (!on) { viceHeat = 0; renderHeat(); }
         const vb = $('viceBtn'); if (vb) { vb.classList.toggle('plate-on', on); vb.querySelector('.plate-tag').textContent = on ? 'leave?' : 'this week!'; vb.blur(); }
@@ -11461,6 +11479,16 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         } else funEvent('🌅 You left Vice. The sunset will be here all week. It never sets. That is kind of the whole thing.', 4000);
     }
     $('viceBtn').addEventListener('click', () => toggleVice());
+    function viceClippyPet(on) {   // swap the Clippy pet into his Vice outfit (and back)
+        const c = $('pet-clippy'), img = c && c.querySelector('.clippy-img'); if (!img) return;
+        if (on) { if (!img.dataset.orig) img.dataset.orig = img.getAttribute('src'); c.classList.add('vice-pose'); img.src = 'media/vice_cp_idle.webp'; }
+        else if (img.dataset.orig) { c.classList.remove('vice-pose'); img.src = img.dataset.orig; }
+    }
+    function vicePose(p, ms, hold) {   // a pose for a few seconds, then back to idle
+        const c = $('pet-clippy'), img = c && c.querySelector('.clippy-img'); if (!img || !c.classList.contains('vice-pose')) return;
+        img.src = 'media/vice_cp_' + p + '.webp'; vicePose.hold = !!hold; clearTimeout(vicePose.t);
+        vicePose.t = setTimeout(() => { vicePose.hold = false; if (c.classList.contains('vice-pose')) img.src = 'media/vice_cp_idle.webp'; }, ms || 4000);
+    }
     function viceTalk(text, ms) {   // Clippy, full size, in a neon talk box
         let t = $('viceTalk'); if (!t) { t = document.createElement('div'); t.id = 'viceTalk'; t.setAttribute('role', 'status'); t.innerHTML = '<img src="media/vice_clippy.webp" alt=""><div><b>CLIPPY</b><span></span></div>'; document.body.appendChild(t); t.onclick = () => t.classList.remove('on'); }
         t.querySelector('span').textContent = text; t.classList.add('on');
@@ -11479,7 +11507,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             if (tag && !inside) tag.textContent = 'this week!';
             if (inside && !week && !store.get('painWheelViceTest', false)) { toggleVice(); funEvent('🌅 Wheel: Vice City is over. Everybody came back. Kevin is still wanted in three states.', 5000); }
         };
-        setTimeout(() => { if (!EMBED_SHOP && isViceWeek() && store.get('painWheelVice', false) && !document.body.classList.contains('vice-city') && !document.body.classList.contains('ghost-town')) { document.body.classList.add('vice-city'); applyTheme(); if (bgmA) bgmStart(Math.floor(Math.random() * bgmList().length)); const vb2 = $('viceBtn'); if (vb2) { vb2.classList.add('plate-on'); vb2.querySelector('.plate-tag').textContent = 'leave?'; } } sync(); }, 3600);   // stayed in last time: still in
+        setTimeout(() => { if (!EMBED_SHOP && isViceWeek() && store.get('painWheelVice', false) && !document.body.classList.contains('vice-city') && !document.body.classList.contains('ghost-town')) { document.body.classList.add('vice-city'); applyTheme(); viceClippyPet(true); if (bgmA) bgmStart(Math.floor(Math.random() * bgmList().length)); const vb2 = $('viceBtn'); if (vb2) { vb2.classList.add('plate-on'); vb2.querySelector('.plate-tag').textContent = 'leave?'; } } sync(); }, 3600);   // stayed in last time: still in
         setInterval(sync, 60000);
     })();
     function lockShopBtn() {   // a padlock and gray on the Shop button until the 8/11 opens
