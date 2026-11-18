@@ -985,7 +985,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 18, 2:12 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 18, 2:13 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -8321,7 +8321,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         activePets().filter(k => k !== 'clippy').slice(0, IS_PHONE() ? 2 : 99).forEach(k => {
             const w = document.createElement('div'); w.className = 'pet-walker'; w.id = 'pet-' + k; w._home = PET_HOME[k] || 'strip';
             w.innerHTML = '<div class="pet-bubble hidden mb-1 px-2 py-1 rounded-lg bg-slate-900/95 border border-slate-600 text-slate-100 text-[11px] font-bold whitespace-nowrap shadow-lg" style="position:absolute;bottom:100%;left:50%;transform:translateX(-50%)"></div><div class="pet-flip" style="transition:transform .25s"><div class="pet-em" style="font-size:38px;line-height:1;animation:houseBob 1.1s ease-in-out infinite alternate">' + (k === 'murloc' ? `<span class="murloc-spr" style="background-image:url(${PHOTO_MURLOC_SHEET})"></span>` : k === 'chicken' ? `<img class="pet-spr chicken-spr" src="${PHOTO_CHICKEN}" alt="🐔">` : k === 'whelp' ? `<img class="pet-spr whelp-spr" src="${PHOTO_WHELP}" alt="🐉">` : k === 'accountant' ? `<img class="pet-spr giz-spr giz-tape" src="${PHOTO_GIZ_TAPE}" alt="🧮">` : k === 'volley' ? `<img class="pet-spr" src="${PHOTO_VOLLEY}" alt="🏐" style="width:40px;height:auto;animation:volleyBob 2.2s ease-in-out infinite">` : PETS[k].img ? `<img class="pet-spr" src="${PETS[k].img}" alt="${PETS[k].e}" style="width:${PETS[k].w || 36}px;height:auto;${k === 'spinny' ? 'animation:spinnyRoll 1.6s linear infinite' : ''}">` : PETS[k].e) + '</div></div>';
-            w.style.cssText = `position:${w._home === 'house' ? 'fixed' : 'absolute'};left:0;top:0;z-index:62;pointer-events:none;will-change:transform`;
+            w.style.cssText = `position:${w._home === 'house' || w._home === 'roam' ? 'fixed' : 'absolute'};left:0;top:0;z-index:62;pointer-events:none;will-change:transform`;
             // Gizzlenut rides inside the sticky wheel column so he stays with the gold count; everyone else is planted on the page
             (w._home === 'gold' && $('wheelColumn') ? $('wheelColumn') : document.body).appendChild(w);
             const t = petTarget(w, true); petMove(w, t.x, t.y, true);
@@ -8343,10 +8343,10 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             const r = $('goldText').getBoundingClientRect(), c = w.parentElement === document.body ? { left: -scrollX, top: -scrollY } : w.parentElement.getBoundingClientRect();
             return { x: r.left - c.left - 46 + Math.random() * (r.width + 30), y: r.top - c.top - (w.id === 'pet-accountant' ? (IS_PHONE() ? 62 : 82) : 44) };
         }
-        if (w._home === 'roam') {   // a spot in the wheel section of the page (not wherever you've scrolled to), with nothing clickable under it
-            const m = document.querySelector('main').getBoundingClientRect(), top = Math.max(90, m.top + scrollY), bot = Math.max(top + 200, m.bottom + scrollY - 110);
+        if (w._home === 'roam') {   // a spot on your screen (the chicken stays with you when you scroll), with nothing clickable under it
+            const top = 90, bot = Math.max(top + 200, H - 70);
             for (let i = 0; i < 14; i++) {
-                const x = 40 + Math.random() * (W - 120), y = top + Math.random() * (bot - top), vy = y - scrollY;
+                const x = 40 + Math.random() * (W - 120), y = top + Math.random() * (bot - top), vy = y;
                 const visible = vy > 0 && vy < H - 40;
                 const hits = visible && [[x, vy], [x + 40, vy], [x, vy + 40], [x + 40, vy + 40], [x + 20, vy + 20]].some(([px, py]) => { const el = document.elementFromPoint(px, py); return el && el.closest(INTERACTIVE); });
                 if (!hits) return { x, y };
@@ -9081,7 +9081,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         store.set('painWheelRoadkillDay', new Date().toDateString()); breaking('AMBULANCE HITS CHICKEN. COP STAYS FOR DINNER');
         patrolOn = true; w._talking = true;
         const lane = innerHeight - 150, cx = Math.round(innerWidth * 0.55);
-        w.style.transition = 'transform 1.6s ease-in-out'; w.style.transform = `translate(${cx - 31 + scrollX}px, ${lane + 6 + scrollY}px)`; w._x = cx - 31 + scrollX; w._y = lane + 6 + scrollY;
+        w.style.transition = 'transform 1.6s ease-in-out'; w.style.transform = `translate(${cx - 31}px, ${lane + 6}px)`; w._x = cx - 31; w._y = lane + 6;   // screen coords: the chicken is pinned to the screen
         petSay('chicken', 'BAWK? (crossing the road)');
         chat('why did the chicken cross the road');
         const mk = (cop) => {
