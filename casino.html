@@ -81,6 +81,35 @@
   #cup img { display: block; width: 100%; height: auto; }
   #gregRam { position: absolute; left: 84.45%; top: 50.36%; width: 20.06%; height: 16.79%; background: url(media/cas_gregram.webp) 0 0 / 1000% 100% no-repeat; display: none; pointer-events: none; }
   #slotClose { position: absolute; right: -6px; top: -6px; z-index: 3; }
+
+  /* ---- Wheel Roulette (Ada's table kit, 2560 x 1280 native; everything placed in % of that) ---- */
+  #roul .rstage { position: relative; width: min(1700px, 97vw, calc(94vh * 2)); aspect-ratio: 2 / 1; container-type: inline-size; background: url(media/rl_table.webp) 0 0 / 100% 100%; border-radius: 1cqw; box-shadow: 0 0 0 3px #b45309, 0 20px 60px rgba(0,0,0,.7); user-select: none; }
+  #roul .abs { position: absolute; }
+  #rRotor { left: 21.523%; top: 24.922%; width: 19.0625%; aspect-ratio: 1; background: url(media/rl_rotor.webp) 0 0 / 100% 100%; will-change: transform; }
+  #rHub { left: 29.0625%; top: 39.922%; width: 4.0234%; pointer-events: none; }
+  #rBall { width: 1.211%; aspect-ratio: 1; background: url(media/rl_ball.webp) 0 0 / 100% 100%; translate: -50% -50%; filter: drop-shadow(0 .1cqw .1cqw rgba(0,0,0,.6)); pointer-events: none; }
+  .rbet { position: absolute; padding: 0; border: .18cqw solid transparent; border-radius: .4cqw; background: transparent; cursor: pointer; }
+  .rbet:hover, .rbet:focus-visible { border-color: #fde68a; box-shadow: 0 0 1cqw #fde68a, inset 0 0 .8cqw rgba(253,230,138,.35); outline: none; }
+  .rbet.win { border-color: #facc15; box-shadow: 0 0 1.6cqw #facc15, inset 0 0 1.4cqw rgba(250,204,21,.55); }
+  .rchip { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: 3.1cqw; aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; font: 900 .95cqw/1 system-ui, sans-serif; color: #fff; text-shadow: 0 .08cqw .1cqw #000; pointer-events: none;
+    border: .3cqw dashed rgba(255,255,255,.85); box-shadow: 0 0 0 .18cqw rgba(0,0,0,.55), 0 .3cqw .5cqw rgba(0,0,0,.6); }
+  .rchip.dark { color: #111; text-shadow: none; border-color: rgba(0,0,0,.55); }
+  #rRack { left: 73.4%; top: 91%; width: 23%; height: 8%; display: flex; align-items: center; justify-content: center; gap: .6cqw; }
+  #rRack .rchip { position: relative; left: auto; top: auto; translate: none; width: 3.6cqw; font-size: 1.05cqw; pointer-events: auto; cursor: pointer; transition: transform .12s; }
+  #rRack .rchip:hover { transform: translateY(-.3cqw); } #rRack .rchip.on { transform: translateY(-.5cqw) scale(1.12); box-shadow: 0 0 0 .25cqw #fde68a, 0 0 1.2cqw #fde68a; }
+  #rInfo { left: 73.4%; top: 86.9%; width: 23%; text-align: center; font: 800 1.15cqw/1.25 system-ui, sans-serif; color: #fde68a; text-shadow: 0 .1cqw .2cqw #000; }
+  #rMsg { left: 3%; top: 2.5%; width: 42%; min-height: 4.2%; padding: .5cqw 1cqw; border-radius: .8cqw; background: rgba(28,8,22,.9); border: .2cqw solid #f59e0b; text-align: center; font: 800 1.3cqw/1.3 system-ui, sans-serif; color: #fde7c4; }
+  .rbtn { position: absolute; padding: 0; border: 0; background: none; cursor: pointer; transition: transform .1s, filter .1s; }
+  .rbtn img { display: block; width: 100%; height: auto; pointer-events: none; }
+  .rbtn:hover, .rbtn:focus-visible { filter: brightness(1.18) drop-shadow(0 0 .6cqw #fde68a); outline: none; } .rbtn:active { transform: translateY(.2cqw); }
+  .rbtn:disabled { filter: grayscale(.8) brightness(.6); cursor: default; }
+  #rRecent { left: 3.711%; top: 87.27%; width: 12.27%; }
+  .rcell { position: absolute; top: 93.67%; width: 1.25%; height: 3.125%; display: grid; place-items: center; font: 900 .95cqw/1 system-ui, sans-serif; color: #fff; border-radius: .2cqw; }
+  #rCrown { width: 3.05%; translate: -50% -85%; pointer-events: none; display: none; filter: drop-shadow(0 0 .8cqw #facc15); }
+  #rMarker { left: 50%; top: 50%; translate: -50% -50%; width: 46%; display: none; padding: 1.4cqw; border-radius: 1.2cqw; background: rgba(28,8,22,.97); border: .3cqw solid #f59e0b; box-shadow: 0 0 2cqw rgba(192,38,211,.5); text-align: center; z-index: 5; }
+  #rMarker.on { display: block; } #rMarker img { width: 7cqw; } #rMarker p { font: 800 1.45cqw/1.4 system-ui, sans-serif; color: #fde7c4; margin: .6cqw 0 1cqw; }
+  #rMarker .big { font-size: 1.4cqw; margin: 0 .4cqw; }
+  #roulClose { position: absolute; right: .6%; top: 1%; z-index: 6; font-size: max(16px, 1.3cqw); }
 </style></head><body>
 <header><h1 class="logo-h1"><img src="media/cas_logo.webp" alt="Chief Kick a Bitch's Casino"></h1><span id="goldBox"></span><nav><a class="alt" href="./"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a><a href="wheel.html">🎡 Back to The Wheel</a></nav></header>
 <div class="wrap"><div class="scroller"><div class="scene" id="scene">
@@ -144,6 +173,26 @@
   <button id="cup" type="button" aria-label="Your drink"><img id="cupImg" src="media/cas_cup_soda.webp" alt=""></button>
   <div id="gregRam"></div>
   <button class="big alt" id="slotClose">✕ Back</button>
+</div></div>
+
+<!-- Wheel Roulette (Ada's table) -->
+<div id="roul" class="dlg" role="dialog" aria-modal="true" aria-label="Wheel Roulette"><div class="rstage" id="rStage">
+  <div class="abs" id="rRotor"></div><img class="abs" id="rHub" src="media/rl_hub.webp" alt="">
+  <div class="abs" id="rBall"></div>
+  <div id="rBets"></div>
+  <img class="abs" id="rCrown" src="media/rl_crown.webp" alt="">
+  <div class="abs" id="rMsg" role="status"></div>
+  <img class="abs" id="rRecent" src="media/rl_recent.webp" alt="Recent results"><div id="rCells"></div>
+  <button class="rbtn" id="rSpin" aria-label="Spin" style="left:17.19%;top:88.98%;width:8.71%"><img src="media/rl_spin.webp" alt=""></button>
+  <button class="rbtn" id="rClear" aria-label="Clear bets" style="left:26.48%;top:88.98%;width:8.71%"><img src="media/rl_clear.webp" alt=""></button>
+  <button class="rbtn" id="rRepeat" aria-label="Repeat last bets" style="left:35.78%;top:88.98%;width:8.71%"><img src="media/rl_repeat.webp" alt=""></button>
+  <button class="rbtn" id="rUndo" aria-label="Undo last chip" style="left:45.08%;top:88.98%;width:8.71%"><img src="media/rl_undo.webp" alt=""></button>
+  <button class="rbtn" id="rBell" aria-label="Service bell" style="left:56.17%;top:87.89%;width:4.34%"><img src="media/rl_bell.webp" alt=""></button>
+  <button class="rbtn" id="rCoco" aria-label="Coconut drink" style="left:62.11%;top:86.72%;width:4.53%"><img src="media/rl_coco.webp" alt=""></button>
+  <img class="abs" src="media/rl_cup.webp" alt="" style="left:67.97%;top:90.78%;width:4.22%;pointer-events:none">
+  <div class="abs" id="rInfo"></div><div class="abs" id="rRack"></div>
+  <div class="abs" id="rMarker" role="dialog" aria-label="Goblin Express marker"><img src="media/cas_hh_smirk.webp" alt=""><p id="rMarkerTxt"></p><button class="big" id="rMarkerYes">Take the marker</button><button class="big alt" id="rMarkerNo">No thanks</button></div>
+  <button class="big alt" id="roulClose">✕ Leave table</button>
 </div></div>
 
 <script>
@@ -317,8 +366,120 @@ function openSlot(m, broken) {
   $('slot').classList.add('open');
 }
 $('slotClose').onclick = () => { $('slot').classList.remove('open'); };
-document.querySelectorAll('.dlg').forEach(d => d.addEventListener('click', (e) => { if (e.target === d) d.classList.remove('open'); }));
-addEventListener('keydown', (e) => { if (e.key === 'Escape') document.querySelectorAll('.dlg.open').forEach(d => d.classList.remove('open')); });
+document.querySelectorAll('.dlg').forEach(d => d.addEventListener('click', (e) => { if (e.target === d) { if (d.id === 'roul') closeRoulette(); else d.classList.remove('open'); } }));
+addEventListener('keydown', (e) => { if (e.key === 'Escape') document.querySelectorAll('.dlg.open').forEach(d => { if (d.id === 'roul') closeRoulette(); else d.classList.remove('open'); }); });
+
+
+// ---------- Wheel Roulette: real gold, single zero, standard payouts (house keeps about 2.7%). Broke? The pit boss offers a Goblin Express marker ----------
+const RL_BETS = [["0",1142,370,71,287,[0],35],["3",1213,370,68,98,[3],35],["6",1281,370,70,98,[6],35],["9",1351,370,66,98,[9],35],["12",1417,370,68,98,[12],35],["15",1485,370,68,98,[15],35],["18",1553,370,72,98,[18],35],["21",1625,370,68,98,[21],35],["24",1693,370,66,98,[24],35],["27",1759,370,70,98,[27],35],["30",1829,370,70,98,[30],35],["33",1899,370,74,98,[33],35],["36",1973,370,70,98,[36],35],["column_3",2043,370,93,98,[3,6,9,12,15,18,21,24,27,30,33,36],2],["2",1213,468,68,93,[2],35],["5",1281,468,70,93,[5],35],["8",1351,468,66,93,[8],35],["11",1417,468,68,93,[11],35],["14",1485,468,68,93,[14],35],["17",1553,468,72,93,[17],35],["20",1625,468,68,93,[20],35],["23",1693,468,66,93,[23],35],["26",1759,468,70,93,[26],35],["29",1829,468,70,93,[29],35],["32",1899,468,74,93,[32],35],["35",1973,468,70,93,[35],35],["column_2",2043,468,93,93,[2,5,8,11,14,17,20,23,26,29,32,35],2],["1",1213,561,68,96,[1],35],["4",1281,561,70,96,[4],35],["7",1351,561,66,96,[7],35],["10",1417,561,68,96,[10],35],["13",1485,561,68,96,[13],35],["16",1553,561,72,96,[16],35],["19",1625,561,68,96,[19],35],["22",1693,561,66,96,[22],35],["25",1759,561,70,96,[25],35],["28",1829,561,70,96,[28],35],["31",1899,561,74,96,[31],35],["34",1973,561,70,96,[34],35],["column_1",2043,561,93,96,[1,4,7,10,13,16,19,22,25,28,31,34],2],["dozen_1",1170,657,299,82,[1,2,3,4,5,6,7,8,9,10,11,12],2],["dozen_2",1469,657,317,82,[13,14,15,16,17,18,19,20,21,22,23,24],2],["dozen_3",1786,657,310,82,[25,26,27,28,29,30,31,32,33,34,35,36],2],["low",1170,739,148,83,[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],1],["even",1318,739,152,83,[2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36],1],["red",1470,739,155,83,[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36],1],["black",1625,739,161,83,[2,4,6,8,10,11,13,15,17,20,22,24,26,28,29,31,33,35],1],["odd",1786,739,161,83,[1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35],1],["high",1947,739,149,83,[19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36],1]];
+const RL_ORDER = [0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26], RL_RED = new Set([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]);
+const RL_STEP = 360 / 37, RL_C = [795, 563], RL_TRACK = 262, RL_SETTLE = 142;
+// chips (Aaron's ladder). Placeholder discs until Ada's chip art arrives; the Googol + Black Hole chips come with high roller status
+const CHIPS = [[1e3, '#f5f5f4', 1], [1e4, '#2563eb'], [5e4, '#ea580c'], [1e5, '#facc15', 1], [1e6, '#cbd5e1', 1], [1e9, '#7e22ce'], [1e12, '#dc2626'], [1e15, '#16a34a'], [1e20, '#ec4899'], [1e25, '#111827'], [1e50, '#ca8a04']];
+const short = (n) => n < 1e3 ? String(Math.round(n)) : n < 1e6 ? +(n / 1e3).toFixed(1) + 'K' : n < 1e9 ? +(n / 1e6).toFixed(1) + 'M' : n < 1e12 ? +(n / 1e9).toFixed(1) + 'B' : n < 1e15 ? +(n / 1e12).toFixed(1) + 'T' : (n / Math.pow(10, Math.floor(Math.log10(n)))).toFixed(1).replace('.0', '') + 'e' + Math.floor(Math.log10(n));
+const chipFor = (n) => { let c = CHIPS[0]; CHIPS.forEach(x => { if (n >= x[0]) c = x; }); return c; };
+const chipEl = (n, cls) => { const c = chipFor(n); return `<span class="rchip${c[2] ? ' dark' : ''}${cls ? ' ' + cls : ''}" style="background:radial-gradient(circle at 35% 30%, rgba(255,255,255,.35), transparent 55%), ${c[1]}">${short(n)}</span>`; };
+const RLP = (x) => (x / 25.6) + '%', RLQ = (y) => (y / 12.8) + '%';
+let rBets = {}, rHist = [], rLast = null, rSpinning = false, rChip = 0, rRot = 0, rMarkerNeed = 0;
+$('rBets').innerHTML = RL_BETS.map(([id, x, y, w, h]) => `<button class="rbet" data-id="${id}" aria-label="Bet on ${id.replace('_', ' ')}" style="left:${RLP(x)};top:${RLQ(y)};width:${RLP(w)};height:${RLQ(h)}"></button>`).join('');
+const rMsg = (t) => { $('rMsg').textContent = t; };
+const rTotal = () => Object.values(rBets).reduce((a, b) => a + b, 0);
+function rRack() {   // the chips you can afford (the 6 biggest that fit), plus the 1K chip so a broke player can still ask for a marker
+  const g = gold(), fit = CHIPS.filter(c => c[0] <= Math.max(g, 1e3)).slice(-6);
+  if (!fit.some(c => c[0] === rChip)) rChip = fit[0][0];
+  $('rRack').innerHTML = fit.map(c => chipEl(c[0], c[0] === rChip ? 'on' : '').replace('<span', `<span role="button" tabindex="0" data-v="${c[0]}" aria-label="Chip ${short(c[0])}"`)).join('');
+  $('rRack').querySelectorAll('[data-v]').forEach(el => { el.onclick = () => { rChip = +el.dataset.v; blip(1200, 40); rRack(); }; el.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') el.click(); }; });
+  $('rInfo').textContent = `On the table: ${fmt(rTotal())} · Gold: ${fmt(g)}`;
+}
+function rDraw() {
+  document.querySelectorAll('.rbet').forEach(b => { const a = rBets[b.dataset.id]; b.innerHTML = a ? chipEl(a) : ''; });
+  rRack(); $('rSpin').disabled = rSpinning; $('rClear').disabled = $('rUndo').disabled = rSpinning || !rHist.length; $('rRepeat').disabled = rSpinning || !rLast;
+}
+function rTake(n) { const g = gold(); if (g < n) return false; put('painWheelGold', g - n); showGold(); return true; }
+function rGive(n) { if (n > 0) { put('painWheelGold', gold() + n); showGold(); } }
+function rPlace(id, v, quiet) {
+  if (rSpinning) return false;
+  if (!rTake(v)) { rOfferMarker(v); return false; }
+  rBets[id] = (rBets[id] || 0) + v; rHist.push([id, v]); $('rCrown').style.display = 'none'; document.querySelectorAll('.rbet.win').forEach(b => b.classList.remove('win'));
+  if (!quiet) { sfx('audio_cas_el_chips_place', .7); rDraw(); }
+  return true;
+}
+document.querySelectorAll('.rbet').forEach(b => b.onclick = () => { if (rPlace(b.dataset.id, rChip)) rMsg(pick(['Bet placed. The wheel is already laughing.', 'Chips down. No take-backs. (There is an UNDO button. Coward.)', 'Nice bet. The house agrees. The house loves it.', 'Placed. Ada nods. Ada is not even at this table.'])); });
+$('rUndo').onclick = () => { if (rSpinning || !rHist.length) return; const [id, v] = rHist.pop(); rBets[id] -= v; if (rBets[id] <= 0) delete rBets[id]; rGive(v); blip(500, 60); rDraw(); };
+$('rClear').onclick = () => { if (rSpinning || !rHist.length) return; rGive(rTotal()); rBets = {}; rHist = []; blip(400, 80); rMsg('Table cleared. Your gold came back. It looks relieved.'); rDraw(); };
+$('rRepeat').onclick = () => {
+  if (rSpinning || !rLast) return; const need = rLast.reduce((a, [, v]) => a + v, 0);
+  if (gold() < need) { rOfferMarker(need); return; }
+  rLast.forEach(([id, v]) => rPlace(id, v, true)); sfx('audio_cas_el_chips_place', .7); rMsg('Same bets as last time. Insanity is doing the same thing and expecting a different result. Good luck!'); rDraw();
+};
+function rOfferMarker(need) {   // the pit boss leans over: a Goblin Express marker, 400% APR, no questions (lots of questions)
+  const total = gold() + (Number(get('painWheelVault', 0)) || 0), debt = Number(get('painWheelDebt', 0)) || 0;
+  const limit = Math.max(1e6, total * 0.5), avail = limit - debt, amt = Math.min(avail, Math.max(need * 5, total * 0.05, 5000));
+  if (avail < need) { rMsg('Goblin Express DECLINED. Even the goblins think you should go home.'); return; }
+  rMarkerNeed = Math.round(amt);
+  $('rMarkerTxt').textContent = `${HOST_NAME}: "Short? No problem. I can front you ${fmt(rMarkerNeed)} on a Goblin Express marker. 400% APR. Totally normal. Everybody does it."`;
+  $('rMarker').classList.add('on');
+}
+$('rMarkerYes').onclick = () => {
+  const debt = Number(get('painWheelDebt', 0)) || 0; put('painWheelDebt', debt + rMarkerNeed); rGive(rMarkerNeed);
+  put('painWheelCasinoMarkers', (get('painWheelCasinoMarkers', 0) || 0) + 1); put('painWheelCardCharges', (get('painWheelCardCharges', 0) || 0) + 1);
+  $('rMarker').classList.remove('on'); sfx('audio_cas_el_chips_collect2', .6); rMsg(`Marker signed. +${fmt(rMarkerNeed)}. The pit boss is smiling. That is never good.`); rDraw();
+};
+$('rMarkerNo').onclick = () => { $('rMarker').classList.remove('on'); rMsg('Smart. Rare, but smart.'); };
+function rBall(angle, r) { const a = angle * Math.PI / 180; $('rBall').style.left = RLP(RL_C[0] + r * Math.sin(a)); $('rBall').style.top = RLQ(RL_C[1] - r * Math.cos(a)); }
+function rCells() {
+  const rec = get('painWheelRouletteRecent', []) || [], X = [125, 157, 189, 220, 252, 284, 315, 347];
+  $('rCells').innerHTML = rec.slice(0, 8).map((n, i) => `<span class="rcell" style="left:${RLP(X[i])};background:${n === 0 ? '#15803d' : RL_RED.has(n) ? '#b91c1c' : '#111827'}">${n}</span>`).join('');
+}
+$('rSpin').onclick = () => {
+  if (rSpinning) return;
+  if (!rHist.length) { rMsg(pick(['Place a bet first. Pick a chip (bottom right), then click the table.', 'No bets, no spin. The wheel has standards.'])); return; }
+  rSpinning = true; rLast = rHist.slice(); rDraw(); $('rCrown').style.display = 'none';
+  const rnd = new Uint32Array(1); crypto.getRandomValues(rnd); const result = rnd[0] % 37;   // the result is decided first; the animation just shows it
+  const idx = RL_ORDER.indexOf(result), R0 = rRot % 360, R1 = R0 + 540 + Math.random() * 360, DUR = still ? 600 : 4500;
+  sfx('audio_cas_el_roulette_spin' + (1 + Math.floor(Math.random() * 5)), .8);
+  rMsg(pick(['No more bets! The ball is rolling.', 'Round and round. Your gold watches nervously.', 'Spinning... Clippy is calculating the odds. Clippy is crying.']));
+  const t0 = performance.now(), eo = (t) => 1 - Math.pow(1 - t, 3);
+  (function step(now) {
+    const t = Math.min(1, (now - t0) / DUR), R = R0 + (R1 - R0) * eo(t); rRot = R;
+    $('rRotor').style.transform = `rotate(${R}deg)`;
+    const rel = (1 - eo(Math.min(1, t * 1.08))) * 1440, r = t < .6 ? RL_TRACK : t < .85 ? RL_TRACK - (RL_TRACK - RL_SETTLE) * ((t - .6) / .25) + Math.abs(Math.sin(t * 60)) * 10 * (1 - (t - .6) / .25) : RL_SETTLE;
+    rBall(R + idx * RL_STEP + rel, r);
+    if (t < 1) requestAnimationFrame(step); else rResolve(result);
+  })(t0);
+};
+function rResolve(n) {
+  let won = 0, lost = 0;
+  RL_BETS.forEach(([id, , , , , nums, net]) => { const a = rBets[id]; if (!a) return; if (nums.includes(n)) won += a * (net + 1); else lost += a; });
+  const area = RL_BETS.find(b => b[0] === String(n)), win = document.querySelector(`.rbet[data-id="${n}"]`);
+  if (win) win.classList.add('win');
+  $('rCrown').style.left = RLP(area[1] + area[3] / 2); $('rCrown').style.top = RLQ(area[2]); $('rCrown').style.display = 'block';
+  const rec = [n].concat(get('painWheelRouletteRecent', []) || []).slice(0, 8); put('painWheelRouletteRecent', rec); rCells();
+  const col = n === 0 ? 'GREEN' : RL_RED.has(n) ? 'RED' : 'BLACK', bet = rTotal();
+  rGive(won); rBets = {}; rHist = [];
+  put('painWheelRouletteSpins', (get('painWheelRouletteSpins', 0) || 0) + 1);
+  if (won > 0) {
+    put('painWheelRouletteWins', (get('painWheelRouletteWins', 0) || 0) + 1);
+    if (rLast.some(([id]) => /^\d+$/.test(id) && +id === n)) put('painWheelRouletteStraight', true);   // hit a single number
+    sfx(won >= bet * 10 ? 'audio_cas_el_jackpot' + (1 + Math.floor(Math.random() * 2)) : 'audio_cas_el_chips_collect' + (2 + Math.floor(Math.random() * 2)), .8);
+    rMsg(`${n} ${col}! You won ${fmt(won)}${won > bet ? ` (up ${fmt(won - bet)})` : ''}. ` + pick(['The pit boss is pretending to be happy for you.', 'Cindy cheered. The bouncers did not.', 'Quit while you are ahead? Nobody ever does.']));
+  } else {
+    if (lost > 0) sfx('audio_cas_el_chips_collect1', .7);   // the dealer sweeps your chips
+    rMsg(`${n} ${col}. ` + (n === 0 ? 'The house takes it all. The house picked green. The house ALWAYS picks green.' : pick(['The dealer sweeps your chips. Gently. Like a funeral.', 'So close. (It was not close.)', 'The wheel has spoken. It said no.', 'Spin again? The wheel would love that.'])));
+  }
+  rSpinning = false; rDraw();
+}
+$('rBell').onclick = () => { blip(1568, 260, 'sine'); setTimeout(() => blip(1568, 200, 'sine'), 120); rMsg(pick(['🛎️ Ding! Cindy is on her way. She is always on her way.', '🛎️ The pit boss heard the bell. He is pretending he did not.', '🛎️ Ding ding! Nothing happened. Ding ding! Still nothing.'])); };
+$('rCoco').onclick = () => rMsg(pick(['🥥 A coconut drink. Cindy left it here. It is probably for you. Probably.', '🥥 Drinking while gambling? Bold. Very bold. The house approves.', '🥥 The umbrella is the best part. Do not eat the umbrella.']));
+function openRoulette() {
+  rBets = {}; rHist = []; rSpinning = false; rCells(); rDraw(); $('rMarker').classList.remove('on'); $('rCrown').style.display = 'none';
+  $('rRotor').style.transform = `rotate(${rRot}deg)`; rBall(rRot + 90, RL_SETTLE);
+  rMsg(pick(['Welcome to Wheel Roulette! Pick a chip (bottom right), click the table, then SPIN.', 'Place your bets! Red, black, or the number of your ex.', 'Single zero. Fair odds. The house still wins. Slowly. Lovingly.']));
+  $('roul').classList.add('open');
+}
+function closeRoulette() { if (rSpinning) return; if (rHist.length) { rGive(rTotal()); rBets = {}; rHist = []; } $('roul').classList.remove('open'); }   // bets that never spun come back to you
+$('roulClose').onclick = closeRoulette;
+addEventListener('storage', (e) => { if (e.key === 'painWheelGold' && $('roul').classList.contains('open') && !rSpinning) rRack(); });
 
 // ---------- everything else you can click ----------
 const LINES = {
@@ -341,6 +502,7 @@ document.querySelectorAll('[data-go]').forEach(b => b.onclick = () => {
   if (g === 'slot') { openSlot(+b.dataset.m, false); return; }
   if (g === 'broken') { openSlot(5, true); return; }
   if (g === 'cage') { openCage(); return; }
+  if (g === 'roulette') { openRoulette(); return; }
   if (g === 'portrait' && Math.random() < .4) portraitEvent();
   note(pick(LINES[g]), 4600);
 });
