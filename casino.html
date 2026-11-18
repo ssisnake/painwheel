@@ -109,6 +109,18 @@
   #rMarker { left: 50%; top: 50%; translate: -50% -50%; width: 46%; display: none; padding: 1.4cqw; border-radius: 1.2cqw; background: rgba(28,8,22,.97); border: .3cqw solid #f59e0b; box-shadow: 0 0 2cqw rgba(192,38,211,.5); text-align: center; z-index: 5; }
   #rMarker.on { display: block; } #rMarker img { width: 7cqw; } #rMarker p { font: 800 1.45cqw/1.4 system-ui, sans-serif; color: #fde7c4; margin: .6cqw 0 1cqw; }
   #rMarker .big { font-size: 1.4cqw; margin: 0 .4cqw; }
+  /* Exxon-Hawkeyes bailout: once per player, when you go broke at the casino */
+  #bailout { position: fixed; inset: 0; z-index: 95; display: none; align-items: center; justify-content: center; padding: 16px; background: rgba(0,0,0,0); transition: background 1.2s; }
+  #bailout.on { display: flex; } #bailout.dim { background: rgba(0,0,0,.82); }
+  #bailout .notice { width: min(640px, 100%); background: #fbfaf5; color: #111; border-radius: 6px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.7); opacity: 0; transform: translateY(12px); transition: opacity .9s .5s, transform .9s .5s; font-family: Georgia, 'Times New Roman', serif; }
+  #bailout.dim .notice { opacity: 1; transform: none; }
+  #bailout .bar { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; background: linear-gradient(90deg, #b91c1c 0 50%, #1d4ed8 50%); color: #fff; font: 900 22px/1.1 system-ui, sans-serif; letter-spacing: .06em; }
+  #bailout .body { padding: 20px 24px 22px; text-align: center; }
+  #bailout .body small { display: block; font: 700 14px system-ui, sans-serif; letter-spacing: .14em; color: #57534e; text-transform: uppercase; }
+  #bailout .body p { font-size: 22px; line-height: 1.45; margin: 12px 0; }
+  #bailout .amt { font: 900 30px ui-monospace, monospace; color: #15803d; }
+  #bailout .ach { display: inline-block; margin-top: 6px; padding: 6px 12px; border-radius: 8px; background: #fef3c7; border: 2px solid #d97706; font: 800 17px system-ui, sans-serif; }
+  #bailout .sig { margin-top: 10px; font-style: italic; color: #44403c; font-size: 16px; }
   #roulClose { position: absolute; right: .6%; top: 1%; z-index: 6; font-size: max(16px, 1.3cqw); }
 </style></head><body>
 <header><h1 class="logo-h1"><img src="media/cas_logo.webp" alt="Chief Kick a Bitch's Casino"></h1><span id="goldBox"></span><nav><a class="alt" href="./"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a><a href="wheel.html">🎡 Back to The Wheel</a></nav></header>
@@ -175,6 +187,16 @@
   <button class="big alt" id="slotClose">✕ Back</button>
 </div></div>
 
+<!-- Exxon-Hawkeyes bailout (Ada's idea) -->
+<div id="bailout" role="dialog" aria-modal="true" aria-label="Exxon-Hawkeyes bailout"><div class="notice">
+  <div class="bar"><span>⛽ EXXON-HAWKEYES</span><span>🦅</span></div>
+  <div class="body"><small>Official Notice · Emergency Gambling Relief Fund</small>
+    <p>Your catastrophic financial decisions have been subsidized by Hawkeyes. Please gamble irresponsibly.</p>
+    <div class="amt" id="bailAmt"></div>
+    <div class="ach">🏆 Achievement unlocked: Too Stupid to Fail</div>
+    <div class="sig">This offer is valid once per lifetime. Hawkeyes has been informed. Hawkeyes is not surprised.</div>
+    <div class="btnrow"><button class="big" id="bailOk">Thank you, Hawkeyes</button></div>
+  </div></div></div>
 <!-- Wheel Roulette (Ada's table) -->
 <div id="roul" class="dlg" role="dialog" aria-modal="true" aria-label="Wheel Roulette"><div class="rstage" id="rStage">
   <div class="abs" id="rRotor"></div><img class="abs" id="rHub" src="media/rl_hub.webp" alt="">
@@ -412,7 +434,17 @@ $('rRepeat').onclick = () => {
   if (gold() < need) { rOfferMarker(need); return; }
   rLast.forEach(([id, v]) => rPlace(id, v, true)); sfx('audio_cas_el_chips_place', .7); rMsg('Same bets as last time. Insanity is doing the same thing and expecting a different result. Good luck!'); rDraw();
 };
+function hawkeyesBailout() {   // once per player: you went broke at the casino and Exxon-Hawkeyes steps in
+  put('painWheelHawkeyesBailout', Date.now());
+  const total = gold() + (Number(get('painWheelVault', 0)) || 0), amt = Math.round(Math.max(1e4, total * 0.02));
+  rGive(amt); $('bailAmt').textContent = '+' + fmt(amt) + ' emergency gambling money';
+  if (window.pwAch) pwAch('toostupid');
+  const b = $('bailout'); b.classList.add('on'); requestAnimationFrame(() => requestAnimationFrame(() => b.classList.add('dim'))); sfx('audio_exxon', .8);
+  rMsg('Exxon-Hawkeyes paid your way. Do not make him regret it. (You will make him regret it.)'); rDraw();
+}
+$('bailOk').onclick = () => { const b = $('bailout'); b.classList.remove('dim'); setTimeout(() => b.classList.remove('on'), 400); };
 function rOfferMarker(need) {   // the pit boss leans over: a Goblin Express marker, 400% APR, no questions (lots of questions)
+  if (gold() < 1e3 && !get('painWheelHawkeyesBailout', 0) && Math.random() < 0.34) { hawkeyesBailout(); return; }   // flat broke: sometimes Hawkeyes shows up first (once ever)
   const total = gold() + (Number(get('painWheelVault', 0)) || 0), debt = Number(get('painWheelDebt', 0)) || 0;
   const limit = Math.max(1e6, total * 0.5), avail = limit - debt, amt = Math.min(avail, Math.max(need * 5, total * 0.05, 5000));
   if (avail < need) { rMsg('Goblin Express DECLINED. Even the goblins think you should go home.'); return; }
