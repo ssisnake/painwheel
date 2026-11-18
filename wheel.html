@@ -784,7 +784,7 @@
             <button id="toyBtn" title="Show / hide your toys (bottom-right corner)" style="display:none" class="plate-btn cursor-pointer"><img class="plate-img" data-plate="TOYS" alt="Toys"><span id="toyLbl" class="plate-count" style="display:none"></span></button>
             <button id="partyBtn" title="Party mode" class="plate-btn cursor-pointer"><img class="plate-img" data-plate="PARTY" alt="Party"><img id="partyHatImg" alt="" hidden></button>
             <button id="tsukBtn" class="plate-btn cursor-pointer" title="TsukBlock (ad blocker)" aria-label="TsukBlock"><img class="plate-img" data-plate="TSUK" src="media/plate_tsuk2.webp" alt="TsukBlock"></button>
-            <button id="viceBtn" title="Vice Week" class="plate-btn cursor-pointer" style="display:none"><img class="plate-img" src="media/plate_vice.webp" alt="Vice Week"><span class="plate-tag"></span></button>
+            <button id="viceBtn" title="Wheel: Vice City" class="plate-btn cursor-pointer" style="display:none"><img class="plate-img" src="media/plate_vice.webp" alt="Wheel: Vice City"><span class="plate-tag"></span></button>
             <button id="foreverBtn" title="WoW Forever is out" class="plate-btn cursor-pointer" style="display:none"><img class="plate-img" data-plate="FOREVER" alt="Forever"><span class="plate-tag"></span></button>
         </div>
     </header>
@@ -969,7 +969,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 18, 1:32 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 18, 1:36 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -4964,9 +4964,9 @@
         { id: 'axacam5',    name: 'Caught on Camera',         desc: 'Catch Axazon hiding in 5 different places.' },
         { id: 'gregpet',    name: 'Heavy Machinery Not Included', desc: 'Win Greg from the claw machine.', secret: true, secretName: true },
         { id: 'cartridge',  name: 'The Collector',            desc: 'Find the one Wheeltari cartridge that actually works, and play it in the VIP room.', secret: true, secretName: true },
-        { id: 'viceweek',   name: 'Welcome to Vice',          desc: 'Go to Vice Week (the new GTA\'s launch week, Nov 19-25).', secret: true },
-        { id: 'vicebusted', name: 'BUSTED',                   desc: 'Hit 5 stars during Vice Week and get caught by ChAoTiC.', secret: true },
-        { id: 'vicewasted', name: 'WASTED',                   desc: 'Get WASTED during Vice Week. It just happens sometimes.', secret: true }
+        { id: 'viceweek',   name: 'Welcome to Vice',          desc: 'Go to Wheel: Vice City (the new GTA\'s launch week, Nov 19-25).', secret: true },
+        { id: 'vicebusted', name: 'BUSTED',                   desc: 'Hit 5 stars during Wheel: Vice City and get caught by ChAoTiC.', secret: true },
+        { id: 'vicewasted', name: 'WASTED',                   desc: 'Get WASTED during Wheel: Vice City. It just happens sometimes.', secret: true }
     ];
     const PURPLE_HEART_SVG = '<svg viewBox="0 0 64 80" width="44" height="55" aria-hidden="true"><path d="M20 0h24v22H20z" fill="#7e22ce"/><path d="M20 0h4v22h-4zM40 0h4v22h-4z" fill="#f5f5f4"/><path d="M28 0h8v22h-8z" fill="#a855f7"/><path d="M32 74 C10 58 4 46 4 36 C4 26 12 20 20 20 C26 20 30 24 32 28 C34 24 38 20 44 20 C52 20 60 26 60 36 C60 46 54 58 32 74Z" fill="#facc15" stroke="#a16207" stroke-width="2"/><path d="M32 68 C14 55 10 45 10 37 C10 30 15 26 21 26 C26 26 29 29 32 33 C35 29 38 26 43 26 C49 26 54 30 54 37 C54 45 50 55 32 68Z" fill="#7e22ce"/><ellipse cx="32" cy="45" rx="7" ry="9" fill="#fde68a" opacity=".9"/></svg>';
     let achQueue = [], achShowing = false;
@@ -6054,7 +6054,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
     (function buildCheatEvents() {   // the newer gags, on demand (nothing here pays out gold)
         const EV = [['🐸 Murloc raid', () => murlocRaid()], ['🏐 Murloc spears Volley', () => murlocSkewer()], ['🧊 Iceberg', () => yachtIceberg(true)], ['🗡️ Stray glaive', () => strayGlaive(true)],
             ['🛸 Chicken abduction', () => chickenAbduct(true)], ['🐔 Roadkill', () => chickenRoadkill(true)],
-            ['🦺 OSHA incident', () => oshaEvent()], ['🌵 Cartel abduction', () => cartelAbduction()], ['⏳ WoW Forever', () => toggleForever()], ['🌴 Vice Week', () => toggleVice(true)], ['🚔 Vice: BUSTED', () => viceCard('busted')], ['💀 Vice: WASTED', () => viceCard('wasted')],
+            ['🦺 OSHA incident', () => oshaEvent()], ['🌵 Cartel abduction', () => cartelAbduction()], ['⏳ WoW Forever', () => toggleForever()], ['🌴 Wheel: Vice City', () => toggleVice(true)], ['🚔 Vice: BUSTED', () => viceCard('busted')], ['💀 Vice: WASTED', () => viceCard('wasted')],
             ['🏪 8/11 opening', () => { store.set('painWheel811Welcomed', false); welcome811(); }],
             ['🏷️ Emporium opening', () => { store.set('painWheelEmporiumOpen', true); store.set('painWheelEmporiumWelcomed', false); welcomeEmporium(); }],
             ['🎂 Clippy birthday', () => { const d = Date; window.Date = class extends d { constructor(...a) { return a.length ? new d(...a) : new d(new d().getFullYear(), 10, 19, 12); } static now() { return d.now(); } }; store.set('painWheelClippyBday', ''); try { clippyBirthday(); } finally { window.Date = d; } }],
@@ -6479,11 +6479,11 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
     var VICE_SLICE = [   // neon sunset: dark purple at the hub, hot color at the rim
         [[0, '#1e0b2e'], [0.55, '#9d174d'], [1, '#ec4899']], [[0, '#1e0b2e'], [0.55, '#9a3412'], [1, '#fb923c']], [[0, '#0b1e2e'], [0.55, '#0f766e'], [1, '#2dd4bf']],
         [[0, '#1e0b2e'], [0.55, '#6b21a8'], [1, '#c084fc']], [[0, '#1e0b2e'], [0.55, '#be185d'], [1, '#fda4af']], [[0, '#1e0b2e'], [0.55, '#a16207'], [1, '#facc15']]];
-    const VICE_THEME = { id: 'vice', name: 'Vice Week 🌴', when: () => false, bg: '#14081f', palm: true, sunsetSlices: true, bgSize: 'cover', logo: 'media/vice_logo.webp',   // background: Ada's Vice painting, dimmed so the panels stay readable
+    const VICE_THEME = { id: 'vice', name: 'Wheel: Vice City 🌴', when: () => false, bg: '#14081f', palm: true, sunsetSlices: true, bgSize: 'cover', logo: 'media/vice_logo.webp',   // background: Ada's Vice painting, dimmed so the panels stay readable
         tint: 'linear-gradient(180deg, rgba(12,4,24,.5), rgba(12,4,24,.7)), url(media/vice_bg.webp)',
         pain: '#f472b6', badge: ['🌴 ', ' 🌅'], tagline: 'Neon Decision Engine • Sunset Mode • No Witnesses',
         kevin: [['#831843', '🌴', '🕶️', '#fbcfe8'], ['#134e4a', '🌅', '💵', '#99f6e4']], kevinLabel: '🕶️ Kevin', drift: ['🌴', '💵', '🕶️', '🌅'],
-        ads: ['🌴 VICE WEEK SALE: EVERYTHING IS STOLEN, SO EVERYTHING IS FREE. (NOTHING IS FREE.)', '🕶️ SUNGLASSES AT NIGHT: NOW 2 FOR 1 AT THE 8/11',
+        ads: ['🌴 VICE CITY SALE: EVERYTHING IS STOLEN, SO EVERYTHING IS FREE. (NOTHING IS FREE.)', '🕶️ SUNGLASSES AT NIGHT: NOW 2 FOR 1 AT THE 8/11',
               '📼 SYNTHWAVE MIXTAPE: 40 MINUTES OF THE SAME SUNSET. 9.99G', '🚗 GOBLIN BODY SHOP: NEW PAINT, NEW PLATES, NO QUESTIONS. QUESTIONS ARE EXTRA.',
               '🌺 FLORAL SHIRTS IN STOCK. CLIPPY BOUGHT THEM ALL. ASK HIM NICELY.'],
         news: ['BREAKING: ENTIRE GUILD CALLS IN SICK. DOCTORS DIAGNOSE NEW GAME FEVER.', 'KEVIN HITS A 5-STAR WANTED LEVEL IN 4 SECONDS. HE WAS STILL IN THE TUTORIAL.',
@@ -10520,7 +10520,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         id: '2026-11-19-vice', title: 'The yacht got a remodel', date: 'November 6-19, 2026',
         showAfter: Date.parse('2026-11-19T06:00:00Z'),   // midnight Central on Vice Week's first day
         lines: [
-            ['🌴', "Vice Week (Nov 19-25): the new GTA is out, so the top bar has a button for it all week. Press it and the wheel goes neon. Watch your heat. Clippy shares the game's birthday, and he got a new shirt for it. Don't mention the shirt."],
+            ['🌴', "Wheel: Vice City (Nov 19-25): the new GTA is out, so the top bar has a button for it all week. Press it and the wheel goes neon. Watch your heat. Clippy shares the game's birthday, and he got a new shirt for it. Don't mention the shirt."],
             ['🛥️', "The yacht got a full remodel (art by Ada): a new trophy case, a real VIP door, and a porthole with a view. The view changes. Keep investigating."],
             ['🐟', "Gary has a plaque now. If your yacht is new, that wall is empty. Somebody at the flea market might be able to help with that."],
             ['❄️', "There's a snow globe case on the yacht. It's mostly empty. Somebody, somewhere, is selling them."],
@@ -11439,15 +11439,15 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
     setInterval(() => { if (viceHeat > 0 && !document.hidden && !isSpinning) { viceHeat--; renderHeat(); } }, 90000);   // cools off one star every 90 seconds
     function toggleVice(force) {
         const on = !document.body.classList.contains('vice-city');
-        if (on && !force && !isViceWeek()) { funEvent("🌴 Vice Week is Nov 19-25. The sunset is closed until then.", 4000); return; }
-        if (on && document.body.classList.contains('ghost-town')) { funEvent("🌵 Everybody is in Forever right now. Vice Week can wait.", 4000); return; }
+        if (on && !force && !isViceWeek()) { funEvent("🌴 Wheel: Vice City runs Nov 19-25. The sunset is closed until then.", 4000); return; }
+        if (on && document.body.classList.contains('ghost-town')) { funEvent("🌵 Everybody is in Forever right now. Vice City can wait.", 4000); return; }
         document.body.classList.toggle('vice-city', on); store.set('painWheelVice', on); applyTheme();
         if (!on) { viceHeat = 0; renderHeat(); }
         const vb = $('viceBtn'); if (vb) { vb.classList.toggle('plate-on', on); vb.querySelector('.plate-tag').textContent = on ? 'leave?' : 'this week!'; vb.blur(); }
         if (on) {
             unlock('viceweek');
-            funEvent('🌴 WELCOME TO VICE WEEK. The whole guild is playing the new GTA. Spins raise your heat. Nobody saw nothin\'.', 5500);
-            chatBurst(['VICE WEEK', 'GTA IS OUT', 'raid is cancelled', 'sunset pog', '🌴🌴🌴', 'here we go'], 6, 2500);
+            funEvent('🌴 WELCOME TO WHEEL: VICE CITY. The whole guild is playing the new GTA. Spins raise your heat. Nobody saw nothin\'.', 5500);
+            chatBurst(['VICE CITY', 'GTA IS OUT', 'raid is cancelled', 'sunset pog', '🌴🌴🌴', 'here we go'], 6, 2500);
             setTimeout(() => viceTalk("Ay. You like the shirt? Me and the new game, we share a birthday. Thirty years old. Show some respect."), 3000);
         } else funEvent('🌅 You left Vice. The sunset will be here all week. It never sets. That is kind of the whole thing.', 4000);
     }
@@ -11468,7 +11468,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             const week = isViceWeek(), inside = document.body.classList.contains('vice-city');
             if (vb) vb.style.display = (week || inside) && !EMBED_SHOP ? '' : 'none';
             if (tag && !inside) tag.textContent = 'this week!';
-            if (inside && !week && !store.get('painWheelViceTest', false)) { toggleVice(); funEvent('🌅 Vice Week is over. Everybody came back. Kevin is still wanted in three states.', 5000); }
+            if (inside && !week && !store.get('painWheelViceTest', false)) { toggleVice(); funEvent('🌅 Wheel: Vice City is over. Everybody came back. Kevin is still wanted in three states.', 5000); }
         };
         setTimeout(() => { if (!EMBED_SHOP && isViceWeek() && store.get('painWheelVice', false) && !document.body.classList.contains('vice-city') && !document.body.classList.contains('ghost-town')) { document.body.classList.add('vice-city'); applyTheme(); const vb2 = $('viceBtn'); if (vb2) { vb2.classList.add('plate-on'); vb2.querySelector('.plate-tag').textContent = 'leave?'; } } sync(); }, 3600);   // stayed in last time: still in
         setInterval(sync, 60000);
@@ -11839,7 +11839,7 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         el.innerHTML = `<img id="heatSiren" src="${PHOTO_SIREN_1}" alt="" style="height:22px;width:auto;vertical-align:middle;margin-right:3px;image-rendering:pixelated">` + '<span class="hl">HEAT</span>' + [0, 1, 2, 3, 4].map(i => `<span class="st${i < stars ? ' on' : ''}">${star(i, i < stars)}</span>`).join('');
         el.title = stars >= 5 ? `WANTED. ${bac} drinks in. Any drinking slice now and ChAoTiC might pull you over (RUI fine: 10% of everything you own). You sober up one drink every 5 minutes.`
             : `Heat: ${bac} drink${bac === 1 ? '' : 's'}. At 5 stars ChAoTiC starts looking for you. You sober up one drink every 5 minutes.`;
-        if (vh > bac) el.title = vh >= 5 ? 'WANTED (Vice Week). ChAoTiC is coming. Every spin is a chance to get BUSTED. Just for fun: no fines.' : `Vice Week heat: ${vh} star${vh === 1 ? '' : 's'}. Spins raise it, it cools off over time. At 5 stars ChAoTiC comes for you.`;
+        if (vh > bac) el.title = vh >= 5 ? 'WANTED (Vice City). ChAoTiC is coming. Every spin is a chance to get BUSTED. Just for fun: no fines.' : `Vice City heat: ${vh} star${vh === 1 ? '' : 's'}. Spins raise it, it cools off over time. At 5 stars ChAoTiC comes for you.`;
         el.setAttribute('aria-label', `Heat ${stars} of 5 stars`);
     }
     setTimeout(renderHeat, 0);
