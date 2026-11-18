@@ -118,7 +118,7 @@
   <button class="hs person" data-go="ada" aria-label="Ada, dealing craps" style="left:14.25%;top:61.5%;width:13.75%;height:18.5%"></button>
   <button class="hs person" data-go="clippy" aria-label="Clippy, dealing blackjack" style="left:75%;top:61%;width:9.5%;height:18%"></button>
   <button class="hs person" data-go="waitress" aria-label="Cindy, the cocktail waitress" style="left:66.5%;top:49.5%;width:10%;height:22.5%"></button>
-  <button id="host" type="button" aria-label="The host"></button>
+  <button id="host" type="button" aria-label="The pit boss"></button>
   <div id="note" role="status"></div>
   <div id="talk" role="status"><img id="talkFace" src="media/cas_hh_smirk.webp" alt=""><div><b id="talkName"></b><span id="talkText"></span></div></div>
 </div></div></div>
@@ -193,20 +193,21 @@ function note(t, ms) {   // a box next to whatever you clicked
   else { const below = lastPt.y < 30; d.style.left = Math.max(21, Math.min(79, lastPt.x)) + '%'; d.style.top = (below ? lastPt.y + 5 : lastPt.y - 4) + '%'; d.style.transform = below ? 'translateX(-50%)' : 'translate(-50%, -100%)'; }
   clearTimeout(note.t); note.t = setTimeout(() => d.style.display = 'none', ms || 4200);
 }
-const HOST_NAME = 'The Host';   // Aaron: name him and this updates everywhere
+const HOST_NAME = 'The Pit Boss';   // Aaron: name him and this updates everywhere
 function hostSay(text, face, ms) {   // the host talks in a box at the bottom with his face in it
   $('talkFace').src = 'media/cas_hh_' + (face || 'smirk') + '.webp'; $('talkName').textContent = HOST_NAME; $('talkText').textContent = text;
   $('talk').style.display = 'flex'; clearTimeout(hostSay.t); hostSay.t = setTimeout(() => $('talk').style.display = 'none', ms || 5200);
 }
 
-// ---------- the host: idles on the carpet, now and then walks a drink over to the craps table ----------
+// ---------- the pit boss: stands on the carpet watching the floor, now and then walks a drink over to the craps table ----------
 const K = 9.6 / 229;   // cqw per sprite pixel (he is about 19% of the room tall)
-const POSE = { idle: { w: 194, h: 229, n: 6, ms: 1500 }, walk: { w: 217, h: 219, n: 4, ms: 620 }, tray: { w: 219, h: 217 }, offer: { w: 246, h: 218 },
+const POSE = { idle: { w: 194, h: 229, f: 'stand' },   // no idle loop: the other people in the room hold still too
+  walk: { w: 217, h: 219, n: 4, ms: 620 }, tray: { w: 219, h: 217 }, offer: { w: 246, h: 218 },
   bow: { w: 249, h: 218 }, strut: { w: 220, h: 241 }, laugh: { w: 246, h: 250 }, wipe: { w: 159, h: 244 }, shrug: { w: 216, h: 243 }, lean: { w: 256, h: 259 } };
 const host = $('host'); let hostX = 57, busy = false;
 function pose(p) {
   const s = POSE[p]; host.style.width = (s.w * K) + 'cqw'; host.style.height = (s.h * K) + 'cqw';
-  host.style.backgroundImage = `url(media/cas_host_${p}.webp)`;
+  host.style.backgroundImage = `url(media/cas_host_${s.f || p}.webp)`;
   if (s.n) { host.style.backgroundSize = (s.n * 100) + '% 100%'; host.style.animation = still ? 'none' : `stripRun ${s.ms}ms steps(${s.n},jump-none) infinite`; }
   else { host.style.backgroundSize = '100% 100%'; host.style.animation = 'none'; host.style.backgroundPosition = '0 0'; }
 }
@@ -215,7 +216,7 @@ pose('idle'); place(hostX);
 function walkTo(x, done) {
   if (still) { place(x); done && done(); return; }
   const dist = Math.abs(x - hostX), ms = dist * 330;
-  host.classList.toggle('flip', x > hostX); pose('walk');
+  host.classList.toggle('flip', x < hostX); pose('walk');   // the walk art faces right
   host.style.transition = `left ${ms}ms linear`; requestAnimationFrame(() => place(x));
   setTimeout(() => { host.style.transition = 'left 0s'; host.classList.remove('flip'); done && done(); }, ms + 30);
 }
@@ -237,7 +238,12 @@ const HOST = [["The cigar? Decorative. The smoke? Also decorative. The fire? Unf
   ["Is that Cogsworth? Tell him the reels are installed when they are installed.", 'shock'],
   ["Vermont called. We did not pick up. We never pick up for Vermont.", 'laugh'],
   ["Free drinks while you play! Free means the price is in your losses.", 'smirk'],
-  ["I was asleep. I mean, I was watching the floor with my eyes closed. Very professional.", 'sleep']];
+  ["I was asleep. I mean, I was watching the floor with my eyes closed. Very professional.", 'sleep'],
+  ["I am the pit boss. I watch the tables, I watch the slots, I watch you. Mostly I watch you.", 'grump'],
+  ["Cindy does the drinks. I help Cindy with the drinks. Cindy says I do not help. Cindy is wrong.", 'shrug'],
+  ["Counting cards? In MY casino? Go ahead. We use a deck of forty-nine. Good luck.", 'laugh'],
+  ["Everybody happy? You look happy. Stop that. Happy people stop playing.", 'smirk'],
+  ["The eye in the sky sees everything. The eye in the sky is the Chief. He has one eye. It is very busy.", 'shock']];
 host.onclick = () => {
   if (busy) { hostSay(pick(["Busy! Drinks are getting warm!", "One second, I am working. Do not get used to it."]), 'shock', 2800); return; }
   const [t, f] = pick(HOST), P2 = { laugh: 'laugh', shock: 'shrug', grump: 'wipe', sleep: 'lean', smirk: pick(['shrug', 'wipe', 'lean']) };
