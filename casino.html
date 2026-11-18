@@ -117,7 +117,7 @@
   <button class="hs person" data-go="cage" aria-label="The cashier" style="left:47.5%;top:36.5%;width:4.5%;height:10%"></button>
   <button class="hs person" data-go="ada" aria-label="Ada, dealing craps" style="left:14.25%;top:61.5%;width:13.75%;height:18.5%"></button>
   <button class="hs person" data-go="clippy" aria-label="Clippy, dealing blackjack" style="left:75%;top:61%;width:9.5%;height:18%"></button>
-  <button class="hs person" data-go="waitress" aria-label="The cocktail waitress" style="left:66.5%;top:49.5%;width:10%;height:22.5%"></button>
+  <button class="hs person" data-go="waitress" aria-label="Cindy, the cocktail waitress" style="left:66.5%;top:49.5%;width:10%;height:22.5%"></button>
   <button id="host" type="button" aria-label="The host"></button>
   <div id="note" role="status"></div>
   <div id="talk" role="status"><img id="talkFace" src="media/cas_hh_smirk.webp" alt=""><div><b id="talkName"></b><span id="talkText"></span></div></div>
@@ -328,7 +328,7 @@ const LINES = {
   cashier: ["The cashier peers out from behind the bars. He is counting. He is always counting.", "The cashier bit your coin. Then he bit his own. Then he bit the counter."],
   ada: ["🔧 Ada: Welcome to my table! I drew this whole room and I dealt myself in.", "🔧 Ada: The dice are fair. Mostly. Greg was chewing on one earlier.", "🔧 Ada: Craps opens soon. I am making the close-up. You will love it. You will lose at it.", "🔧 Ada: If you see a ram in a top hat near the slots, I am not responsible. I am a little responsible."],
   clippy: ["📎 Clippy: It looks like you are trying to count cards! Would you like help with that? (You cannot have help with that.)", "📎 Clippy: Blackjack opens soon! I have prepared a 40-page guide. It is mostly warnings.", "📎 Clippy: Hit or stand? Have you considered a third option: closing the game?"],
-  waitress: ["The cocktail waitress spins past with coconut drinks. She does not stop. She never stops.", "She winks at you. Then she winks at the bouncer. Then at the slot machine. She is just friendly.", "Coconut drink? She says the umbrella costs extra. The coconut is free. The drink is extra."] };
+  waitress: ["🍹 Cindy spins past with coconut drinks. She does not stop. She never stops.", "🍹 Cindy: Coconut drink? The coconut is free. The drink is extra. The umbrella is VERY extra.", "🍹 Cindy: If a ram in a top hat asks for a drink, his name is Greg and the answer is no.", "🍹 Cindy winks at you. Then at the bouncer. Then at a slot machine. She is just friendly."] };
 document.querySelectorAll('[data-go]').forEach(b => b.onclick = () => {
   const g = b.dataset.go;
   if (g === 'slot') { openSlot(+b.dataset.m, false); return; }
