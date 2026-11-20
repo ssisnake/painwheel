@@ -985,7 +985,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 18, 5:51 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 19, 8:52 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -10540,11 +10540,9 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             ['📜', 'Patch notes now keep a history. Scroll down here to read the past updates.']
         ]
     };
-    const UPDATE_NOTES = {
-        id: '2026-11-19-vice', title: 'The yacht got a remodel', date: 'November 6-19, 2026',
-        showAfter: Date.parse('2026-11-19T06:00:00Z'),   // midnight Central on Vice Week's first day
+    const UPDATE_NOTES_NOV6 = {   // Nov 6-18 (one long run of updates); moved to history when the Nov 19 notes went out
+        id: '2026-11-18-yacht', title: 'The yacht got a remodel', date: 'November 6-18, 2026',
         lines: [
-            ['🌴', "Wheel: Vice City (Nov 19-25): the new GTA is out, so the top bar has a button for it all week. Press it and the wheel goes neon. Watch your heat. Clippy shares the game's birthday, and he got a new shirt for it. Don't mention the shirt."],
             ['🛥️', "The yacht got a full remodel (art by Ada): a new trophy case, a real VIP door, and a porthole with a view. The view changes. Keep investigating."],
             ['🐟', "Gary has a plaque now. If your yacht is new, that wall is empty. Somebody at the flea market might be able to help with that."],
             ['❄️', "There's a snow globe case on the yacht. It's mostly empty. Somebody, somewhere, is selling them."],
@@ -10694,7 +10692,18 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             ['🔊', 'New sounds: real farts for Gambled on a Fart, the yacht sinks (glug) after the iceberg and rocket hits, and Krom\'s Kool Kids slams a real door in your face.']
         ]
     };
+    const UPDATE_NOTES = {   // one entry per day: when a new day's notes go out, the previous day moves into UPDATE_HISTORY
+        id: '2026-11-19-vice', title: 'Wheel: Vice City', date: 'November 19, 2026',
+        showAfter: Date.parse('2026-11-19T06:00:00Z'),   // midnight Central on Vice City's first day
+        lines: [
+            ['🌴', "Wheel: Vice City (Nov 19-25): the new GTA is out, so the top bar has a button for it all week. Press it and the wheel goes neon. Watch your heat. Clippy shares the game's birthday, and he got a new shirt for it. Don't mention the shirt."],
+            ['🪧', "The top bar got tidied up: your name tag sits next to the logo now, and event buttons have their own spot on the right so nothing jumps around when one shows up."],
+            ['🐔', 'The chicken stays on your screen when you scroll now, instead of getting left behind.'],
+            ['🔷', 'The Hearthstone cast has a real sound, and it peaks right as you land.'],
+        ]
+    };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
+        UPDATE_NOTES_NOV6,
         UPDATE_NOTES_NOV1,
         { title: 'The yacht, the rocket, and the IRS', date: 'October 31, 2026', lines: [
             ['🛥️', 'Step inside the yacht, VIP room and all. Pixel-art cop car, ambulance and yacht, plus 5 new slices (180 total).'],
@@ -11509,6 +11518,17 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         const b = document.createElement('button'); b.id = 'viceClippy'; b.type = 'button'; b.title = 'Talk to Clippy'; b.setAttribute('aria-label', 'Talk to Clippy');
         b.innerHTML = '<img src="media/vice_clippy.webp" alt="">'; document.body.appendChild(b);
         b.addEventListener('click', () => viceTalk(pickFresh(VICE_CLIPPY)));
+        const place = () => {   // find a spot that covers nothing: the shack, the chat, Squawkr, the wheel, the pets and docks (they can be dragged around, so check every second)
+            if (!document.body.classList.contains('vice-city') || document.hidden) return;
+            const W = innerWidth, H = innerHeight, cw = 116, ch = 172, wr = ($('wheelCanvas') && $('wheelCanvas').parentElement.getBoundingClientRect()) || { left: W / 2 };
+            const obs = ['shackSpot', 'chatCard', 'socialRow', 'squawkWin', 'petDock', 'garageDock', 'rightStack', 'toyCorner', 'billsBox'].map(id => $(id)).filter(e => e && getComputedStyle(e).visibility !== 'hidden' && getComputedStyle(e).display !== 'none').map(e => e.getBoundingClientRect()).filter(r => r.width && r.height);
+            if ($('wheelCanvas')) obs.push(wr);
+            const cands = [[10, H - ch - 10], [Math.round(wr.left - cw - 14), H - ch - 10], [10, Math.round(H * .42)], [Math.round(wr.left - cw - 14), Math.round(H * .45)], [W - cw - 70, H - ch - 140], [10, 180]];
+            const hit = ([x, y]) => obs.reduce((a, r) => a + Math.max(0, Math.min(x + cw, r.right) - Math.max(x, r.left)) * Math.max(0, Math.min(y + ch, r.bottom) - Math.max(y, r.top)), 0);
+            let best = null, bh = Infinity; cands.filter(([x, y]) => x >= 0 && y >= 60 && x + cw <= W).forEach(c => { const v = hit(c); if (v < bh) { bh = v; best = c; } });
+            if (best) { b.style.left = best[0] + 'px'; b.style.top = best[1] + 'px'; b.style.bottom = 'auto'; }
+        };
+        place(); setInterval(place, 1000); addEventListener("resize", place);
     }
     (function viceSeason() {   // the button only shows during Vice Week; when the week ends, everyone gets sent home
         const vb = $('viceBtn'), tag = vb && vb.querySelector('.plate-tag');
