@@ -509,7 +509,7 @@ setInterval(() => { showGold(); }, 5000);
 <script src="fish_song.js?v=31f920f8"></script>
 <script src="wallet.js?v=07cb4a3e"></script>
 <script>
-// ---- the hooded stranger: our traveling merchant for rare and unusual things. He keeps hours (Central): 6-8 AM, noon-2 PM, 6-8 PM, 11 PM-1 AM,
+// ---- the hooded stranger: our traveling merchant for rare and unusual things. He keeps hours (Central): 6-8 AM, noon-2 PM, 6-8 PM, 10 PM-1 AM,
 // so day people and night people both catch him. Your 2nd visit to the flea market he's always there, with Reb's dusty bottle (his introduction). ----
 (() => {
   const sc = document.getElementById('scene'); if (!sc) return;
@@ -556,7 +556,7 @@ setInterval(() => { showGold(); }, 5000);
     card.querySelector('.no').onclick = () => $('dlg').close();
     $('dlg').showModal();
   }
-  const HOURS = [[6, 8], [12, 14], [18, 20], [23, 25]];   // Central; 23-25 = 11 PM to 1 AM
+  const HOURS = [[6, 8], [12, 14], [18, 20], [22, 25]];   // Central; 22-25 = 10 PM to 1 AM (was 11 PM, Aaron moved it up Nov 19)
   const hourCT = () => { const p = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', hour: 'numeric', minute: 'numeric', hour12: false }).formatToParts(new Date());
     const h = +p.find(x => x.type === 'hour').value % 24, m = +p.find(x => x.type === 'minute').value; return h + m / 60; };
   const inHours = () => { const h = hourCT(); return HOURS.some(([a, b]) => (h >= a && h < b) || (h + 24 >= a && h + 24 < b)); };
@@ -564,7 +564,7 @@ setInterval(() => { showGold(); }, 5000);
   let visits = get('painWheelEmporiumVisits', null);
   if (!sessionStorage.getItem('pwEmpVisit')) { sessionStorage.setItem('pwEmpVisit', '1'); visits = (visits === null ? (window.__empFirst === false ? 1 : 0) : visits) + 1; put('painWheelEmporiumVisits', visits); }
   const introNow = () => (visits || 0) === 2 && !get('painWheelStrangerMet', false);
-  window.strangerHours = () => 'He keeps hours: 6-8 AM, noon-2 PM, 6-8 PM and 11 PM-1 AM, Central. "He comes and goes. Mostly goes." —Axazon';
+  window.strangerHours = () => 'He keeps hours: 6-8 AM, noon-2 PM, 6-8 PM and 10 PM-1 AM, Central. "He comes and goes. Mostly goes." —Axazon';
   const place = () => {
     const here = inHours() || introNow();
     if (here && !el) {
