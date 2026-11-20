@@ -985,7 +985,7 @@
                 <div class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">📰 Patch notes</div>
                 <button id="updateReopen" class="px-3 py-1.5 rounded bg-amber-700 hover:bg-amber-600 text-white text-xs font-bold cursor-pointer">See what's new</button>
                 <a href="./" class="ml-2 text-xs text-amber-300 underline" title="It's all connected"><img src="media/board_icon.png" alt="" style="display:inline-block;height:1.15em;width:auto;vertical-align:-.25em;margin-right:.25em;border-radius:2px">The Board</a>
-                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 19, 8:52 PM CT</span>
+                <span id="buildStamp" class="ml-2 text-xs text-slate-500" title="If this is old, press Ctrl+F5">Version: Nov 19, 9:02 PM CT</span>
             </div>
             <div class="mt-5 pt-4 border-t border-slate-800 text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">🔤 Font</div>
             <div id="fontPicks" class="grid grid-cols-2 sm:grid-cols-3 gap-2"><button type="button" class="font-pick" data-font="pixel"><b class="fp-name">Pixel Goblin</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pixelify Sans + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="silk"><b class="fp-name">Arcade Caps</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Silkscreen + Nunito Sans</span></button><button type="button" class="font-pick" data-font="pirata"><b class="fp-name">Pirate Gothic</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Pirata One + Barlow</span></button><button type="button" class="font-pick" data-font="germania"><b class="fp-name">Iron Fraktur</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Germania One + Barlow</span></button><button type="button" class="font-pick" data-font="tiny"><b class="fp-name">Tiny Pixel</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Tiny5 + Atkinson Hyperlegible</span></button><button type="button" class="font-pick" data-font="jersey"><b class="fp-name">Arcade Cabinet</b><span class="fp-sample">KEVIN · Spin Again</span><span class="fp-sub">Jersey 15 + Atkinson Hyperlegible</span></button></div>
@@ -10540,9 +10540,12 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             ['📜', 'Patch notes now keep a history. Scroll down here to read the past updates.']
         ]
     };
-    const UPDATE_NOTES_NOV6 = {   // Nov 6-18 (one long run of updates); moved to history when the Nov 19 notes went out
-        id: '2026-11-18-yacht', title: 'The yacht got a remodel', date: 'November 6-18, 2026',
-        lines: [
+    // Nov 6-17, one entry per day (split back out by when each line first went live)
+    const UPDATE_NOTES_2026_11_17 = { id: '2026-11-17-day', title: "A slimmer top bar and a walking chicken", date: 'November 17, 2026', lines: [
+            ['📏', "The top bar is slimmer: smaller buttons, and the Forever button only shows up during Forever Week."],
+            ['🐔', "The Westfall Chicken got a glow-up (art by Ada): it actually walks now, pecks when you poke it, and shows a ! when it has a quest for you."],
+    ] };
+    const UPDATE_NOTES_2026_11_16 = { id: '2026-11-16-day', title: "The yacht got a remodel", date: 'November 16, 2026', lines: [
             ['🛥️', "The yacht got a full remodel (art by Ada): a new trophy case, a real VIP door, and a porthole with a view. The view changes. Keep investigating."],
             ['🐟', "Gary has a plaque now. If your yacht is new, that wall is empty. Somebody at the flea market might be able to help with that."],
             ['❄️', "There's a snow globe case on the yacht. It's mostly empty. Somebody, somewhere, is selling them."],
@@ -10552,13 +10555,13 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             ['🚀', "When the rocket hits the wheel, anything sitting on the wheel goes flying. It comes back. Mostly."],
             ['📞', "Slick has a face now. You'll wish he didn't."],
             ['❄️', "Snow globes are a thing now (art by Ada). Each place has one, and each one is earned its own way. The Wheel's is for the truly committed."],
-            ['📏', "The top bar is slimmer: smaller buttons, and the Forever button only shows up during Forever Week."],
-            ['🐔', "The Westfall Chicken got a glow-up (art by Ada): it actually walks now, pecks when you poke it, and shows a ! when it has a quest for you."],
             ['🛡️', "TsukBlock moved out of the store into its own box, with its own button in the top bar (art by Ada). No 8/11 required. When Tsussie eats an ad, you'll know."],
             ['🕴️', "There's a hooded stranger at the flea market now, and he keeps hours: 6-8 AM, noon-2 PM, 6-8 PM and 11 PM-1 AM (Central). He sells rare and unusual things. The second time you visit, he'll be waiting for you."],
             ['🏧', "The 8/11 ATM got a real machine (art by Ada). Insert your card, punch your PIN on the keypad, watch the cash come out. Your Goblin Express goes in the slot if you have one."],
             ['🌋', "The VIP room's power strip changes the lava lamp's color. The two are not connected. Goblin tech. Don't ask."],
             ['🔐', "The yacht vault has a proper keypad and a proper vault menu now (art by Ada). Same code. Still on a sticky note. Still do not tell Kevin."],
+    ] };
+    const UPDATE_NOTES_2026_11_15 = { id: '2026-11-15-day', title: "Slick, the VIP door, and new achievements", date: 'November 15, 2026', lines: [
             ['🎡', "The Secret Society tab has a new name. The all-seeing wheel would like a word."],
             ['🥃', "Reb is working the VIP door on the yacht now. He can't be bought with gold. He CAN be bought."],
             ['🛥️', "You don't just buy the yacht anymore. Get the castle and a guy named Slick gives you a call."],
@@ -10570,6 +10573,8 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             ['🏪', "The 8/11's wiring has been described as 'a fire hazard with opinions'."],
             ['🚪', "The VIP room is very quiet. Very, very quiet. Until it isn't."],
             ['🛥️', "The yacht's buttons moved up off the art, the shop chooser got a proper frame, and the title tags got cleaner text."],
+    ] };
+    const UPDATE_NOTES_2026_11_14 = { id: '2026-11-14-day', title: "Gnome Depot, earned titles, and Channel 8/11", date: 'November 14, 2026', lines: [
             ['🥤', "The 8/11 Slurpee machine is stronger than it looks. Pace yourself."],
             ['🕯️', "The VIP room got a new poster. The Church of the Eternal Spin is very proud of it."],
             ['🌙', "The Emporium after dark has... a regular. Nobody's sure who he is."],
@@ -10590,17 +10595,6 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             ['👓', "Ret Vision has its own soundtrack now. You'll know it when you hear it."],
             ['🐏', "New studio in the credits on The Board. Ask Greg. Actually, don't."],
             ['📰', "Channel 8/11 News has an anchor now. He blinks, he talks, and when something big happens out there in the guild, he finds out live on air."],
-            ['🕹️', "Claw & Disorder at Little St. Jeff's Prize Island (Shop → Pets). It takes Chief Kick a Bitch casino tokens, not gold. 5 prizes, one at a time: Volley McBallface, Lil' Spinny, Gerald, The Needle and Kevin Jr."],
-            ['🎰', "Casino tokens: 3 from the casino slice, 1 for your first spin each day, every 25 spins, every achievement, sometimes from Gambled on a Fart, 8/11 and golden cookies, and Gizzlenut finds them in the couch. Or buy one at the cashier cage (5% of your gold)."],
-            ['🫀', "Reb's liver is becoming a guild-wide boss: every drink anyone takes hurts it. Buy it water, or take a double and hurt everyone. If it survives the week, everyone who didn't wreck it gets paid."],
-            ['🛡️', "New slices: Taunting (Casimir would never; the untaunted add goes for Reb's liver), Can't Park There (repair bill included) and Forever Depends. 185 slices."],
-            ['🦺', 'OSHA landings break things now: the rocket crashes, the banker trips, a slice falls off the wheel, a vehicle explodes, a pet trips, a top-bar button falls off (click it to bolt it back on), Clippy pokes his eye out, or the shack catches fire.'],
-            ['📂', "The Board: clicking a place opens its case file first, with its own polaroid. Clippy has concerns."],
-            ['🏷️', "Axazon's Emporium is open: a flea market with six items and new stock every 9 AM and 9 PM Central. Land on the Emporium slice to get in."],
-            ['🎒', "LOOT OVERHAUL: one set per place (the Wheel, the Yacht, the VIP Room, the Shack, the 8/11) plus the Degenerate Rejects guild set. Set pieces are RARE now: about 1 in 60 spins, plus boss kills, the liver, rent and the 8/11. Everything else is trash you can sell or hoard. Check your Sets tab."],
-            ['🏅', "The original 8 sets are retired. The people who helped build The Wheel get them back forever with a personal code (Settings → Have a code?)."],
-            ['🏆', "No One is now You're Winner ! (Big Rigs fans know.)"],
-            ['🌙', "Go to Bed Evelyn plays a real lullaby now."],
             ['🎵', "The music sits further back now, and it steps aside when the wheel lands on something with its own sound. The singing fish got cheaper speakers. They were already cheap."],
             ['🏐', "If your murloc and Volley are both out... keep an eye on Volley."],
             ['🔨', "Gnome Depot has its own polaroid on The Board now. The shops all wear matching signs."],
@@ -10614,6 +10608,14 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             ['🏦', "The Guild Bank Vault takes an exact amount now: type 25000, 250k or 1.5m and Stash or Take out."],
             ['🏪', "The 8/11: the pet carriers sit inside the cabinet, the clerk is back on his stool, and the dying light flickers without the weird box (its buzz is slower too)."],
             ['🏷️', "Axazon's Emporium: the price on the sale tag always reads dark now, the cobra basket sits on the ground, and Axazon moves around his stall so you can get at the stuff behind him. Also: he does not take Goblin Express."],
+    ] };
+    const UPDATE_NOTES_2026_11_08 = { id: '2026-11-08-day', title: "The Board, the Emporium, and loot sets", date: 'November 8, 2026', lines: [
+            ['📂', "The Board: clicking a place opens its case file first, with its own polaroid. Clippy has concerns."],
+            ['🏷️', "Axazon's Emporium is open: a flea market with six items and new stock every 9 AM and 9 PM Central. Land on the Emporium slice to get in."],
+            ['🎒', "LOOT OVERHAUL: one set per place (the Wheel, the Yacht, the VIP Room, the Shack, the 8/11) plus the Degenerate Rejects guild set. Set pieces are RARE now: about 1 in 60 spins, plus boss kills, the liver, rent and the 8/11. Everything else is trash you can sell or hoard. Check your Sets tab."],
+            ['🏅', "The original 8 sets are retired. The people who helped build The Wheel get them back forever with a personal code (Settings → Have a code?)."],
+            ['🏆', "No One is now You're Winner ! (Big Rigs fans know.)"],
+            ['🌙', "Go to Bed Evelyn plays a real lullaby now."],
             ['🖼️', "New painted icons all over the Shop and Settings. The Shack and the Emporium got their own polaroids and case file photos on The Board."],
             ['📞', "Don't want phone calls? Turn them off in Settings."],
             ['📎', "Ret Vision curses everything now except Clippy. He has thoughts about that."],
@@ -10628,21 +10630,34 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             ['⚡', 'Holding the spin button has a real charge-up sound now.'],
             ['🕹️', "The claw machine is fully stocked: every prize you haven't won sits inside at once. Line up on whichever one you want."],
             ['📈', "Fixed: the stock market box vanished for anyone who had it minimized. It's back, and the — button works again."],
-            ['🌵', 'New Forever button: WoW Forever is out and everyone left. Tumbleweeds, a sign on the door, and Clippy. Clippy never leaves.'],
+            ['🪝', 'Hearthing is risky now: Bibledaddy or Platemage might yank you mid-cast.'],
+            ['🏚️', 'The shack has company: the skeleton talks, the barrel has a daily casino token, and the toolbox tightens the claw for one strong grab a day. Look around.'],
+            ['🎒', 'Real pixel art for most bag items, the casino token, the Goblin Vault, and the Paid Shoutout and Goblin IRS profile pictures.'],
+            ['🕹️', 'The claw machine has 4 new prizes, and the old prizes got real art.'],
+            ['🏆', 'The trophy room is finished: every one of the 90 achievements has its own trophy now.'],
+            ['🚨', 'The HEAT meter has a spinning siren next to the stars. It spins faster when ChAoTiC is looking for you.'],
+            ['🌵', 'The tumbleweeds are real animated ones now. The chicken loses real feathers. The casino token is the official CKBC coin. Gary has a Squawkr profile picture (he is angry about it).'],
+            ['🏠', 'Home is tidier: one button to board the yacht, and every kind of debt or fine has its own box with a Pay button (or a calm No debt).'],
+            ['🛒', 'The shop got a makeover: riveted iron tabs and rows, real BUY / OWNED / EQUIPPED buttons.'],
+            ['🍀', 'The 8/11 bad-luck protection is stronger: +6% per spin (up to 90%) until you land it.'],
+    ] };
+    const UPDATE_NOTES_2026_11_07 = { id: '2026-11-07-day', title: "The claw, the 8/11, and real sounds", date: 'November 7, 2026', lines: [
+            ['🕹️', "Claw & Disorder at Little St. Jeff's Prize Island (Shop → Pets). It takes Chief Kick a Bitch casino tokens, not gold. 5 prizes, one at a time: Volley McBallface, Lil' Spinny, Gerald, The Needle and Kevin Jr."],
+            ['🎰', "Casino tokens: 3 from the casino slice, 1 for your first spin each day, every 25 spins, every achievement, sometimes from Gambled on a Fart, 8/11 and golden cookies, and Gizzlenut finds them in the couch. Or buy one at the cashier cage (5% of your gold)."],
+            ['🫀', "Reb's liver is becoming a guild-wide boss: every drink anyone takes hurts it. Buy it water, or take a double and hurt everyone. If it survives the week, everyone who didn't wreck it gets paid."],
+            ['🛡️', "New slices: Taunting (Casimir would never; the untaunted add goes for Reb's liver), Can't Park There (repair bill included) and Forever Depends. 185 slices."],
+            ['🦺', 'OSHA landings break things now: the rocket crashes, the banker trips, a slice falls off the wheel, a vehicle explodes, a pet trips, a top-bar button falls off (click it to bolt it back on), Clippy pokes his eye out, or the shack catches fire.'],
             ['🪩', "Party mode: Gallywix's Disco Ball drops in, and your pets line up to dance with the ambulance and the cop car."],
             ['🔪', 'Sorry I\'m Busy Skinning: the SPIN button is busy for 5 seconds while somebody skins the last pack. You get the leather.'],
-            ['🖐️', "Bibledaddy's Finger sometimes flies off the SPIN button or crawls away (click it to catch it). It also keeps turning up in chutes."],
             ['🖼️', 'New pictures and jokes for Lower DPS (plus Uwutek checking your keyboard), Nuclear Family, Dylan and OSHA; waiting music for the Wrath Remix; Croissant 2; more Iraqi Freedom and holiday lines; ChAoTiC on Stole Muh Bike; more Bibledaddy (sometimes rainbow); Tsukaar\'s pink typos.'],
             ['🎨', 'Art everywhere: class sigils (pick yours from a grid), new top-bar buttons and window icons, a bigger yacht with closeups, a real toy box, and Ret Vision horror art for almost everything (and a lot less blur, so you can actually see it).'],
             ['🐾', 'Up to 4 pets out at once (Shop → Pets). Clippy does not count, and Clippy cannot be turned off.'],
             ['🔘', 'New Toys, Party and Forever buttons (with Ret Vision horror versions). The Hearthstone moved into Home: hearth with the cast, or click the yacht to board right away.'],
             ['🗡️', 'Stray glaives now stick in point first, and the golden cookie poofs the right way.'],
             ['📌', "Someone pinned up a conspiracy board. It's in Settings, if you want to look."],
-            ['🅿️', "Can't Park There is spreading: ads, guild news, Squawkr and chat."],
             ['💰', 'Prices and payouts now go by a percent of your gold, so everything stays worth it no matter how rich you get: mulligans and flasks 1%, Reb\'s bottle 2%, titles and casino tokens 5%, pets and toys 10%, themes 15%, houses 15% to 40%. Curses and shoutouts are 0.25%. House rent now climbs from 0.5% to 10% (the yacht), the shack and Hall of Shame pay 1%, and every price in the game shows its real current cost. Giving Reb water is +1% now (it was way too strong).'],
             ['🎯', 'The daily bounty pays 15% of your gold. Killing Uwutek pays big and scales with the difficulty (Mythic is around 1e40 at least).'],
             ['🛥️', 'The yacht pays 10% of your gold every 10 minutes. The Home window shows your Goblin Express credit limit next to the debt, and the Hearth button lives there once your house is maxed.'],
-            ['🪝', 'Hearthing is risky now: Bibledaddy or Platemage might yank you mid-cast.'],
             ['📌', 'The conspiracy board got a real board. Click the photos.'],
             ['🏪', 'The 7/11 is now the 8/11 (open 7 hours a day, 11 days a week). Land on it to walk in and buy a Slurpee for 1 gold, like the old days. Hold it carefully.'],
             ['🧸', 'The toy box text no longer spills out when your text size is turned up.'],
@@ -10668,7 +10683,6 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             ['🏚️', 'The desert shack has an inside now, and the claw machine lives in the corner. Click your shack (or its photo on The Board) to go in: it is its own page now, and the claw machine runs right there in the corner. Some things in there are still a mystery. Golden cookies in Forever burst into tumbleweeds.'],
             ['🌵', 'WoW Forever mode: press the Forever button and the whole wheel goes ghost town. $KNOB crashes to $0.00, the guild feed is crickets, the zoom window cracked from neglect, and Uwutek is off playing Forever. Leave and everything goes back exactly how it was. (Leaving might take a minute.)'],
             ['🥤', 'The 8/11 Slurpee machine actually runs now, and you watch your cup fill under the tap.'],
-            ['🏚️', 'The shack has company: the skeleton talks, the barrel has a daily casino token, and the toolbox tightens the claw for one strong grab a day. Look around.'],
             ['🐟', 'Gary (who is not named Gary) is mounted on The Board.'],
             ['🐦', 'Kevin and Casimir have real Squawkr profile pictures. Sorry I\'m Busy Skinning has its picture.'],
             ['🏪', 'The 8/11 is the shop now. The Shop button walks you in: click an aisle sign (Pets, Toys, Snacks & Potions, Cosmetics, Themes, Curses), the scratch-off rack, or the pet carriers. Slurpees are still 1 gold, right from the machine. The whole catalog button is still there too.'],
@@ -10678,20 +10692,16 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
             ['🥃', "Pouring Reb a double only hurts the liver 1% now (it was 30%), and the liver got a fresh start. The weekly liver reward and Uwutek kill rewards now count your vault gold too."],
             ['🕹️', 'The claw machine is stingier: lined up is a 15% grab now, so it does not get cleaned out on day one.'],
             ['📈', 'Fixed: during WoW Forever week the fake $0.00 screen blocked stonks. It has a Trade anyway button now.'],
-            ['🎒', 'Real pixel art for most bag items, the casino token, the Goblin Vault, and the Paid Shoutout and Goblin IRS profile pictures.'],
-            ['🕹️', 'The claw machine has 4 new prizes, and the old prizes got real art.'],
-            ['🏆', 'The trophy room is finished: every one of the 90 achievements has its own trophy now.'],
-            ['🚨', 'The HEAT meter has a spinning siren next to the stars. It spins faster when ChAoTiC is looking for you.'],
-            ['🌵', 'The tumbleweeds are real animated ones now. The chicken loses real feathers. The casino token is the official CKBC coin. Gary has a Squawkr profile picture (he is angry about it).'],
-            ['🏠', 'Home is tidier: one button to board the yacht, and every kind of debt or fine has its own box with a Pay button (or a calm No debt).'],
-            ['🛒', 'The shop got a makeover: riveted iron tabs and rows, real BUY / OWNED / EQUIPPED buttons.'],
-            ['🍀', 'The 8/11 bad-luck protection is stronger: +6% per spin (up to 90%) until you land it.'],
             ['⏳', 'WoW Forever mode only turns on when YOU press the Forever button now. It no longer switches itself on during launch week.'],
             ['💳', 'Goblin Express has card tiers: Red when you sign up, Platinum after 10 charges, Black after 50. Same 400% APR either way.'],
             ['🚀', 'The SpaceZ pad has a real launch pad, and the LAUNCH button has a safety cover that flips open when you reach for it.'],
-            ['🔊', 'New sounds: real farts for Gambled on a Fart, the yacht sinks (glug) after the iceberg and rocket hits, and Krom\'s Kool Kids slams a real door in your face.']
-        ]
-    };
+            ['🔊', 'New sounds: real farts for Gambled on a Fart, the yacht sinks (glug) after the iceberg and rocket hits, and Krom\'s Kool Kids slams a real door in your face.'],
+    ] };
+    const UPDATE_NOTES_2026_11_06 = { id: '2026-11-06-day', title: "Taunting, and WoW Forever", date: 'November 6, 2026', lines: [
+            ['🌵', 'New Forever button: WoW Forever is out and everyone left. Tumbleweeds, a sign on the door, and Clippy. Clippy never leaves.'],
+            ['🖐️', "Bibledaddy's Finger sometimes flies off the SPIN button or crawls away (click it to catch it). It also keeps turning up in chutes."],
+            ['🅿️', "Can't Park There is spreading: ads, guild news, Squawkr and chat."],
+    ] };
     const UPDATE_NOTES = {   // one entry per day: when a new day's notes go out, the previous day moves into UPDATE_HISTORY
         id: '2026-11-19-vice', title: 'Wheel: Vice City', date: 'November 19, 2026',
         showAfter: Date.parse('2026-11-19T06:00:00Z'),   // midnight Central on Vice City's first day
@@ -10703,7 +10713,13 @@ const PHOTO_ICO_TEXTSIZE = "media/photo_ico_textsize.png?v=ee06b30a";
         ]
     };
     const UPDATE_HISTORY = [   // newest first; a day moves here once the next day's notes go out
-        UPDATE_NOTES_NOV6,
+        UPDATE_NOTES_2026_11_17,
+        UPDATE_NOTES_2026_11_16,
+        UPDATE_NOTES_2026_11_15,
+        UPDATE_NOTES_2026_11_14,
+        UPDATE_NOTES_2026_11_08,
+        UPDATE_NOTES_2026_11_07,
+        UPDATE_NOTES_2026_11_06,
         UPDATE_NOTES_NOV1,
         { title: 'The yacht, the rocket, and the IRS', date: 'October 31, 2026', lines: [
             ['🛥️', 'Step inside the yacht, VIP room and all. Pixel-art cop car, ambulance and yacht, plus 5 new slices (180 total).'],
